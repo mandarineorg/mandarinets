@@ -1,0 +1,9 @@
+export enum InjectionTypes {
+    INJECTABLE_OBJECT,
+    QUERY_PARAM,
+    ROUTE_PARAM,
+    REQUEST_PARAM,
+    REQUEST_BODY_PARAM,
+    RESPONSE_PARAM,
+    COOKIE_PARAM
+}
