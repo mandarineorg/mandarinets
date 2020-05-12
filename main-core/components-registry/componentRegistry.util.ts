@@ -35,15 +35,5 @@ export class ComponentsRegistryUtil {
 
             ApplicationContext.getInstance().getComponentsRegistry().register(componentName, componentTarget, componentType, configuration);
         }
-
-        // let componentInstanceInitialized: any = undefined;
-        // switch(componentType) {
-        //     case ComponentTypes.CONTROLLER:
-        //         let ctrlContext: ControllerComponent = new ControllerComponent(componentName, configuration.pathRoute, componentTarget);
-        //         componentInstanceInitialized = ctrlContext;
-        //     break;
-        // }
-
-        // getComponentsRegistry().register(componentName, componentInstanceInitialized, componentType);
     }
 }

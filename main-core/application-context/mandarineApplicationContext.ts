@@ -34,6 +34,4 @@ export class ApplicationContext extends MandarineApplicationContextComponentsReg
         return this.applicationContextSingleton;
     }
 
-
-
 }

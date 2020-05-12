@@ -12,7 +12,6 @@ export class ComponentsRegistry {
     private components: Map<string, ComponentRegistryContext> = new Map<string, ComponentRegistryContext>();
 
     public register(componentName: string, componentInstance: any, componentType: ComponentTypes, configuration: any): void {
-        
         let componentExist: boolean = this.exist(componentName);
 
         if(componentExist) {
@@ -27,7 +26,7 @@ export class ComponentsRegistry {
 
             switch(componentType) {
                 case ComponentTypes.CONTROLLER:
-                    componentInstanceInitialized = new ControllerComponent(componentName, configuration.pathRoute, componentHandler);
+                    componentInstanceInitialized = new ControllerComponent(componentName, configuration.pathRoute, componentInstance, componentHandler);
                     break;
                 case ComponentTypes.SERVICE:
                     componentInstanceInitialized = new ServiceComponent(componentName, componentHandler);

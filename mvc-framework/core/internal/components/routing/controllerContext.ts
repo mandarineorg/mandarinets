@@ -10,6 +10,8 @@ import { routingParamContext } from "../../../interfaces/routing/routingParamCon
 import { Reflect } from "../../../../../main-core/reflectMetadata.ts";
 import { MandarineConstants } from "../../../../../main-core/mandarineConstants.ts";
 import { ReflectUtils } from "../../../../../main-core/utils/reflectUtils.ts";
+import { HttpStatusCode } from "../../../enums/http/httpCodes.ts";
+import { ResponseStatusMetadataContext } from "../../../decorators/stereotypes/controller/responseStatus.ts";
 
 export class ControllerComponent {
     
@@ -17,14 +19,18 @@ export class ControllerComponent {
     private route?: string;
     private actions: Map<String, RoutingAction> = new Map<String, RoutingAction>();
     private classHandler: any;
+    private classHandlerType: any;
     public options: RoutingOptions = {};
 
-    constructor(name?: string, route?: string, handler?: any) {
+    constructor(name?: string, route?: string, handlerType?: any, handler?: any) {
         this.name = name;
         this.route = route;
         this.classHandler = handler;
-        
+        // We get the type of the handler class just in case we need it to read annotations, or other use cases we might have.
+        this.classHandlerType = handlerType;
+
         this.initializeRoutes();
+        this.initializeDefaultResponseStatus();
     }
 
     public registerAction(routeAction: RoutingAction): void {
@@ -46,6 +52,20 @@ export class ControllerComponent {
         } else {
             this.actions.set(actionName, routeAction);
         }
+    }
+
+    private initializeDefaultResponseStatus(): void {
+        let metadataKeysFromClass: Array<any> = Reflect.getMetadataKeys(this.getClassHandlerType());
+        if(metadataKeysFromClass == (null || undefined)) return;
+
+        let defaultResponseStatusMetadataKey: Array<any> = metadataKeysFromClass.find((metadataKey: string) => metadataKey === `${MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_DEFAULT_HTTP_RESPONSE_CODE}`);
+        if(defaultResponseStatusMetadataKey == (null || undefined)) {
+            this.options.responseStatus = HttpStatusCode.OK;
+            return;
+        }
+
+        let defaultStatusAnnotationContext: ResponseStatusMetadataContext = <ResponseStatusMetadataContext> Reflect.getMetadata(defaultResponseStatusMetadataKey, this.getClassHandlerType());
+        this.options.responseStatus = defaultStatusAnnotationContext.responseStatus;
     }
 
     private initializeRoutes(): void {
@@ -120,6 +140,10 @@ export class ControllerComponent {
 
     public getClassHandler(): any {
         return this.classHandler;
+    }
+
+    public getClassHandlerType(): any {
+        return this.classHandlerType;
     }
 
     public getActions(): Map<String, RoutingAction> {
