@@ -1,8 +1,8 @@
-import { Configuration } from "./configuration.ts";
+import { MandarineConfiguration, MandarineDefaultConfiguration } from "./mandarineConfiguration.ts";
 
-export const getMandarineConfiguration = (configuration?: Configuration) => {
+export const getMandarineConfiguration = (configuration?: MandarineConfiguration) => {
     if (!(window as any).mandarineMVCConfiguration)
-    (window as any).mandarineMVCConfiguration = (configuration == (null || undefined)) ? new Configuration() : configuration;
+    (window as any).mandarineMVCConfiguration = (configuration == (null || undefined)) ? MandarineDefaultConfiguration : configuration;
 
     return (window as any).mandarineMVCConfiguration;
 }
