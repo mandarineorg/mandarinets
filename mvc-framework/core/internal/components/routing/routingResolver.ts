@@ -1,10 +1,9 @@
 import { ServerRequest } from "https://deno.land/std@v1.0.0-rc1/http/server.ts";
 import { RoutingAction } from "./routingAction.ts";
 import { ControllerComponent } from "./controllerContext.ts";
-import { ArgValue, getRoutingMethodArguments } from "./RoutingMethodArguments.ts";
 import { ComponentRegistryContext } from "../../../../../main-core/components-registry/componentRegistryContext.ts";
 import { ReflectUtils } from "../../../../../main-core/utils/reflectUtils.ts";
-import { MethodArgumentsResolver } from "../../../../../main-core/dependency-injection/methodArgumentsResolver.ts";
+import { MethodArgumentsResolver, ArgumentValue } from "../../../../../main-core/dependency-injection/methodArgumentsResolver.ts";
 import { ApplicationContext } from "../../../../../main-core/application-context/mandarineApplicationContext.ts";
 
 
@@ -14,7 +13,7 @@ export const requestResolver = async (routingAction: RoutingAction, request: Ser
     let handler: any = component.getClassHandler();
     let handlerMethod: any = handler[routingAction.actionMethodName];
     let handlerMethodParams: Array<string> = ReflectUtils.getParamNames(handlerMethod);
-    let methodArgs: ArgValue[] = MethodArgumentsResolver(handler, routingAction.actionMethodName, {
+    let methodArgs: ArgumentValue[] = MethodArgumentsResolver(handler, routingAction.actionMethodName, {
         request: request,
         response: response,
         params: params,

@@ -8,3 +8,4 @@ export interface ArgumentsResolverExtraData {
     params: any;
     routingAction: RoutingAction;
 }
+

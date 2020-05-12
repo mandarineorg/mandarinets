@@ -16,7 +16,7 @@ export class DependencyInjectionUtil {
         return metadataKeys.some(ComponentsRegistryUtil.isObjectComponent());
     }
 
-    public static defineInjectionMetadata(injectionType: InjectionTypes, paramaterInjectableObject: any, target: any, propertyName: string, parameterIndex: number) {
+    public static defineInjectionMetadata(injectionType: InjectionTypes, paramaterInjectableObject: any, target: any, propertyName: string, parameterIndex: number, specificParameterName?: string) {
         let isMethod: boolean = (parameterIndex != null);
         let parentClassName: string = ReflectUtils.getClassName(target);
 
@@ -25,6 +25,8 @@ export class DependencyInjectionUtil {
             let parameterName: string = methodParams[parameterIndex];
 
             let varName: string = parameterName; // If it is a property we catch its name
+
+            if(specificParameterName != (null || undefined)) varName = specificParameterName; // If the user specified an specific parameter name, then we use it.
 
             let injectionFieldType = "PARAMETER";
 

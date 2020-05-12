@@ -9,13 +9,13 @@ export const Param = (paramType: InjectionTypes, name?: string): Function => {
 
 export const RouteParam = (name?: string): Function => {
     return (target: Object, propertyName: string, index: number) => {
-        RoutingUtils.registerRoutingParam(InjectionTypes.ROUTE_PARAM, target, propertyName, index);
+        RoutingUtils.registerRoutingParam(InjectionTypes.ROUTE_PARAM, target, propertyName, index, name);
     };
 };
 
 export const QueryParam = (name?: string): Function => {
     return (target: Object, propertyName: string, index: number) => {
-        RoutingUtils.registerRoutingParam(InjectionTypes.QUERY_PARAM, target, propertyName, index);
+        RoutingUtils.registerRoutingParam(InjectionTypes.QUERY_PARAM, target, propertyName, index, name);
     };
 };
 
