@@ -25,6 +25,12 @@ export const Request = (): Function => {
     };
 };
 
+export const ServerRequest = (): Function => {
+    return (target: Object, propertyName: string, index: number) => {
+        RoutingUtils.registerRoutingParam(InjectionTypes.SERVER_REQUEST_PARAM, target, propertyName, index);
+    };
+};
+
 export const Response = (): Function => {
     return (target: Object, propertyName: string, index: number) => {
         RoutingUtils.registerRoutingParam(InjectionTypes.RESPONSE_PARAM, target, propertyName, index);

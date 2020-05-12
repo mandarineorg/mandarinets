@@ -8,8 +8,10 @@ import { getCookies } from "https://deno.land/std@v1.0.0-rc1/http/cookie.ts";
 import { MandarineConstants } from "../mandarineConstants.ts";
 import { ApplicationContext } from "../application-context/mandarineApplicationContext.ts";
 import { getDependencyInstance } from "./getDependencyInstance.ts";
+import { decoder } from "https://deno.land/std@v1.0.0-rc1/encoding/utf8.ts";
+import { HttpUtils } from "../utils/httpUtils.ts";
 export type ArgumentValue = any;
-export const MethodArgumentsResolver = (object: any, methodName: string, extraData: ArgumentsResolverExtraData) => {
+export const MethodArgumentsResolver = async (object: any, methodName: string, extraData: ArgumentsResolverExtraData) => {
     const args: Array<ArgumentValue> = [];
 
     let componentMethodParams: Array<string> = ReflectUtils.getParamNames(object[methodName]);
@@ -28,7 +30,7 @@ export const MethodArgumentsResolver = (object: any, methodName: string, extraDa
     metadataValues = metadataValues.sort((a, b) => a.parameterIndex - b.parameterIndex);
 
     const queryParams = RoutingUtils.findQueryParams(extraData.request.url);
-    const requestCookies = getCookies(extraData.request);
+    const requestCookies = getCookies(extraData.request.serverRequest);
 
     for(let i = 0; i < componentMethodParams.length; i++) {
         if(!metadataValues.some((injectionMetadata: InjectionMetadataContext) => injectionMetadata.parameterIndex === i)) {
@@ -47,8 +49,11 @@ export const MethodArgumentsResolver = (object: any, methodName: string, extraDa
                 case InjectionTypes.REQUEST_PARAM:
                     args.push(extraData.request);
                     break;
+                case InjectionTypes.SERVER_REQUEST_PARAM:
+                    args.push(extraData.request.serverRequest);
+                break;
                 case InjectionTypes.REQUEST_BODY_PARAM:
-                    args.push(extraData.request.body);
+                    args.push(await HttpUtils.parseBody(extraData.request));
                 break;
                 case InjectionTypes.RESPONSE_PARAM:
                     args.push(extraData.response);

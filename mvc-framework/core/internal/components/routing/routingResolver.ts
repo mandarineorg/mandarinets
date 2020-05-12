@@ -5,15 +5,15 @@ import { ComponentRegistryContext } from "../../../../../main-core/components-re
 import { ReflectUtils } from "../../../../../main-core/utils/reflectUtils.ts";
 import { MethodArgumentsResolver, ArgumentValue } from "../../../../../main-core/dependency-injection/methodArgumentsResolver.ts";
 import { ApplicationContext } from "../../../../../main-core/application-context/mandarineApplicationContext.ts";
+import { Request } from "https://deno.land/x/oak/request.ts";
 
-
-export const requestResolver = async (routingAction: RoutingAction, request: ServerRequest, response: any, params: any) => {
+export const requestResolver = async (routingAction: RoutingAction, request: Request, response: any, params: any) => {
     let objectContext: ComponentRegistryContext = ApplicationContext.getInstance().getComponentsRegistry().get(routingAction.actionParent);
     let component: ControllerComponent = <ControllerComponent> objectContext.componentInstance;
     let handler: any = component.getClassHandler();
     let handlerMethod: any = handler[routingAction.actionMethodName];
     let handlerMethodParams: Array<string> = ReflectUtils.getParamNames(handlerMethod);
-    let methodArgs: ArgumentValue[] = MethodArgumentsResolver(handler, routingAction.actionMethodName, {
+    let methodArgs: ArgumentValue[] = await MethodArgumentsResolver(handler, routingAction.actionMethodName, {
         request: request,
         response: response,
         params: params,

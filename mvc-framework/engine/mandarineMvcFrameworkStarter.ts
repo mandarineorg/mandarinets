@@ -7,8 +7,8 @@ import { requestResolver } from "../core/internal/components/routing/routingReso
 import { HttpMethods } from "../core/enums/http/httpMethods.ts";
 import { MandarineLoading } from "../../main-core/mandarineLoading.ts";
 import { Log } from "../../logger/log.ts";
-
-
+import { ServerRequest } from "https://deno.land/std@v1.0.0-rc1/http/server.ts";
+import { Request } from "https://deno.land/x/oak/request.ts";
 export class MandarineMvcFrameworkStarter {
 
     private router: Router = new Router();
@@ -51,7 +51,7 @@ export class MandarineMvcFrameworkStarter {
         let route: string = controllerComponent.getActionRoute(routingAction);
 
         let responseHandler = async ({ response, params, request }) => {
-            response.body = await requestResolver(routingAction, request, response, params);
+            response.body = await requestResolver(routingAction, <Request> request, response, params);
         };
 
         switch(routingAction.actionType) {
