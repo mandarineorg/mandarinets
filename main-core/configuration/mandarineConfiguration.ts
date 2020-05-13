@@ -10,6 +10,7 @@ export type MandarineConfiguration = {
 export const MandarineDefaultConfiguration: MandarineConfiguration = {
     mandarine: {
         server: {
+            host: "0.0.0.0",
             port: 4444
         }
     }
