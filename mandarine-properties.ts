@@ -1,4 +1,4 @@
-export type MandarineConfiguration = {
+export type MandarineProperties = {
     mandarine: {
         server: {
             host?: string,
@@ -7,7 +7,7 @@ export type MandarineConfiguration = {
     }
 };
 
-export const MandarineDefaultConfiguration: MandarineConfiguration = {
+export const MandarineDefaultConfiguration: MandarineProperties = {
     mandarine: {
         server: {
             host: "0.0.0.0",

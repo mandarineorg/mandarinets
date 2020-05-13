@@ -4,19 +4,18 @@ import routingErrorHandler from "./core/internal/components/routing/middlewares/
 import notFoundHandler from "./core/internal/components/routing/middlewares/notFoundHandler.ts";
 import { blue } from "https://deno.land/std@v1.0.0-rc1/fmt/colors.ts";
 import { Log } from "../logger/log.ts";
-import { MandarineConfiguration } from "../main-core/configuration/mandarineConfiguration.ts";
+import { MandarineProperties } from "../mandarine-properties.ts";
 import { getMandarineConfiguration } from "../main-core/configuration/getMandarineConfiguration.ts";
-
 
 export class MandarineMVC {
 
     public logger: Log = Log.getLogger(MandarineMVC);
 
-    constructor(configuration?: MandarineConfiguration) {
+    constructor(configuration?: MandarineProperties) {
         this.getConfiguration(configuration);
     }
 
-    private getConfiguration(configuration?: MandarineConfiguration): MandarineConfiguration {
+    private getConfiguration(configuration?: MandarineProperties): MandarineProperties {
         return getMandarineConfiguration(configuration);
     }
 
@@ -29,7 +28,7 @@ export class MandarineMVC {
         app.use(routingErrorHandler);
         app.use(notFoundHandler);
 
-        let mandarineConfiguration: MandarineConfiguration = this.getConfiguration();
+        let mandarineConfiguration: MandarineProperties = this.getConfiguration();
         let serverConfig: string = `127.0.0.1:${mandarineConfiguration.mandarine.server.port}`;
 
         this.logger.info(`Server has started ~ ${serverConfig}`);
