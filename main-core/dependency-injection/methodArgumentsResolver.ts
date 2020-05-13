@@ -49,6 +49,9 @@ export const MethodArgumentsResolver = async (object: any, methodName: string, e
                 case InjectionTypes.REQUEST_PARAM:
                     args.push(extraData.request);
                     break;
+                case InjectionTypes.SESSION_PARAM:
+                    args.push((<any> extraData.request).session)
+                    break;
                 case InjectionTypes.SERVER_REQUEST_PARAM:
                     args.push(extraData.request.serverRequest);
                 break;

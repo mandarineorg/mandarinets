@@ -1,6 +1,7 @@
 import { ComponentsRegistry } from "../components-registry/componentRegistry.ts";
 import { ApplicationContextMetadata } from "./applicationContextMetadata.ts";
 import { MandarineApplicationContextComponentsRegistry } from "./mandarineApplicationContextComponentsRegistry.ts";
+import { DefaultSessionContainerConfiguration } from "../mandarine-native/sessions/sessionDefaultConfiguration.ts";
 
 export class ApplicationContext extends MandarineApplicationContextComponentsRegistry {
 
@@ -13,6 +14,7 @@ export class ApplicationContext extends MandarineApplicationContextComponentsReg
     constructor() {
         super();
         this.initializeMetadata();
+        this.initializeSessionContainer();
     }
 
     public getComponentsRegistry(): ComponentsRegistry { 
@@ -20,6 +22,11 @@ export class ApplicationContext extends MandarineApplicationContextComponentsReg
         (window as any).mandarineComponentsRegistry = new ComponentsRegistry();
 
         return (window as any).mandarineComponentsRegistry;
+    }
+
+
+    private initializeSessionContainer(): void {
+        if (!(window as any).mandarineSessionContainer) (window as any).mandarineSessionContainer = DefaultSessionContainerConfiguration;
     }
 
     public initializeMetadata(): void {
