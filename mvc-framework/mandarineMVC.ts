@@ -4,8 +4,9 @@ import routingErrorHandler from "./core/internal/components/routing/middlewares/
 import notFoundHandler from "./core/internal/components/routing/middlewares/notFoundHandler.ts";
 import { blue } from "https://deno.land/std@v1.0.0-rc1/fmt/colors.ts";
 import { Log } from "../logger/log.ts";
-import { getMandarineConfiguration } from "./getMandarineConfiguration.ts";
-import { MandarineConfiguration } from "./mandarineConfiguration.ts";
+import { MandarineConfiguration } from "../main-core/configuration/mandarineConfiguration.ts";
+import { getMandarineConfiguration } from "../main-core/configuration/getMandarineConfiguration.ts";
+
 
 export class MandarineMVC {
 
