@@ -1,9 +1,9 @@
-import { InjectionTypes } from "../../../../main-core/dependency-injection/injectionTypes.ts";
+import { DI } from "../../../../main-core/dependency-injection/di.ns.ts";
 
 export interface routingParamContext {
     methodName: string;
     parameterName: string;
     parameterIndex: number;
-    parameterType: InjectionTypes;
+    parameterType: DI.InjectionTypes;
     className?: string;
 }

@@ -5,11 +5,11 @@ import { ControllerComponent } from "../../internal/components/routing/controlle
 import { ArgsParams, RoutingParams } from "../../internal/components/routing/routingParams.ts";
 import { RoutingAction } from "../../internal/components/routing/routingAction.ts";
 import { AnnotationMetadataContext } from "../../interfaces/mandarine/mandarineAnnotationMetadataContext.ts";
-import { InjectionTypes } from "../../../../main-core/dependency-injection/injectionTypes.ts";
 import { DependencyInjectionUtil } from "../../../../main-core/dependency-injection/di.util.ts";
 import { ReflectUtils } from "../../../../main-core/utils/reflectUtils.ts";
 import { Reflect } from "../../../../main-core/reflectMetadata.ts"
 import { MandarineConstants } from "../../../../main-core/mandarineConstants.ts";
+import { DI } from "../../../../main-core/dependency-injection/di.ns.ts";
 
 export class RoutingUtils {
 
@@ -35,7 +35,7 @@ export class RoutingUtils {
         }
     }
 
-    public static registerRoutingParam(parameterType: InjectionTypes, target: any, methodName: string, parameterIndex: number, specificParameterName?: string) {
+    public static registerRoutingParam(parameterType: DI.InjectionTypes, target: any, methodName: string, parameterIndex: number, specificParameterName?: string) {
         DependencyInjectionUtil.defineInjectionMetadata(parameterType, undefined, target, methodName, parameterIndex, specificParameterName);
     }
 

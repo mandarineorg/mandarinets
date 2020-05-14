@@ -7,13 +7,14 @@ import { ApplicationContext } from "../../../../../main-core/application-context
 export const Controller = (baseRoute?: string, name?: string): Function => {
     return (target: any, methodName: string, index: number) => {
         let className: string = ReflectUtils.getClassName(target);
-            if(ApplicationContext.getInstance().getComponentsRegistry().exist(className)) {
+        let getComponentsRegistry = ApplicationContext.getInstance().getComponentsRegistry();
+            if(getComponentsRegistry.exist(className)) {
 
-                let objectContext: ComponentRegistryContext = ApplicationContext.getInstance().getComponentsRegistry().get(className);
+                let objectContext: ComponentRegistryContext = getComponentsRegistry.get(className);
                 let controllerComponent:ControllerComponent = <ControllerComponent> objectContext.componentInstance;
                 controllerComponent.setRoute(baseRoute);
 
-                ApplicationContext.getInstance().getComponentsRegistry().update(className, objectContext);
+                getComponentsRegistry.update(className, objectContext);
             } else {
                 ComponentUtils.createControllerComponent(name, { pathRoute: baseRoute }, target);
             }

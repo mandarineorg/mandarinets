@@ -3,4 +3,5 @@ export interface ComponentCommonInterface {
     classHandler?: any;
     getName: () => string;
     getClassHandler: () => any;
+    setClassHandler: (classHandler: any) => void;
 }

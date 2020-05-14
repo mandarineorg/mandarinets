@@ -1,16 +1,11 @@
 import { ComponentRegistryContext } from "./componentRegistryContext.ts";
 import { ComponentTypes } from "./componentTypes.ts";
 import { ComponentFactoryError } from "../../mvc-framework/core/exceptions/mandarine/componentFactoryError.ts";
-import { DIFactory } from "../dependency-injection/constructorResolver.ts";
-import { Reflect } from "../reflectMetadata.ts";
-import { ReflectUtils } from "../utils/reflectUtils.ts";
 import { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
 import { ServiceComponent } from "../components/service-component/serviceComponent.ts";
 import { ConfigurationComponent } from "../components/configuration-component/configurationComponent.ts";
 import { ComponentComponent } from "../components/component-component/componentComponent.ts";
-import { MandarineConstants } from "../mandarineConstants.ts";
-import { ApplicationContext } from "../application-context/mandarineApplicationContext.ts";
-import { Service1 } from "../../examples/example-4.ts";
+import { DI } from "../dependency-injection/di.ns.ts";
 
 export class ComponentsRegistry {
 
@@ -88,7 +83,7 @@ export class ComponentsRegistry {
     }
 
     public isComponentHandlerTypeMatch(componentName: string, classType: any): boolean {
-        let componentContext: ComponentRegistryContext = ApplicationContext.getInstance().getComponentsRegistry().get(componentName);
+        let componentContext: ComponentRegistryContext = this.get(componentName);
         if(componentContext.componentType == ComponentTypes.MANUAL_COMPONENT) return componentContext.componentInstance instanceof classType;
         else componentContext.componentInstance.getClassHandler() instanceof classType;
         return false;
@@ -107,7 +102,7 @@ export class ComponentsRegistry {
     }
 
     public getComponentType(componentName: string): string {
-        let componentContext: ComponentRegistryContext = ApplicationContext.getInstance().getComponentsRegistry().get(componentName);
+        let componentContext: ComponentRegistryContext = this.get(componentName);
         switch(componentContext.componentType) {
             case ComponentTypes.CONTROLLER:
                 let component: ControllerComponent = <ControllerComponent> componentContext.componentInstance;
@@ -116,39 +111,7 @@ export class ComponentsRegistry {
         }
     }
 
-
     public resolveDependencies(): void {
-        this.getAllComponentNames().forEach((componentName) => {
-            let component: ComponentRegistryContext = this.get(componentName);
-
-            if(component.componentType == ComponentTypes.MANUAL_COMPONENT) {
-                return;
-            }
-
-            let componentClassHandler = component.componentInstance.getClassHandler();
-
-            if(ReflectUtils.constructorHasParameters(componentClassHandler)) {
-                component.componentInstance.setClassHandler(DIFactory(component, this));
-            } else {
-                component.componentInstance.setClassHandler(new componentClassHandler());
-            }
-
-            let componentHandler: any = component.componentInstance.getClassHandler();
-
-            let reflectMetadataInjectionKeys = Reflect.getMetadataKeys(componentHandler);
-            if(reflectMetadataInjectionKeys != (undefined || null)) {
-                reflectMetadataInjectionKeys = reflectMetadataInjectionKeys.filter((metadataKey: string) => metadataKey.startsWith(`${MandarineConstants.REFLECTION_MANDARINE_INJECTABLE_FIELD}:`));
-                if(reflectMetadataInjectionKeys != (undefined || null)) {
-                    (<Array<string>>reflectMetadataInjectionKeys).forEach((metadataKey) => {
-                        let metadata: {propertyType: any, propertyName: string, propertyTypeName: string} = Reflect.getMetadata(metadataKey, componentHandler);
-                        let injectableComponent: any = this.getComponentByHandlerType(metadata.propertyType);
-                        if(injectableComponent != (null || undefined)) {
-                            let injectableHandler = (injectableComponent.componentType == ComponentTypes.MANUAL_COMPONENT) ? injectableComponent.componentInstance : injectableComponent.componentInstance.getClassHandler();
-                            componentHandler[metadata.propertyName] = injectableHandler;
-                        }
-                    });
-                }
-            }
-        });
+        return DI.componentDependencyResolver(this);
     }
 }

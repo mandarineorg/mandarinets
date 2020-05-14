@@ -6,7 +6,6 @@ import { RoutingException } from "../../../exceptions/routingException.ts";
 import { RoutingUtils } from "../../../utils/mandarine/routingUtils.ts";
 import { AnnotationMetadataContext } from "../../../interfaces/mandarine/mandarineAnnotationMetadataContext.ts";
 import { RoutingAnnotationContext } from "../../../interfaces/routing/routingAnnotationContext.ts";
-import { routingParamContext } from "../../../interfaces/routing/routingParamContext.ts";
 import { Reflect } from "../../../../../main-core/reflectMetadata.ts";
 import { MandarineConstants } from "../../../../../main-core/mandarineConstants.ts";
 import { ReflectUtils } from "../../../../../main-core/utils/reflectUtils.ts";

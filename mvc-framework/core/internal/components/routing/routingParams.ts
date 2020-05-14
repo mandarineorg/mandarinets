@@ -1,5 +1,5 @@
 import { ModuleRelation } from "../../../interfaces/moduleRelation.ts";
-import { InjectionTypes } from "../../../../../main-core/dependency-injection/injectionTypes.ts";
+import { DI } from "../../../../../main-core/dependency-injection/di.ns.ts";
 
 export interface RoutingParams {
     relation?: ModuleRelation;
@@ -8,7 +8,7 @@ export interface RoutingParams {
 }
 
 export interface ArgsParams {
-    paramType: InjectionTypes;
+    paramType: DI.InjectionTypes;
     relation: ModuleRelation;
     index: number;
     name?: string;

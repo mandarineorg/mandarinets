@@ -7,7 +7,6 @@ import { requestResolver } from "../core/internal/components/routing/routingReso
 import { HttpMethods } from "../core/enums/http/httpMethods.ts";
 import { MandarineLoading } from "../../main-core/mandarineLoading.ts";
 import { Log } from "../../logger/log.ts";
-import { ServerRequest } from "https://deno.land/std@v1.0.0-rc1/http/server.ts";
 import { Request } from "https://deno.land/x/oak/request.ts";
 import { SessionMiddleware } from "../core/middlewares/sessionMiddleware.ts";
 
