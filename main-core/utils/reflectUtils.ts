@@ -8,7 +8,7 @@ export class ReflectUtils {
         return className;
     }
 
-    public static getParamNames(method: Function): Array<string> {
+    public static getParamNames(method: any): Array<string> {
         let STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
         let ARGUMENT_NAMES = /([^\s,]+)/g;
 

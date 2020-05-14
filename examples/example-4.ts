@@ -5,6 +5,8 @@ import { Controller } from "../mvc-framework/core/decorators/stereotypes/control
 import { GET } from "../mvc-framework/core/decorators/stereotypes/controller/routingDecorator.ts";
 import { MandarineMVC } from "../mvc-framework/mandarineMVC.ts";
 import { Inject } from "../main-core/dependency-injection/decorators/Inject.ts";
+import { Reflect } from "../main-core/reflectMetadata.ts";
+import { ApplicationContext } from "../main-core/application-context/mandarineApplicationContext.ts";
 
 
 export class ManualInjectionService {
@@ -21,18 +23,9 @@ export class ManualInjectionService {
 
 }
 
-@Configuration()
-export class MainConfig {
-
-    @Injectable()
-    public getManualInjectionService() {
-        return new ManualInjectionService("Andres");
-    }
-
-}
-
 @Service()
 export class Service1 {
+
     @Inject()
     public service: ManualInjectionService;
 
@@ -41,13 +34,23 @@ export class Service1 {
     }
 }
 
+@Configuration()
+export class MainConfig {
+
+    @Injectable()
+    public ManualInjectionService() {
+        return new ManualInjectionService("Andres");
+    }
+
+}
+
 @Controller()
 export class Controller1 {
 
     constructor(public readonly Service: Service1){}
 
     @GET('/testing-manual-injection')
-    public test() {
+    public test(): string {
         return this.Service.getResult();
     }
 

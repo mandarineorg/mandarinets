@@ -8,6 +8,9 @@ import { ControllerComponent } from "../../mvc-framework/core/internal/component
 import { ServiceComponent } from "../components/service-component/serviceComponent.ts";
 import { ConfigurationComponent } from "../components/configuration-component/configurationComponent.ts";
 import { ComponentComponent } from "../components/component-component/componentComponent.ts";
+import { MandarineConstants } from "../mandarineConstants.ts";
+import { ApplicationContext } from "../application-context/mandarineApplicationContext.ts";
+import { Service1 } from "../../examples/example-4.ts";
 
 export class ComponentsRegistry {
 
@@ -21,12 +24,7 @@ export class ComponentsRegistry {
         } else {
 
             let componentInstanceInitialized: any;
-            let componentHandler: any;
-
-            if(componentType != ComponentTypes.MANUAL_COMPONENT) {
-                if(ReflectUtils.constructorHasParameters(componentInstance)) componentHandler = DIFactory(componentInstance);
-                else componentHandler = new componentInstance();
-            }
+            let componentHandler: any = componentInstance;
 
             switch(componentType) {
                 case ComponentTypes.CONTROLLER:
@@ -82,5 +80,75 @@ export class ComponentsRegistry {
 
     public getControllers(): ComponentRegistryContext[] {
         return Array.from(this.components.values()).filter(item => item.componentType == ComponentTypes.CONTROLLER);
+    }
+
+    public getComponentDefinitionNames(componentType?: ComponentTypes): Array<string> {
+        if(componentType == (null || undefined)) return this.getAllComponentNames();
+        else return this.getAllComponentNamesByType(componentType);
+    }
+
+    public isComponentHandlerTypeMatch(componentName: string, classType: any): boolean {
+        let componentContext: ComponentRegistryContext = ApplicationContext.getInstance().getComponentsRegistry().get(componentName);
+        if(componentContext.componentType == ComponentTypes.MANUAL_COMPONENT) return componentContext.componentInstance instanceof classType;
+        else componentContext.componentInstance.getClassHandler() instanceof classType;
+        return false;
+    }
+
+    public getComponentByHandlerType(classType: any): ComponentRegistryContext {
+        return this.getComponents().find(component => {
+            let instance = undefined;
+                if(component.componentType != ComponentTypes.MANUAL_COMPONENT) {
+                    instance = component.componentInstance.getClassHandler();
+                } else {
+                    instance = component.componentInstance;
+                }
+                return  instance instanceof classType;
+        });
+    }
+
+    public getComponentType(componentName: string): string {
+        let componentContext: ComponentRegistryContext = ApplicationContext.getInstance().getComponentsRegistry().get(componentName);
+        switch(componentContext.componentType) {
+            case ComponentTypes.CONTROLLER:
+                let component: ControllerComponent = <ControllerComponent> componentContext.componentInstance;
+                return component.getClassHandler().constructor.name; 
+            break;
+        }
+    }
+
+
+    public resolveDependencies(): void {
+        this.getAllComponentNames().forEach((componentName) => {
+            let component: ComponentRegistryContext = this.get(componentName);
+
+            if(component.componentType == ComponentTypes.MANUAL_COMPONENT) {
+                return;
+            }
+
+            let componentClassHandler = component.componentInstance.getClassHandler();
+
+            if(ReflectUtils.constructorHasParameters(componentClassHandler)) {
+                component.componentInstance.setClassHandler(DIFactory(component, this));
+            } else {
+                component.componentInstance.setClassHandler(new componentClassHandler());
+            }
+
+            let componentHandler: any = component.componentInstance.getClassHandler();
+
+            let reflectMetadataInjectionKeys = Reflect.getMetadataKeys(componentHandler);
+            if(reflectMetadataInjectionKeys != (undefined || null)) {
+                reflectMetadataInjectionKeys = reflectMetadataInjectionKeys.filter((metadataKey: string) => metadataKey.startsWith(`${MandarineConstants.REFLECTION_MANDARINE_INJECTABLE_FIELD}:`));
+                if(reflectMetadataInjectionKeys != (undefined || null)) {
+                    (<Array<string>>reflectMetadataInjectionKeys).forEach((metadataKey) => {
+                        let metadata: {propertyType: any, propertyName: string, propertyTypeName: string} = Reflect.getMetadata(metadataKey, componentHandler);
+                        let injectableComponent: any = this.getComponentByHandlerType(metadata.propertyType);
+                        if(injectableComponent != (null || undefined)) {
+                            let injectableHandler = (injectableComponent.componentType == ComponentTypes.MANUAL_COMPONENT) ? injectableComponent.componentInstance : injectableComponent.componentInstance.getClassHandler();
+                            componentHandler[metadata.propertyName] = injectableHandler;
+                        }
+                    });
+                }
+            }
+        });
     }
 }

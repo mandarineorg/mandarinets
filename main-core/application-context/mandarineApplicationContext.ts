@@ -1,10 +1,9 @@
 import { ComponentsRegistry } from "../components-registry/componentRegistry.ts";
 import { ApplicationContextMetadata } from "./applicationContextMetadata.ts";
-import { MandarineApplicationContextComponentsRegistry } from "./mandarineApplicationContextComponentsRegistry.ts";
 import { MandarineSessionContainer } from "../mandarine-native/sessions/sessionDefaultConfiguration.ts";
 import { SessionContainer } from "../../security-core/sessions/sessionInterfaces.ts";
 
-export class ApplicationContext extends MandarineApplicationContextComponentsRegistry {
+export class ApplicationContext  {
 
     public static applicationContextSingleton: ApplicationContext;
 
@@ -13,7 +12,6 @@ export class ApplicationContext extends MandarineApplicationContextComponentsReg
     public componentsRegistry: ComponentsRegistry;
 
     constructor() {
-        super();
         this.initializeMetadata();
         this.initializeSessionContainer();
     }
