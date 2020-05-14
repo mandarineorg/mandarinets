@@ -1,9 +1,9 @@
 import { ComponentCommonInterface } from "../componentCommonInterface.ts";
 
-export class ComponentComponent {
+export class ComponentComponent implements ComponentCommonInterface {
 
-    private name?: string;
-    private classHandler: any;
+    name?: string;
+    classHandler: any;
 
     constructor(name?: string, classHandler?: any) {
         this.name = name;

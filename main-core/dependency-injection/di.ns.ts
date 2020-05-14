@@ -1,0 +1,194 @@
+import { RoutingAction } from "../../mvc-framework/core/internal/components/routing/routingAction.ts";
+import { ComponentsRegistry } from "../components-registry/componentRegistry.ts";
+import { ReflectUtils } from "../utils/reflectUtils.ts";
+import { Reflect } from "../reflectMetadata.ts";
+import { MandarineConstants } from "../mandarineConstants.ts";
+import { RoutingUtils } from "../../mvc-framework/core/utils/mandarine/routingUtils.ts";
+import { getCookies } from "https://deno.land/std@v1.0.0-rc1/http/cookie.ts";
+import { Request } from "https://deno.land/x/oak/request.ts";
+import { HttpUtils } from "../utils/httpUtils.ts";
+import { ApplicationContext } from "../application-context/mandarineApplicationContext.ts";
+import { ComponentTypes } from "../components-registry/componentTypes.ts";
+import { ComponentRegistryContext } from "../components-registry/componentRegistryContext.ts";
+import { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
+import { ServiceComponent } from "../components/service-component/serviceComponent.ts";
+import { ConfigurationComponent } from "../components/configuration-component/configurationComponent.ts";
+import { ComponentComponent } from "../components/component-component/componentComponent.ts";
+
+export namespace DI {
+
+    export type ArgumentValue = any;
+
+    export type Constructor<T = any> = new (...args: any[]) => T;
+
+    export interface ArgumentsResolverExtraData {
+        request: Request;
+        response: any;
+        params: any;
+        routingAction: RoutingAction;
+    }
+
+    export interface InjectionMetadataContext {
+        injectionFieldType: "FIELD" | "PARAMETER";
+        injectionType: InjectionTypes;
+        parameterName: string;
+        parameterIndex: number;
+        parameterMethodName: string;
+        parameterObjectToInject?: any;
+    
+        propertyName: string;
+        propertyObjectToInject?: any;
+    
+        className: string;
+    }
+
+    export enum InjectionTypes {
+        INJECTABLE_OBJECT,
+        QUERY_PARAM,
+        ROUTE_PARAM,
+        SERVER_REQUEST_PARAM,
+        REQUEST_PARAM,
+        SESSION_PARAM,
+        REQUEST_BODY_PARAM,
+        RESPONSE_PARAM,
+        COOKIE_PARAM
+    }
+
+    export function constructorResolver<T>(componentSource: ComponentRegistryContext, componentRegistry: ComponentsRegistry): T {
+        if(componentSource.componentType == ComponentTypes.MANUAL_COMPONENT) return;
+
+        let target: Constructor<T> = componentSource.componentInstance.getClassHandler();
+
+        const providers = Reflect.getMetadata('design:paramtypes', target);
+        const args = providers.map((provider: Constructor) => {
+        let component: ComponentRegistryContext = componentRegistry.getComponentByHandlerType(provider);
+            if(component != (undefined || null)) {
+                let classHandler: any = (component.componentType == ComponentTypes.MANUAL_COMPONENT) ? component.componentInstance : component.componentInstance.getClassHandler();
+
+                return (component.componentType == ComponentTypes.MANUAL_COMPONENT || ReflectUtils.checkClassInitialized(classHandler)) ? classHandler : new classHandler();
+            } else {
+                return undefined;
+            }
+        });
+
+        return new target(...args);
+    }
+
+    export function componentDependencyResolver(componentRegistry: ComponentsRegistry) {
+        componentRegistry.getAllComponentNames().forEach((componentName) => {
+            let component: ComponentRegistryContext = componentRegistry.get(componentName);
+    
+            if(component.componentType == ComponentTypes.MANUAL_COMPONENT) {
+                return;
+            }
+    
+            let componentClassHandler = component.componentInstance.getClassHandler();
+    
+            if(ReflectUtils.constructorHasParameters(componentClassHandler)) {
+                component.componentInstance.setClassHandler(constructorResolver(component, componentRegistry));
+            } else {
+                component.componentInstance.setClassHandler(new componentClassHandler());
+            }
+    
+            let componentHandler: any = component.componentInstance.getClassHandler();
+    
+            let reflectMetadataInjectionKeys = Reflect.getMetadataKeys(componentHandler);
+            if(reflectMetadataInjectionKeys != (undefined || null)) {
+                reflectMetadataInjectionKeys = reflectMetadataInjectionKeys.filter((metadataKey: string) => metadataKey.startsWith(`${MandarineConstants.REFLECTION_MANDARINE_INJECTABLE_FIELD}:`));
+                if(reflectMetadataInjectionKeys != (undefined || null)) {
+                    (<Array<string>>reflectMetadataInjectionKeys).forEach((metadataKey) => {
+                        let metadata: {propertyType: any, propertyName: string, propertyTypeName: string} = Reflect.getMetadata(metadataKey, componentHandler);
+                        let injectableComponent: any = componentRegistry.getComponentByHandlerType(metadata.propertyType);
+                        if(injectableComponent != (null || undefined)) {
+                            let injectableHandler = (injectableComponent.componentType == ComponentTypes.MANUAL_COMPONENT) ? injectableComponent.componentInstance : injectableComponent.componentInstance.getClassHandler();
+                            componentHandler[metadata.propertyName] = injectableHandler;
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    export function getDependencyInstance(componentType: ComponentTypes, componentInstance: any): any {
+        switch(componentType) {
+            case ComponentTypes.CONTROLLER:
+                return (<ControllerComponent> componentInstance).getClassHandler();
+            case ComponentTypes.SERVICE:
+                return (<ServiceComponent> componentInstance).getClassHandler();
+            case ComponentTypes.CONFIGURATION:
+                return (<ConfigurationComponent> componentInstance).getClassHandler();
+            case ComponentTypes.COMPONENT:
+                return (<ComponentComponent> componentInstance).getClassHandler();
+        }
+        return null;
+    }
+    
+    export async function methodArgumentResolver(object: any, methodName: string, extraData: ArgumentsResolverExtraData) {
+        const args: Array<ArgumentValue> = [];
+
+        let componentMethodParams: Array<string> = ReflectUtils.getParamNames(object[methodName]);
+    
+        let methodAnnotationMetadata: Array<any> = Reflect.getMetadataKeys(object, methodName);
+        let methodInjectableDependencies: Array<any> = methodAnnotationMetadata.filter((metadataKey: string) => metadataKey.startsWith(`${MandarineConstants.REFLECTION_MANDARINE_INJECTION_FIELD}:PARAMETER`));
+        if(methodInjectableDependencies == null) return args;
+    
+        let metadataValues: Array<InjectionMetadataContext> = new Array<InjectionMetadataContext>();
+    
+        methodInjectableDependencies.forEach((dependencyMetadataKey: string) => {
+            let metadataValue: InjectionMetadataContext = <InjectionMetadataContext> Reflect.getMetadata(dependencyMetadataKey, object, methodName);
+            metadataValues.push(metadataValue);
+        });
+    
+        metadataValues = metadataValues.sort((a, b) => a.parameterIndex - b.parameterIndex);
+    
+        const queryParams = RoutingUtils.findQueryParams(extraData.request.url);
+        const requestCookies = getCookies(extraData.request.serverRequest);
+    
+        for(let i = 0; i < componentMethodParams.length; i++) {
+            if(!metadataValues.some((injectionMetadata: InjectionMetadataContext) => injectionMetadata.parameterIndex === i)) {
+                args.push(undefined);
+            } else {
+                const param = metadataValues.find(injectionMetadata => injectionMetadata.parameterIndex === i);
+                switch(param.injectionType) {
+                    case InjectionTypes.QUERY_PARAM:
+                        if(queryParams) args.push(queryParams.get(param.parameterName));
+                        else args.push(undefined);
+                        break;
+                    case InjectionTypes.ROUTE_PARAM:
+                        if(extraData.params) args.push(extraData.params[param.parameterName]);
+                        else args.push(undefined);
+                        break;
+                    case InjectionTypes.REQUEST_PARAM:
+                        args.push(extraData.request);
+                        break;
+                    case InjectionTypes.SESSION_PARAM:
+                        args.push((<any> extraData.request).session)
+                        break;
+                    case InjectionTypes.SERVER_REQUEST_PARAM:
+                        args.push(extraData.request.serverRequest);
+                    break;
+                    case InjectionTypes.REQUEST_BODY_PARAM:
+                        args.push(await HttpUtils.parseBody(extraData.request));
+                    break;
+                    case InjectionTypes.RESPONSE_PARAM:
+                        args.push(extraData.response);
+                        break;
+                    case InjectionTypes.COOKIE_PARAM:
+                        if(requestCookies[param.parameterName]) args.push(requestCookies[param.parameterName]);
+                        else args.push(undefined);
+                        break;
+                    case InjectionTypes.INJECTABLE_OBJECT:
+                        if(ApplicationContext.getInstance().getComponentsRegistry().exist(param.parameterObjectToInject.name)) {
+                            let component = ApplicationContext.getInstance().getComponentsRegistry().get(param.parameterObjectToInject.name);
+                            args.push(getDependencyInstance(component.componentType, component.componentInstance));
+                        }
+                        else args.push(undefined);
+                        break;
+                }
+            }
+        }
+    
+        if (args.length == 0) return null;
+        return args;
+    }
+}

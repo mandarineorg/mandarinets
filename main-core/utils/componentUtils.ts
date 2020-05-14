@@ -7,13 +7,6 @@ import { ApplicationContext } from "../application-context/mandarineApplicationC
 
 export class ComponentUtils {
 
-    public static createControllerContext(componentName: string, classHandler: any): void {
-        let objectContext: ComponentRegistryContext = ApplicationContext.getInstance().getComponentsRegistry().get(componentName);
-        if(objectContext == (null || undefined)) {
-            ComponentUtils.createControllerComponent(componentName, {}, classHandler);
-        }
-    }
-
     public static createControllerComponent(componentName: string, configuration: any, classHandler: any) {
         ComponentsRegistryUtil.registerComponent(componentName, classHandler, ComponentTypes.CONTROLLER, configuration, null);
     }

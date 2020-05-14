@@ -1,22 +1,15 @@
-import { InjectionTypes } from "./injectionTypes.ts";
 import { Reflect } from "../reflectMetadata.ts";
 import { MandarineConstants } from "../mandarineConstants.ts";
 import { ReflectUtils } from "../utils/reflectUtils.ts";
-import { InjectionMetadataContext } from "./injectionMetadataContext.ts";
 import { ComponentsRegistryUtil } from "../components-registry/componentRegistry.util.ts";
 import { ComponentExceptions } from "../exceptions/componentExceptions.ts";
 import { ComponentMetadataContext } from "../components-registry/componentMetadataContext.ts";
 import { ApplicationContext } from "../application-context/mandarineApplicationContext.ts";
-import { getDependencyInstance } from "./getDependencyInstance.ts";
+import { DI } from "./di.ns.ts";
 
 export class DependencyInjectionUtil {
 
-    public static isObjectInjectable(object: any) {
-        let metadataKeys = Reflect.getMetadataKeys(object);
-        return metadataKeys.some(ComponentsRegistryUtil.isObjectComponent());
-    }
-
-    public static defineInjectionMetadata(injectionType: InjectionTypes, paramaterInjectableObject: any, target: any, propertyName: string, parameterIndex: number, specificParameterName?: string) {
+    public static defineInjectionMetadata(injectionType: DI.InjectionTypes, paramaterInjectableObject: any, target: any, propertyName: string, parameterIndex: number, specificParameterName?: string) {
         let isMethod: boolean = (parameterIndex != null);
         let parentClassName: string = ReflectUtils.getClassName(target);
 
@@ -32,7 +25,7 @@ export class DependencyInjectionUtil {
 
             let parameterDependencyInjectionMetadataName = `${MandarineConstants.REFLECTION_MANDARINE_INJECTION_FIELD}:${injectionFieldType}:${injectionType}:${varName}:${(parameterIndex == (null || undefined) ? 0 : parameterIndex)}`;
 
-            let annotationContext: InjectionMetadataContext = {
+            let annotationContext: DI.InjectionMetadataContext = {
                 injectionFieldType: <"PARAMETER" | "FIELD"> injectionFieldType,
                 injectionType: injectionType,
                 parameterName: varName,

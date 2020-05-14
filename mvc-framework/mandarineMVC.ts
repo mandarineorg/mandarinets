@@ -2,7 +2,6 @@ import { Application } from "https://deno.land/x/oak/mod.ts";
 import { MandarineMvcFrameworkStarter } from "./engine/mandarineMvcFrameworkStarter.ts";
 import routingErrorHandler from "./core/internal/components/routing/middlewares/routingErrorHandler.ts";
 import notFoundHandler from "./core/internal/components/routing/middlewares/notFoundHandler.ts";
-import { blue } from "https://deno.land/std@v1.0.0-rc1/fmt/colors.ts";
 import { Log } from "../logger/log.ts";
 import { MandarineProperties } from "../mandarine-properties.ts";
 import { getMandarineConfiguration } from "../main-core/configuration/getMandarineConfiguration.ts";
