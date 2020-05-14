@@ -17,10 +17,22 @@ import { ComponentComponent } from "../components/component-component/componentC
 
 export namespace DI {
 
+    /** 
+     * Interprets the arguments to return after injection
+     *
+     */
     export type ArgumentValue = any;
 
+    /** 
+     * Infer the arguments of constructor for dependency injection.
+     *
+     */
     export type Constructor<T = any> = new (...args: any[]) => T;
 
+    /** 
+     * Structure of data for requests in order to resolve dependencies.
+     *
+     */
     export interface ArgumentsResolverExtraData {
         request: Request;
         response: any;
@@ -28,6 +40,10 @@ export namespace DI {
         routingAction: RoutingAction;
     }
 
+    /** 
+     * Structure of injections in methods' arguments.
+     *
+     */
     export interface InjectionMetadataContext {
         injectionFieldType: "FIELD" | "PARAMETER";
         injectionType: InjectionTypes;
@@ -42,6 +58,11 @@ export namespace DI {
         className: string;
     }
 
+    /** 
+     * List of all the possible injection types.
+     * **NOTE** INJECTABLE_OBJECT refers to a injection that is not part of Mandarine Components but it has been defined as a component by the user.
+     *
+     */
     export enum InjectionTypes {
         INJECTABLE_OBJECT,
         QUERY_PARAM,
@@ -54,6 +75,10 @@ export namespace DI {
         COOKIE_PARAM
     }
 
+    /** 
+     * Resolve dependencies from a component's constructor. This method will look for the requested dependencies in the DI Container at mandarine compile time.
+     *
+     */
     export function constructorResolver<T>(componentSource: ComponentRegistryContext, componentRegistry: ComponentsRegistry): T {
         if(componentSource.componentType == ComponentTypes.MANUAL_COMPONENT) return;
 
@@ -74,6 +99,11 @@ export namespace DI {
         return new target(...args);
     }
 
+    /** 
+     * Resolves all the dependencies a component has (Fields and constructor). 
+     * **Note** MANUAL_COMPONENTS are not resolved since they were theorically resolved by the user.
+     *
+     */
     export function componentDependencyResolver(componentRegistry: ComponentsRegistry) {
         componentRegistry.getAllComponentNames().forEach((componentName) => {
             let component: ComponentRegistryContext = componentRegistry.get(componentName);
@@ -123,6 +153,11 @@ export namespace DI {
         return null;
     }
     
+    /** 
+     * Resolves all the requested data by a HTTP Handler method.
+     * This function is used when requests are received
+     *
+     */
     export async function methodArgumentResolver(object: any, methodName: string, extraData: ArgumentsResolverExtraData) {
         const args: Array<ArgumentValue> = [];
 
