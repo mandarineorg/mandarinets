@@ -8,7 +8,7 @@ With the use of multiple systems and design patterns, Mandarine offers you the a
 
 ## Documentation
 To see all the available documentation of Mandarine.TS, please [Click here](https://github.com/mandarineorg/mandarinets/wiki)
-
+### [Click here to see our To-Do list](https://github.com/mandarineorg/mandarinets/wiki/TO-DO's)
 ## Basic usage
 
 ```
