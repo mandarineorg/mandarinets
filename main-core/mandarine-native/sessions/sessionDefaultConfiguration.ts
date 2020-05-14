@@ -2,8 +2,7 @@ import { SessionContainer } from "../../../security-core/sessions/sessionInterfa
 import { CommonUtils } from "../../utils/commonUtils.ts";
 import { MandarineStorageHandler } from "./mandarineDefaultSessionStore.ts";
 
-
-export const DefaultSessionContainerConfiguration: SessionContainer = {
+export const MandarineSessionContainer: SessionContainer = {
     cookie: {
             path: '/', 
             httpOnly: false, 

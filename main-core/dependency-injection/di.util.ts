@@ -69,6 +69,9 @@ export class DependencyInjectionUtil {
                 let component = ApplicationContext.getInstance().getComponentsRegistry().get(propertyType.name);
                 let componentInstance = component.componentInstance;
                 target[propertyName] = getDependencyInstance(component.componentType, componentInstance);
+
+            } else if(ApplicationContext.getInstance().getPredefinedInjectables().hasOwnProperty('get'+propertyType.name)) {
+                target[propertyName] = ApplicationContext.getInstance().getPredefinedInjectables()[`get${propertyType.name}`];
             } else {
                 throw new ComponentExceptions(ComponentExceptions.NON_VALID_INJECTABLE, propertyType.name);
             }

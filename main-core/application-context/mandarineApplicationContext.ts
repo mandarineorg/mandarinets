@@ -1,7 +1,8 @@
 import { ComponentsRegistry } from "../components-registry/componentRegistry.ts";
 import { ApplicationContextMetadata } from "./applicationContextMetadata.ts";
 import { MandarineApplicationContextComponentsRegistry } from "./mandarineApplicationContextComponentsRegistry.ts";
-import { DefaultSessionContainerConfiguration } from "../mandarine-native/sessions/sessionDefaultConfiguration.ts";
+import { MandarineSessionContainer } from "../mandarine-native/sessions/sessionDefaultConfiguration.ts";
+import { SessionContainer } from "../../security-core/sessions/sessionInterfaces.ts";
 
 export class ApplicationContext extends MandarineApplicationContextComponentsRegistry {
 
@@ -24,13 +25,21 @@ export class ApplicationContext extends MandarineApplicationContextComponentsReg
         return (window as any).mandarineComponentsRegistry;
     }
 
+    public getPredefinedInjectables(): object { 
+        if (!(window as any).mandarinePredefinedInjectables) (window as any).mandarinePredefinedInjectables = {};
+        return (window as any).mandarinePredefinedInjectables;
+    }
 
     private initializeSessionContainer(): void {
-        if (!(window as any).mandarineSessionContainer) (window as any).mandarineSessionContainer = DefaultSessionContainerConfiguration;
+        if (!(window as any).mandarineSessionContainer) (window as any).mandarineSessionContainer = MandarineSessionContainer;
     }
 
     public initializeMetadata(): void {
         this.contextMetadata.startupDate = Math.round(+new Date()/1000);
+    }
+
+    public changeSessionContainer(newSessionContainer: SessionContainer): void {
+        (window as any).mandarineSessionContainer = newSessionContainer;
     }
 
     public static getInstance(): ApplicationContext {
