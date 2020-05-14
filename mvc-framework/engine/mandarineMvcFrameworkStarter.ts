@@ -21,10 +21,22 @@ export class MandarineMvcFrameworkStarter {
 
         MandarineLoading();
 
-        this.intializeControllers();
+        this.resolveComponentsDependencies();
+        this.initializeControllers();
+        this.intializeControllersRoutes();
     }
 
-    private intializeControllers(): void {
+    private resolveComponentsDependencies(): void {
+        ApplicationContext.getInstance().getComponentsRegistry().resolveDependencies();
+    }
+
+    private initializeControllers() {
+        ApplicationContext.getInstance().getComponentsRegistry().getControllers().forEach((controller) => {
+            (<ControllerComponent>controller.componentInstance).initializeControllerFunctionality();
+        })
+    }
+
+    private intializeControllersRoutes(): void {
         let mvcControllers: ComponentRegistryContext[] = ApplicationContext.getInstance().getComponentsRegistry().getControllers();
 
         if(mvcControllers.length == 0) {

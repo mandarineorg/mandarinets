@@ -56,25 +56,12 @@ export class DependencyInjectionUtil {
 
         } else {
             let propertyType = Reflect.getMetadata("design:type", target, propertyName);
-
-            if(DependencyInjectionUtil.isObjectInjectable(propertyType)) {
-
-                let targetMetadataKey = Reflect.getMetadataKeys(propertyType).find(ComponentsRegistryUtil.isObjectComponent());
-                let metadata = <ComponentMetadataContext> Reflect.getMetadata(targetMetadataKey, propertyType);
-
-                if(!ApplicationContext.getInstance().getComponentsRegistry().exist(propertyType.name)) {
-                    ApplicationContext.getInstance().getComponentsRegistry().register(propertyType.name, target, metadata.componentType, {});
-                }
-
-                let component = ApplicationContext.getInstance().getComponentsRegistry().get(propertyType.name);
-                let componentInstance = component.componentInstance;
-                target[propertyName] = getDependencyInstance(component.componentType, componentInstance);
-
-            } else if(ApplicationContext.getInstance().getPredefinedInjectables().hasOwnProperty('get'+propertyType.name)) {
-                target[propertyName] = ApplicationContext.getInstance().getPredefinedInjectables()[`get${propertyType.name}`];
-            } else {
-                throw new ComponentExceptions(ComponentExceptions.NON_VALID_INJECTABLE, propertyType.name);
-            }
+            
+            Reflect.defineMetadata(`${MandarineConstants.REFLECTION_MANDARINE_INJECTABLE_FIELD}:${propertyName}`, {
+                propertyType: propertyType,
+                propertyTypeName: propertyType.name,
+                propertyName: propertyName
+            }, target);
         }
     }
 }

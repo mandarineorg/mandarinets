@@ -17,4 +17,8 @@ export class ConfigurationComponent {
         return this.classHandler;
     }
 
+    public setClassHandler(handler: any) {
+        this.classHandler = handler;
+    }
+
 }

@@ -18,4 +18,8 @@ export class ServiceComponent {
         return this.classHandler;
     }
 
+    public setClassHandler(handler: any) {
+        this.classHandler = handler;
+    }
+
 }

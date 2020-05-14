@@ -28,7 +28,9 @@ export class ControllerComponent {
         this.classHandler = handler;
         // We get the type of the handler class just in case we need it to read annotations, or other use cases we might have.
         this.classHandlerType = handlerType;
+    }
 
+    public initializeControllerFunctionality() {
         this.initializeRoutes();
         this.initializeDefaultResponseStatus();
     }
