@@ -2,5 +2,6 @@ export enum ComponentTypes {
     CONTROLLER,
     COMPONENT,
     SERVICE,
-    CONFIGURATION
+    CONFIGURATION,
+    MANUAL_COMPONENT
 }

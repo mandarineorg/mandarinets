@@ -6,6 +6,8 @@ import { Reflect } from "../reflectMetadata.ts";
 import { ReflectUtils } from "../utils/reflectUtils.ts";
 import { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
 import { ServiceComponent } from "../components/service-component/serviceComponent.ts";
+import { ConfigurationComponent } from "../components/configuration-component/configurationComponent.ts";
+import { ComponentComponent } from "../components/component-component/componentComponent.ts";
 
 export class ComponentsRegistry {
 
@@ -21,8 +23,10 @@ export class ComponentsRegistry {
             let componentInstanceInitialized: any;
             let componentHandler: any;
 
-            if(ReflectUtils.constructorHasParameters(componentInstance)) componentHandler = DIFactory(componentInstance);
-            else componentHandler = new componentInstance();
+            if(componentType != ComponentTypes.MANUAL_COMPONENT) {
+                if(ReflectUtils.constructorHasParameters(componentInstance)) componentHandler = DIFactory(componentInstance);
+                else componentHandler = new componentInstance();
+            }
 
             switch(componentType) {
                 case ComponentTypes.CONTROLLER:
@@ -30,6 +34,15 @@ export class ComponentsRegistry {
                     break;
                 case ComponentTypes.SERVICE:
                     componentInstanceInitialized = new ServiceComponent(componentName, componentHandler);
+                break;
+                case ComponentTypes.CONFIGURATION:
+                    componentInstanceInitialized = new ConfigurationComponent(componentName, componentHandler);
+                break;
+                case ComponentTypes.COMPONENT:
+                    componentInstanceInitialized = new ComponentComponent(componentName, componentHandler);
+                break;
+                case ComponentTypes.MANUAL_COMPONENT:
+                    componentInstanceInitialized = componentInstance;
                 break;
             }
 

@@ -9,6 +9,8 @@ import { MandarineLoading } from "../../main-core/mandarineLoading.ts";
 import { Log } from "../../logger/log.ts";
 import { ServerRequest } from "https://deno.land/std@v1.0.0-rc1/http/server.ts";
 import { Request } from "https://deno.land/x/oak/request.ts";
+import { SessionMiddleware } from "../core/middlewares/sessionMiddleware.ts";
+
 export class MandarineMvcFrameworkStarter {
 
     private router: Router = new Router();
@@ -44,14 +46,23 @@ export class MandarineMvcFrameworkStarter {
             this.logger.error(`Controllers could not be initialized`, error);
         }
 
-        
+    }
+
+    private preRequestInternalMiddlewares(response: any, request: Request): void {
+        new SessionMiddleware().createSessionCookie(request, response);
+    }
+
+    private postRequestInternalMiddlewares(response: any, request: Request): void {
+        new SessionMiddleware().storeSession(request, response);
     }
 
     private addPathToRouter(router: Router, routingAction: RoutingAction, controllerComponent: ControllerComponent): Router {
         let route: string = controllerComponent.getActionRoute(routingAction);
 
         let responseHandler = async ({ response, params, request }) => {
+            this.preRequestInternalMiddlewares(response, request);
             response.body = await requestResolver(routingAction, <Request> request, response, params);
+            this.postRequestInternalMiddlewares(response, request);
         };
 
         switch(routingAction.actionType) {
