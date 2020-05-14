@@ -44,13 +44,6 @@ export class ComponentsRegistry {
                 break;
             }
 
-            // console.log(componentName, {
-            //     classParentName: componentName,
-            //     componentName: componentName,
-            //     componentInstance: componentInstanceInitialized,
-            //     componentType: componentType
-            // });
-
             this.components.set(componentName, {
                 classParentName: componentName,
                 componentName: componentName,
