@@ -1,6 +1,7 @@
 import { ComponentsRegistry } from "../components-registry/componentRegistry.ts";
 import { MandarineSessionContainer } from "../mandarine-native/sessions/sessionDefaultConfiguration.ts";
 import { SessionContainer } from "../../security-core/sessions/sessionInterfaces.ts";
+import { ComponentTypes } from "../components-registry/componentTypes.ts";
 
 export class ApplicationContext  {
 
@@ -14,7 +15,7 @@ export class ApplicationContext  {
 
     constructor() {
         this.initializeMetadata();
-        this.initializeSessionContainer();
+        this.initializeDefaultSessionContainer();
     }
 
     public getComponentsRegistry(): ComponentsRegistry { 
@@ -24,7 +25,7 @@ export class ApplicationContext  {
         return (window as any).mandarineComponentsRegistry;
     }
 
-    private initializeSessionContainer(): void {
+    private initializeDefaultSessionContainer(): void {
         if (!(window as any).mandarineSessionContainer) (window as any).mandarineSessionContainer = MandarineSessionContainer;
     }
 
@@ -33,7 +34,22 @@ export class ApplicationContext  {
     }
 
     public changeSessionContainer(newSessionContainer: SessionContainer): void {
-        (window as any).mandarineSessionContainer = newSessionContainer;
+        let defaultContainer = MandarineSessionContainer;
+        
+        (window as any).mandarineSessionContainer = <SessionContainer>{
+            cookie: {
+                path: (newSessionContainer.cookie && newSessionContainer.cookie.path) ? newSessionContainer.cookie.path : defaultContainer.cookie.path,
+                maxAge: (newSessionContainer.cookie && newSessionContainer.cookie.maxAge) ? newSessionContainer.cookie.maxAge : defaultContainer.cookie.maxAge,
+                httpOnly: (newSessionContainer.cookie && newSessionContainer.cookie.httpOnly) ? newSessionContainer.cookie.httpOnly : defaultContainer.cookie.httpOnly,
+                secure: (newSessionContainer.cookie && newSessionContainer.cookie.secure) ? newSessionContainer.cookie.secure : defaultContainer.cookie.secure
+            },
+            sessionPrefix: (newSessionContainer.sessionPrefix) ? newSessionContainer.sessionPrefix : defaultContainer.sessionPrefix,
+            genId: (newSessionContainer.genId) ? newSessionContainer.genId : defaultContainer.genId,
+            resave: (newSessionContainer.resave) ? newSessionContainer.resave : defaultContainer.resave,
+            rolling: (newSessionContainer.rolling) ? newSessionContainer.rolling : defaultContainer.rolling,
+            saveUninitialized: (newSessionContainer.saveUninitialized) ? newSessionContainer.saveUninitialized : defaultContainer.saveUninitialized,
+            store: (newSessionContainer.store) ? newSessionContainer.store : defaultContainer.store,
+        };
     }
 
     public static getInstance(): ApplicationContext {

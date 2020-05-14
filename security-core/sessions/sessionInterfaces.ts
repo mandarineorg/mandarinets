@@ -53,5 +53,5 @@ export interface SessionContainer {
     resave?: boolean,
     rolling?: boolean,
     saveUninitialized?: boolean,
-    store: SessionStore
+    store?: SessionStore
 }

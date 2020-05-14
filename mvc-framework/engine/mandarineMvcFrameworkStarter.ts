@@ -9,6 +9,7 @@ import { MandarineLoading } from "../../main-core/mandarineLoading.ts";
 import { Log } from "../../logger/log.ts";
 import { Request } from "https://deno.land/x/oak/request.ts";
 import { SessionMiddleware } from "../core/middlewares/sessionMiddleware.ts";
+import { MandarineMvcFrameworkEngineMethods } from "./mandarineMvcFrameworkEngineMethods.ts";
 
 export class MandarineMvcFrameworkStarter {
 
@@ -21,6 +22,9 @@ export class MandarineMvcFrameworkStarter {
         MandarineLoading();
 
         this.resolveComponentsDependencies();
+
+        MandarineMvcFrameworkEngineMethods.initializeEngineMethods();
+
         this.initializeControllers();
         this.intializeControllersRoutes();
     }
