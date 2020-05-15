@@ -1,8 +1,8 @@
-import { ComponentCommonInterface } from "../componentCommonInterface.ts";
 import { MiddlewareTarget } from "./middlewareTarget.ts";
 import { MandarineException } from "../../exceptions/mandarineException.ts";
+import { Mandarine } from "../../Mandarine.ns.ts";
 
-export class MiddlewareComponent implements ComponentCommonInterface {
+export class MiddlewareComponent implements Mandarine.MandarineCore.ComponentCommonInterface {
 
     name?: string;
     regexRoute?: RegExp;

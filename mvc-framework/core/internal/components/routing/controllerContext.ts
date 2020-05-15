@@ -1,25 +1,20 @@
-import { RoutingAction } from "./routingAction.ts";
-import { RoutingParams, ArgsParams } from "./routingParams.ts";
-import { RoutingOptions } from "../../../interfaces/routing/routingOptions.ts";
-import { InitializationStatus } from "../../../enums/internal/routingInitializationStatus.ts";
 import { RoutingException } from "../../../exceptions/routingException.ts";
 import { RoutingUtils } from "../../../utils/mandarine/routingUtils.ts";
 import { AnnotationMetadataContext } from "../../../interfaces/mandarine/mandarineAnnotationMetadataContext.ts";
-import { RoutingAnnotationContext } from "../../../interfaces/routing/routingAnnotationContext.ts";
 import { Reflect } from "../../../../../main-core/reflectMetadata.ts";
 import { MandarineConstants } from "../../../../../main-core/mandarineConstants.ts";
 import { ReflectUtils } from "../../../../../main-core/utils/reflectUtils.ts";
-import { HttpStatusCode } from "../../../enums/http/httpCodes.ts";
 import { ResponseStatusMetadataContext } from "../../../decorators/stereotypes/controller/responseStatus.ts";
+import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
 
 export class ControllerComponent {
     
     private name?: string;
     private route?: string;
-    private actions: Map<String, RoutingAction> = new Map<String, RoutingAction>();
+    private actions: Map<String, Mandarine.MandarineMVC.Routing.RoutingAction> = new Map<String, Mandarine.MandarineMVC.Routing.RoutingAction>();
     private classHandler: any;
     private classHandlerType: any;
-    public options: RoutingOptions = {};
+    public options: Mandarine.MandarineMVC.Routing.RoutingOptions = {};
 
     constructor(name?: string, route?: string, handlerType?: any, handler?: any) {
         this.name = name;
@@ -34,16 +29,16 @@ export class ControllerComponent {
         this.initializeDefaultResponseStatus();
     }
 
-    public registerAction(routeAction: RoutingAction): void {
+    public registerAction(routeAction: Mandarine.MandarineMVC.Routing.RoutingAction): void {
         let actionName: string = this.getActionName(routeAction.actionMethodName);
-        let routingAction: RoutingAction = this.actions.get(actionName);
+        let routingAction: Mandarine.MandarineMVC.Routing.RoutingAction = this.actions.get(actionName);
 
-        if(routingAction != null && routingAction.initializationStatus == InitializationStatus.CREATED) throw new RoutingException(RoutingException.EXISTENT_ACTION, actionName);
+        if(routingAction != null && routingAction.initializationStatus == Mandarine.MandarineMVC.Routing.RouteInitializationStatus.CREATED) throw new RoutingException(RoutingException.EXISTENT_ACTION, actionName);
 
         this.initializeRoutingActionContext(routeAction);
         
         if(this.existRoutingAction(routeAction.actionMethodName)) {
-            let currentRoutingAction: RoutingAction = this.actions.get(actionName);
+            let currentRoutingAction: Mandarine.MandarineMVC.Routing.RoutingAction = this.actions.get(actionName);
             currentRoutingAction.actionMethodName = routeAction.actionMethodName;
             currentRoutingAction.actionType = routeAction.actionType;
             currentRoutingAction.route = routeAction.route;
@@ -61,7 +56,7 @@ export class ControllerComponent {
 
         let defaultResponseStatusMetadataKey: Array<any> = metadataKeysFromClass.find((metadataKey: string) => metadataKey === `${MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_DEFAULT_HTTP_RESPONSE_CODE}`);
         if(defaultResponseStatusMetadataKey == (null || undefined)) {
-            this.options.responseStatus = HttpStatusCode.OK;
+            this.options.responseStatus = Mandarine.MandarineMVC.HttpStatusCode.OK;
             return;
         }
 
@@ -80,37 +75,37 @@ export class ControllerComponent {
         routesMetadataKeys.forEach((value) => {
             let annotationContext: AnnotationMetadataContext = <AnnotationMetadataContext> Reflect.getMetadata(value, classHandler);
             if(annotationContext.type == "ROUTE") {
-                let routeContext: RoutingAnnotationContext = <RoutingAnnotationContext> annotationContext.context;
+                let routeContext: Mandarine.MandarineMVC.Routing.RoutingAnnotationContext = <Mandarine.MandarineMVC.Routing.RoutingAnnotationContext> annotationContext.context;
                 this.registerAction({
                     actionParent: routeContext.className,
                     actionType: routeContext.methodType,
                     actionMethodName: routeContext.methodName,
                     route: routeContext.route,
                     routingOptions: routeContext.options,
-                    initializationStatus: InitializationStatus.CREATED
+                    initializationStatus: Mandarine.MandarineMVC.Routing.RouteInitializationStatus.CREATED
                 });
             }
         });
     }
 
-    private initializeRoutingActionContext(routeAction: RoutingAction) {
+    private initializeRoutingActionContext(routeAction: Mandarine.MandarineMVC.Routing.RoutingAction) {
         routeAction.actionParent = this.getName();
-        routeAction.routeParams = new Array<RoutingParams>();
+        routeAction.routeParams = new Array<Mandarine.MandarineMVC.Routing.RoutingParams>();
         this.processParamRoutes(routeAction);
     }
 
-    private processParamRoutes(routeAction: RoutingAction) {
-        let routeParams: RoutingParams[] = RoutingUtils.findRouteParams(routeAction.route);
+    private processParamRoutes(routeAction: Mandarine.MandarineMVC.Routing.RoutingAction) {
+        let routeParams: Mandarine.MandarineMVC.Routing.RoutingParams[] = RoutingUtils.findRouteParams(routeAction.route);
         if(routeParams == null) return;
         routeParams.forEach((value) => routeAction.routeParams.push(value));
     }
 
-    public getActionRoute(routeAction: RoutingAction): string {
+    public getActionRoute(routeAction: Mandarine.MandarineMVC.Routing.RoutingAction): string {
         if(this.getRoute() != null) return this.getRoute() + routeAction.route;
         else return routeAction.route;
     }
 
-    public getRoutingAction(actionMethodName: string): RoutingAction {
+    public getRoutingAction(actionMethodName: string): Mandarine.MandarineMVC.Routing.RoutingAction {
         return this.actions.get(`${this.getName()}.${actionMethodName}`);
     }
 
@@ -147,7 +142,7 @@ export class ControllerComponent {
         return this.classHandlerType;
     }
 
-    public getActions(): Map<String, RoutingAction> {
+    public getActions(): Map<String, Mandarine.MandarineMVC.Routing.RoutingAction> {
         return this.actions;
     }
 

@@ -1,8 +1,8 @@
 import { ControllerComponent } from "../../../internal/components/routing/controllerContext.ts";
 import { ReflectUtils } from "../../../../../main-core/utils/reflectUtils.ts";
-import { ComponentRegistryContext } from "../../../../../main-core/components-registry/componentRegistryContext.ts";
 import { ComponentUtils } from "../../../../../main-core/utils/componentUtils.ts";
 import { ApplicationContext } from "../../../../../main-core/application-context/mandarineApplicationContext.ts";
+import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
 
 export const Controller = (baseRoute?: string, name?: string): Function => {
     return (target: any, methodName: string, index: number) => {
@@ -10,7 +10,7 @@ export const Controller = (baseRoute?: string, name?: string): Function => {
         let getComponentsRegistry = ApplicationContext.getInstance().getComponentsRegistry();
             if(getComponentsRegistry.exist(className)) {
 
-                let objectContext: ComponentRegistryContext = getComponentsRegistry.get(className);
+                let objectContext: Mandarine.MandarineCore.ComponentRegistryContext = getComponentsRegistry.get(className);
                 let controllerComponent:ControllerComponent = <ControllerComponent> objectContext.componentInstance;
                 controllerComponent.setRoute(baseRoute);
 

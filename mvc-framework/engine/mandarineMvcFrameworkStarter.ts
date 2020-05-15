@@ -1,18 +1,14 @@
 import { Router } from "https://deno.land/x/oak/router.ts";
 import { ApplicationContext } from "../../main-core/application-context/mandarineApplicationContext.ts";
-import { ComponentRegistryContext } from "../../main-core/components-registry/componentRegistryContext.ts";
 import { ControllerComponent } from "../core/internal/components/routing/controllerContext.ts";
-import { RoutingAction } from "../core/internal/components/routing/routingAction.ts";
 import { requestResolver, middlewareResolver } from "../core/internal/components/routing/routingResolver.ts";
-import { HttpMethods } from "../core/enums/http/httpMethods.ts";
 import { MandarineLoading } from "../../main-core/mandarineLoading.ts";
 import { Log } from "../../logger/log.ts";
 import { Request } from "https://deno.land/x/oak/request.ts";
 import { SessionMiddleware } from "../core/middlewares/sessionMiddleware.ts";
 import { MandarineMvcFrameworkEngineMethods } from "./mandarineMvcFrameworkEngineMethods.ts";
 import { MiddlewareComponent } from "../../main-core/components/middleware-component/middlewareComponent.ts";
-import { getMandarineConfiguration } from "../../main-core/configuration/getMandarineConfiguration.ts";
-import { MandarineProperties } from "../../mandarine-properties.ts";
+import { Mandarine } from "../../main-core/Mandarine.ns.ts";
 
 export class MandarineMvcFrameworkStarter {
 
@@ -43,7 +39,7 @@ export class MandarineMvcFrameworkStarter {
     }
 
     private intializeControllersRoutes(): void {
-        let mvcControllers: ComponentRegistryContext[] = ApplicationContext.getInstance().getComponentsRegistry().getControllers();
+        let mvcControllers: Mandarine.MandarineCore.ComponentRegistryContext[] = ApplicationContext.getInstance().getComponentsRegistry().getControllers();
 
         if(mvcControllers.length == 0) {
             this.logger.warn("No controllers have been found"); 
@@ -52,7 +48,7 @@ export class MandarineMvcFrameworkStarter {
 
         try {
 
-            mvcControllers.forEach((component: ComponentRegistryContext, index) => {
+            mvcControllers.forEach((component: Mandarine.MandarineCore.ComponentRegistryContext, index) => {
                 let controller: ControllerComponent = <ControllerComponent> component.componentInstance;
                 controller.getActions().forEach((value, key) => {
                     this.router = this.addPathToRouter(this.router, value, controller);
@@ -74,7 +70,7 @@ export class MandarineMvcFrameworkStarter {
         new SessionMiddleware().storeSession(request, response);
     }
 
-    private async executeUserMiddlewares(preRequestMiddleware: boolean, middlewares: Array<MiddlewareComponent>, response: any, request: Request, params: any, routingAction: RoutingAction): Promise<boolean> {
+    private async executeUserMiddlewares(preRequestMiddleware: boolean, middlewares: Array<MiddlewareComponent>, response: any, request: Request, params: any, routingAction: Mandarine.MandarineMVC.Routing.RoutingAction): Promise<boolean> {
         for(const middlewareComponent of middlewares) {
             if(middlewareComponent.regexRoute.test(request.url)) {
                 let middlewareResolved: boolean = await middlewareResolver(preRequestMiddleware, middlewareComponent, routingAction, request, response, params);
@@ -89,10 +85,10 @@ export class MandarineMvcFrameworkStarter {
         return true;
     }
 
-    private addPathToRouter(router: Router, routingAction: RoutingAction, controllerComponent: ControllerComponent): Router {
+    private addPathToRouter(router: Router, routingAction: Mandarine.MandarineMVC.Routing.RoutingAction, controllerComponent: ControllerComponent): Router {
         let route: string = controllerComponent.getActionRoute(routingAction);
 
-        let availableMiddlewares: Array<MiddlewareComponent> = (<Array<MiddlewareComponent>>(window as any).mandarineMiddlewareComponentNames);
+        let availableMiddlewares: Array<MiddlewareComponent> = Mandarine.Global.getMiddleware();
 
         let responseHandler = async ({ response, params, request }) => {
             
@@ -109,19 +105,19 @@ export class MandarineMvcFrameworkStarter {
         };
 
         switch(routingAction.actionType) {
-            case HttpMethods.GET:
+            case Mandarine.MandarineMVC.HttpMethods.GET:
                 return router.get(route, responseHandler);
-            case HttpMethods.POST:
+            case Mandarine.MandarineMVC.HttpMethods.POST:
                 return router.post(route, responseHandler);
-            case HttpMethods.DELETE:
+            case Mandarine.MandarineMVC.HttpMethods.DELETE:
                 return router.delete(route, responseHandler);
-            case HttpMethods.OPTIONS:
+            case Mandarine.MandarineMVC.HttpMethods.OPTIONS:
                 return router.options(route, responseHandler);
-            case HttpMethods.PUT:
+            case Mandarine.MandarineMVC.HttpMethods.PUT:
                 return router.put(route, responseHandler);
-            case HttpMethods.PATCH:
+            case Mandarine.MandarineMVC.HttpMethods.PATCH:
                 return router.patch(route, responseHandler);
-            case HttpMethods.HEAD:
+            case Mandarine.MandarineMVC.HttpMethods.HEAD:
                 return router.head(route, responseHandler);
         }
     }
