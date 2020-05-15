@@ -67,6 +67,10 @@ export namespace MandarineSecurity {
             store?: SessionStore
         }
 
+        /**
+        * This is the class a session will have.
+        * When a session is created, a MandarineSession object is being created and it will contain all the available & requested information of this.
+        */
         export class MandarineSession implements IMandarineSession {
 
             public sessionID: string;
