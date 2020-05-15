@@ -3,5 +3,6 @@ export enum ComponentTypes {
     COMPONENT,
     SERVICE,
     CONFIGURATION,
+    MIDDLEWARE,
     MANUAL_COMPONENT
 }
