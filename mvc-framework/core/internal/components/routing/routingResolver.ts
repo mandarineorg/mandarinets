@@ -1,14 +1,12 @@
-import { RoutingAction } from "./routingAction.ts";
 import { ControllerComponent } from "./controllerContext.ts";
-import { ComponentRegistryContext } from "../../../../../main-core/components-registry/componentRegistryContext.ts";
 import { ApplicationContext } from "../../../../../main-core/application-context/mandarineApplicationContext.ts";
 import { Request } from "https://deno.land/x/oak/request.ts";
-import { HttpStatusCode } from "../../../enums/http/httpCodes.ts";
 import { DI } from "../../../../../main-core/dependency-injection/di.ns.ts";
 import { MiddlewareComponent } from "../../../../../main-core/components/middleware-component/middlewareComponent.ts";
+import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
 
-export const requestResolver = async (routingAction: RoutingAction, request: Request, response: any, params: any) => {
-    let objectContext: ComponentRegistryContext = ApplicationContext.getInstance().getComponentsRegistry().get(routingAction.actionParent);
+export const requestResolver = async (routingAction: Mandarine.MandarineMVC.Routing.RoutingAction, request: Request, response: any, params: any) => {
+    let objectContext: Mandarine.MandarineCore.ComponentRegistryContext = ApplicationContext.getInstance().getComponentsRegistry().get(routingAction.actionParent);
     let component: ControllerComponent = <ControllerComponent> objectContext.componentInstance;
     let handler: any = component.getClassHandler();
 
@@ -25,7 +23,7 @@ export const requestResolver = async (routingAction: RoutingAction, request: Req
     } else if(component.options.responseStatus != (undefined || null)) {
         response.status = component.options.responseStatus;
     } else {
-        response.status = HttpStatusCode.OK;
+        response.status = Mandarine.MandarineMVC.HttpStatusCode.OK;
     }
 
     // We dont use the variable handlerMethod because if we do it will loose the context and so the dependency injection will fail.
@@ -35,7 +33,7 @@ export const requestResolver = async (routingAction: RoutingAction, request: Req
     else return handler[routingAction.actionMethodName](...methodArgs);
 };
 
-export const middlewareResolver = async (preRequest: boolean, middlewareComponent: MiddlewareComponent, routingAction: RoutingAction, request: Request, response: any, params: any): Promise<boolean> => {
+export const middlewareResolver = async (preRequest: boolean, middlewareComponent: MiddlewareComponent, routingAction: Mandarine.MandarineMVC.Routing.RoutingAction, request: Request, response: any, params: any): Promise<boolean> => {
 
     let handler = middlewareComponent.getClassHandler();
     let methodName: string = (preRequest) ? "onPreRequest" : "onPostRequest";

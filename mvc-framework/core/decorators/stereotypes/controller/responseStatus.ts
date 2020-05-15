@@ -1,16 +1,15 @@
-import { HttpStatusCode } from "../../../enums/http/httpCodes.ts";
 import { ReflectUtils } from "../../../../../main-core/utils/reflectUtils.ts";
 import { Reflect } from "../../../../../main-core/reflectMetadata.ts";
 import { MandarineConstants } from "../../../../../main-core/mandarineConstants.ts";
-
+import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
 
 export interface ResponseStatusMetadataContext {
     classParentName: string;
-    responseStatus: HttpStatusCode;
+    responseStatus: Mandarine.MandarineMVC.HttpStatusCode;
     methodName?: string;
 }
 
-export const ResponseStatus = (httpCode: HttpStatusCode): Function => {
+export const ResponseStatus = (httpCode: Mandarine.MandarineMVC.HttpStatusCode): Function => {
     return (target: any, methodName: string) => {
         let className: string = ReflectUtils.getClassName(target);
 

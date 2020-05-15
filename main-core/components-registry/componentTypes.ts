@@ -1,8 +1,0 @@
-export enum ComponentTypes {
-    CONTROLLER,
-    COMPONENT,
-    SERVICE,
-    CONFIGURATION,
-    MIDDLEWARE,
-    MANUAL_COMPONENT
-}

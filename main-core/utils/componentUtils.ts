@@ -1,14 +1,12 @@
-import { ComponentRegistryContext } from "../components-registry/componentRegistryContext.ts";
-import { ComponentTypes } from "../components-registry/componentTypes.ts";
 import { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
 import { FactoryStorageError } from "../../mvc-framework/core/exceptions/factoryStorageError.ts";
 import { ComponentsRegistryUtil } from "../components-registry/componentRegistry.util.ts";
-import { ApplicationContext } from "../application-context/mandarineApplicationContext.ts";
+import { Mandarine } from "../Mandarine.ns.ts";
 
 export class ComponentUtils {
 
     public static createControllerComponent(componentName: string, configuration: any, classHandler: any) {
-        ComponentsRegistryUtil.registerComponent(componentName, classHandler, ComponentTypes.CONTROLLER, configuration, null);
+        ComponentsRegistryUtil.registerComponent(componentName, classHandler, Mandarine.MandarineCore.ComponentTypes.CONTROLLER, configuration, null);
     }
 
     public static assertControllerNotNull(classComponentName: string, controllerComponent: ControllerComponent) {

@@ -1,18 +1,17 @@
-import { SessionContainer } from "../../../security-core/sessions/sessionInterfaces.ts";
 import { SessionsUtils } from "../../../security-core/sessions/sessions.util.ts";
-import { MandarineSession } from "../../../security-core/sessions/session.ts";
 import { CommonUtils } from "../../../main-core/utils/commonUtils.ts";
 import { Cookies, Cookie, getCookies, setCookie } from "https://deno.land/std@v1.0.0-rc1/http/cookie.ts";
 import { Request } from "https://deno.land/x/oak/request.ts";
+import { Mandarine } from "../../../main-core/Mandarine.ns.ts";
 
 export class SessionMiddleware {
 
-    private getSessionContainer(): SessionContainer {
-        return (window as any).mandarineSessionContainer;
+    private getSessionContainer(): Mandarine.Security.Sessions.SessionContainer {
+        return Mandarine.Global.getSessionContainer();
     }
 
     public createSessionCookie(request: Request, response: any) {
-        const sessionContainerConfig: SessionContainer = this.getSessionContainer();
+        const sessionContainerConfig: Mandarine.Security.Sessions.SessionContainer = this.getSessionContainer();
 
         const cookiesFromRequest: Cookies = getCookies(request.serverRequest);
         let cookiesNames: Array<string> = Object.keys(cookiesFromRequest);
@@ -26,7 +25,7 @@ export class SessionMiddleware {
 
             setCookie(response, sessionCookie);
 
-            (<any>request).sessionContext = new MandarineSession(sesId, sessionContainerConfig.store.options.expiration, sessionCookie);
+            (<any>request).sessionContext = new Mandarine.Security.Sessions.MandarineSession(sesId, sessionContainerConfig.store.options.expiration, sessionCookie);
             (<any>request).sessionID = sesId;
             (<any>request).session = {};
         } else {
@@ -35,27 +34,27 @@ export class SessionMiddleware {
             
             let sessionCookie: Cookie = SessionsUtils.getCookieForSession(sessionContainerConfig, sesId);
 
-            sessionContainerConfig.store.get(sesId, (error, result: MandarineSession) => {
+            sessionContainerConfig.store.get(sesId, (error, result: Mandarine.Security.Sessions.MandarineSession) => {
 
                 if(result == undefined) {
-                    (<any>request).sessionContext = new MandarineSession(sesId, sessionContainerConfig.store.options.expiration, sessionCookie);
+                    (<any>request).sessionContext = new Mandarine.Security.Sessions.MandarineSession(sesId, sessionContainerConfig.store.options.expiration, sessionCookie);
                 } else {
                     (<any>request).sessionContext = result;
                 }
 
                 if(sessionContainerConfig.rolling) {
-                    (<MandarineSession>(<any>request).sessionContext).sessionCookie.expires = new Date(new Date().getTime() + sessionContainerConfig.store.options.expiration);
+                    (<Mandarine.Security.Sessions.MandarineSession>(<any>request).sessionContext).sessionCookie.expires = new Date(new Date().getTime() + sessionContainerConfig.store.options.expiration);
                 }
 
                 (<any>request).sessionID = sesId;
-                (<any>request).session = Object.assign({}, (<MandarineSession>(<any>request).sessionContext).sessionData);
+                (<any>request).session = Object.assign({}, (<Mandarine.Security.Sessions.MandarineSession>(<any>request).sessionContext).sessionData);
             });
         }
     }
 
     public storeSession(request: Request, response: any) {
-        const sessionContainerConfig: SessionContainer = this.getSessionContainer();
-        const mandarineSession: MandarineSession = (<MandarineSession>(<any> request).sessionContext);
+        const sessionContainerConfig: Mandarine.Security.Sessions.SessionContainer = this.getSessionContainer();
+        const mandarineSession: Mandarine.Security.Sessions.MandarineSession = (<Mandarine.Security.Sessions.MandarineSession>(<any> request).sessionContext);
 
         const compareSessionData = CommonUtils.compareObjectKeys(mandarineSession.sessionData, (<any> request).session);
         mandarineSession.sessionData = (<any> request).session;

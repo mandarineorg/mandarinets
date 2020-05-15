@@ -1,4 +1,3 @@
-import { RoutingAction } from "../../mvc-framework/core/internal/components/routing/routingAction.ts";
 import { ComponentsRegistry } from "../components-registry/componentRegistry.ts";
 import { ReflectUtils } from "../utils/reflectUtils.ts";
 import { Reflect } from "../reflectMetadata.ts";
@@ -8,12 +7,11 @@ import { getCookies } from "https://deno.land/std@v1.0.0-rc1/http/cookie.ts";
 import { Request } from "https://deno.land/x/oak/request.ts";
 import { HttpUtils } from "../utils/httpUtils.ts";
 import { ApplicationContext } from "../application-context/mandarineApplicationContext.ts";
-import { ComponentTypes } from "../components-registry/componentTypes.ts";
-import { ComponentRegistryContext } from "../components-registry/componentRegistryContext.ts";
 import { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
 import { ServiceComponent } from "../components/service-component/serviceComponent.ts";
 import { ConfigurationComponent } from "../components/configuration-component/configurationComponent.ts";
 import { ComponentComponent } from "../components/component-component/componentComponent.ts";
+import { Mandarine } from "../Mandarine.ns.ts";
 
 export namespace DI {
 
@@ -37,7 +35,7 @@ export namespace DI {
         request: Request;
         response: any;
         params: any;
-        routingAction: RoutingAction;
+        routingAction: Mandarine.MandarineMVC.Routing.RoutingAction;
     }
 
     /** 
@@ -79,18 +77,18 @@ export namespace DI {
      * Resolve dependencies from a component's constructor. This method will look for the requested dependencies in the DI Container at mandarine compile time.
      *
      */
-    export function constructorResolver<T>(componentSource: ComponentRegistryContext, componentRegistry: ComponentsRegistry): T {
-        if(componentSource.componentType == ComponentTypes.MANUAL_COMPONENT) return;
+    export function constructorResolver<T>(componentSource: Mandarine.MandarineCore.ComponentRegistryContext, componentRegistry: Mandarine.MandarineCore.IComponentsRegistry): T {
+        if(componentSource.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT) return;
 
         let target: Constructor<T> = componentSource.componentInstance.getClassHandler();
 
         const providers = Reflect.getMetadata('design:paramtypes', target);
         const args = providers.map((provider: Constructor) => {
-        let component: ComponentRegistryContext = componentRegistry.getComponentByHandlerType(provider);
+        let component: Mandarine.MandarineCore.ComponentRegistryContext = componentRegistry.getComponentByHandlerType(provider);
             if(component != (undefined || null)) {
-                let classHandler: any = (component.componentType == ComponentTypes.MANUAL_COMPONENT) ? component.componentInstance : component.componentInstance.getClassHandler();
+                let classHandler: any = (component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT) ? component.componentInstance : component.componentInstance.getClassHandler();
 
-                return (component.componentType == ComponentTypes.MANUAL_COMPONENT || ReflectUtils.checkClassInitialized(classHandler)) ? classHandler : new classHandler();
+                return (component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT || ReflectUtils.checkClassInitialized(classHandler)) ? classHandler : new classHandler();
             } else {
                 return undefined;
             }
@@ -106,9 +104,9 @@ export namespace DI {
      */
     export function componentDependencyResolver(componentRegistry: ComponentsRegistry) {
         componentRegistry.getAllComponentNames().forEach((componentName) => {
-            let component: ComponentRegistryContext = componentRegistry.get(componentName);
+            let component: Mandarine.MandarineCore.ComponentRegistryContext = componentRegistry.get(componentName);
     
-            if(component.componentType == ComponentTypes.MANUAL_COMPONENT) {
+            if(component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT) {
                 return;
             }
     
@@ -130,7 +128,7 @@ export namespace DI {
                         let metadata: {propertyType: any, propertyName: string, propertyTypeName: string} = Reflect.getMetadata(metadataKey, componentHandler);
                         let injectableComponent: any = componentRegistry.getComponentByHandlerType(metadata.propertyType);
                         if(injectableComponent != (null || undefined)) {
-                            let injectableHandler = (injectableComponent.componentType == ComponentTypes.MANUAL_COMPONENT) ? injectableComponent.componentInstance : injectableComponent.componentInstance.getClassHandler();
+                            let injectableHandler = (injectableComponent.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT) ? injectableComponent.componentInstance : injectableComponent.componentInstance.getClassHandler();
                             componentHandler[metadata.propertyName] = injectableHandler;
                         }
                     });
@@ -139,15 +137,15 @@ export namespace DI {
         });
     }
 
-    export function getDependencyInstance(componentType: ComponentTypes, componentInstance: any): any {
+    export function getDependencyInstance(componentType: Mandarine.MandarineCore.ComponentTypes, componentInstance: any): any {
         switch(componentType) {
-            case ComponentTypes.CONTROLLER:
+            case Mandarine.MandarineCore.ComponentTypes.CONTROLLER:
                 return (<ControllerComponent> componentInstance).getClassHandler();
-            case ComponentTypes.SERVICE:
+            case Mandarine.MandarineCore.ComponentTypes.SERVICE:
                 return (<ServiceComponent> componentInstance).getClassHandler();
-            case ComponentTypes.CONFIGURATION:
+            case Mandarine.MandarineCore.ComponentTypes.CONFIGURATION:
                 return (<ConfigurationComponent> componentInstance).getClassHandler();
-            case ComponentTypes.COMPONENT:
+            case Mandarine.MandarineCore.ComponentTypes.COMPONENT:
                 return (<ComponentComponent> componentInstance).getClassHandler();
         }
         return null;

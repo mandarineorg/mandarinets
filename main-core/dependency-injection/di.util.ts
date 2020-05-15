@@ -1,10 +1,6 @@
 import { Reflect } from "../reflectMetadata.ts";
 import { MandarineConstants } from "../mandarineConstants.ts";
 import { ReflectUtils } from "../utils/reflectUtils.ts";
-import { ComponentsRegistryUtil } from "../components-registry/componentRegistry.util.ts";
-import { ComponentExceptions } from "../exceptions/componentExceptions.ts";
-import { ComponentMetadataContext } from "../components-registry/componentMetadataContext.ts";
-import { ApplicationContext } from "../application-context/mandarineApplicationContext.ts";
 import { DI } from "./di.ns.ts";
 
 export class DependencyInjectionUtil {

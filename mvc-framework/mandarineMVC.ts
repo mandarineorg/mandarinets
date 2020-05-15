@@ -3,18 +3,18 @@ import { MandarineMvcFrameworkStarter } from "./engine/mandarineMvcFrameworkStar
 import routingErrorHandler from "./core/internal/components/routing/middlewares/routingErrorHandler.ts";
 import notFoundHandler from "./core/internal/components/routing/middlewares/notFoundHandler.ts";
 import { Log } from "../logger/log.ts";
-import { MandarineProperties } from "../mandarine-properties.ts";
 import { getMandarineConfiguration } from "../main-core/configuration/getMandarineConfiguration.ts";
+import { Mandarine } from "../main-core/Mandarine.ns.ts";
 
 export class MandarineMVC {
 
     public logger: Log = Log.getLogger(MandarineMVC);
 
-    constructor(configuration?: MandarineProperties) {
+    constructor(configuration?: Mandarine.Properties) {
         this.getConfiguration(configuration);
     }
 
-    private getConfiguration(configuration?: MandarineProperties): MandarineProperties {
+    private getConfiguration(configuration?: Mandarine.Properties): Mandarine.Properties {
         return getMandarineConfiguration(configuration);
     }
 
@@ -27,7 +27,7 @@ export class MandarineMVC {
         app.use(routingErrorHandler);
         app.use(notFoundHandler);
 
-        let mandarineConfiguration: MandarineProperties = this.getConfiguration();
+        let mandarineConfiguration: Mandarine.Properties = this.getConfiguration();
         let serverConfig: string = `127.0.0.1:${mandarineConfiguration.mandarine.server.port}`;
 
         this.logger.info(`Server has started ~ ${serverConfig}`);

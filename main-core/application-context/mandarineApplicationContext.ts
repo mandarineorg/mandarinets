@@ -1,42 +1,39 @@
 import { ComponentsRegistry } from "../components-registry/componentRegistry.ts";
-import { MandarineSessionContainer } from "../mandarine-native/sessions/sessionDefaultConfiguration.ts";
-import { SessionContainer } from "../../security-core/sessions/sessionInterfaces.ts";
-import { ComponentTypes } from "../components-registry/componentTypes.ts";
+import { Mandarine } from "../Mandarine.ns.ts";
+import { MandarineSecurity } from "../../security-core/mandarine-security.ns.ts";
 
-export class ApplicationContext  {
+export class ApplicationContext implements Mandarine.ApplicationContext.IApplicationContext {
 
-    public static applicationContextSingleton: ApplicationContext;
+    public static applicationContextSingleton: Mandarine.ApplicationContext.IApplicationContext;
 
     public contextMetadata: {    
         startupDate?: number;
     } = {};
 
-    public componentsRegistry: ComponentsRegistry;
+    public componentsRegistry: Mandarine.MandarineCore.IComponentsRegistry;
 
     constructor() {
         this.initializeMetadata();
         this.initializeDefaultSessionContainer();
     }
 
-    public getComponentsRegistry(): ComponentsRegistry { 
-        if (!(window as any).mandarineComponentsRegistry)
-        (window as any).mandarineComponentsRegistry = new ComponentsRegistry();
-
-        return (window as any).mandarineComponentsRegistry;
+    public getComponentsRegistry(): Mandarine.MandarineCore.IComponentsRegistry { 
+        return Mandarine.Global.getComponentsRegistry();
     }
 
     private initializeDefaultSessionContainer(): void {
-        if (!(window as any).mandarineSessionContainer) (window as any).mandarineSessionContainer = MandarineSessionContainer;
+        Mandarine.Global.initializeDefaultSessionContainer();
     }
 
     public initializeMetadata(): void {
         this.contextMetadata.startupDate = Math.round(+new Date()/1000);
     }
 
-    public changeSessionContainer(newSessionContainer: SessionContainer): void {
-        let defaultContainer = MandarineSessionContainer;
+    public changeSessionContainer(newSessionContainer: MandarineSecurity.Sessions.SessionContainer): void {
+        let defaultContainer = Mandarine.Defaults.MandarineDefaultSessionContainer;
+        let mandarineGlobal: Mandarine.Global.MandarineGlobalInterface  = Mandarine.Global.getMandarineGlobal();
         
-        (window as any).mandarineSessionContainer = <SessionContainer>{
+        mandarineGlobal.mandarineSessionContainer = <MandarineSecurity.Sessions.SessionContainer>{
             cookie: {
                 path: (newSessionContainer.cookie && newSessionContainer.cookie.path) ? newSessionContainer.cookie.path : defaultContainer.cookie.path,
                 maxAge: (newSessionContainer.cookie && newSessionContainer.cookie.maxAge) ? newSessionContainer.cookie.maxAge : defaultContainer.cookie.maxAge,
@@ -52,7 +49,7 @@ export class ApplicationContext  {
         };
     }
 
-    public static getInstance(): ApplicationContext {
+    public static getInstance(): Mandarine.ApplicationContext.IApplicationContext {
         if(ApplicationContext.applicationContextSingleton == (null || undefined)) { 
             ApplicationContext.applicationContextSingleton = new ApplicationContext(); 
             return ApplicationContext.applicationContextSingleton; 

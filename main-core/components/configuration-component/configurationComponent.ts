@@ -1,6 +1,6 @@
-import { ComponentCommonInterface } from "../componentCommonInterface.ts";
+import { Mandarine } from "../../Mandarine.ns.ts";
 
-export class ConfigurationComponent implements ComponentCommonInterface {
+export class ConfigurationComponent implements Mandarine.MandarineCore.ComponentCommonInterface {
     name?: string;
     classHandler: any;
 
