@@ -6,6 +6,7 @@ import { ServiceComponent } from "../components/service-component/serviceCompone
 import { ConfigurationComponent } from "../components/configuration-component/configurationComponent.ts";
 import { ComponentComponent } from "../components/component-component/componentComponent.ts";
 import { DI } from "../dependency-injection/di.ns.ts";
+import { MiddlewareComponent } from "../components/middleware-component/middlewareComponent.ts";
 
 export class ComponentsRegistry {
 
@@ -33,6 +34,9 @@ export class ComponentsRegistry {
                 break;
                 case ComponentTypes.COMPONENT:
                     componentInstanceInitialized = new ComponentComponent(componentName, componentHandler);
+                break;
+                case ComponentTypes.MIDDLEWARE:
+                    componentInstanceInitialized = new MiddlewareComponent(componentName, configuration.regexRoute, componentHandler);
                 break;
                 case ComponentTypes.MANUAL_COMPONENT:
                     componentInstanceInitialized = componentInstance;

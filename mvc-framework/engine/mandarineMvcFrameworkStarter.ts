@@ -3,13 +3,16 @@ import { ApplicationContext } from "../../main-core/application-context/mandarin
 import { ComponentRegistryContext } from "../../main-core/components-registry/componentRegistryContext.ts";
 import { ControllerComponent } from "../core/internal/components/routing/controllerContext.ts";
 import { RoutingAction } from "../core/internal/components/routing/routingAction.ts";
-import { requestResolver } from "../core/internal/components/routing/routingResolver.ts";
+import { requestResolver, middlewareResolver } from "../core/internal/components/routing/routingResolver.ts";
 import { HttpMethods } from "../core/enums/http/httpMethods.ts";
 import { MandarineLoading } from "../../main-core/mandarineLoading.ts";
 import { Log } from "../../logger/log.ts";
 import { Request } from "https://deno.land/x/oak/request.ts";
 import { SessionMiddleware } from "../core/middlewares/sessionMiddleware.ts";
 import { MandarineMvcFrameworkEngineMethods } from "./mandarineMvcFrameworkEngineMethods.ts";
+import { MiddlewareComponent } from "../../main-core/components/middleware-component/middlewareComponent.ts";
+import { getMandarineConfiguration } from "../../main-core/configuration/getMandarineConfiguration.ts";
+import { MandarineProperties } from "../../mandarine-properties.ts";
 
 export class MandarineMvcFrameworkStarter {
 
@@ -71,13 +74,38 @@ export class MandarineMvcFrameworkStarter {
         new SessionMiddleware().storeSession(request, response);
     }
 
+    private async executeUserMiddlewares(preRequestMiddleware: boolean, middlewares: Array<MiddlewareComponent>, response: any, request: Request, params: any, routingAction: RoutingAction): Promise<boolean> {
+        for(const middlewareComponent of middlewares) {
+            if(middlewareComponent.regexRoute.test(request.url)) {
+                let middlewareResolved: boolean = await middlewareResolver(preRequestMiddleware, middlewareComponent, routingAction, request, response, params);
+
+                if(preRequestMiddleware) {
+                    return middlewareResolved;
+                } else {
+                    return true;
+                }
+            }
+        }
+        return true;
+    }
+
     private addPathToRouter(router: Router, routingAction: RoutingAction, controllerComponent: ControllerComponent): Router {
         let route: string = controllerComponent.getActionRoute(routingAction);
 
+        let availableMiddlewares: Array<MiddlewareComponent> = (<Array<MiddlewareComponent>>(window as any).mandarineMiddlewareComponentNames);
+
         let responseHandler = async ({ response, params, request }) => {
-            this.preRequestInternalMiddlewares(response, request);
-            response.body = await requestResolver(routingAction, <Request> request, response, params);
-            this.postRequestInternalMiddlewares(response, request);
+            
+            MandarineMvcFrameworkEngineMethods.initializeDefaultsForResponse(response);
+
+            this.preRequestInternalMiddlewares(response, request); // Execute internal middleware like sessions
+            let continueRequest: boolean = await this.executeUserMiddlewares(true, availableMiddlewares, response, request, params, routingAction); // If the user has any middleware, execute it
+
+            if(continueRequest) {
+                response.body = await requestResolver(routingAction, <Request> request, response, params);
+                this.executeUserMiddlewares(false, availableMiddlewares, response, request, params, routingAction);
+                this.postRequestInternalMiddlewares(response, request);
+            }
         };
 
         switch(routingAction.actionType) {

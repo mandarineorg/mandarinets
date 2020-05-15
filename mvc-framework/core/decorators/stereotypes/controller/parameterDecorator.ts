@@ -19,7 +19,7 @@ export const QueryParam = (name?: string): Function => {
     };
 };
 
-export const Request = (): Function => {
+export const RequestParam = (): Function => {
     return (target: Object, propertyName: string, index: number) => {
         RoutingUtils.registerRoutingParam(DI.InjectionTypes.REQUEST_PARAM, target, propertyName, index);
     };
@@ -31,13 +31,13 @@ export const Session = (): Function => {
     };
 };
 
-export const ServerRequest = (): Function => {
+export const ServerRequestParam = (): Function => {
     return (target: Object, propertyName: string, index: number) => {
         RoutingUtils.registerRoutingParam(DI.InjectionTypes.SERVER_REQUEST_PARAM, target, propertyName, index);
     };
 };
 
-export const Response = (): Function => {
+export const ResponseParam = (): Function => {
     return (target: Object, propertyName: string, index: number) => {
         RoutingUtils.registerRoutingParam(DI.InjectionTypes.RESPONSE_PARAM, target, propertyName, index);
     };
