@@ -29,5 +29,13 @@ export class HttpUtils {
                 return body;
         }
     }
+
+    public static redirect(response: any): Function {
+        // This is not good practice. No good design
+        // This should be change as soon as Deno allows redirection natively.
+        return (url: string) => {
+            response.body = `<script>location.href='${url}'</script>`;
+        }
+    }
     
 }

@@ -11,6 +11,8 @@ import { Request } from "https://deno.land/x/oak/request.ts";
 import { SessionMiddleware } from "../core/middlewares/sessionMiddleware.ts";
 import { MandarineMvcFrameworkEngineMethods } from "./mandarineMvcFrameworkEngineMethods.ts";
 import { MiddlewareComponent } from "../../main-core/components/middleware-component/middlewareComponent.ts";
+import { getMandarineConfiguration } from "../../main-core/configuration/getMandarineConfiguration.ts";
+import { MandarineProperties } from "../../mandarine-properties.ts";
 
 export class MandarineMvcFrameworkStarter {
 
@@ -93,12 +95,13 @@ export class MandarineMvcFrameworkStarter {
         let availableMiddlewares: Array<MiddlewareComponent> = (<Array<MiddlewareComponent>>(window as any).mandarineMiddlewareComponentNames);
 
         let responseHandler = async ({ response, params, request }) => {
-            this.preRequestInternalMiddlewares(response, request);
-            let continueRequest: boolean = await this.executeUserMiddlewares(true, availableMiddlewares, response, request, params, routingAction);
+            
+            MandarineMvcFrameworkEngineMethods.initializeDefaultsForResponse(response);
 
-            if(!continueRequest) {
-                return;
-            } else {
+            this.preRequestInternalMiddlewares(response, request); // Execute internal middleware like sessions
+            let continueRequest: boolean = await this.executeUserMiddlewares(true, availableMiddlewares, response, request, params, routingAction); // If the user has any middleware, execute it
+
+            if(continueRequest) {
                 response.body = await requestResolver(routingAction, <Request> request, response, params);
                 this.executeUserMiddlewares(false, availableMiddlewares, response, request, params, routingAction);
                 this.postRequestInternalMiddlewares(response, request);

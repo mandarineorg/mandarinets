@@ -3,6 +3,9 @@ import { ComponentsRegistry } from "../../main-core/components-registry/componen
 import { ComponentTypes } from "../../main-core/components-registry/componentTypes.ts";
 import { ComponentRegistryContext } from "../../main-core/components-registry/componentRegistryContext.ts";
 import { MiddlewareComponent } from "../../main-core/components/middleware-component/middlewareComponent.ts";
+import { HttpUtils } from "../../main-core/utils/httpUtils.ts";
+import { MandarineProperties } from "../../mandarine-properties.ts";
+import { getMandarineConfiguration } from "../../main-core/configuration/getMandarineConfiguration.ts";
 
 export class MandarineMvcFrameworkEngineMethods {
 
@@ -48,5 +51,10 @@ export class MandarineMvcFrameworkEngineMethods {
             });
 
         }
+    }
+
+    public static initializeDefaultsForResponse(response: any) {
+        response.redirect = HttpUtils.redirect(response);
+        response.headers.set('Content-Type', (<MandarineProperties> getMandarineConfiguration()).mandarine.server.responseType); 
     }
 }
