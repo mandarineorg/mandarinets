@@ -1,5 +1,6 @@
 import { Request } from "https://deno.land/x/oak/request.ts";
-import { decoder } from "https://deno.land/std@v1.0.0-rc1/encoding/utf8.ts";
+import { decoder } from "https://deno.land/std/encoding/utf8.ts";
+
 export class HttpUtils {
 
     public static async parseBody(request: Request): Promise<any> {

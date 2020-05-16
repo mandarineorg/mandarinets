@@ -43,7 +43,7 @@ export const ResponseParam = (): Function => {
     };
 };
 
-export const Cookie = (name?: string): Function => {
+export const CookieParam = (name?: string): Function => {
     return (target: Object, propertyName: string, index: number) => {
         RoutingUtils.registerRoutingParam(DI.InjectionTypes.COOKIE_PARAM, target, propertyName, index);
     };

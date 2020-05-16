@@ -1,8 +1,8 @@
 import { SessionsUtils } from "../../../security-core/sessions/sessions.util.ts";
 import { CommonUtils } from "../../../main-core/utils/commonUtils.ts";
-import { Cookies, Cookie, getCookies, setCookie } from "https://deno.land/std@v1.0.0-rc1/http/cookie.ts";
-import { Request } from "https://deno.land/x/oak/request.ts";
 import { Mandarine } from "../../../main-core/Mandarine.ns.ts";
+import { getCookies, Cookies, setCookie, Cookie } from "https://deno.land/std@0.51.0/http/cookie.ts";
+import { Request } from "https://deno.land/x/oak/request.ts";
 
 export class SessionMiddleware {
 
@@ -17,7 +17,7 @@ export class SessionMiddleware {
         let cookiesNames: Array<string> = Object.keys(cookiesFromRequest);
         let sesId: string = undefined;
 
-        let sessionCookieExists: boolean = cookiesNames.some(cookieName => cookieName.startsWith(`${sessionContainerConfig.sessionPrefix}`));
+        let sessionCookieExists: boolean = cookiesNames.some((cookieName) => cookieName.startsWith(`${sessionContainerConfig.sessionPrefix}`));
         if(!sessionCookieExists) {
             sesId = sessionContainerConfig.genId();
 

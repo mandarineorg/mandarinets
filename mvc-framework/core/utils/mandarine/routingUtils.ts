@@ -1,4 +1,4 @@
-import { ServerRequest } from "https://deno.land/std@v1.0.0-rc1/http/server.ts";
+import { ServerRequest } from "https://deno.land/std/http/server.ts";
 import { ControllerComponent } from "../../internal/components/routing/controllerContext.ts";
 import { AnnotationMetadataContext } from "../../interfaces/mandarine/mandarineAnnotationMetadataContext.ts";
 import { DependencyInjectionUtil } from "../../../../main-core/dependency-injection/di.util.ts";

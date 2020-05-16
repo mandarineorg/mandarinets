@@ -3,7 +3,6 @@ import { ReflectUtils } from "../utils/reflectUtils.ts";
 import { Reflect } from "../reflectMetadata.ts";
 import { MandarineConstants } from "../mandarineConstants.ts";
 import { RoutingUtils } from "../../mvc-framework/core/utils/mandarine/routingUtils.ts";
-import { getCookies } from "https://deno.land/std@v1.0.0-rc1/http/cookie.ts";
 import { Request } from "https://deno.land/x/oak/request.ts";
 import { HttpUtils } from "../utils/httpUtils.ts";
 import { ApplicationContext } from "../application-context/mandarineApplicationContext.ts";
@@ -12,6 +11,7 @@ import { ServiceComponent } from "../components/service-component/serviceCompone
 import { ConfigurationComponent } from "../components/configuration-component/configurationComponent.ts";
 import { ComponentComponent } from "../components/component-component/componentComponent.ts";
 import { Mandarine } from "../Mandarine.ns.ts";
+import { getCookies } from "https://deno.land/std@0.51.0/http/cookie.ts";
 
 export namespace DI {
 
@@ -174,7 +174,7 @@ export namespace DI {
     
         metadataValues = metadataValues.sort((a, b) => a.parameterIndex - b.parameterIndex);
     
-        const queryParams = RoutingUtils.findQueryParams(extraData.request.url);
+        const queryParams = RoutingUtils.findQueryParams(extraData.request.url.toString());
         const requestCookies = getCookies(extraData.request.serverRequest);
     
         for(let i = 0; i < componentMethodParams.length; i++) {

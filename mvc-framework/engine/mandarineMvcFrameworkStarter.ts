@@ -72,7 +72,7 @@ export class MandarineMvcFrameworkStarter {
 
     private async executeUserMiddlewares(preRequestMiddleware: boolean, middlewares: Array<MiddlewareComponent>, response: any, request: Request, params: any, routingAction: Mandarine.MandarineMVC.Routing.RoutingAction): Promise<boolean> {
         for(const middlewareComponent of middlewares) {
-            if(middlewareComponent.regexRoute.test(request.url)) {
+            if(middlewareComponent.regexRoute.test(request.url.toString())) {
                 let middlewareResolved: boolean = await middlewareResolver(preRequestMiddleware, middlewareComponent, routingAction, request, response, params);
 
                 if(preRequestMiddleware) {
