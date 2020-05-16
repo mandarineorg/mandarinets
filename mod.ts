@@ -9,6 +9,7 @@ import { Component } from "./main-core/decorators/stereotypes/component/componen
 import { Configuration } from "./main-core/decorators/stereotypes/configuration/configuration.ts";
 import { Service } from "./main-core/decorators/stereotypes/service/service.ts";
 import { Middleware } from "./main-core/decorators/stereotypes/middleware/Middleware.ts";
+import { MiddlewareTarget } from "./main-core/components/middleware-component/middlewareTarget.ts";
 import { Inject } from "./main-core/dependency-injection/decorators/Inject.ts";
 import { Injectable } from "./main-core/dependency-injection/decorators/injectable.ts";
 import { MandarineCore } from "./main-core/mandarineCore.ts";
@@ -17,4 +18,4 @@ import { Controller } from "./mvc-framework/core/decorators/stereotypes/controll
 import { Param, RouteParam, QueryParam, RequestParam, Session, ServerRequestParam, ResponseParam, CookieParam } from "./mvc-framework/core/decorators/stereotypes/controller/parameterDecorator.ts";
 import { ResponseStatus } from "./mvc-framework/core/decorators/stereotypes/controller/responseStatus.ts";
 import { GET, POST, DELETE, PATCH, PUT, HEAD, OPTIONS } from "./mvc-framework/core/decorators/stereotypes/controller/routingDecorator.ts";
-import { MandarineMVC } from "./mvc-framework/mandarineMVC.ts";
+import { MandarineMVC } from "./mvc-framework/mandarineMVC.ts"
