@@ -21,7 +21,7 @@ export namespace Mandarine {
                 responseType?: MandarineMVC.MediaTypes
             }
         }
-    }
+    };
 
     /**
     * Handles the interaction with the global environment of Mandarine
@@ -37,7 +37,7 @@ export namespace Mandarine {
             mandarineSessionContainer: MandarineSecurity.Sessions.SessionContainer;
             mandarineProperties: Properties;
             mandarineMiddleware: Array<MiddlewareComponent>;
-        }
+        };
 
         /**
         * Initializes Mandarine Global Environment.
@@ -51,7 +51,7 @@ export namespace Mandarine {
                     mandarineMiddleware: undefined
                 }
             }
-        }
+        };
 
         /**
         * Get the global environment based on interface @MandarineGlobalInterface
@@ -72,7 +72,7 @@ export namespace Mandarine {
             }
     
             return mandarineGlobal.mandarineComponentsRegistry;
-        }
+        };
 
         /**
         * Get the properties mandarine is using.
@@ -86,7 +86,7 @@ export namespace Mandarine {
             }
     
             return mandarineGlobal.mandarineProperties;
-        }
+        };
 
         /**
         * Get the list of registered middlewares
@@ -96,7 +96,7 @@ export namespace Mandarine {
             initializeMiddleware();
 
             return getMandarineGlobal().mandarineMiddleware;
-        }
+        };
 
         /**
         * Initializes the Session Container.
@@ -107,7 +107,7 @@ export namespace Mandarine {
             if(mandarineGlobal.mandarineSessionContainer == (undefined || null)) {
                 mandarineGlobal.mandarineSessionContainer = Defaults.MandarineDefaultSessionContainer;
             }
-        }
+        };
 
         /**
         * Get the instance of the Session Container
@@ -116,7 +116,7 @@ export namespace Mandarine {
             let mandarineGlobal: MandarineGlobalInterface = getMandarineGlobal();
             return mandarineGlobal.mandarineSessionContainer;
 
-        }
+        };
 
         /**
         * Initializes the middleware list in the global environment.
@@ -127,8 +127,8 @@ export namespace Mandarine {
             if(mandarineGlobal.mandarineMiddleware == (undefined || null)) {
                 mandarineGlobal.mandarineMiddleware = new Array<MiddlewareComponent>();
             }
-        }
-    }
+        };
+    };
 
     /**
     * Refers to the Application Context.
@@ -143,7 +143,7 @@ export namespace Mandarine {
             changeSessionContainer(newSessionContainer: MandarineSecurity.Sessions.SessionContainer): void;
             getInstance?: () => ApplicationContext.IApplicationContext;
         }
-    }
+    };
 
     /**
     * Refers to all the elements part of the core.
@@ -162,7 +162,7 @@ export namespace Mandarine {
             CONFIGURATION,
             MIDDLEWARE,
             MANUAL_COMPONENT
-        }
+        };
 
         /**
         * Contains the metadata information of the component.
@@ -174,7 +174,7 @@ export namespace Mandarine {
             componentInstance: any;
             componentConfiguration?: any;
             classParentName: string;
-        }
+        };
 
         /**
         * Refers to the context of the component inside the DI container.
@@ -185,7 +185,7 @@ export namespace Mandarine {
             componentName?: string;
             componentInstance: any;
             componentType: ComponentTypes;
-        }
+        };
 
         /**
         * Refers to the essentials of a component class for the Mandarine Engine.
@@ -196,7 +196,7 @@ export namespace Mandarine {
             getName: () => string;
             getClassHandler: () => any;
             setClassHandler: (classHandler: any) => void;
-        }
+        };
 
         /**
         * Refers to the Components' Registry
@@ -218,9 +218,9 @@ export namespace Mandarine {
             getComponentByHandlerType(classType: any): ComponentRegistryContext;
             getComponentType(componentName: string): string;
             resolveDependencies(): void;
-        }
+        };
 
-    }
+    };
 
     /**
     * Refers to the namespace of the Mandarine MVC module.
@@ -240,7 +240,7 @@ export namespace Mandarine {
                     responseType: MandarineMVC.MediaTypes.TEXT_HTML
                 }
             }
-        }
+        };
 
         export const MandarineDefaultSessionContainer: MandarineSecurity.Sessions.SessionContainer = {
             cookie: {
@@ -255,8 +255,8 @@ export namespace Mandarine {
             rolling: false,
             saveUninitialized: false,
             store: new MandarineStorageHandler()
-        }
-    }
+        };
+    };
 
     /**
     * Refers to the namespace of the Mandarine Security module.
