@@ -2,7 +2,11 @@ import { bold, magenta, green, yellow, red } from "https://deno.land/std/fmt/col
 
     private className: string = null;
 
-    constructor(source: any) {
+    constructor(source: any | string) {
+        if(source instanceof String) {
+            this.className = <string> source;
+            return;
+        }
         try {
             this.className = source.prototype.constructor.name + ".class";
         }catch(error) {

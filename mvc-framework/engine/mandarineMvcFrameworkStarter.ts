@@ -16,6 +16,10 @@ export class MandarineMvcFrameworkStarter {
 
     private logger: Log = Log.getLogger(MandarineMvcFrameworkStarter);
 
+    private essentials = {
+        sessionMiddleware: undefined
+    }
+
     constructor() {
 
         MandarineLoading();
@@ -26,10 +30,15 @@ export class MandarineMvcFrameworkStarter {
 
         this.initializeControllers();
         this.intializeControllersRoutes();
+        this.initializeEssentials();
     }
 
     private resolveComponentsDependencies(): void {
         ApplicationContext.getInstance().getComponentsRegistry().resolveDependencies();
+    }
+
+    private initializeEssentials() {
+        this.essentials.sessionMiddleware = new SessionMiddleware();
     }
 
     private initializeControllers() {
@@ -63,11 +72,11 @@ export class MandarineMvcFrameworkStarter {
     }
 
     private preRequestInternalMiddlewares(response: any, request: Request): void {
-        new SessionMiddleware().createSessionCookie(request, response);
+        this.essentials.sessionMiddleware.createSessionCookie(request, response);
     }
 
     private postRequestInternalMiddlewares(response: any, request: Request): void {
-        new SessionMiddleware().storeSession(request, response);
+        this.essentials.sessionMiddleware.storeSession(request, response);
     }
 
     private async executeUserMiddlewares(preRequestMiddleware: boolean, middlewares: Array<MiddlewareComponent>, response: any, request: Request, params: any, routingAction: Mandarine.MandarineMVC.Routing.RoutingAction): Promise<boolean> {

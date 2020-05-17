@@ -4,8 +4,11 @@ import { MiddlewareComponent } from "../../main-core/components/middleware-compo
 import { HttpUtils } from "../../main-core/utils/httpUtils.ts";
 import { getMandarineConfiguration } from "../../main-core/configuration/getMandarineConfiguration.ts";
 import { Mandarine } from "../../main-core/Mandarine.ns.ts";
+import { Log } from "../../logger/log.ts";
 
 export class MandarineMvcFrameworkEngineMethods {
+
+    public static logger: Log = Log.getLogger("MandarineMvcFrameworkStarter");
 
     public static initializeEngineMethods() {
         this.initializeInternalManualComponents();
@@ -46,6 +49,10 @@ export class MandarineMvcFrameworkEngineMethods {
                 middleware.push(componentInstance);
             });
 
+        }
+
+        if(middleware.length > 0) {
+            this.logger.info(`A total of ${middleware.length} Middleware have been registered`);
         }
     }
 
