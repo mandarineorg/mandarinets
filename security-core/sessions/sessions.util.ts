@@ -1,5 +1,6 @@
 import { Cookie } from "https://deno.land/std/http/cookie.ts";
 import { MandarineSecurity } from "../mandarine-security.ns.ts";
+import { KeyStack } from "../keyStack.ts";
 
 export class SessionsUtils {
     public static getCookieForSession(sessionContainerConfig: MandarineSecurity.Sessions.SessionContainer, sesId: string): Cookie {
@@ -22,6 +23,8 @@ export class SessionsUtils {
         }
 
         sessionCookie.expires = new Date(new Date().getTime() + sessionContainerConfig.store.options.expiration);
+
+        sessionCookie.value = new KeyStack(sessionContainerConfig.keys).sign(`${sessionCookie.name}=${sessionCookie.value}`);
 
         return sessionCookie;
     }

@@ -1,13 +1,24 @@
 import { SessionsUtils } from "../../../security-core/sessions/sessions.util.ts";
 import { CommonUtils } from "../../../main-core/utils/commonUtils.ts";
 import { Mandarine } from "../../../main-core/Mandarine.ns.ts";
-import { getCookies, Cookies, setCookie, Cookie } from "https://deno.land/std@0.51.0/http/cookie.ts";
+import { getCookies, Cookies, setCookie, Cookie, delCookie } from "https://deno.land/std@0.51.0/http/cookie.ts";
 import { Request } from "https://deno.land/x/oak/request.ts";
+import { KeyStack } from "../../../security-core/keyStack.ts";
 
 export class SessionMiddleware {
 
     private getSessionContainer(): Mandarine.Security.Sessions.SessionContainer {
         return Mandarine.Global.getSessionContainer();
+    }
+
+    private createSessionContext(sessionContainerConfig: Mandarine.Security.Sessions.SessionContainer, response: any, request: Request) {
+        let sesId = sessionContainerConfig.genId();
+        let sessionCookie: Cookie = SessionsUtils.getCookieForSession(sessionContainerConfig, sesId);
+        setCookie(response, sessionCookie);
+        (<any>request).sessionContext = new Mandarine.Security.Sessions.MandarineSession(sesId, sessionContainerConfig.store.options.expiration, sessionCookie);
+        (<any>request).sessionID = sesId;
+        (<any>request).session = {};
+        return sesId;
     }
 
     public createSessionCookie(request: Request, response: any) {
@@ -19,20 +30,25 @@ export class SessionMiddleware {
 
         let sessionCookieExists: boolean = cookiesNames.some((cookieName) => cookieName.startsWith(`${sessionContainerConfig.sessionPrefix}`));
         if(!sessionCookieExists) {
-            sesId = sessionContainerConfig.genId();
-
-            let sessionCookie: Cookie = SessionsUtils.getCookieForSession(sessionContainerConfig, sesId);
-
-            setCookie(response, sessionCookie);
-
-            (<any>request).sessionContext = new Mandarine.Security.Sessions.MandarineSession(sesId, sessionContainerConfig.store.options.expiration, sessionCookie);
-            (<any>request).sessionID = sesId;
-            (<any>request).session = {};
+            sesId = this.createSessionContext(sessionContainerConfig, response, request);
         } else {
             let sessionCookieName: string = cookiesNames.find(cookieName => cookieName.startsWith(`${sessionContainerConfig.sessionPrefix}`));
-            sesId = cookiesFromRequest[sessionCookieName];
+            sesId = sessionCookieName.split(':')[1];
+            let digestData = cookiesFromRequest[sessionCookieName]; // Necessary to verify the signature of the cookie.
             
             let sessionCookie: Cookie = SessionsUtils.getCookieForSession(sessionContainerConfig, sesId);
+
+            const cookieDataForSignature: string = `${sessionContainerConfig.sessionPrefix}:${sesId}=${sesId}`;
+
+            const isCookieValid: boolean = new KeyStack(sessionContainerConfig.keys).verify(cookieDataForSignature, digestData);
+
+            if(!isCookieValid) {
+                // If the signature is invalid then we delete the current cookie since it's a malicious cookie, but we WILL create another cookie for a new session.
+                delCookie(response, sessionCookieName);
+                // Create context for new session
+                this.createSessionContext(sessionContainerConfig, response, request);
+                return;
+            }
 
             sessionContainerConfig.store.get(sesId, (error, result: Mandarine.Security.Sessions.MandarineSession) => {
 

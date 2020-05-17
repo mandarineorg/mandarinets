@@ -249,6 +249,7 @@ export namespace Mandarine {
                 secure: false, 
                 maxAge: null 
             },
+            keys: ["mandarine", "orange", "apple", "beer"],
             sessionPrefix: "mandarine-session",
             genId: CommonUtils.generateUUID,
             resave: false,
