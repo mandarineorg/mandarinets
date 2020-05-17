@@ -7,8 +7,10 @@ MandarineTS aims to provide an affordable and easy way to create typescript web-
 With the use of multiple systems and design patterns, Mandarine offers you the ability to develop complex MVC web applications. Dependency Injection & Components are one of the few things you can take advantage of.
 
 ## Documentation
-To see all the available documentation of Mandarine.TS, please [Click here](https://github.com/mandarineorg/mandarinets/wiki)
+To see all the available documentation of Mandarine.TS, please [Click here](https://github.com/mandarineorg/mandarinets/wiki).  
+[Click here](https://github.com/mandarineorg/mandarinets/wiki/Basic-Concepts) to see how to set-up your Mandarine application
 ### [Click here to see our To-Do list](https://github.com/mandarineorg/mandarinets/wiki/TO-DO's)
+
 ## Basic usage
 
 ```
@@ -26,6 +28,8 @@ new MandarineMVC().run();
 
 # request => http://localhost:4444/api/hello-world => Hello World
 ```
+
+**Note** tsconfig.json file is required, please refer to [this link](https://github.com/mandarineorg/mandarinets/wiki/Basic-Concepts) to understand more.
 ## Mandarine.TS Main features
 Built-in Dependency Injection Framework, Components, Automatization for routes creation, Middlewares, Sessions, 
 
