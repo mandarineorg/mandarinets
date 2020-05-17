@@ -60,6 +60,7 @@ export namespace MandarineSecurity {
                 secure?: boolean,
                 maxAge?: number
             },
+            keys: string[],
             sessionPrefix?: string;
             genId?: Function,
             resave?: boolean,
