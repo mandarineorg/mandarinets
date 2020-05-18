@@ -10,7 +10,8 @@ export class Middleware1 implements MiddlewareTarget {
 
     public onPreRequest(@ResponseParam() response: any): boolean {
         // True = the request must continue, False = the request will stop
-        return true;
+        response.redirect('http://google.com');
+        return false;
     }
 
     public onPostRequest(): void {
