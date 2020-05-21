@@ -150,6 +150,10 @@ export namespace Mandarine {
     */
     export namespace MandarineCore {
 
+        export interface Cookies {
+            [key: string]: string;
+        }
+
         /**
         * List of all recognizable mandarine components.
         * 

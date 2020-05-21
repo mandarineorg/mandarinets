@@ -4,26 +4,27 @@ import { Request } from "https://deno.land/x/oak/request.ts";
 import { DI } from "../../../../../main-core/dependency-injection/di.ns.ts";
 import { MiddlewareComponent } from "../../../../../main-core/components/middleware-component/middlewareComponent.ts";
 import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
+import { Cookies } from "https://deno.land/x/oak/cookies.ts";
 
-export const requestResolver = async (routingAction: Mandarine.MandarineMVC.Routing.RoutingAction, request: Request, response: any, params: any) => {
+export const requestResolver = async (routingAction: Mandarine.MandarineMVC.Routing.RoutingAction, context: any) => {
     let objectContext: Mandarine.MandarineCore.ComponentRegistryContext = ApplicationContext.getInstance().getComponentsRegistry().get(routingAction.actionParent);
     let component: ControllerComponent = <ControllerComponent> objectContext.componentInstance;
     let handler: any = component.getClassHandler();
-
     let methodArgs: DI.ArgumentValue[] = await DI.methodArgumentResolver(handler, routingAction.actionMethodName, {
-        request: request,
-        response: response,
-        params: params,
+        request: context.request,
+        response: context.response,
+        params: context.params,
+        cookies: context.cookies,
         routingAction: routingAction
     });
 
     // Modify Response Status
     if(routingAction.routingOptions != undefined && routingAction.routingOptions.responseStatus != (undefined || null)) {
-        response.status = routingAction.routingOptions.responseStatus;
+        context.response.status = routingAction.routingOptions.responseStatus;
     } else if(component.options.responseStatus != (undefined || null)) {
-        response.status = component.options.responseStatus;
+        context.response.status = component.options.responseStatus;
     } else {
-        response.status = Mandarine.MandarineMVC.HttpStatusCode.OK;
+        context.response.status = Mandarine.MandarineMVC.HttpStatusCode.OK;
     }
 
     // We dont use the variable handlerMethod because if we do it will loose the context and so the dependency injection will fail.
@@ -33,15 +34,16 @@ export const requestResolver = async (routingAction: Mandarine.MandarineMVC.Rout
     else return handler[routingAction.actionMethodName](...methodArgs);
 };
 
-export const middlewareResolver = async (preRequest: boolean, middlewareComponent: MiddlewareComponent, routingAction: Mandarine.MandarineMVC.Routing.RoutingAction, request: Request, response: any, params: any): Promise<boolean> => {
+export const middlewareResolver = async (preRequest: boolean, middlewareComponent: MiddlewareComponent, routingAction: Mandarine.MandarineMVC.Routing.RoutingAction, context: any): Promise<boolean> => {
 
     let handler = middlewareComponent.getClassHandler();
     let methodName: string = (preRequest) ? "onPreRequest" : "onPostRequest";
 
     let methodArgs: DI.ArgumentValue[] = await DI.methodArgumentResolver(handler, methodName, {
-        request: request,
-        response: response,
-        params: params,
+        request: context.request,
+        response: context.response,
+        params: context.params,
+        cookies: context.cookies,
         routingAction: routingAction
     });
 
