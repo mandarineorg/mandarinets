@@ -6,6 +6,10 @@ import { ComponentComponent } from "../components/component-component/componentC
 import { DI } from "../dependency-injection/di.ns.ts";
 import { MiddlewareComponent } from "../components/middleware-component/middlewareComponent.ts";
 import { Mandarine } from "../Mandarine.ns.ts";
+import { ReflectUtils } from "../utils/reflectUtils.ts";
+import { RepositoryComponent } from "../components/repository-component/repositoryComponent.ts";
+import { MandarineRepository } from "../../orm-core/repository/mandarineRepository.ts";
+import { RepositoryProxy } from "../../orm-core/repository/repositoryProxy.ts";
 
 export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRegistry {
 
@@ -39,6 +43,9 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
                 break;
                 case Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT:
                     componentInstanceInitialized = componentInstance;
+                break;
+                case Mandarine.MandarineCore.ComponentTypes.REPOSITORY:
+                    componentInstanceInitialized = new RepositoryComponent(componentName, componentHandler, configuration);
                 break;
             }
 
@@ -76,8 +83,16 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
         return Array.from(this.components.values());
     }
 
+    public getComponentsByComponentType(componentType: Mandarine.MandarineCore.ComponentTypes): Mandarine.MandarineCore.ComponentRegistryContext[] {
+        return Array.from(this.components.values()).filter(item => item.componentType == componentType);
+    }
+
     public getControllers(): Mandarine.MandarineCore.ComponentRegistryContext[] {
         return Array.from(this.components.values()).filter(item => item.componentType == Mandarine.MandarineCore.ComponentTypes.CONTROLLER);
+    }
+
+    public getAllRepositories(): Array<Mandarine.MandarineCore.ComponentRegistryContext> {
+        return this.getComponentsByComponentType(Mandarine.MandarineCore.ComponentTypes.REPOSITORY);
     }
 
     public getComponentDefinitionNames(componentType?: Mandarine.MandarineCore.ComponentTypes): Array<string> {
@@ -88,19 +103,24 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
     public isComponentHandlerTypeMatch(componentName: string, classType: any): boolean {
         let componentContext: Mandarine.MandarineCore.ComponentRegistryContext = this.get(componentName);
         if(componentContext.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT) return componentContext.componentInstance instanceof classType;
-        else componentContext.componentInstance.getClassHandler() instanceof classType;
-        return false;
+        else {
+            let classHandler = componentContext.componentInstance.getClassHandler();
+            if(ReflectUtils.checkClassInitialized(classHandler)) classHandler = new classHandler();
+            return classHandler instanceof classType;
+        }
     }
 
     public getComponentByHandlerType(classType: any): Mandarine.MandarineCore.ComponentRegistryContext {
         return this.getComponents().find(component => {
             let instance = undefined;
-                if(component.componentType != Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT) {
-                    instance = component.componentInstance.getClassHandler();
-                } else {
-                    instance = component.componentInstance;
-                }
-                return  instance instanceof classType;
+            if(component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT) {
+                instance = component.componentInstance;
+            }else {
+                instance = component.componentInstance.getClassHandler();
+            }
+            if(!ReflectUtils.checkClassInitialized(instance)) instance = new instance();
+
+            return instance instanceof classType;
         });
     }
 
@@ -116,5 +136,78 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
 
     public resolveDependencies(): void {
         return DI.componentDependencyResolver(this);
+    }
+
+    private connectRepositoryToProxy(repositoryObject: Mandarine.MandarineCore.ComponentRegistryContext) {
+        let repositoryInstance: RepositoryComponent = repositoryObject.componentInstance;
+        let repositoryTarget: any = repositoryInstance.getClassHandler();
+        let repositoryMethods: Array<string> = ReflectUtils.getMethodsFromClass(repositoryTarget);
+        let mandarineRepositoryMethods: Array<string> = ReflectUtils.getMethodsFromClass(MandarineRepository);
+        repositoryMethods = repositoryMethods.concat(mandarineRepositoryMethods);
+        
+        let repositoryProxy = new RepositoryProxy<any>(repositoryInstance.extraData.entity);
+
+        repositoryMethods.forEach((methodName) => {
+            let methodParameterNames: Array<string> = ReflectUtils.getParamNames(repositoryTarget.prototype[methodName]);
+
+            switch(methodName) {
+                case 'findAll':
+                    repositoryTarget.prototype[methodName] = () => {
+                        repositoryProxy.findAll();
+                    }
+                    return;
+                    break;
+                case 'deleteAll':
+                    repositoryTarget.prototype[methodName] = () => {
+                        repositoryProxy.deleteAll();
+                    }
+                    return;
+                    break;
+                case 'save':
+                    repositoryTarget.prototype[methodName] = (...args) => {
+                        repositoryProxy.save(methodParameterNames, args);
+                    }
+                    return;
+                    break;
+            }
+
+            if(methodName.startsWith('find')) {
+                repositoryTarget.prototype[methodName] = (...args) => { 
+                    return repositoryProxy.mainProxy(methodName, methodParameterNames, "findBy", args);
+                }
+            } else if(methodName.startsWith('exists')) {
+                repositoryTarget.prototype[methodName] = (...args) => { 
+                    return repositoryProxy.mainProxy(methodName, methodParameterNames, "existsBy", args);
+                }
+            } else if(methodName.startsWith('delete')) {
+                repositoryTarget.prototype[methodName] = (...args) => { 
+                    return repositoryProxy.mainProxy(methodName, methodParameterNames, "deleteBy", args);
+                }
+            }
+        });
+
+        repositoryInstance.classHandler = repositoryTarget;
+        return repositoryInstance;
+    }
+
+    public connectRepositoriesToProxy(): void {
+
+        this.getAllRepositories().forEach((repo: Mandarine.MandarineCore.ComponentRegistryContext) => {
+            let componentInstance: RepositoryComponent = repo.componentInstance;
+            let newRepositoryProxy: any = this.connectRepositoryToProxy(repo);
+            let handler: any = newRepositoryProxy.getClassHandler();
+            componentInstance.classHandler = new handler();
+            this.update(`repo:${componentInstance.extraData.schema}.${componentInstance.extraData.table}`, repo);
+        });
+
+    }
+
+    public getRepositoryByHandlerType(classType: any): Mandarine.MandarineCore.ComponentRegistryContext {
+        return this.getAllRepositories().find(repo => {
+            let component: RepositoryComponent = repo.componentInstance;
+            let instance = component.getClassHandler();
+            if(!ReflectUtils.checkClassInitialized(instance)) instance = new instance();
+            return instance instanceof classType;
+        });
     }
 }

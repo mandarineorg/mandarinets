@@ -10,12 +10,12 @@ export class MandarineMVC {
 
     public logger: Log = Log.getLogger(MandarineMVC);
 
-    constructor(configuration?: Mandarine.Properties) {
-        this.getConfiguration(configuration);
+    constructor() {
+        this.getConfiguration();
     }
 
-    private getConfiguration(configuration?: Mandarine.Properties): Mandarine.Properties {
-        return getMandarineConfiguration(configuration);
+    private getConfiguration(): Mandarine.Properties {
+        return getMandarineConfiguration();
     }
 
     async run() {
