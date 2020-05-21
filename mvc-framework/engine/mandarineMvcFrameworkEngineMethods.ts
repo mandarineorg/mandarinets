@@ -56,8 +56,8 @@ export class MandarineMvcFrameworkEngineMethods {
         }
     }
 
-    public static initializeDefaultsForResponse(response: any) {
-        response.redirect = HttpUtils.redirect(response);
-        response.headers.set('Content-Type', getMandarineConfiguration().mandarine.server.responseType); 
+    public static initializeDefaultsForResponse(context: any) {
+        context.response.redirect = HttpUtils.redirect(context.response);
+        context.response.headers.set('Content-Type', getMandarineConfiguration().mandarine.server.responseType); 
     }
 }
