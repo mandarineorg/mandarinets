@@ -12,7 +12,7 @@ import { ConfigurationComponent } from "../components/configuration-component/co
 import { ComponentComponent } from "../components/component-component/componentComponent.ts";
 import { Mandarine } from "../Mandarine.ns.ts";
 import { getCookies } from "https://deno.land/std@0.51.0/http/cookie.ts";
-
+import { Cookies } from "https://deno.land/x/oak/cookies.ts";
 export namespace DI {
 
     /** 
@@ -35,6 +35,7 @@ export namespace DI {
         request: Request;
         response: any;
         params: any;
+        cookies: Cookies;
         routingAction: Mandarine.MandarineMVC.Routing.RoutingAction;
     }
 
@@ -177,7 +178,7 @@ export namespace DI {
         metadataValues = metadataValues.sort((a, b) => a.parameterIndex - b.parameterIndex);
     
         const queryParams = RoutingUtils.findQueryParams(extraData.request.url.toString());
-        const requestCookies = getCookies(extraData.request.serverRequest);
+        const requestCookies: Cookies = extraData.cookies;
     
         for(let i = 0; i < componentMethodParams.length; i++) {
             if(!metadataValues.some((injectionMetadata: InjectionMetadataContext) => injectionMetadata.parameterIndex === i)) {
@@ -209,7 +210,7 @@ export namespace DI {
                         args.push(extraData.response);
                         break;
                     case InjectionTypes.COOKIE_PARAM:
-                        if(requestCookies[param.parameterName]) args.push(requestCookies[param.parameterName]);
+                        if(requestCookies.get(param.parameterName)) args.push(requestCookies.get(param.parameterName));
                         else args.push(undefined);
                         break;
                     case InjectionTypes.INJECTABLE_OBJECT:

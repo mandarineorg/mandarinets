@@ -1,5 +1,7 @@
 import { Request } from "https://deno.land/x/oak/request.ts";
 import { decoder } from "https://deno.land/std/encoding/utf8.ts";
+import { assert } from "https://deno.land/std/testing/asserts.ts";
+import { Mandarine } from "../Mandarine.ns.ts";
 
 export class HttpUtils {
 
@@ -39,5 +41,21 @@ export class HttpUtils {
             response.status = 302;
         }
     }
+
+    public static getCookies(req: any): Mandarine.MandarineCore.Cookies {
+        const cookie = req.headers.get("Cookie");
+        if (cookie != null) {
+          const out: Mandarine.MandarineCore.Cookies = {};
+          const c = cookie.split(";");
+          for (const kv of c) {
+            const [cookieKey, ...cookieVal] = kv.split("=");
+            assert(cookieKey != null);
+            const key = cookieKey.trim();
+            out[key] = cookieVal.join("=");
+          }
+          return out;
+        }
+        return {};
+      }
     
 }
