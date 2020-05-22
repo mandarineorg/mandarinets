@@ -13,10 +13,13 @@ import { RepositoryProxy } from "../../orm-core/repository/repositoryProxy.ts";
 import { ApplicationContext } from "../application-context/mandarineApplicationContext.ts";
 import { Reflect } from "../reflectMetadata.ts";
 import { MandarineConstants } from "../mandarineConstants.ts";
+import { Log } from "../../logger/log.ts";
 
 export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRegistry {
 
     private components: Map<string, Mandarine.MandarineCore.ComponentRegistryContext> = new Map<string, Mandarine.MandarineCore.ComponentRegistryContext>();
+
+    private logger: Log = Log.getLogger(ComponentsRegistry);
 
     public register(componentName: string, componentInstance: any, componentType: Mandarine.MandarineCore.ComponentTypes, configuration: any): void {
         let componentExist: boolean = this.exist(componentName);
@@ -151,9 +154,17 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
         let repositoryProxy = new RepositoryProxy<any>(repositoryInstance.extraData.entity);
 
         repositoryMethods.forEach((methodName) => {
+
+            if(ApplicationContext.getInstance().getEntityManager().getDataSource() == undefined) {
+                repositoryTarget.prototype[methodName] = (...args) => {
+                    this.logger.warn("A data source is required for repositories. Operation not supported");
+                    return undefined;
+                }
+                return;
+            }
+
             let methodParameterNames: Array<string> = ReflectUtils.getParamNames(repositoryTarget.prototype[methodName]);
             let manualQuery: { query: string, secure?: boolean } = Reflect.getMetadata(`${MandarineConstants.REFLECTION_MANDARINE_REPOSITORY_METHOD_MANUAL_QUERY}:${methodName}`, new repositoryTarget(), methodName);
-
             if(manualQuery != undefined) {
                 repositoryTarget.prototype[methodName] = (...args) => {
                     return repositoryProxy.manualProxy(manualQuery.query, manualQuery.secure, args);
