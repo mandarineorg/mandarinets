@@ -19,3 +19,8 @@ export { Param, RouteParam, QueryParam, RequestParam, Session, ServerRequestPara
 export { ResponseStatus } from "./mvc-framework/core/decorators/stereotypes/controller/responseStatus.ts";
 export { GET, POST, DELETE, PATCH, PUT, HEAD, OPTIONS } from "./mvc-framework/core/decorators/stereotypes/controller/routingDecorator.ts";
 export { MandarineMVC } from "./mvc-framework/mandarineMVC.ts"
+
+export { MandarineRepository } from "./orm-core/repository/mandarineRepository.ts";
+export { CustomQuery, Repository } from "./orm-core/core/decorators/Repository.ts";
+export { Table , Column, Id, GeneratedValue } from "./orm-core/core/decorators/entityDecorators.ts";
+export { Types as SQLTypes } from "./orm-core/sql/types.ts";

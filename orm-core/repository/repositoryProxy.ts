@@ -32,9 +32,7 @@ export class RepositoryProxy<T> {
                     let rowsOfObjects = await queryExecution.rowsOfObjects();
                     if(rowsOfObjects.length == 0) {
                         return null;
-                    } else if(rowsOfObjects.length == 1) {
-                        return rowsOfObjects[0];
-                    } else {
+                    } else if(rowsOfObjects.length >= 1) {
                         return rowsOfObjects;
                     }
                 }catch(error){
@@ -102,7 +100,7 @@ export class RepositoryProxy<T> {
 
         let dialect = entityManager.getDialectClass();
         let query = dialect.selectAllCountStatement(dialect.getTableMetadata(this.entity));
-        return (<any>await this.executeQuery(query, entityManager)).count;
+        return (<any>await this.executeQuery(query, entityManager))[0].count;
     }
 
     public async deleteAll() {
@@ -216,7 +214,9 @@ export class RepositoryProxy<T> {
         }, entityManager);
 
         if(proxyType == "countBy") {
-            return (await query).count;
+            return (await query)[0].count;
+        } else if(proxyType == "existsBy") {
+            return ((await query)[0].count) >= 1;
         } else {
             return query;
         }

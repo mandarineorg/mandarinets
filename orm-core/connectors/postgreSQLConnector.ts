@@ -44,17 +44,29 @@ export class PostgresConnector implements PostgresConnectorInterface {
     }
   
     public async makeConnection(): Promise<PoolClient> {
+      try {
         return await this.clientPooler.connect();
+      }catch(error) {
+        // TODO
+      }
     }
 
     public async query(query: string | QueryConfig): Promise<QueryResult> {
+      try {
         let connection = await this.makeConnection();
         let result: Promise<QueryResult> = connection.query(query);
         return result;
+      }catch(error) {
+        // TODO
+      }
     }
 
     public async queryWithConnection(connection: PoolClient, query: string | QueryConfig): Promise<QueryResult> {
-      let result: Promise<QueryResult> = connection.query(query);
-      return result;
+      try {
+        let result: Promise<QueryResult> = connection.query(query);
+        return result;
+      }catch(error) {
+        // TODO
+      }
   }
 }

@@ -6,10 +6,12 @@ import { MandarineConstants } from "../../main-core/mandarineConstants.ts";
 export class EntityRegistry {
     private entities: Map<string, Mandarine.ORM.Entity.Table> = new Map<string, Mandarine.ORM.Entity.Table>();
 
-    public register(schemaName: string, instance: any, tableName?: string) {
+    public register(schemaName: string, instance: any, tableName: string) {
 
         if(tableName == (null || undefined)) tableName = ReflectUtils.getClassName(instance);
 
+        tableName = tableName.toLowerCase();
+        
         if(this.entities.get(`${schemaName}.${tableName}`) == (null || undefined)) {
 
             let columns = this.getColumnsFromEntity(instance);

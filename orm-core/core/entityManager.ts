@@ -69,11 +69,15 @@ export class EntityManagerClass {
 
         switch(this.getDialect()) {
             case Mandarine.ORM.Dialect.Dialects.POSTGRESQL:
-                let connection = await (<PostgresConnector>this.databaseClient).makeConnection();
-                (<PostgresConnector>this.databaseClient).queryWithConnection(connection, tableQueries.join(" "));
-                (<PostgresConnector>this.databaseClient).queryWithConnection(connection, columnQueries.join(" "));
-                (<PostgresConnector>this.databaseClient).queryWithConnection(connection, constraintQueries.join(" "));
-                connection = null;
+                try {
+                    let connection = await (<PostgresConnector>this.databaseClient).makeConnection();
+                    await (<PostgresConnector>this.databaseClient).queryWithConnection(connection, tableQueries.join(" "));
+                    await (<PostgresConnector>this.databaseClient).queryWithConnection(connection, columnQueries.join(" "));
+                    await (<PostgresConnector>this.databaseClient).queryWithConnection(connection, constraintQueries.join(" "));
+                    connection = null;
+                }catch(error){
+                    // TODO
+                }
             break;
         }
     }
@@ -104,17 +108,14 @@ export class EntityManagerClass {
     }
 
     public getDatabaseClient() {
-        this.initializeEssentials();
         return this.databaseClient;
     }
 
     public getDialect() {
-        this.initializeEssentials();
         return this.dialect;
     }
 
     public getDialectClass() {
-        this.initializeEssentials();
         return this.dialectClass;
     }
 

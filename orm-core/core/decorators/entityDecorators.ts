@@ -6,7 +6,7 @@ import { Types } from "../../sql/types.ts";
 
 export const Table = (decoratorOptions: Mandarine.ORM.Entity.Decorators.Table): Function => {
     return (target: any) => {
-        ApplicationContext.getInstance().getEntityManager().entityRegistry.register(decoratorOptions.schema, target, decoratorOptions?.name);
+        ApplicationContext.getInstance().getEntityManager().entityRegistry.register(decoratorOptions.schema, target, decoratorOptions.name);
     }
 }
 
