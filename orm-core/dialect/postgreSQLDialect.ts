@@ -156,17 +156,48 @@ export class PostgreSQLDialect implements Mandarine.ORM.Dialect.Dialect {
         return `${colName} ${operator} ${(secureParameter != undefined && secureParameter == true) ? `${colValue}` : `'${colValue}'`}`;
     }
 
-    public mpqlInsertStatement(columns: Array<string>, values: object): string {
-        let syntax: string = `INSERT INTO %table% (${columns.join(", ")}) VALUES (%values%)`;
+    public insertStatement(tableMetadata: Mandarine.ORM.Entity.TableMetadata, entity: Mandarine.ORM.Entity.Table, values: object): any {
+        let syntax: string = `INSERT INTO ${this.getTableName(tableMetadata)} (%columns%) VALUES (%values%)`;
+        let primaryKey = entity.primaryKey;
 
-        let valuesForInsertion: Array<string> = new Array<string>();
-        Object.keys(values).forEach((valueKey, index) => {
-            valuesForInsertion.push(`$${index + 1}`);
+        let insertionValues: object = {};
+        entity.columns.forEach((column, index) => {
+            if(primaryKey != undefined) {
+                if(column.name == primaryKey.name) {
+                    if(primaryKey.incrementStrategy) {
+                        if(primaryKey.options.generatedValue.strategy == "MANUAL") {
+                            if(primaryKey.options.generatedValue.manualHandler == undefined) {
+                                // TO DO THROW ERROR
+                            } else {
+                                insertionValues[primaryKey.name] = primaryKey.options.generatedValue.manualHandler();
+                                return;
+                            }
+                        } else if(primaryKey.options.generatedValue.strategy == "SEQUENCE") {
+                            return;
+                        }
+                    } else {
+                        insertionValues[primaryKey.name] = values[primaryKey.name];
+                        return;
+                    }
+                }
+            }
+
+            let value = values[column.name];
+
+            if(value == undefined) {
+                value = null;
+            }
+
+            insertionValues[column.name] = value;
         });
 
-        syntax = syntax.replace("%values%", `${valuesForInsertion.join(", ")}`);
+        let columnsForInsertion = Object.keys(insertionValues);
+        syntax = syntax.replace('%columns%', columnsForInsertion.join(", "));
 
-        return syntax;
+        return {
+            query: syntax,
+            insertionValuesObject: insertionValues
+        };
     }
 
 }

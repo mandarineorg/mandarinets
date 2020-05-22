@@ -10,6 +10,7 @@ import { ReflectUtils } from "../utils/reflectUtils.ts";
 import { RepositoryComponent } from "../components/repository-component/repositoryComponent.ts";
 import { MandarineRepository } from "../../orm-core/repository/mandarineRepository.ts";
 import { RepositoryProxy } from "../../orm-core/repository/repositoryProxy.ts";
+import { ApplicationContext } from "../application-context/mandarineApplicationContext.ts";
 
 export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRegistry {
 
@@ -153,19 +154,19 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
             switch(methodName) {
                 case 'findAll':
                     repositoryTarget.prototype[methodName] = () => {
-                        repositoryProxy.findAll();
+                        return repositoryProxy.findAll();
                     }
                     return;
                     break;
                 case 'deleteAll':
                     repositoryTarget.prototype[methodName] = () => {
-                        repositoryProxy.deleteAll();
+                        return repositoryProxy.deleteAll();
                     }
                     return;
                     break;
                 case 'save':
-                    repositoryTarget.prototype[methodName] = (...args) => {
-                        repositoryProxy.save(methodParameterNames, args);
+                    repositoryTarget.prototype[methodName] = (model) => {
+                        return repositoryProxy.save(methodParameterNames, model);
                     }
                     return;
                     break;

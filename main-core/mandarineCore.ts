@@ -7,7 +7,6 @@ export class MandarineCore {
         const decoder = new TextDecoder("utf-8");
         let readConfig = await Deno.readFile(configFilePath);
         let properties: Mandarine.Properties = JSON.parse(decoder.decode(readConfig));
-
         Mandarine.Global.setConfiguration(properties);
     }
 }

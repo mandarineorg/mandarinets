@@ -36,6 +36,13 @@ export class MandarineMvcFrameworkStarter {
         this.initializeControllers();
         this.intializeControllersRoutes();
         this.initializeEssentials();
+        this.initializeEntityManager();
+    }
+
+    private initializeEntityManager() {
+        let entityManager = ApplicationContext.getInstance().getEntityManager();
+        entityManager.initializeEssentials();
+        entityManager.initializeAllEntities();
     }
 
     private resolveComponentsDependencies(): void {

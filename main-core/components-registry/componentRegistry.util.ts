@@ -49,7 +49,6 @@ export class ComponentsRegistryUtil {
             }
 
         } catch(error) {
-            console.log(error);
             throw new MandarineRepositoryException(MandarineRepositoryException.INVALID_REPOSITORY, ReflectUtils.getClassName(repositoryTarget));
         }
     }

@@ -18,7 +18,7 @@ export const Value = (key: string): Function => {
                     currentProperty = parts[propertiesStartingIndex];
                     propertiesStartingIndex++;
                 }
-        
+                
                 target[propertyName] = propertyObject[last];
             } else {
                 target[propertyName] = undefined;

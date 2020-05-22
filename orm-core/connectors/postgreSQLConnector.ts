@@ -3,6 +3,7 @@ import { Client as PostgresClient, Pool } from "https://deno.land/x/postgres/mod
 import { PoolClient } from "https://deno.land/x/postgres/client.ts";
 import { QueryResult, QueryConfig } from "https://deno.land/x/postgres/query.ts";
 import { Value } from "../../main-core/decorators/configuration-readers/value.ts";
+import { CommonUtils } from "../../main-core/utils/commonUtils.ts";
 
 export interface PostgresConnectorInterface extends Mandarine.ORM.Connection.Connector {
     /** Client that maintains an external database connection. */
@@ -29,51 +30,31 @@ export interface PostgresConnectorInterface extends Mandarine.ORM.Connection.Con
 
 export class PostgresConnector implements PostgresConnectorInterface {
 
-    @Value('mandarine.dataSource.data.host')
-    private host: string;
-
-    @Value('mandarine.dataSource.data.port')
-    private port: number;
-
-    @Value('mandarine.dataSource.data.username')
-    private username: string;
-
-    @Value('mandarine.dataSource.data.password')
-    private password: string;
-
-    @Value('mandarine.dataSource.data.database')
-    private database: string;
-
-    @Value('mandarine.dataSource.data.poolSize')
-    private poolSize: number;
-    
     public clientPooler: Pool;
   
     /** Create a PostgreSQL connection. */
-    constructor() {
+    constructor(host: string, username: string, password: string, database: string, port: number, poolSize: number) {
       this.clientPooler = new Pool({
-        hostname: this.host,
-        user: this.username,
-        password: this.password,
-        database: this.database,
-        port: this.port ?? 5432,
-      }, this.poolSize ?? 100, true);
+        hostname: host,
+        user: username,
+        password: password,
+        database: database,
+        port: port ?? 5432,
+      }, poolSize ?? 100, true);
     }
   
-    public makeConnection(): Promise<PoolClient> {
-        return this.clientPooler.connect();
+    public async makeConnection(): Promise<PoolClient> {
+        return await this.clientPooler.connect();
     }
 
     public async query(query: string | QueryConfig): Promise<QueryResult> {
-        let connection = await (await this.makeConnection());
-        let result: QueryResult = await connection.query(query);
-        connection.release();
+        let connection = await this.makeConnection();
+        let result: Promise<QueryResult> = connection.query(query);
         return result;
     }
 
-    public async queryWithConnection(connection: PoolClient, query: string | QueryConfig, releaseOnFinish: boolean): Promise<QueryResult> {
-      let result: QueryResult = await connection.query(query);
-      if(releaseOnFinish) connection.release();
+    public async queryWithConnection(connection: PoolClient, query: string | QueryConfig): Promise<QueryResult> {
+      let result: Promise<QueryResult> = connection.query(query);
       return result;
   }
 }
