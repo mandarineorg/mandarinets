@@ -168,6 +168,12 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
                     }
                     return;
                     break;
+                case 'countAll':
+                    repositoryTarget.prototype[methodName] = () => {
+                        return repositoryProxy.countAll();
+                    }
+                    return;
+                    break;
                 case 'deleteAll':
                     repositoryTarget.prototype[methodName] = () => {
                         return repositoryProxy.deleteAll();
@@ -193,6 +199,10 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
             } else if(methodName.startsWith('delete')) {
                 repositoryTarget.prototype[methodName] = (...args) => { 
                     return repositoryProxy.mainProxy(methodName, methodParameterNames, "deleteBy", args);
+                }
+            } else if(methodName.startsWith('count')) {
+                repositoryTarget.prototype[methodName] = (...args) => { 
+                    return repositoryProxy.mainProxy(methodName, methodParameterNames, "countBy", args);
                 }
             }
         });

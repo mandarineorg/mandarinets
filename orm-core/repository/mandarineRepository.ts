@@ -28,5 +28,6 @@ export abstract class MandarineRepository<T> {
      public save(model: T) {}
      public findAll() {}
      public deleteAll() {}
+     public countAll() {}
 
 }

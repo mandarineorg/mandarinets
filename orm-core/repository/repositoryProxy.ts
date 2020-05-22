@@ -97,6 +97,14 @@ export class RepositoryProxy<T> {
         return this.executeQuery(query, entityManager);
     }
 
+    public async countAll() {
+        let entityManager: Mandarine.ORM.Entity.EntityManager = this.getEntityManager();
+
+        let dialect = entityManager.getDialectClass();
+        let query = dialect.selectAllCountStatement(dialect.getTableMetadata(this.entity));
+        return (<any>await this.executeQuery(query, entityManager)).count;
+    }
+
     public async deleteAll() {
         let entityManager: Mandarine.ORM.Entity.EntityManager = this.getEntityManager();
 
@@ -112,7 +120,7 @@ export class RepositoryProxy<T> {
         }
     }
 
-    private lexicalProcessor(methodName: string, repositoryMethodParameterNames: Array<string>, proxyType: "findBy" | "existsBy" | "deleteBy") {
+    private lexicalProcessor(methodName: string, repositoryMethodParameterNames: Array<string>, proxyType: "findBy" | "existsBy" | "deleteBy" | "countBy") {
         let entityManager: Mandarine.ORM.Entity.EntityManager = this.getEntityManager();
         let dialect = entityManager.getDialectClass();
         let tableMetadata: Mandarine.ORM.Entity.TableMetadata = dialect.getTableMetadata(this.entity);
@@ -125,6 +133,9 @@ export class RepositoryProxy<T> {
         switch(proxyType) {
             case "findBy":
                 mainQuery += `${dialect.selectWhereStatement(tableMetadata)} `;
+            break;
+            case "countBy":
+                mainQuery += `${dialect.selectAllCountWhereStatement(tableMetadata)} `;
             break;
             case "existsBy":
                 mainQuery += `${dialect.selectAllCountWhereStatement(tableMetadata)} `;
@@ -142,6 +153,11 @@ export class RepositoryProxy<T> {
 
         const addOperator = (operator: string, columnVal: string, last: boolean) => {
             switch(operator) {
+                case "=":
+                    queryData.push('=');
+                    queryData.push(`'%${columnVal}%'`);
+                break;
+
                 case "and":
                 case "or":
                     previousOperator = operator;
@@ -169,6 +185,10 @@ export class RepositoryProxy<T> {
             }
         }
 
+        if(previousOperator == "") {
+            previousOperator = "=";
+        }
+
         addOperator(previousOperator, previousColumn, true);
 
         mainQuery += queryData.join(" ");
@@ -176,7 +196,7 @@ export class RepositoryProxy<T> {
         return mainQuery;
     }
 
-    public async mainProxy(nativeMethodName: string, repositoryMethodParameterNames: Array<string>, proxyType: "findBy" | "existsBy" | "deleteBy", args: Array<any>): Promise<any> {
+    public async mainProxy(nativeMethodName: string, repositoryMethodParameterNames: Array<string>, proxyType: "findBy" | "existsBy" | "deleteBy" | "countBy", args: Array<any>): Promise<any> {
         let entityManager: Mandarine.ORM.Entity.EntityManager = this.getEntityManager();
 
         let values: object = this.getQueryKeysValues(repositoryMethodParameterNames.map(item => item.toLowerCase()), args);
@@ -190,10 +210,16 @@ export class RepositoryProxy<T> {
             }
         });
 
-       return this.executeQuery({
+       let query = this.executeQuery({
         text: mqlQuery,
         args: args
         }, entityManager);
+
+        if(proxyType == "countBy") {
+            return (await query).count;
+        } else {
+            return query;
+        }
     }
 
     public async manualProxy(query: String, secure: boolean, args: Array<any>) {
