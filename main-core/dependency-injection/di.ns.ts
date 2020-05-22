@@ -79,7 +79,8 @@ export namespace DI {
      *
      */
     export function constructorResolver<T>(componentSource: Mandarine.MandarineCore.ComponentRegistryContext, componentRegistry: Mandarine.MandarineCore.IComponentsRegistry): T {
-        if(componentSource.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT) return;
+        if(componentSource.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT ||
+            componentSource.componentType == Mandarine.MandarineCore.ComponentTypes.REPOSITORY) return;
 
         let target: Constructor<T> = componentSource.componentInstance.getClassHandler();
 
@@ -87,9 +88,10 @@ export namespace DI {
         const args = providers.map((provider: Constructor) => {
         let component: Mandarine.MandarineCore.ComponentRegistryContext = componentRegistry.getComponentByHandlerType(provider);
             if(component != (undefined || null)) {
-                let classHandler: any = (component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT) ? component.componentInstance : component.componentInstance.getClassHandler();
+                let isComponentManual = component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT; 
+                let classHandler: any = (isComponentManual) ? component.componentInstance : component.componentInstance.getClassHandler();
 
-                return (component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT || ReflectUtils.checkClassInitialized(classHandler)) ? classHandler : new classHandler();
+                return (isComponentManual || ReflectUtils.checkClassInitialized(classHandler)) ? classHandler : new classHandler();
             } else {
                 return undefined;
             }
@@ -107,7 +109,7 @@ export namespace DI {
         componentRegistry.getAllComponentNames().forEach((componentName) => {
             let component: Mandarine.MandarineCore.ComponentRegistryContext = componentRegistry.get(componentName);
     
-            if(component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT) {
+            if(component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT || component.componentType == Mandarine.MandarineCore.ComponentTypes.REPOSITORY) {
                 return;
             }
     

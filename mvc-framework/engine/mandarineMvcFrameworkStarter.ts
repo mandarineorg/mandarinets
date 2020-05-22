@@ -26,6 +26,9 @@ export class MandarineMvcFrameworkStarter {
 
         MandarineLoading();
 
+        // ORDER OF THINGS MATTER
+        // If the repository proxy is resolved after the dependencies, then the dependencies will have an empty repository
+        this.resolveRepositoriesProxy();
         this.resolveComponentsDependencies();
 
         MandarineMvcFrameworkEngineMethods.initializeEngineMethods();
@@ -33,10 +36,21 @@ export class MandarineMvcFrameworkStarter {
         this.initializeControllers();
         this.intializeControllersRoutes();
         this.initializeEssentials();
+        this.initializeEntityManager();
+    }
+
+    private initializeEntityManager() {
+        let entityManager = ApplicationContext.getInstance().getEntityManager();
+        entityManager.initializeEssentials();
+        entityManager.initializeAllEntities();
     }
 
     private resolveComponentsDependencies(): void {
         ApplicationContext.getInstance().getComponentsRegistry().resolveDependencies();
+    }
+
+    private resolveRepositoriesProxy(): void {
+        ApplicationContext.getInstance().getComponentsRegistry().connectRepositoriesToProxy();
     }
 
     private initializeEssentials() {

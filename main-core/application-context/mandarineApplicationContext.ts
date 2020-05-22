@@ -57,4 +57,8 @@ export class ApplicationContext implements Mandarine.ApplicationContext.IApplica
         return this.applicationContextSingleton;
     }
 
+    public getEntityManager(): Mandarine.ORM.Entity.EntityManager {
+        return Mandarine.Global.getEntityManager();
+    }
+
 }

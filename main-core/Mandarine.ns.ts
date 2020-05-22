@@ -5,6 +5,7 @@ import { CommonUtils } from "./utils/commonUtils.ts";
 import { MandarineStorageHandler } from "./mandarine-native/sessions/mandarineDefaultSessionStore.ts";
 import { MandarineSecurity } from "../security-core/mandarine-security.ns.ts";
 import { MandarineMvc } from "../mvc-framework/mandarine-mvc.ns.ts";
+import { MandarineORM } from "../orm-core/mandarine-orm.ns.ts";
 
 export namespace Mandarine {
 
@@ -14,13 +15,25 @@ export namespace Mandarine {
    * Custom Properties must extend Mandarine.Properties
    */
     export interface Properties {
+        [prop: string]: any,
         mandarine: {
             server: {
                 host?: string,
                 port: number,
                 responseType?: MandarineMVC.MediaTypes
-            }
-        }
+            } & any,
+            dataSource?: {
+                dialect: Mandarine.ORM.Dialect.Dialects,
+                data: {
+                    host: string,
+                    port?: number,
+                    username: string,
+                    password: string,
+                    database: string,
+                    poolSize?: number
+                } & any
+            } & any
+        } & any
     };
 
     /**
@@ -35,6 +48,7 @@ export namespace Mandarine {
         export interface MandarineGlobalInterface {
             mandarineComponentsRegistry: MandarineCore.IComponentsRegistry;
             mandarineSessionContainer: MandarineSecurity.Sessions.SessionContainer;
+            mandarineEntityManager: Mandarine.ORM.Entity.EntityManager;
             mandarineProperties: Properties;
             mandarineMiddleware: Array<MiddlewareComponent>;
         };
@@ -47,6 +61,7 @@ export namespace Mandarine {
                 (window as any).mandarineGlobal = <MandarineGlobalInterface> {
                     mandarineComponentsRegistry: undefined,
                     mandarineSessionContainer: undefined,
+                    mandarineEntityManager: undefined,
                     mandarineProperties: undefined,
                     mandarineMiddleware: undefined
                 }
@@ -75,6 +90,19 @@ export namespace Mandarine {
         };
 
         /**
+        * Get the entity manager to manipulate the current DB connection
+        */
+       export function getEntityManager(): MandarineORM.Entity.EntityManager { 
+            let mandarineGlobal: MandarineGlobalInterface = getMandarineGlobal();
+
+            if(mandarineGlobal.mandarineEntityManager == (null || undefined)) {
+                mandarineGlobal.mandarineEntityManager = new Mandarine.ORM.Entity.EntityManager();
+            }
+
+            return mandarineGlobal.mandarineEntityManager;
+        };
+
+        /**
         * Get the properties mandarine is using.
         * If no properties are set by the user then it gets the default properties.
         */
@@ -87,6 +115,22 @@ export namespace Mandarine {
     
             return mandarineGlobal.mandarineProperties;
         };
+
+        /**
+        * Set a new configuration for the mandarine properties
+        * If properties are ignored, it will set the default values.
+        */   
+       export function setConfiguration(properties: Properties) {
+            let mandarineGlobal: MandarineGlobalInterface = getMandarineGlobal();
+            let defaultConfiguration: Properties = Defaults.MandarineDefaultConfiguration;
+
+            if(properties.mandarine.server == (null || undefined)) properties.mandarine.server = defaultConfiguration.mandarine.server;
+            if(properties.mandarine.server.host == (null || undefined)) properties.mandarine.server.host = defaultConfiguration.mandarine.server.host;
+            if(properties.mandarine.server.port == (null || undefined)) properties.mandarine.server.port = defaultConfiguration.mandarine.server.port;
+            if(properties.mandarine.server.responseType == (null || undefined)) properties.mandarine.server.responseType = defaultConfiguration.mandarine.server.responseType;
+
+            mandarineGlobal.mandarineProperties = properties;
+       }
 
         /**
         * Get the list of registered middlewares
@@ -139,6 +183,7 @@ export namespace Mandarine {
         export interface IApplicationContext {
             componentsRegistry: Mandarine.MandarineCore.IComponentsRegistry;
             getComponentsRegistry(): MandarineCore.IComponentsRegistry;
+            getEntityManager(): Mandarine.ORM.Entity.EntityManager;
             initializeMetadata(): void;
             changeSessionContainer(newSessionContainer: MandarineSecurity.Sessions.SessionContainer): void;
             getInstance?: () => ApplicationContext.IApplicationContext;
@@ -165,6 +210,7 @@ export namespace Mandarine {
             SERVICE,
             CONFIGURATION,
             MIDDLEWARE,
+            REPOSITORY,
             MANUAL_COMPONENT
         };
 
@@ -217,11 +263,14 @@ export namespace Mandarine {
             getAllComponentNamesByType(componentType: ComponentTypes): Array<string>
             getComponents(): ComponentRegistryContext[];
             getControllers(): ComponentRegistryContext[];
+            getComponentsByComponentType(componentType: Mandarine.MandarineCore.ComponentTypes): Mandarine.MandarineCore.ComponentRegistryContext[];
             getComponentDefinitionNames(componentType?: ComponentTypes): Array<string>;
             isComponentHandlerTypeMatch(componentName: string, classType: any): boolean;
             getComponentByHandlerType(classType: any): ComponentRegistryContext;
             getComponentType(componentName: string): string;
             resolveDependencies(): void;
+            getRepositoryByHandlerType(classType: any): Mandarine.MandarineCore.ComponentRegistryContext;
+            connectRepositoriesToProxy(): void;
         };
 
     };
@@ -268,4 +317,6 @@ export namespace Mandarine {
     * Inside this module, you can find everything that is related to the Security Engine, like Sessions.
     */
     export import Security = MandarineSecurity; 
+
+    export import ORM = MandarineORM; 
 }
