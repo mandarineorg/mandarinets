@@ -196,4 +196,20 @@ export class RepositoryProxy<T> {
         }, entityManager);
     }
 
+    public async manualProxy(query: String, secure: boolean, args: Array<any>) {
+        let entityManager: Mandarine.ORM.Entity.EntityManager = this.getEntityManager();
+        switch(entityManager.getDialect()) {
+            case Mandarine.ORM.Dialect.Dialects.POSTGRESQL:
+                if(secure != undefined && secure == true) {
+                    return this.executeQuery({
+                        text: query,
+                        args: args
+                    }, entityManager);
+                } else {
+                    return this.executeQuery(query, entityManager);
+                }
+                break;
+        }
+    }
+
 }

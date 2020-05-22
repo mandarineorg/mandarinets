@@ -11,6 +11,8 @@ import { RepositoryComponent } from "../components/repository-component/reposito
 import { MandarineRepository } from "../../orm-core/repository/mandarineRepository.ts";
 import { RepositoryProxy } from "../../orm-core/repository/repositoryProxy.ts";
 import { ApplicationContext } from "../application-context/mandarineApplicationContext.ts";
+import { Reflect } from "../reflectMetadata.ts";
+import { MandarineConstants } from "../mandarineConstants.ts";
 
 export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRegistry {
 
@@ -150,6 +152,14 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
 
         repositoryMethods.forEach((methodName) => {
             let methodParameterNames: Array<string> = ReflectUtils.getParamNames(repositoryTarget.prototype[methodName]);
+            let manualQuery: { query: string, secure?: boolean } = Reflect.getMetadata(`${MandarineConstants.REFLECTION_MANDARINE_REPOSITORY_METHOD_MANUAL_QUERY}:${methodName}`, new repositoryTarget(), methodName);
+
+            if(manualQuery != undefined) {
+                repositoryTarget.prototype[methodName] = (...args) => {
+                    return repositoryProxy.manualProxy(manualQuery.query, manualQuery.secure, args);
+                }
+                return;
+            }
 
             switch(methodName) {
                 case 'findAll':
