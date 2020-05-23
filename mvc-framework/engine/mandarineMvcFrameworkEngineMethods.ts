@@ -58,6 +58,18 @@ export class MandarineMvcFrameworkEngineMethods {
 
     public static initializeDefaultsForResponse(context: any) {
         context.response.redirect = HttpUtils.redirect(context.response);
-        context.response.headers.set('Content-Type', getMandarineConfiguration().mandarine.server.responseType); 
+    }
+
+    public static assignContentType(context: any) {
+        let contentType: string = getMandarineConfiguration().mandarine.server.responseType;
+
+        if(context.response.body != (null || undefined)) {
+            switch(typeof context.response.body) {
+                case "object":
+                    contentType = Mandarine.MandarineMVC.MediaTypes.APPLICATION_JSON;
+                break;
+            }
+        }
+        context.response.headers.set('Content-Type', contentType);
     }
 }

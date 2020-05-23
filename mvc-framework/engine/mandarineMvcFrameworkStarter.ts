@@ -125,7 +125,11 @@ export class MandarineMvcFrameworkStarter {
             let continueRequest: boolean = await this.executeUserMiddlewares(true, availableMiddlewares, context, routingAction); // If the user has any middleware, execute it
 
             if(continueRequest) {
+
                 context.response.body = await requestResolver(routingAction, context);
+
+                MandarineMvcFrameworkEngineMethods.assignContentType(context);
+
                 this.executeUserMiddlewares(false, availableMiddlewares, context, routingAction);
                 this.postRequestInternalMiddlewares(context);
             }
