@@ -3,6 +3,7 @@ import { Mandarine } from "../../main-core/Mandarine.ns.ts";
 import { Value } from "../../main-core/decorators/configuration-readers/value.ts";
 import { PostgreSQLDialect } from "../dialect/postgreSQLDialect.ts";
 import { PostgresConnector } from "../connectors/postgreSQLConnector.ts";
+import { MandarineORMException } from "./exceptions/mandarineORMException.ts";
 
 export class EntityManagerClass {
 
@@ -76,7 +77,6 @@ export class EntityManagerClass {
                     await (<PostgresConnector>this.databaseClient).queryWithConnection(connection, constraintQueries.join(" "));
                     connection = null;
                 }catch(error){
-                    // TODO
                 }
             break;
         }
@@ -100,7 +100,7 @@ export class EntityManagerClass {
                 }
             break;
             default:
-                // TODO THROW ERROR
+                throw new MandarineORMException(MandarineORMException.UNKNOWN_DIALECT, "Entity Manager");
             break;
         }
         this.fullyInitialized = true;

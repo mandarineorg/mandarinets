@@ -4,6 +4,7 @@ import { PoolClient } from "https://deno.land/x/postgres/client.ts";
 import { QueryResult, QueryConfig } from "https://deno.land/x/postgres/query.ts";
 import { Value } from "../../main-core/decorators/configuration-readers/value.ts";
 import { CommonUtils } from "../../main-core/utils/commonUtils.ts";
+import { Log } from "../../logger/log.ts";
 
 export interface PostgresConnectorInterface extends Mandarine.ORM.Connection.Connector {
     /** Client that maintains an external database connection. */
@@ -31,6 +32,7 @@ export interface PostgresConnectorInterface extends Mandarine.ORM.Connection.Con
 export class PostgresConnector implements PostgresConnectorInterface {
 
     public clientPooler: Pool;
+    public logger: Log = Log.getLogger(PostgresConnector);
   
     /** Create a PostgreSQL connection. */
     constructor(host: string, username: string, password: string, database: string, port: number, poolSize: number) {
@@ -47,7 +49,7 @@ export class PostgresConnector implements PostgresConnectorInterface {
       try {
         return await this.clientPooler.connect();
       }catch(error) {
-        // TODO
+        this.logger.error("Database connection could not be reached");
       }
     }
 
@@ -57,7 +59,7 @@ export class PostgresConnector implements PostgresConnectorInterface {
         let result: Promise<QueryResult> = connection.query(query);
         return result;
       }catch(error) {
-        // TODO
+        this.logger.error("Query statement could not be executed");
       }
     }
 
@@ -66,7 +68,7 @@ export class PostgresConnector implements PostgresConnectorInterface {
         let result: Promise<QueryResult> = connection.query(query);
         return result;
       }catch(error) {
-        // TODO
+        this.logger.error("Query & connection have failed to be reached");
       }
   }
 }

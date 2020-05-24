@@ -2,6 +2,7 @@ import { Request } from "https://deno.land/x/oak/request.ts";
 import { decoder } from "https://deno.land/std/encoding/utf8.ts";
 import { assert } from "https://deno.land/std/testing/asserts.ts";
 import { Mandarine } from "../Mandarine.ns.ts";
+import { Log } from "../../logger/log.ts";
 
 export class HttpUtils {
 
@@ -16,7 +17,7 @@ export class HttpUtils {
                 try {
                     return JSON.parse(decodedBody);
                 } catch(error) {
-                    // TODO
+                    new Log(HttpUtils).warn("Body could not be parsed");
                 }
 
                 break;
