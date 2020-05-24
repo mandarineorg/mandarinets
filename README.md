@@ -31,7 +31,7 @@ new MandarineMVC().run();
 
 **Note** tsconfig.json file is required, please refer to [this link](https://github.com/mandarineorg/mandarinets/wiki/Basic-Concepts) to understand more.
 ## Mandarine.TS Main features
-Built-in Dependency Injection Framework, Components, Automatization for routes creation, Middlewares, Sessions, 
+Built-in [Dependency Injection](https://github.com/mandarineorg/mandarinets/wiki/Dependency-Injection) Framework, [Components](https://github.com/mandarineorg/mandarinets/wiki/Components), [Automatization for routes creation](https://github.com/mandarineorg/mandarinets/wiki/Routing-Annotations), [Middlewares](https://github.com/mandarineorg/mandarinets/wiki/Custom-Middleware), [Sessions](https://github.com/mandarineorg/mandarinets/wiki/Sessions), [built-in ORM](https://github.com/mandarineorg/mandarinets/wiki/Mandarine-ORM), [MQL](https://github.com/mandarineorg/mandarinets/wiki/Mandarine-Query-Language-(MQL)) (Mandarine Query Language)
 
 ## Want to help?
 ### Interested in coding
