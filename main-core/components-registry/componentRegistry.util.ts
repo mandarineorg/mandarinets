@@ -6,7 +6,7 @@ import { MandarineConstants } from "../mandarineConstants.ts";
 import { ApplicationContext } from "../application-context/mandarineApplicationContext.ts";
 import { Mandarine } from "../Mandarine.ns.ts";
 import { MandarineRepository } from "../../orm-core/repository/mandarineRepository.ts";
-import { MandarineRepositoryException } from "../../orm-core/core/exceptions/repositoryException.ts";
+import { MandarineORMException } from "../../orm-core/core/exceptions/mandarineORMException.ts";
 
 export class ComponentsRegistryUtil {
 
@@ -45,11 +45,11 @@ export class ComponentsRegistryUtil {
                     entity: entity
                 }, null);
             } else {
-                throw new MandarineRepositoryException(MandarineRepositoryException.INVALID_REPOSITORY, ReflectUtils.getClassName(repositoryTarget));
+                throw new MandarineORMException(MandarineORMException.INVALID_REPOSITORY, ReflectUtils.getClassName(repositoryTarget));
             }
 
         } catch(error) {
-            throw new MandarineRepositoryException(MandarineRepositoryException.INVALID_REPOSITORY, ReflectUtils.getClassName(repositoryTarget));
+            throw new MandarineORMException(MandarineORMException.INVALID_REPOSITORY, ReflectUtils.getClassName(repositoryTarget));
         }
     }
 }

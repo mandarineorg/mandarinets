@@ -1,5 +1,6 @@
 import { Mandarine } from "../../mod.ts";
 import { Types } from "../sql/types.ts";
+import { MandarineORMException } from "../core/exceptions/mandarineORMException.ts";
 
 export class PostgreSQLDialect implements Mandarine.ORM.Dialect.Dialect {
 
@@ -167,7 +168,7 @@ export class PostgreSQLDialect implements Mandarine.ORM.Dialect.Dialect {
                     if(primaryKey.incrementStrategy) {
                         if(primaryKey.options.generatedValue.strategy == "MANUAL") {
                             if(primaryKey.options.generatedValue.manualHandler == undefined) {
-                                // TO DO THROW ERROR
+                                throw new MandarineORMException(MandarineORMException.GENERATION_HANDLER_REQUIRED, "PostgreSQLDialect");
                             } else {
                                 insertionValues[primaryKey.name] = primaryKey.options.generatedValue.manualHandler();
                                 return;
