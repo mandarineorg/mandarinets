@@ -15,6 +15,11 @@ import { Reflect } from "../reflectMetadata.ts";
 import { MandarineConstants } from "../mandarineConstants.ts";
 import { Log } from "../../logger/log.ts";
 
+/**
+* This class is also known as the DI container.
+* This class handles the addition, initialization and injection for all mandarine components
+* This class is also responsible for connection repository methods to a repository proxy method in order to resolve queries
+*/
 export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRegistry {
 
     private components: Map<string, Mandarine.MandarineCore.ComponentRegistryContext> = new Map<string, Mandarine.MandarineCore.ComponentRegistryContext>();

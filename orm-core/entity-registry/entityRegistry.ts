@@ -3,6 +3,9 @@ import { Mandarine } from "../../mod.ts";
 import { Reflect } from "../../main-core/reflectMetadata.ts";
 import { MandarineConstants } from "../../main-core/mandarineConstants.ts";
 
+/**
+ * This class represents the registry where all the entities are added in order for mandarine to work with them at and after mandarine compile time.
+ */
 export class EntityRegistry {
     private entities: Map<string, Mandarine.ORM.Entity.Table> = new Map<string, Mandarine.ORM.Entity.Table>();
 

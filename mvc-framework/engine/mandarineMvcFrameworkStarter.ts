@@ -10,6 +10,12 @@ import { MandarineMvcFrameworkEngineMethods } from "./mandarineMvcFrameworkEngin
 import { MiddlewareComponent } from "../../main-core/components/middleware-component/middlewareComponent.ts";
 import { Mandarine } from "../../main-core/Mandarine.ns.ts";
 import { Cookies } from "https://deno.land/x/oak/cookies.ts";
+
+/**
+ * This class works as the MVC engine and it is responsible for the initialization & behavior of HTTP requests.
+ * It handles the initialization of controllers, routes, repository proxys, entity manager and others.
+ * This class is the Mandarine Compiler since it is the most important class for the MVC framework to work as it resolves everything it needs
+ */
 export class MandarineMvcFrameworkStarter {
 
     private router: Router = new Router();

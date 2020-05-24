@@ -4,6 +4,10 @@ import { PostgreSQLDialect } from "../dialect/postgreSQLDialect.ts";
 import { PostgresConnector } from "../connectors/postgreSQLConnector.ts";
 import { ReflectUtils } from "../../main-core/utils/reflectUtils.ts";
 
+/**
+ * This class is one of the most important class for MQL
+ * This class resolves the methods of your repository as it works as bridge between your repositories and Mandarine's Engine.
+ */
 export class RepositoryProxy<T> {
 
     private static readonly SUPPORTED_KEYWORDS = ["and", "or"];

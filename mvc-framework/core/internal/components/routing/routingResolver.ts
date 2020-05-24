@@ -6,6 +6,10 @@ import { MiddlewareComponent } from "../../../../../main-core/components/middlew
 import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
 import { Cookies } from "https://deno.land/x/oak/cookies.ts";
 
+/**
+ * Resolves the request made to an endpoint. 
+ * This method works along with the DI container.
+ */
 export const requestResolver = async (routingAction: Mandarine.MandarineMVC.Routing.RoutingAction, context: any) => {
     let objectContext: Mandarine.MandarineCore.ComponentRegistryContext = ApplicationContext.getInstance().getComponentsRegistry().get(routingAction.actionParent);
     let component: ControllerComponent = <ControllerComponent> objectContext.componentInstance;
@@ -34,6 +38,9 @@ export const requestResolver = async (routingAction: Mandarine.MandarineMVC.Rout
     else return handler[routingAction.actionMethodName](...methodArgs);
 };
 
+/**
+ * Resolves the middleware request made to an endpoint. 
+ */
 export const middlewareResolver = async (preRequest: boolean, middlewareComponent: MiddlewareComponent, routingAction: Mandarine.MandarineMVC.Routing.RoutingAction, context: any): Promise<boolean> => {
 
     let handler = middlewareComponent.getClassHandler();

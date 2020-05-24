@@ -7,6 +7,10 @@ import { ReflectUtils } from "../../../../../main-core/utils/reflectUtils.ts";
 import { ResponseStatusMetadataContext } from "../../../decorators/stereotypes/controller/responseStatus.ts";
 import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
 
+/**
+ * This class is used in the DI Container for Mandarine to store components annotated as @Controller
+ * It contains all the behavior of a controller, like its routes and the methods of the routes.
+ */
 export class ControllerComponent {
     
     private name?: string;

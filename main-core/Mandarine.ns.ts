@@ -7,6 +7,10 @@ import { MandarineSecurity } from "../security-core/mandarine-security.ns.ts";
 import { MandarineMvc } from "../mvc-framework/mandarine-mvc.ns.ts";
 import { MandarineORM } from "../orm-core/mandarine-orm.ns.ts";
 
+/**
+* This namespace contains all the essentials for mandarine to work
+* Gnerally, global functionings are added to this namespace in order to be easily accesible across Mandarine
+*/
 export namespace Mandarine {
 
    /**

@@ -6,6 +6,9 @@ import { getMandarineConfiguration } from "../../main-core/configuration/getMand
 import { Mandarine } from "../../main-core/Mandarine.ns.ts";
 import { Log } from "../../logger/log.ts";
 
+/**
+ * Contains methods that are necessary for the MVC engine to start
+ */
 export class MandarineMvcFrameworkEngineMethods {
 
     public static logger: Log = Log.getLogger("MandarineMvcFrameworkStarter");

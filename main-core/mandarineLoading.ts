@@ -2,6 +2,9 @@ import { MandarineCore } from "./mandarineCore.ts";
 import { rgb8 } from "https://deno.land/std/fmt/colors.ts";
 import { Log } from "../logger/log.ts";
 
+/**
+ * Loads the visualization of Mandarine's Compiler
+ */
 export const MandarineLoading = () => {
     console.log(`  __  __                 _            _              _______ _____ `);
     console.log(` |  \\/  |               | |          (_)            |__   __/ ____|`);

@@ -1,6 +1,9 @@
 import { MandarineException } from "../../exceptions/mandarineException.ts";
 import { Mandarine } from "../../Mandarine.ns.ts";
 
+/**
+* This class is used in the DI Container for Mandarine to store components annotated as @Repository
+*/
 export class RepositoryComponent implements Mandarine.MandarineCore.ComponentCommonInterface {
 
     public name?: string;

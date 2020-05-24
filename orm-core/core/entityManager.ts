@@ -5,6 +5,10 @@ import { PostgreSQLDialect } from "../dialect/postgreSQLDialect.ts";
 import { PostgresConnector } from "../connectors/postgreSQLConnector.ts";
 import { MandarineORMException } from "./exceptions/mandarineORMException.ts";
 
+/**
+ * This class represents the entity manager which contains all the necessary methods & references for Mandarine to interact with your database.
+ * This class handles the creation of new entities or new columns in entities as well as the interaction with your application and MQL
+ */
 export class EntityManagerClass {
 
     private dialectClass: Mandarine.ORM.Dialect.Dialect;

@@ -1,5 +1,11 @@
 import { getMandarineConfiguration } from "../../configuration/getMandarineConfiguration.ts";
 
+/**
+ * **Decorator**
+ * Inject a value from the configuration file.
+ *
+ * `@Value('mandarine.server.host')`
+ */
 export const Value = (key: string): Function => {
     return (target: any, propertyName: string) => {
         try {
