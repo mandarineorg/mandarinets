@@ -5,6 +5,7 @@ import { QueryResult, QueryConfig } from "https://deno.land/x/postgres/query.ts"
 import { Value } from "../../main-core/decorators/configuration-readers/value.ts";
 import { CommonUtils } from "../../main-core/utils/commonUtils.ts";
 import { Log } from "../../logger/log.ts";
+import { MandarineORMException } from "../core/exceptions/mandarineORMException.ts";
 
 export interface PostgresConnectorInterface extends Mandarine.ORM.Connection.Connector {
     /** Client that maintains an external database connection. */
@@ -36,13 +37,18 @@ export class PostgresConnector implements PostgresConnectorInterface {
   
     /** Create a PostgreSQL connection. */
     constructor(host: string, username: string, password: string, database: string, port: number, poolSize: number) {
-      this.clientPooler = new Pool({
-        hostname: host,
-        user: username,
-        password: password,
-        database: database,
-        port: port ?? 5432,
-      }, poolSize ?? 100, true);
+      try {
+        this.clientPooler = new Pool({
+          hostname: host,
+          user: username,
+          password: password,
+          database: database,
+          port: port ?? 5432,
+        }, poolSize ?? 100, true);
+      } catch(error) {
+        this.logger.error("Aborting database client", error);
+        throw new MandarineORMException(MandarineORMException.IMPOSSIBLE_CONNECTION, "PostgresConnector");
+      }
     }
   
     public async makeConnection(): Promise<PoolClient> {
@@ -59,7 +65,7 @@ export class PostgresConnector implements PostgresConnectorInterface {
         let result: Promise<QueryResult> = connection.query(query);
         return result;
       }catch(error) {
-        this.logger.error("Query statement could not be executed");
+        this.logger.error("Query statement could not be executed", error);
       }
     }
 
@@ -68,7 +74,7 @@ export class PostgresConnector implements PostgresConnectorInterface {
         let result: Promise<QueryResult> = connection.query(query);
         return result;
       }catch(error) {
-        this.logger.error("Query & connection have failed to be reached");
+        this.logger.error("Query & connection have failed to be reached", error);
       }
   }
 }

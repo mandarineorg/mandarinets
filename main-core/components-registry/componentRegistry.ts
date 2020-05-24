@@ -165,6 +165,7 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
 
             let methodParameterNames: Array<string> = ReflectUtils.getParamNames(repositoryTarget.prototype[methodName]);
             let manualQuery: { query: string, secure?: boolean } = Reflect.getMetadata(`${MandarineConstants.REFLECTION_MANDARINE_REPOSITORY_METHOD_MANUAL_QUERY}:${methodName}`, new repositoryTarget(), methodName);
+            
             if(manualQuery != undefined) {
                 repositoryTarget.prototype[methodName] = (...args) => {
                     return repositoryProxy.manualProxy(manualQuery.query, manualQuery.secure, args);
