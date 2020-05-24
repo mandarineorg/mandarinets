@@ -2,6 +2,9 @@ import { MiddlewareTarget } from "./middlewareTarget.ts";
 import { MandarineException } from "../../exceptions/mandarineException.ts";
 import { Mandarine } from "../../Mandarine.ns.ts";
 
+/**
+* This class is used in the DI Container for Mandarine to store components annotated as @Middleware
+*/
 export class MiddlewareComponent implements Mandarine.MandarineCore.ComponentCommonInterface {
 
     name?: string;

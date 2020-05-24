@@ -8,6 +8,9 @@ import { MandarineConstants } from "../../../../main-core/mandarineConstants.ts"
 import { DI } from "../../../../main-core/dependency-injection/di.ns.ts";
 import { Mandarine } from "../../../../main-core/Mandarine.ns.ts";
 
+/**
+ * Contains all the util methods that are related to the router and routings
+ */
 export class RoutingUtils {
 
     public static registerHttpAction(route: string, methodType: Mandarine.MandarineMVC.HttpMethods, target: any, methodName: string, options: Mandarine.MandarineMVC.Routing.RoutingOptions) {

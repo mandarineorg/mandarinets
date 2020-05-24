@@ -1,5 +1,8 @@
 import { DI } from "../main-core/dependency-injection/di.ns.ts";
 
+/**
+* This namespace contains all the essentials for Mandarine MVC to work
+*/
 export namespace MandarineMvc {
     /**
      * Hypertext Transfer Protocol (HTTP) response status codes.

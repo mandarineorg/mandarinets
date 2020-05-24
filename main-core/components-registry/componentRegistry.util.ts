@@ -8,6 +8,9 @@ import { Mandarine } from "../Mandarine.ns.ts";
 import { MandarineRepository } from "../../orm-core/repository/mandarineRepository.ts";
 import { MandarineORMException } from "../../orm-core/core/exceptions/mandarineORMException.ts";
 
+/**
+* This class contains utils that are used in references related to the DI container
+*/
 export class ComponentsRegistryUtil {
 
     public static registerComponent(componentName: string, componentTarget: any, componentType: Mandarine.MandarineCore.ComponentTypes, configuration: any, index: number): any {

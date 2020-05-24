@@ -3,8 +3,14 @@ import { MandarineConstants } from "../mandarineConstants.ts";
 import { ReflectUtils } from "../utils/reflectUtils.ts";
 import { DI } from "./di.ns.ts";
 
+/**
+ * Contains all the util methods that are related to the DI built-in framework.
+ */
 export class DependencyInjectionUtil {
 
+    /**
+     * Defines the context for a new injection inside the DI system
+     */
     public static defineInjectionMetadata(injectionType: DI.InjectionTypes, paramaterInjectableObject: any, target: any, propertyName: string, parameterIndex: number, specificParameterName?: string) {
         let isMethod: boolean = (parameterIndex != null);
         let parentClassName: string = ReflectUtils.getClassName(target);

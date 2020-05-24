@@ -2,7 +2,9 @@ import { assert } from "https://deno.land/std@0.51.0/testing/asserts.ts";
 import { HmacSha256 } from "../hash/sha256.ts";
 
 // Part of this class is a fraction of https://github.com/oakserver/oak/blob/master/tssCompare.ts
-
+/**
+ * Contains all the util methods used by the security core
+ */
 export class SecurityUtils {
     public static compareArrayBuffer(a: ArrayBuffer, b: ArrayBuffer): boolean {
         assert(a.byteLength === b.byteLength, "ArrayBuffer lengths must match.");

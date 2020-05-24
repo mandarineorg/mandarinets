@@ -30,6 +30,9 @@ export interface PostgresConnectorInterface extends Mandarine.ORM.Connection.Con
     close?(): Promise<any>;
 }
 
+/**
+* Connector for PostgreSQL
+*/
 export class PostgresConnector implements PostgresConnectorInterface {
 
     public clientPooler: Pool;

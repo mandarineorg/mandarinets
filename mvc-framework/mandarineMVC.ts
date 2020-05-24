@@ -6,6 +6,9 @@ import { Log } from "../logger/log.ts";
 import { getMandarineConfiguration } from "../main-core/configuration/getMandarineConfiguration.ts";
 import { Mandarine } from "../main-core/Mandarine.ns.ts";
 
+/**
+* This class is the bridge between the HTTP server & the Mandarine Compiler.
+*/
 export class MandarineMVC {
 
     public logger: Log = Log.getLogger(MandarineMVC);

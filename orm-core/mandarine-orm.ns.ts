@@ -1,13 +1,24 @@
 import { Types } from "./sql/types.ts";
 import { EntityManagerClass } from "./core/entityManager.ts";
 
+/**
+ * Contains all the essentials for Mandarine's ORM to work.
+ */
 export namespace MandarineORM {
 
     export namespace Dialect {
+
+        /**
+         * Contains the dialects supported by Mandarine
+         */
         export enum Dialects {
             POSTGRESQL = "postgresql"
         }
 
+        /**
+         * Contains the interface for a dialect implementation.
+         * This is used when a new database system will be added to Mandarine as this class defines how syntax should be written
+         */
         export interface Dialect {
             getDefaultSchema(): string;
             getTableMetadata(table: Entity.Table): Entity.TableMetadata;
@@ -28,7 +39,14 @@ export namespace MandarineORM {
         }
     }
 
+    /**
+     * Contains all the essentials related to an entity.
+     */
     export namespace Entity {
+
+        /**
+         * Contains the metadata of a table such as its schema and its name
+         */
         export interface TableMetadata {
             name?: string;
             schema: string;
@@ -39,6 +57,9 @@ export namespace MandarineORM {
             export interface Table extends TableMetadata {
             }
 
+            /**
+             * Contains the information the @Column decorator can and will have
+             */
             export interface Column {
                 name?: string;
                 fieldName?: string;
@@ -58,11 +79,17 @@ export namespace MandarineORM {
             }
         }
 
+        /**
+        * Contains the information of a column
+        */
         export interface Column extends Entity.Decorators.Column {
         }
 
         export class EntityManager extends EntityManagerClass {}
 
+        /**
+        * Contains the information & structure of a table
+        */
         export interface Table {
             tableName: string;
             schema: string;
@@ -74,6 +101,9 @@ export namespace MandarineORM {
         }
     }
 
+    /**
+     * References to a connection/connector classes.
+     */
     export namespace Connection {
 
         /** Default connector options. */
@@ -87,6 +117,9 @@ export namespace MandarineORM {
         }
     }
 
+    /**
+    * Contains the defaults for Mandarine's ORM
+    */
     export namespace Defaults {
         export const ColumnDecoratorDefault: Entity.Decorators.Column = {
             name: undefined,

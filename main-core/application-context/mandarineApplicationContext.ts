@@ -2,6 +2,10 @@ import { ComponentsRegistry } from "../components-registry/componentRegistry.ts"
 import { Mandarine } from "../Mandarine.ns.ts";
 import { MandarineSecurity } from "../../security-core/mandarine-security.ns.ts";
 
+/**
+* Contains the "application context" of mandarine.
+* The Application Context is used to interact with various namespaces & initializations
+*/
 export class ApplicationContext implements Mandarine.ApplicationContext.IApplicationContext {
 
     public static applicationContextSingleton: Mandarine.ApplicationContext.IApplicationContext;

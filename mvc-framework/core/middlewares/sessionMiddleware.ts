@@ -8,6 +8,10 @@ import { Cookies } from "https://deno.land/x/oak/cookies.ts";
 import { Cookie } from "https://deno.land/std/http/cookie.ts";
 import { HttpUtils } from "../../../main-core/utils/httpUtils.ts";
 
+/**
+ * This class handles the creation and manipulation of sessions
+ * This class works as a middleware and handles the injection of the session object to the request
+ */
 export class SessionMiddleware {
 
     private logger: Log = Log.getLogger(SessionMiddleware);

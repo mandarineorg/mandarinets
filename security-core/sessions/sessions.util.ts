@@ -2,6 +2,9 @@ import { Cookie } from "https://deno.land/std/http/cookie.ts";
 import { MandarineSecurity } from "../mandarine-security.ns.ts";
 import { KeyStack } from "../keyStack.ts";
 
+/**
+ * Contains all the util methods used by the session middleware
+ */
 export class SessionsUtils {
     public static getCookieForSession(sessionContainerConfig: MandarineSecurity.Sessions.SessionContainer, sesId: string): Cookie {
         let sessionCookie: Cookie = {

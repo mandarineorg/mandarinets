@@ -1,5 +1,8 @@
 import { Cookie } from "https://deno.land/std/http/cookie.ts";
 
+/**
+ * Contains all the essentials for Mandarine's security core to work
+ */
 export namespace MandarineSecurity {
 
     export namespace Sessions {
