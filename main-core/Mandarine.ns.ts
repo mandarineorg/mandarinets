@@ -14,6 +14,11 @@ import { TemplateEngineException } from "../mvc-framework/core/exceptions/templa
 */
 export namespace Mandarine {
 
+    /**
+     * Used to verify that a method is async
+     */
+    export const AsyncFunction = (async () => {}).constructor;
+
    /**
    * Structure of Mandarine Properties.
    * Mandarine uses these properties to determine how it should work
