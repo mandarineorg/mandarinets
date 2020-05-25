@@ -7,7 +7,7 @@ export class MandarineException extends Error {
     constructor(public message: string, public objectName: string) {
       super(message + " ~ Object name: " + objectName);
       this.name = "MandarineException";
-      this.stack = (new Error()).stack;
+      this.stack = (this).stack;
     }
   
 }

@@ -6,7 +6,7 @@ export class InvalidAnnotationError extends Error {
     constructor(public message: string, annotation: string) {
       super(`${message} ~ ${annotation}`);
       this.name = "InvalidAnnotationError";
-      this.stack = (new Error()).stack;
+      this.stack = (this).stack;
     }
   
 }

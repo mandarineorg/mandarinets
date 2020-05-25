@@ -6,7 +6,7 @@ export class RoutingException extends Error {
     constructor(public message: string, public actionName: string) {
       super(message + " ~ Object name: " + actionName);
       this.name = "RoutingException";
-      this.stack = (new Error()).stack;
+      this.stack = (this).stack;
     }
   
 }

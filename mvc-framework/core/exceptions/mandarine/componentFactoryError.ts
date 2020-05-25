@@ -6,7 +6,7 @@ export class ComponentFactoryError extends Error {
     constructor(public message: string, component: string) {
       super(`${message} ~ ${component}`);
       this.name = "ComponentFactoryError";
-      this.stack = (new Error()).stack;
+      this.stack = (this).stack;
     }
   
 }
