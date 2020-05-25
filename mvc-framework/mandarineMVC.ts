@@ -22,13 +22,7 @@ export class MandarineMVC {
     }
 
     async run() {
-        let starter:MandarineMvcFrameworkStarter = new MandarineMvcFrameworkStarter();
-        
-        let app: Application = new Application();
-        app.use(starter.getRouter().routes());
-        app.use(starter.getRouter().allowedMethods());
-        app.use(routingErrorHandler);
-        app.use(notFoundHandler);
+        let app: Application = this.initializeMVCApplication();
 
         let mandarineConfiguration: Mandarine.Properties = this.getConfiguration();
         let serverConfig: string = `127.0.0.1:${mandarineConfiguration.mandarine.server.port}`;
@@ -42,6 +36,22 @@ export class MandarineMVC {
         } catch(error) {
             this.logger.error(`Server has been shut down`, error);
         }
+    }
+
+    public initializeMVCApplication(): Application {
+        let starter:MandarineMvcFrameworkStarter = new MandarineMvcFrameworkStarter();
+        
+        let app: Application = new Application()
+        .use(starter.getRouter().routes())
+        .use(starter.getRouter().allowedMethods())
+        .use(routingErrorHandler)
+        .use(notFoundHandler);
+
+        app.addEventListener("error", (event) => {
+            this.logger.error("Fatal error", event.error);
+        });
+
+        return app;
     }
     
 }
