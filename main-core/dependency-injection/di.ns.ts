@@ -13,6 +13,8 @@ import { ComponentComponent } from "../components/component-component/componentC
 import { Mandarine } from "../Mandarine.ns.ts";
 import { getCookies } from "https://deno.land/std@0.51.0/http/cookie.ts";
 import { Cookies } from "https://deno.land/x/oak/cookies.ts";
+import { ViewModel } from "../../mvc-framework/core/modules/view-engine/viewModel.ts";
+
 export namespace DI {
 
     /** 
@@ -71,7 +73,8 @@ export namespace DI {
         SESSION_PARAM,
         REQUEST_BODY_PARAM,
         RESPONSE_PARAM,
-        COOKIE_PARAM
+        COOKIE_PARAM,
+        TEMPLATE_MODEL_PARAM
     }
 
     /** 
@@ -219,6 +222,9 @@ export namespace DI {
                             args.push(getDependencyInstance(component.componentType, component.componentInstance));
                         }
                         else args.push(undefined);
+                        break;
+                    case InjectionTypes.TEMPLATE_MODEL_PARAM:
+                        args.push(new ViewModel());
                         break;
                 }
             }

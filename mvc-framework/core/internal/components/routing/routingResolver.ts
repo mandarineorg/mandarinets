@@ -5,6 +5,10 @@ import { DI } from "../../../../../main-core/dependency-injection/di.ns.ts";
 import { MiddlewareComponent } from "../../../../../main-core/components/middleware-component/middlewareComponent.ts";
 import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
 import { Cookies } from "https://deno.land/x/oak/cookies.ts";
+import { Reflect } from "../../../../../main-core/reflectMetadata.ts";
+import { MandarineConstants } from "../../../../../main-core/mandarineConstants.ts";
+import { ViewModel } from "../../../modules/view-engine/viewModel.ts";
+import { RenderEngine } from "../../../modules/view-engine/renderEngine.ts";
 
 /**
  * Resolves the request made to an endpoint. 
@@ -14,6 +18,7 @@ export const requestResolver = async (routingAction: Mandarine.MandarineMVC.Rout
     let objectContext: Mandarine.MandarineCore.ComponentRegistryContext = ApplicationContext.getInstance().getComponentsRegistry().get(routingAction.actionParent);
     let component: ControllerComponent = <ControllerComponent> objectContext.componentInstance;
     let handler: any = component.getClassHandler();
+
     let methodArgs: DI.ArgumentValue[] = await DI.methodArgumentResolver(handler, routingAction.actionMethodName, {
         request: context.request,
         response: context.response,
@@ -34,8 +39,18 @@ export const requestResolver = async (routingAction: Mandarine.MandarineMVC.Rout
     // We dont use the variable handlerMethod because if we do it will loose the context and so the dependency injection will fail.
     // So if the method we are invoking uses dependents, the dispatcher will fail.
     // with that said we have to use nativaly the class and the method as if we are invoking the whole thing.
-    if(methodArgs == null) return handler[routingAction.actionMethodName]();
-    else return handler[routingAction.actionMethodName](...methodArgs);
+    let methodValue: any = (methodArgs == null) ? handler[routingAction.actionMethodName]() : handler[routingAction.actionMethodName](...methodArgs);
+
+    let isRenderable: boolean = false;
+
+    let renderInformation: Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData = Reflect.getMetadata(`${MandarineConstants.REFLECTION_MANDARINE_METHOD_ROUTE_RENDER}:${routingAction.actionMethodName}`, handler, routingAction.actionMethodName);
+    isRenderable = renderInformation != undefined;
+    
+    if(isRenderable) {
+        context.response.body = RenderEngine.render(renderInformation, renderInformation.engine, (methodValue == (null || undefined)) ? {} : methodValue);
+    } else {
+        context.response.body = methodValue;
+    }
 };
 
 /**

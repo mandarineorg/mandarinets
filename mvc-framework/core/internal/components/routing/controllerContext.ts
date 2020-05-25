@@ -6,6 +6,8 @@ import { MandarineConstants } from "../../../../../main-core/mandarineConstants.
 import { ReflectUtils } from "../../../../../main-core/utils/reflectUtils.ts";
 import { ResponseStatusMetadataContext } from "../../../decorators/stereotypes/controller/responseStatus.ts";
 import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
+import { ApplicationContext } from "../../../../../main-core/application-context/mandarineApplicationContext.ts";
+import { Sha256 } from "../../../../../security-core/hash/sha256.ts";
 
 /**
  * This class is used in the DI Container for Mandarine to store components annotated as @Controller
@@ -74,7 +76,7 @@ export class ControllerComponent {
 
         let metadataKeysFromClass: Array<any> = Reflect.getMetadataKeys(classHandler);
         if(metadataKeysFromClass == (null || undefined)) return;
-        let routesMetadataKeys: Array<any> = metadataKeysFromClass.filter((metadataKey: string) => metadataKey.startsWith(`mandarine-method-route:`));
+        let routesMetadataKeys: Array<any> = metadataKeysFromClass.filter((metadataKey: string) => metadataKey.startsWith(`${MandarineConstants.REFLECTION_MANDARINE_METHOD_ROUTE}:`));
         if(routesMetadataKeys == (null || undefined)) return;
         routesMetadataKeys.forEach((value) => {
             let annotationContext: AnnotationMetadataContext = <AnnotationMetadataContext> Reflect.getMetadata(value, classHandler);
@@ -88,7 +90,24 @@ export class ControllerComponent {
                     routingOptions: routeContext.options,
                     initializationStatus: Mandarine.MandarineMVC.Routing.RouteInitializationStatus.CREATED
                 });
+
+                // Initialize templates for route
+                this.initializeTemplates(routeContext.methodName);
             }
+        });
+    }
+
+    private initializeTemplates(methodHandlerName: string): void {
+        let classHandler: any = this.getClassHandler();
+        classHandler = (ReflectUtils.checkClassInitialized(this.getClassHandler())) ? classHandler : new classHandler();
+
+        let metadataKeysFromClass: Array<any> = Reflect.getMetadataKeys(classHandler, methodHandlerName);
+        if(metadataKeysFromClass == (null || undefined)) return;
+        let templateMetadataKeys: Array<any> = metadataKeysFromClass.filter((metadataKey: string) => metadataKey.startsWith(`${MandarineConstants.REFLECTION_MANDARINE_METHOD_ROUTE_RENDER}:`));
+        if(templateMetadataKeys == (null || undefined)) return;
+        templateMetadataKeys.forEach((value) => {
+            let annotationContext: Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData = <Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData> Reflect.getMetadata(value, classHandler, methodHandlerName);
+            ApplicationContext.getInstance().getTemplateManager().register(annotationContext, annotationContext.engine);
         });
     }
 

@@ -140,3 +140,19 @@ export const RequestBody = (): Function => {
         RoutingUtils.registerRoutingParam(DI.InjectionTypes.REQUEST_BODY_PARAM, target, propertyName, index);
     };
 };
+
+
+/**
+ * **Decorator**
+ * 
+ * Gets a modeler for a template. By using the built-in modeler, it is easier to work with templates & the variable it will have.
+ * 
+ * `@Model()
+ *  Target: Method parameter`
+ */
+
+ export const Model = (): Function => {
+     return (target: any, propertyName: string, index: number) => {
+        RoutingUtils.registerRoutingParam(DI.InjectionTypes.TEMPLATE_MODEL_PARAM, target, propertyName, index);
+     }
+ }

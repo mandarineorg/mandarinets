@@ -132,7 +132,7 @@ export class MandarineMvcFrameworkStarter {
 
             if(continueRequest) {
 
-                context.response.body = await requestResolver(routingAction, context);
+                await requestResolver(routingAction, context);
 
                 MandarineMvcFrameworkEngineMethods.assignContentType(context);
 

@@ -6,6 +6,7 @@ import { MandarineStorageHandler } from "./mandarine-native/sessions/mandarineDe
 import { MandarineSecurity } from "../security-core/mandarine-security.ns.ts";
 import { MandarineMvc } from "../mvc-framework/mandarine-mvc.ns.ts";
 import { MandarineORM } from "../orm-core/mandarine-orm.ns.ts";
+import { TemplatesManager } from "./templates-registry/templatesRegistry.ts";
 
 /**
 * This namespace contains all the essentials for mandarine to work
@@ -26,6 +27,9 @@ export namespace Mandarine {
                 port: number,
                 responseType?: MandarineMVC.MediaTypes
             } & any,
+            templateEngine: {
+                path: string
+            } & any,
             dataSource?: {
                 dialect: Mandarine.ORM.Dialect.Dialects,
                 data: {
@@ -39,7 +43,6 @@ export namespace Mandarine {
             } & any
         } & any
     };
-
     /**
     * Handles the interaction with the global environment of Mandarine
     * Mandarine uses a global environment to store and manipulate essential information to work
@@ -53,6 +56,7 @@ export namespace Mandarine {
             mandarineComponentsRegistry: MandarineCore.IComponentsRegistry;
             mandarineSessionContainer: MandarineSecurity.Sessions.SessionContainer;
             mandarineEntityManager: Mandarine.ORM.Entity.EntityManager;
+            mandarineTemplatesManager: MandarineCore.ITemplatesManager,
             mandarineProperties: Properties;
             mandarineMiddleware: Array<MiddlewareComponent>;
         };
@@ -67,7 +71,8 @@ export namespace Mandarine {
                     mandarineSessionContainer: undefined,
                     mandarineEntityManager: undefined,
                     mandarineProperties: undefined,
-                    mandarineMiddleware: undefined
+                    mandarineMiddleware: undefined,
+                    mandarineTemplatesManager: undefined
                 }
             }
         };
@@ -104,6 +109,19 @@ export namespace Mandarine {
             }
 
             return mandarineGlobal.mandarineEntityManager;
+        };
+
+        /**
+        * Get the entity manager to manipulate the current DB connection
+        */
+       export function getTemplateManager(): Mandarine.MandarineCore.ITemplatesManager { 
+            let mandarineGlobal: MandarineGlobalInterface = getMandarineGlobal();
+
+            if(mandarineGlobal.mandarineTemplatesManager == (null || undefined)) {
+                mandarineGlobal.mandarineTemplatesManager = new Mandarine.MandarineCore.MandarineTemplateManager();
+            }
+
+            return mandarineGlobal.mandarineTemplatesManager;
         };
 
         /**
@@ -188,6 +206,7 @@ export namespace Mandarine {
             componentsRegistry: Mandarine.MandarineCore.IComponentsRegistry;
             getComponentsRegistry(): MandarineCore.IComponentsRegistry;
             getEntityManager(): Mandarine.ORM.Entity.EntityManager;
+            getTemplateManager(): Mandarine.MandarineCore.ITemplatesManager;
             initializeMetadata(): void;
             changeSessionContainer(newSessionContainer: MandarineSecurity.Sessions.SessionContainer): void;
             getInstance?: () => ApplicationContext.IApplicationContext;
@@ -277,6 +296,19 @@ export namespace Mandarine {
             connectRepositoriesToProxy(): void;
         };
 
+        /**
+        * Refers to the templates' registry.
+        * All the templates that are read and initialized at mandarine compile time are registed inside the templates registry
+        * When an user requests a renderable endpoint, the templates' registry will get requested in order to get the template.
+        */
+        export interface ITemplatesManager {
+            register(renderData: Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData, engine?: Mandarine.MandarineMVC.TemplateEngine.Engines): void;
+            getTemplate(templatePath: string, manual: boolean): Mandarine.MandarineMVC.TemplateEngine.Template;
+            getFullPath(templatePath: string): string
+        }
+
+        export class MandarineTemplateManager extends TemplatesManager {}
+
     };
 
     /**
@@ -295,6 +327,9 @@ export namespace Mandarine {
                     host: "0.0.0.0",
                     port: 4444,
                     responseType: MandarineMVC.MediaTypes.TEXT_HTML
+                },
+                templateEngine: {
+                    path: "./static/resources/templates"
                 }
             }
         };
