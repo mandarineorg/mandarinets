@@ -1,5 +1,4 @@
 import { MiddlewareComponent } from "./components/middleware-component/middlewareComponent.ts";
-import { DI } from "./dependency-injection/di.ns.ts";
 import { ComponentsRegistry } from "./components-registry/componentRegistry.ts";
 import { CommonUtils } from "./utils/commonUtils.ts";
 import { MandarineStorageHandler } from "./mandarine-native/sessions/mandarineDefaultSessionStore.ts";
@@ -7,7 +6,6 @@ import { MandarineSecurity } from "../security-core/mandarine-security.ns.ts";
 import { MandarineMvc } from "../mvc-framework/mandarine-mvc.ns.ts";
 import { MandarineORM } from "../orm-core/mandarine-orm.ns.ts";
 import { TemplatesManager } from "./templates-registry/templatesRegistry.ts";
-import { object } from "https://deno.land/x/view_engine/node_modules/@types/prop-types/index.d.ts";
 import { TemplateEngineException } from "../mvc-framework/core/exceptions/templateEngineException.ts";
 
 /**
