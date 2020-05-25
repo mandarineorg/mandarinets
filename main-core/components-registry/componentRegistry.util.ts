@@ -22,7 +22,7 @@ export class ComponentsRegistryUtil {
         let componentsRegistry = ApplicationContext.getInstance().getComponentsRegistry();
 
         if(componentsRegistry.exist(componentName)) {
-            throw new ComponentExceptions(ComponentExceptions.EXISTENT_COMPONENT, componentName);
+            throw new ComponentExceptions(ComponentExceptions.EXISTENT_COMPONENT.replace("%component%", componentName), componentName);
         } else {
             Reflect.defineMetadata(`${MandarineConstants.REFLECTION_MANDARINE_COMPONENT}:${Mandarine.MandarineCore.ComponentTypes[componentType].toLowerCase()}:${componentName}`, {
                 componentName: componentName,
