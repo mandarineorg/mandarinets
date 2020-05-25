@@ -535,24 +535,44 @@ export namespace MandarineMvc {
         className?: string;
     }
 
+    /**
+     * Refers to all the information that the rendering engine needs to work out.
+     */
     export namespace TemplateEngine {
+        /**
+         * Supported view engines by mandarine
+         */
         export enum Engines {
             HANDLEBARS,
             EJS
         }
 
+        /**
+         * Decorators information related to the view engine/template engine
+         */
         export namespace Decorators {
             export interface RenderData {
                 className: string,
-                templatePath: string,
-                engine: TemplateEngine.Engines
+                template: string,
+                engine: TemplateEngine.Engines,
+                options: RenderingOptions
             }
         }
 
+        /**
+         * Information of the template registered in the templates' registry
+         */
         export interface Template {
             templateFullPath: string,
             engine: TemplateEngine.Engines,
             content: string
+        }
+
+        /**
+         * If manual is set to true then the template is defined in the decorator @Render
+         */
+        export interface RenderingOptions {
+            manual: boolean;
         }
     }
 }

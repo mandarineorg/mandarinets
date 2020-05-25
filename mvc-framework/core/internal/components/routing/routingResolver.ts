@@ -47,7 +47,7 @@ export const requestResolver = async (routingAction: Mandarine.MandarineMVC.Rout
     isRenderable = renderInformation != undefined;
     
     if(isRenderable) {
-        context.response.body = RenderEngine.render(renderInformation.templatePath, renderInformation.engine, (methodValue == (null || undefined)) ? {} : methodValue);
+        context.response.body = RenderEngine.render(renderInformation, renderInformation.engine, (methodValue == (null || undefined)) ? {} : methodValue);
     } else {
         context.response.body = methodValue;
     }

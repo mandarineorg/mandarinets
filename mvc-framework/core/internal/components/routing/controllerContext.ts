@@ -7,6 +7,7 @@ import { ReflectUtils } from "../../../../../main-core/utils/reflectUtils.ts";
 import { ResponseStatusMetadataContext } from "../../../decorators/stereotypes/controller/responseStatus.ts";
 import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
 import { ApplicationContext } from "../../../../../main-core/application-context/mandarineApplicationContext.ts";
+import { Sha256 } from "../../../../../security-core/hash/sha256.ts";
 
 /**
  * This class is used in the DI Container for Mandarine to store components annotated as @Controller
@@ -106,7 +107,7 @@ export class ControllerComponent {
         if(templateMetadataKeys == (null || undefined)) return;
         templateMetadataKeys.forEach((value) => {
             let annotationContext: Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData = <Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData> Reflect.getMetadata(value, classHandler, methodHandlerName);
-            ApplicationContext.getInstance().getTemplateManager().register(annotationContext.templatePath, annotationContext.engine);
+            ApplicationContext.getInstance().getTemplateManager().register(annotationContext, annotationContext.engine);
         });
     }
 

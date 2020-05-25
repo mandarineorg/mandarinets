@@ -35,7 +35,7 @@ export class RoutingUtils {
         }
     }
 
-    public static registerRenderHandler(target: any, methodName: string, templatePath: string, engine?: Mandarine.MandarineMVC.TemplateEngine.Engines) {
+    public static registerRenderHandler(target: any, methodName: string, template: string, engine?: Mandarine.MandarineMVC.TemplateEngine.Engines, options?: Mandarine.MandarineMVC.TemplateEngine.RenderingOptions) {
         if(engine == (null || undefined)) engine = Mandarine.MandarineMVC.TemplateEngine.Engines.EJS;
         
         let className: string = ReflectUtils.getClassName(target);
@@ -45,8 +45,9 @@ export class RoutingUtils {
         if(!currentTargetAnnotations.some(metadataKeys => metadataKeys == renderAnnotationName)) {
             let annotationContext: Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData = {
                 className: className,
-                templatePath: templatePath,
-                engine: engine 
+                template: template,
+                engine: engine,
+                options: options
             };
 
             Reflect.defineMetadata(renderAnnotationName, annotationContext, target, methodName);

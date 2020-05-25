@@ -302,8 +302,8 @@ export namespace Mandarine {
         * When an user requests a renderable endpoint, the templates' registry will get requested in order to get the template.
         */
         export interface ITemplatesManager {
-            register(templatePath: string, engine?: Mandarine.MandarineMVC.TemplateEngine.Engines): void;
-            getTemplate(templatePath: string): Mandarine.MandarineMVC.TemplateEngine.Template;
+            register(renderData: Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData, engine?: Mandarine.MandarineMVC.TemplateEngine.Engines): void;
+            getTemplate(templatePath: string, manual: boolean): Mandarine.MandarineMVC.TemplateEngine.Template;
             getFullPath(templatePath: string): string
         }
 
