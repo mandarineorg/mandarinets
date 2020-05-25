@@ -5,12 +5,12 @@ import { MandarineMVC } from "../mvc-framework/mandarineMVC.ts";
 import { Model } from "../mvc-framework/core/decorators/stereotypes/controller/parameterDecorator.ts";
 import { ViewModel } from "../mvc-framework/core/modules/view-engine/viewModel.ts";
 
-@Controller('/templates')
+@Controller()
 export class MyController {
 
-    @GET('/test')
+    @GET('/path-template')
     @Render('mytemplate.html')
-    public handler(@Model() model: ViewModel) {
+    public httpHandler(@Model() model: ViewModel) {
 
         model.setAttribute("data", {
             name: "Andres",
@@ -25,11 +25,12 @@ export class MyController {
         return model;
     }
 
-    @GET('/test2')
+    @GET('/manual-template')
     @Render(`<h2><%= name %></h2>`, { manual: true })
-    public handler2(@Model() model: ViewModel) {
-        model.setAttribute("name", "Andres");
-        return model;
+    public httpHandler2() {
+        return {
+            name: "Andres"
+        };
     }
 
 }
