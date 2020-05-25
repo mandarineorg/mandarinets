@@ -5,7 +5,7 @@ import { Log } from "../logger/log.ts";
  * Contains core methods & information related to Mandarine
  */
 export class MandarineCore {
-    public static releaseVersion: string = "1.0.0";
+    public static releaseVersion: string = "0.5.0";
     public static logger: Log = Log.getLogger(MandarineCore);
 
     /**
