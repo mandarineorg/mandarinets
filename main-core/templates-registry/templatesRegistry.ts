@@ -7,10 +7,12 @@ import { ControllerComponent } from "../../mvc-framework/core/internal/component
 import { ReflectUtils } from "../utils/reflectUtils.ts";
 import { Reflect } from "../reflectMetadata.ts";
 import { MandarineConstants } from "../mandarineConstants.ts";
+import { Log } from "../../logger/log.ts";
 
 export class TemplatesManager implements Mandarine.MandarineCore.ITemplatesManager {
 
     private templates: Map<string, Mandarine.MandarineMVC.TemplateEngine.Template> = new Map<string, Mandarine.MandarineMVC.TemplateEngine.Template>();
+    public logger: Log = Log.getLogger(TemplatesManager);
 
     public register(renderData: Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData, engine?: Mandarine.MandarineMVC.TemplateEngine.Engines): void {
         if(engine == (null || undefined)) engine = Mandarine.Global.getMandarineConfiguration().mandarine.templateEngine.engine;
@@ -81,6 +83,9 @@ export class TemplatesManager implements Mandarine.MandarineCore.ITemplatesManag
                 });
             });
         });
+
+        let numberOfTemplates: number = Array.from(this.templates.keys()).length;
+        if(numberOfTemplates > 0) this.logger.info(`A total of ${numberOfTemplates} templates have been found`);
     }
 
 }
