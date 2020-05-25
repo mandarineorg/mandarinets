@@ -25,7 +25,7 @@ export class RenderEngineClass {
                 viewEngine = engineFactory.getHandlebarsEngine();
                 break;
             default:
-                // TODO THROW ERROR
+                throw new TemplateEngineException(TemplateEngineException.INVALID_ENGINE, "RenderEngine");
                 break;
         }
 
