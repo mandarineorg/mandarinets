@@ -5,8 +5,8 @@ export class TemplateEngineException extends Error {
   
     constructor(public message: string, public objectName: string) {
       super(message + " ~ Object name: " + objectName);
-      this.name = "FactoryStorageError";
-      this.stack = (new Error()).stack;
+      this.name = "TemplateEngineException";
+      this.stack = (this).stack;
     }
   
 }
