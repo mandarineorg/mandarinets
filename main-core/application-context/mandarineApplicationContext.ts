@@ -65,4 +65,8 @@ export class ApplicationContext implements Mandarine.ApplicationContext.IApplica
         return Mandarine.Global.getEntityManager();
     }
 
+    public getTemplateManager(): Mandarine.MandarineCore.ITemplatesManager {
+        return Mandarine.Global.getTemplateManager();
+    }
+
 }

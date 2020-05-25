@@ -12,6 +12,8 @@ export class MandarineConstants {
     public static readonly REFLECTION_MANDARINE_TABLE_COLUMN_PROPERTY = "mandarine-table-column-property";
     public static readonly REFLECTION_MANDARINE_REPOSITORY_METHOD_MANUAL_QUERY = "mandarine-repository-manual-query";
 
+    public static readonly REFLECTION_MANDARINE_METHOD_ROUTE_RENDER = "mandarine-method-route-render";
+
     public static readonly REFLECTION_HTTP_ACTION_KEY = "httpAction";
 
 }

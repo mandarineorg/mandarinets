@@ -35,6 +35,25 @@ export class RoutingUtils {
         }
     }
 
+    public static registerRenderHandler(target: any, methodName: string, templatePath: string, engine?: Mandarine.MandarineMVC.TemplateEngine.Engines) {
+        if(engine == (null || undefined)) engine = Mandarine.MandarineMVC.TemplateEngine.Engines.EJS;
+        
+        let className: string = ReflectUtils.getClassName(target);
+        let currentTargetAnnotations: Array<any> = Reflect.getMetadataKeys(target);
+        let renderAnnotationName: string = `${MandarineConstants.REFLECTION_MANDARINE_METHOD_ROUTE_RENDER}:${methodName}`;
+
+        if(!currentTargetAnnotations.some(metadataKeys => metadataKeys == renderAnnotationName)) {
+            let annotationContext: Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData = {
+                className: className,
+                templatePath: templatePath,
+                engine: engine 
+            };
+
+            Reflect.defineMetadata(renderAnnotationName, annotationContext, target, methodName);
+        }
+
+    }
+
     public static registerRoutingParam(parameterType: DI.InjectionTypes, target: any, methodName: string, parameterIndex: number, specificParameterName?: string) {
         DependencyInjectionUtil.defineInjectionMetadata(parameterType, undefined, target, methodName, parameterIndex, specificParameterName);
     }

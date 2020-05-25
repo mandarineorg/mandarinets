@@ -535,4 +535,24 @@ export namespace MandarineMvc {
         className?: string;
     }
 
+    export namespace TemplateEngine {
+        export enum Engines {
+            HANDLEBARS,
+            EJS
+        }
+
+        export namespace Decorators {
+            export interface RenderData {
+                className: string,
+                templatePath: string,
+                engine: TemplateEngine.Engines
+            }
+        }
+
+        export interface Template {
+            templateFullPath: string,
+            engine: TemplateEngine.Engines,
+            content: string
+        }
+    }
 }
