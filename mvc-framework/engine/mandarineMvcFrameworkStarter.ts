@@ -40,6 +40,7 @@ export class MandarineMvcFrameworkStarter {
         MandarineMvcFrameworkEngineMethods.initializeEngineMethods();
 
         this.initializeControllers();
+        this.initializeTemplates();
         this.intializeControllersRoutes();
         this.initializeEssentials();
         this.initializeEntityManager();
@@ -69,6 +70,10 @@ export class MandarineMvcFrameworkStarter {
         ApplicationContext.getInstance().getComponentsRegistry().getControllers().forEach((controller) => {
             (<ControllerComponent>controller.componentInstance).initializeControllerFunctionality();
         })
+    }
+
+    private initializeTemplates() {
+        ApplicationContext.getInstance().getTemplateManager().initializeTemplates();
     }
 
     private intializeControllersRoutes(): void {

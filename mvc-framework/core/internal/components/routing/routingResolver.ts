@@ -8,7 +8,6 @@ import { Cookies } from "https://deno.land/x/oak/cookies.ts";
 import { Reflect } from "../../../../../main-core/reflectMetadata.ts";
 import { MandarineConstants } from "../../../../../main-core/mandarineConstants.ts";
 import { ViewModel } from "../../../modules/view-engine/viewModel.ts";
-import { RenderEngine } from "../../../modules/view-engine/renderEngine.ts";
 
 /**
  * Resolves the request made to an endpoint. 
@@ -47,7 +46,7 @@ export const requestResolver = async (routingAction: Mandarine.MandarineMVC.Rout
     isRenderable = renderInformation != undefined;
     
     if(isRenderable) {
-        context.response.body = RenderEngine.render(renderInformation, renderInformation.engine, (methodValue == (null || undefined)) ? {} : methodValue);
+        context.response.body = Mandarine.MandarineMVC.TemplateEngine.RenderEngine.render(renderInformation, renderInformation.engine, (methodValue == (null || undefined)) ? {} : methodValue);
     } else {
         context.response.body = methodValue;
     }

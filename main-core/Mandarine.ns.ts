@@ -28,6 +28,7 @@ export namespace Mandarine {
                 responseType?: MandarineMVC.MediaTypes
             } & any,
             templateEngine: {
+                engine: Mandarine.MandarineMVC.TemplateEngine.Engines,
                 path: string
             } & any,
             dataSource?: {
@@ -303,8 +304,9 @@ export namespace Mandarine {
         */
         export interface ITemplatesManager {
             register(renderData: Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData, engine?: Mandarine.MandarineMVC.TemplateEngine.Engines): void;
-            getTemplate(templatePath: string, manual: boolean): Mandarine.MandarineMVC.TemplateEngine.Template;
-            getFullPath(templatePath: string): string
+            getTemplate(templatePath: Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData, manual: boolean): Mandarine.MandarineMVC.TemplateEngine.Template;
+            getFullPath(templatePath: string): string;
+            initializeTemplates(): void;
         }
 
         export class MandarineTemplateManager extends TemplatesManager {}
@@ -329,7 +331,8 @@ export namespace Mandarine {
                     responseType: MandarineMVC.MediaTypes.TEXT_HTML
                 },
                 templateEngine: {
-                    path: "./static/resources/templates"
+                    path: "./static/resources/templates",
+                    engine: "ejs"
                 }
             }
         };
