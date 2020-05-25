@@ -38,13 +38,16 @@ export const requestResolver = async (routingAction: Mandarine.MandarineMVC.Rout
     // We dont use the variable handlerMethod because if we do it will loose the context and so the dependency injection will fail.
     // So if the method we are invoking uses dependents, the dispatcher will fail.
     // with that said we have to use nativaly the class and the method as if we are invoking the whole thing.
-    let methodValue: any = (methodArgs == null) ? handler[routingAction.actionMethodName]() : handler[routingAction.actionMethodName](...methodArgs);
-
+    let methodValue: any = undefined;
+    if(handler[routingAction.actionMethodName] instanceof Mandarine.AsyncFunction) {
+        methodValue = (methodArgs == null) ? await handler[routingAction.actionMethodName]() : await handler[routingAction.actionMethodName](...methodArgs);
+    } else {
+        methodValue = (methodArgs == null) ? handler[routingAction.actionMethodName]() : handler[routingAction.actionMethodName](...methodArgs);
+    }
     let isRenderable: boolean = false;
 
     let renderInformation: Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData = Reflect.getMetadata(`${MandarineConstants.REFLECTION_MANDARINE_METHOD_ROUTE_RENDER}:${routingAction.actionMethodName}`, handler, routingAction.actionMethodName);
     isRenderable = renderInformation != undefined;
-    
     if(isRenderable) {
         context.response.body = Mandarine.MandarineMVC.TemplateEngine.RenderEngine.render(renderInformation, renderInformation.engine, (methodValue == (null || undefined)) ? {} : methodValue);
     } else {
