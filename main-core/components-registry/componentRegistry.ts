@@ -229,8 +229,9 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
     }
 
     public connectRepositoriesToProxy(): void {
+        let repositoriesArray = this.getAllRepositories();
 
-        this.getAllRepositories().forEach((repo: Mandarine.MandarineCore.ComponentRegistryContext) => {
+        repositoriesArray.forEach((repo: Mandarine.MandarineCore.ComponentRegistryContext) => {
             let componentInstance: RepositoryComponent = repo.componentInstance;
             let newRepositoryProxy: any = this.connectRepositoryToProxy(repo);
             let handler: any = newRepositoryProxy.getClassHandler();
@@ -238,6 +239,9 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
             this.update(`repo:${componentInstance.extraData.schema}.${componentInstance.extraData.table}`, repo);
         });
 
+        if(repositoriesArray != undefined && repositoriesArray.length > 0) {
+            this.logger.info(`A total of ${repositoriesArray.length} repositories have been found`);
+        }
     }
 
     public getRepositoryByHandlerType(classType: any): Mandarine.MandarineCore.ComponentRegistryContext {

@@ -4,6 +4,7 @@ import { Value } from "../../main-core/decorators/configuration-readers/value.ts
 import { PostgreSQLDialect } from "../dialect/postgreSQLDialect.ts";
 import { PostgresConnector } from "../connectors/postgreSQLConnector.ts";
 import { MandarineORMException } from "./exceptions/mandarineORMException.ts";
+import { Log } from "../../logger/log.ts";
 
 /**
  * This class represents the entity manager which contains all the necessary methods & references for Mandarine to interact with your database.
@@ -17,12 +18,15 @@ export class EntityManagerClass {
     private databaseClient: any | PostgresConnector;
     private fullyInitialized: boolean = false;
 
+    public logger: Log = Log.getLogger(Mandarine.ORM.Entity.EntityManager);
+
     constructor() {
         this.entityRegistry = new EntityRegistry();
     }
 
     public async initializeAllEntities() {
         let entities: Array<Mandarine.ORM.Entity.Table> = this.entityRegistry.getAllEntities();
+        
         let dialect: Mandarine.ORM.Dialect.Dialect = this.dialectClass;
         // CREATE TABLES
         let tableQueries: Array<string> = new Array<string>();
@@ -83,6 +87,10 @@ export class EntityManagerClass {
                 }catch(error){
                 }
             break;
+        }
+
+        if(entities.length > 0) {
+            this.logger.info(`A total of ${entities.length} database entities have been found`);
         }
     }
 
