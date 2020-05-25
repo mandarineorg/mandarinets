@@ -90,24 +90,7 @@ export class ControllerComponent {
                     routingOptions: routeContext.options,
                     initializationStatus: Mandarine.MandarineMVC.Routing.RouteInitializationStatus.CREATED
                 });
-
-                // Initialize templates for route
-                this.initializeTemplates(routeContext.methodName);
             }
-        });
-    }
-
-    private initializeTemplates(methodHandlerName: string): void {
-        let classHandler: any = this.getClassHandler();
-        classHandler = (ReflectUtils.checkClassInitialized(this.getClassHandler())) ? classHandler : new classHandler();
-
-        let metadataKeysFromClass: Array<any> = Reflect.getMetadataKeys(classHandler, methodHandlerName);
-        if(metadataKeysFromClass == (null || undefined)) return;
-        let templateMetadataKeys: Array<any> = metadataKeysFromClass.filter((metadataKey: string) => metadataKey.startsWith(`${MandarineConstants.REFLECTION_MANDARINE_METHOD_ROUTE_RENDER}:`));
-        if(templateMetadataKeys == (null || undefined)) return;
-        templateMetadataKeys.forEach((value) => {
-            let annotationContext: Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData = <Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData> Reflect.getMetadata(value, classHandler, methodHandlerName);
-            ApplicationContext.getInstance().getTemplateManager().register(annotationContext, annotationContext.engine);
         });
     }
 

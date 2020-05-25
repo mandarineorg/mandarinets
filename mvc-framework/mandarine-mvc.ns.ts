@@ -1,4 +1,5 @@
 import { DI } from "../main-core/dependency-injection/di.ns.ts";
+import { RenderEngineClass } from "./core/modules/view-engine/renderEngine.ts";
 
 /**
 * This namespace contains all the essentials for Mandarine MVC to work
@@ -543,8 +544,8 @@ export namespace MandarineMvc {
          * Supported view engines by mandarine
          */
         export enum Engines {
-            HANDLEBARS,
-            EJS
+            HANDLEBARS = "handlebars",
+            EJS = "ejs"
         }
 
         /**
@@ -574,5 +575,7 @@ export namespace MandarineMvc {
         export interface RenderingOptions {
             manual: boolean;
         }
+
+        export class RenderEngine extends RenderEngineClass {}
     }
 }

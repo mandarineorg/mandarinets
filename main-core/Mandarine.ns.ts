@@ -7,6 +7,8 @@ import { MandarineSecurity } from "../security-core/mandarine-security.ns.ts";
 import { MandarineMvc } from "../mvc-framework/mandarine-mvc.ns.ts";
 import { MandarineORM } from "../orm-core/mandarine-orm.ns.ts";
 import { TemplatesManager } from "./templates-registry/templatesRegistry.ts";
+import { object } from "https://deno.land/x/view_engine/node_modules/@types/prop-types/index.d.ts";
+import { TemplateEngineException } from "../mvc-framework/core/exceptions/templateEngineException.ts";
 
 /**
 * This namespace contains all the essentials for mandarine to work
@@ -28,6 +30,7 @@ export namespace Mandarine {
                 responseType?: MandarineMVC.MediaTypes
             } & any,
             templateEngine: {
+                engine: Mandarine.MandarineMVC.TemplateEngine.Engines,
                 path: string
             } & any,
             dataSource?: {
@@ -150,6 +153,11 @@ export namespace Mandarine {
             if(properties.mandarine.server.host == (null || undefined)) properties.mandarine.server.host = defaultConfiguration.mandarine.server.host;
             if(properties.mandarine.server.port == (null || undefined)) properties.mandarine.server.port = defaultConfiguration.mandarine.server.port;
             if(properties.mandarine.server.responseType == (null || undefined)) properties.mandarine.server.responseType = defaultConfiguration.mandarine.server.responseType;
+            if(properties.mandarine.templateEngine == (null || undefined)) properties.mandarine.templateEngine = defaultConfiguration.mandarine.templateEngine;
+            if(properties.mandarine.templateEngine.path == (null || undefined)) properties.mandarine.templateEngine.path == defaultConfiguration.mandarine.templateEngine.path;
+            if(properties.mandarine.templateEngine.engine == (null || undefined)) properties.mandarine.templateEngine.engine == defaultConfiguration.mandarine.templateEngine.engine;
+
+            if(!Object.values(Mandarine.MandarineMVC.TemplateEngine.Engines).includes(properties.mandarine.templateEngine.engine)) throw new TemplateEngineException(TemplateEngineException.INVALID_ENGINE, "MandarineCore");
 
             mandarineGlobal.mandarineProperties = properties;
        }
@@ -303,8 +311,9 @@ export namespace Mandarine {
         */
         export interface ITemplatesManager {
             register(renderData: Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData, engine?: Mandarine.MandarineMVC.TemplateEngine.Engines): void;
-            getTemplate(templatePath: string, manual: boolean): Mandarine.MandarineMVC.TemplateEngine.Template;
-            getFullPath(templatePath: string): string
+            getTemplate(templatePath: Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData, manual: boolean): Mandarine.MandarineMVC.TemplateEngine.Template;
+            getFullPath(templatePath: string): string;
+            initializeTemplates(): void;
         }
 
         export class MandarineTemplateManager extends TemplatesManager {}
@@ -329,7 +338,8 @@ export namespace Mandarine {
                     responseType: MandarineMVC.MediaTypes.TEXT_HTML
                 },
                 templateEngine: {
-                    path: "./static/resources/templates"
+                    path: "./static/resources/templates",
+                    engine: "ejs"
                 }
             }
         };

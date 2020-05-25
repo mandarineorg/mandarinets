@@ -11,7 +11,7 @@ import { TemplateUtils } from "../../utils/templateUtils.ts";
  * This class executes the rendering of a template inside the templates container
  * This class contains all elements related to the execution of the template
  */
-export class RenderEngine {
+export class RenderEngineClass {
     public static render(renderData: Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData, engine: Mandarine.MandarineMVC.TemplateEngine.Engines, model: any): string {
         let templatesManager: Mandarine.MandarineCore.ITemplatesManager = ApplicationContext.getInstance().getTemplateManager();
 
@@ -25,13 +25,13 @@ export class RenderEngine {
                 viewEngine = engineFactory.getHandlebarsEngine();
                 break;
             default:
-                // TODO THROW ERROR
+                throw new TemplateEngineException(TemplateEngineException.INVALID_ENGINE, "RenderEngine");
                 break;
         }
 
         let manual: boolean = renderData.options != undefined && renderData.options.manual == true;
 
-        let template: Mandarine.MandarineMVC.TemplateEngine.Template = templatesManager.getTemplate(TemplateUtils.getTemplateKey(renderData), manual);
+        let template: Mandarine.MandarineMVC.TemplateEngine.Template = templatesManager.getTemplate(renderData, manual);
         if(template == undefined) throw new TemplateEngineException(TemplateEngineException.INVALID_TEMPLATE_PROCESSING, "RenderEngine");
         
         return viewEngine(template.content, (model instanceof ViewModel) ? model.toObject() : model);

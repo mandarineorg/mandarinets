@@ -36,7 +36,7 @@ export class RoutingUtils {
     }
 
     public static registerRenderHandler(target: any, methodName: string, template: string, engine?: Mandarine.MandarineMVC.TemplateEngine.Engines, options?: Mandarine.MandarineMVC.TemplateEngine.RenderingOptions) {
-        if(engine == (null || undefined)) engine = Mandarine.MandarineMVC.TemplateEngine.Engines.EJS;
+        if(engine == (null || undefined)) engine = Mandarine.Global.getMandarineConfiguration().mandarine.templateEngine.engine;
         
         let className: string = ReflectUtils.getClassName(target);
         let currentTargetAnnotations: Array<any> = Reflect.getMetadataKeys(target);
