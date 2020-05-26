@@ -15,7 +15,7 @@ export { Injectable } from "./main-core/dependency-injection/decorators/injectab
 export { MandarineCore } from "./main-core/mandarineCore.ts";
 export { RequestMethod } from "./mvc-framework/core/decorators/stereotypes/controller/action.ts";
 export { Controller } from "./mvc-framework/core/decorators/stereotypes/controller/controller.ts";
-export { Param, RouteParam, QueryParam, RequestParam, Session, ServerRequestParam, ResponseParam, CookieParam, Model } from "./mvc-framework/core/decorators/stereotypes/controller/parameterDecorator.ts";
+export { Param, RouteParam, QueryParam, RequestParam, Session, ServerRequestParam, ResponseParam, CookieParam, Model, RequestBody } from "./mvc-framework/core/decorators/stereotypes/controller/parameterDecorator.ts";
 export { ResponseStatus } from "./mvc-framework/core/decorators/stereotypes/controller/responseStatus.ts";
 export { GET, POST, DELETE, PATCH, PUT, HEAD, OPTIONS } from "./mvc-framework/core/decorators/stereotypes/controller/routingDecorator.ts";
 export { Render } from "./mvc-framework/core/decorators/stereotypes/view-engine/viewEngineDecorators.ts";
