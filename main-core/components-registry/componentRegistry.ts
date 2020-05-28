@@ -14,6 +14,7 @@ import { ApplicationContext } from "../application-context/mandarineApplicationC
 import { Reflect } from "../reflectMetadata.ts";
 import { MandarineConstants } from "../mandarineConstants.ts";
 import { Log } from "../../logger/log.ts";
+import { CommonUtils } from "../utils/commonUtils.ts";
 
 /**
 * This class is also known as the DI container.
@@ -30,7 +31,7 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
         let componentExist: boolean = this.exist(componentName);
 
         if(componentExist) {
-            throw new ComponentFactoryError(ComponentFactoryError.EXISTENT_COMPONENT, `${componentName}`);
+            componentName = `${componentName}.${CommonUtils.generateUUID()}`;
         } else {
 
             let componentInstanceInitialized: any;
