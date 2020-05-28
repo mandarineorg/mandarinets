@@ -337,7 +337,7 @@ export namespace Mandarine {
             mandarine: {
                 server: {
                     host: "0.0.0.0",
-                    port: 4444,
+                    port: 8080,
                     responseType: MandarineMVC.MediaTypes.TEXT_HTML
                 },
                 templateEngine: {
