@@ -7,9 +7,8 @@ MandarineTS aims to provide an affordable and easy way to create typescript web-
 With the use of multiple systems and design patterns, Mandarine offers you the ability to develop complex MVC web applications. Dependency Injection & Components are one of the few things you can take advantage of.
 
 ## Documentation
-To see all the available documentation of Mandarine.TS, please [Click here](https://github.com/mandarineorg/mandarinets/wiki).  
-[Click here](https://github.com/mandarineorg/mandarinets/wiki/Basic-Concepts) to see how to set-up your Mandarine application
-### [Click here to see our To-Do list](https://github.com/mandarineorg/mandarinets/wiki/TO-DO's)
+To see all the available documentation of Mandarine.TS, please [Click here](https://mandarineframework.gitbook.io/mandarine-ts/).  
+[Click here](https://mandarineframework.gitbook.io/mandarine-ts/getting-started) to see how to set-up your Mandarine application
 
 ## Basic usage
 
@@ -29,9 +28,9 @@ new MandarineMVC().run();
 # request => http://localhost:4444/api/hello-world => Hello World
 ```
 
-**Note** tsconfig.json file is required, please refer to [this link](https://github.com/mandarineorg/mandarinets/wiki/Basic-Concepts) to understand more.
+**Note** tsconfig.json file is required, please refer to [this link](https://mandarineframework.gitbook.io/mandarine-ts/getting-started#typescript-configuration) to understand more.
 ## Mandarine.TS Main features
-Built-in [Dependency Injection](https://github.com/mandarineorg/mandarinets/wiki/Dependency-Injection) Framework, [Components](https://github.com/mandarineorg/mandarinets/wiki/Components), [Automatization for routes creation](https://github.com/mandarineorg/mandarinets/wiki/Routing-Annotations), [Middlewares](https://github.com/mandarineorg/mandarinets/wiki/Custom-Middleware), [Sessions](https://github.com/mandarineorg/mandarinets/wiki/Sessions), [built-in ORM](https://github.com/mandarineorg/mandarinets/wiki/Mandarine-ORM), [MQL](https://github.com/mandarineorg/mandarinets/wiki/Mandarine-Query-Language-(MQL)) (Mandarine Query Language), [Template Engine](https://github.com/mandarineorg/mandarinets/wiki/Template-Engine)
+Built-in [Dependency Injection](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-core/dependency-injection) Framework, [Components](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-core/components/component), [Automatization for routes creation](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-mvc/controllers/using-routes-and-http-handlers), [Middlewares](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-mvc/custom-middleware), [Sessions](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-mvc/session-middleware), [built-in ORM](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-data/orm), [MQL](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-data/mandarine-query-language) (Mandarine Query Language), [Template Engine](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-mvc/template-engine)
 
 ## Want to help?
 ### Interested in coding
