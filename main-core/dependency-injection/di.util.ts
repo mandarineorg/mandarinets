@@ -11,11 +11,13 @@ export class DependencyInjectionUtil {
     /**
      * Defines the context for a new injection inside the DI system
      */
-    public static defineInjectionMetadata(injectionType: DI.InjectionTypes, paramaterInjectableObject: any, target: any, propertyName: string, parameterIndex: number, specificParameterName?: string) {
+    public static defineInjectionMetadata(injectionType: DI.InjectionTypes, target: any, propertyName: string, parameterIndex: number, specificParameterName?: string) {
         let isMethod: boolean = (parameterIndex != null);
         let parentClassName: string = ReflectUtils.getClassName(target);
 
         if(isMethod) {
+            let methodArgumentTypes = Reflect.getMetadata("design:paramtypes", target, propertyName);
+
             let methodParams: Array<string> = ReflectUtils.getParamNames(target[propertyName]);
             let parameterName: string = methodParams[parameterIndex];
 
@@ -23,17 +25,14 @@ export class DependencyInjectionUtil {
 
             if(specificParameterName != (null || undefined)) varName = specificParameterName; // If the user specified an specific parameter name, then we use it.
 
-            let injectionFieldType = "PARAMETER";
-
-            let parameterDependencyInjectionMetadataName = `${MandarineConstants.REFLECTION_MANDARINE_INJECTION_FIELD}:${injectionFieldType}:${injectionType}:${varName}:${(parameterIndex == (null || undefined) ? 0 : parameterIndex)}`;
+            let parameterDependencyInjectionMetadataName = `${MandarineConstants.REFLECTION_MANDARINE_INJECTION_FIELD}:PARAMETER:${injectionType}:${varName}:${(parameterIndex == (null || undefined) ? 0 : parameterIndex)}`;
 
             let annotationContext: DI.InjectionMetadataContext = {
-                injectionFieldType: <"PARAMETER" | "FIELD"> injectionFieldType,
                 injectionType: injectionType,
                 parameterName: varName,
                 parameterIndex: parameterIndex,
                 parameterMethodName: propertyName,
-                parameterObjectToInject: paramaterInjectableObject,
+                parameterObjectToInject: (injectionType == DI.InjectionTypes.INJECTABLE_OBJECT) ? methodArgumentTypes[parameterIndex] : undefined,
                 propertyName: undefined,
                 propertyObjectToInject: undefined,
                 className: parentClassName

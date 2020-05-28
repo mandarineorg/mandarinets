@@ -10,9 +10,9 @@ import { DI } from "../di.ns.ts";
  * `@Inject(injectableObject?: any)
  *  Target: property/method parameter`
  */
-export const Inject = (injectableObject?: any): Function => {
+export const Inject = (): Function => {
     return (target: any, propertyName: string, index: number) => {
          // If index is not null then it is a parameter otherwise it is a class property.
-        DependencyInjectionUtil.defineInjectionMetadata(DI.InjectionTypes.INJECTABLE_OBJECT, injectableObject, target, propertyName, index);
+        DependencyInjectionUtil.defineInjectionMetadata(DI.InjectionTypes.INJECTABLE_OBJECT, target, propertyName, index);
     };
 };
