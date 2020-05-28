@@ -341,7 +341,7 @@ export namespace Mandarine {
                     responseType: MandarineMVC.MediaTypes.TEXT_HTML
                 },
                 templateEngine: {
-                    path: "./resources/templates",
+                    path: "./src/main/resources/templates",
                     engine: "ejs"
                 }
             }
