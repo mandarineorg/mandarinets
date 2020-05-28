@@ -93,6 +93,7 @@ export namespace DI {
                 let isComponentManual = component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT; 
                 let classHandler: any = (isComponentManual) ? component.componentInstance : component.componentInstance.getClassHandler();
 
+                // It is never initialized when it gets here.
                 return (isComponentManual || ReflectUtils.checkClassInitialized(classHandler)) ? classHandler : new classHandler();
             } else {
                 return undefined;
@@ -142,20 +143,6 @@ export namespace DI {
         });
     }
 
-    export function getDependencyInstance(componentType: Mandarine.MandarineCore.ComponentTypes, componentInstance: any): any {
-        switch(componentType) {
-            case Mandarine.MandarineCore.ComponentTypes.CONTROLLER:
-                return (<ControllerComponent> componentInstance).getClassHandler();
-            case Mandarine.MandarineCore.ComponentTypes.SERVICE:
-                return (<ServiceComponent> componentInstance).getClassHandler();
-            case Mandarine.MandarineCore.ComponentTypes.CONFIGURATION:
-                return (<ConfigurationComponent> componentInstance).getClassHandler();
-            case Mandarine.MandarineCore.ComponentTypes.COMPONENT:
-                return (<ComponentComponent> componentInstance).getClassHandler();
-        }
-        return null;
-    }
-    
     /** 
      * Resolves all the requested data by a HTTP Handler method.
      * This function is used when requests are received
