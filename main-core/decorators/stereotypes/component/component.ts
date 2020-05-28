@@ -6,11 +6,11 @@ import { Mandarine } from "../../../Mandarine.ns.ts";
  * 
  * Register a component type Component in the DI Container
  *
- * `@Component(name?: string)
+ * `@Component()
  *  Target: class`
  */
-export const Component = (name?: string): Function => {
+export const Component = (): Function => {
     return (target: any, methodName: string, index: number) => {
-        ComponentsRegistryUtil.registerComponent(name, target, Mandarine.MandarineCore.ComponentTypes.COMPONENT, {}, index);
+        ComponentsRegistryUtil.registerComponent(target, Mandarine.MandarineCore.ComponentTypes.COMPONENT, {}, index);
     };
 };

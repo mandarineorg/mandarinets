@@ -6,12 +6,12 @@ import { Mandarine } from "../../../Mandarine.ns.ts";
  * 
  * Register a component type Middleware in the DI Container
  *
- * `@Middleware(regexRoute: RegExp, name?: string)
+ * `@Middleware(regexRoute: RegExp)
  *  Target: class`
  */
-export const Middleware = (regexRoute: RegExp, name?: string): Function => {
+export const Middleware = (regexRoute: RegExp): Function => {
     return (target: any, methodName: string, index: number) => {
-        ComponentsRegistryUtil.registerComponent(name, target, Mandarine.MandarineCore.ComponentTypes.MIDDLEWARE, {
+        ComponentsRegistryUtil.registerComponent(target, Mandarine.MandarineCore.ComponentTypes.MIDDLEWARE, {
             regexRoute: regexRoute
         }, index);
     };

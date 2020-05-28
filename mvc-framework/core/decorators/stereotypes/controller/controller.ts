@@ -10,10 +10,10 @@ import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
  * Defines that a class is a controller. 
  * When a class is a controller, it is meant to resolve http handlers & all the internals related to mandarine HTTP server
  * 
- * `@Controller(baseRoute, name)
+ * `@Controller(baseRoute)
  *  Target: Class`
  */
-export const Controller = (baseRoute?: string, name?: string): Function => {
+export const Controller = (baseRoute?: string): Function => {
     return (target: any, methodName: string, index: number) => {
         let className: string = ReflectUtils.getClassName(target);
         let getComponentsRegistry = ApplicationContext.getInstance().getComponentsRegistry();
@@ -25,7 +25,7 @@ export const Controller = (baseRoute?: string, name?: string): Function => {
 
                 getComponentsRegistry.update(className, objectContext);
             } else {
-                ComponentUtils.createControllerComponent(name, { pathRoute: baseRoute }, target);
+                ComponentUtils.createControllerComponent({ pathRoute: baseRoute }, target);
             }
     };
 };

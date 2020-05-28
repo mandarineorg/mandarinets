@@ -13,11 +13,11 @@ import { MandarineORMException } from "../../orm-core/core/exceptions/mandarineO
 */
 export class ComponentsRegistryUtil {
 
-    public static registerComponent(componentName: string, componentTarget: any, componentType: Mandarine.MandarineCore.ComponentTypes, configuration: any, index: number): any {
+    public static registerComponent(componentTarget: any, componentType: Mandarine.MandarineCore.ComponentTypes, configuration: any, index: number): any {
         if((index != null)) throw new InvalidAnnotationError(InvalidAnnotationError.CLASS_ONLY_ANNOTATION, Mandarine.MandarineCore.ComponentTypes[componentType]);
         
         let parentClassName: string = ReflectUtils.getClassName(componentTarget);
-        if(componentName == (undefined || null)) componentName = parentClassName;
+        let componentName = parentClassName;
 
         let componentsRegistry = ApplicationContext.getInstance().getComponentsRegistry();
 
@@ -42,7 +42,7 @@ export class ComponentsRegistryUtil {
             let entity: Mandarine.ORM.Entity.Table = mandarineRepository.getModeler().entity;
             
             if(entity != (null || undefined)) {
-                this.registerComponent(`repo:${entity.schema}.${entity.tableName}`, repositoryTarget, Mandarine.MandarineCore.ComponentTypes.REPOSITORY, {
+                this.registerComponent(repositoryTarget, Mandarine.MandarineCore.ComponentTypes.REPOSITORY, {
                     table: entity.tableName,
                     schema: entity.schema,
                     entity: entity

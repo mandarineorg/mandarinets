@@ -237,7 +237,7 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
             let newRepositoryProxy: any = this.connectRepositoryToProxy(repo);
             let handler: any = newRepositoryProxy.getClassHandler();
             componentInstance.classHandler = new handler();
-            this.update(`repo:${componentInstance.extraData.schema}.${componentInstance.extraData.table}`, repo);
+            this.update(repo.componentName, repo);
         });
 
         if(repositoriesArray != undefined && repositoriesArray.length > 0) {
