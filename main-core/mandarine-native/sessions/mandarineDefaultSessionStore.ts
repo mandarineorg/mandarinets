@@ -11,6 +11,7 @@ export class MandarineStorageHandler implements Mandarine.Security.Sessions.Sess
 
     constructor() {
         this.initializeSessionsContainer();
+        this.startExpiringSessions();
     }
 
     public initializeSessionsContainer(): void {
@@ -94,9 +95,9 @@ export class MandarineStorageHandler implements Mandarine.Security.Sessions.Sess
         });
     }
 
-    public startExpiringSessions(): void {
+    public async startExpiringSessions(): Promise<void> {
         if(this.options.autoclearExpiredSessions && this.options.expirationIntervalHandler == undefined && this.options.expirationInterval > 0) {
-            this.options.expirationIntervalHandler = setInterval(this.clearExpiredSessions, this.options.expirationInterval);
+            this.options.expirationIntervalHandler = setInterval(() => this.clearExpiredSessions(), this.options.expirationInterval);
         }
     }
 

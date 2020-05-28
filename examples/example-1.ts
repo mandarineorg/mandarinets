@@ -10,7 +10,6 @@ class TestController {
     public helloWorld(@QueryParam('name') personsName: string): string {
         return `Hello ${personsName}, welcome to Mandarine.TS`;
     }
-
 }
 
 @Controller('/api')
