@@ -46,7 +46,6 @@ export namespace DI {
      *
      */
     export interface InjectionMetadataContext {
-        injectionFieldType: "FIELD" | "PARAMETER";
         injectionType: InjectionTypes;
         parameterName: string;
         parameterIndex: number;

@@ -56,7 +56,7 @@ export class RoutingUtils {
     }
 
     public static registerRoutingParam(parameterType: DI.InjectionTypes, target: any, methodName: string, parameterIndex: number, specificParameterName?: string) {
-        DependencyInjectionUtil.defineInjectionMetadata(parameterType, undefined, target, methodName, parameterIndex, specificParameterName);
+        DependencyInjectionUtil.defineInjectionMetadata(parameterType, target, methodName, parameterIndex, specificParameterName);
     }
 
     public static findQueryParams(url: string): URLSearchParams | undefined {
