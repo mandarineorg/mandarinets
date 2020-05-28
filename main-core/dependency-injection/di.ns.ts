@@ -216,11 +216,12 @@ export namespace DI {
                         else args.push(undefined);
                         break;
                     case InjectionTypes.INJECTABLE_OBJECT:
-                        if(ApplicationContext.getInstance().getComponentsRegistry().exist(param.parameterObjectToInject.name)) {
-                            let component = ApplicationContext.getInstance().getComponentsRegistry().get(param.parameterObjectToInject.name);
-                            args.push(getDependencyInstance(component.componentType, component.componentInstance));
-                        }
-                        else args.push(undefined);
+                        let injectableComponent = ApplicationContext.getInstance().getComponentsRegistry().getComponentByHandlerType(param.parameterObjectToInject);
+
+                        if(injectableComponent != (null || undefined)) {
+                            args.push((injectableComponent.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT) ? injectableComponent.componentInstance : injectableComponent.componentInstance.getClassHandler());
+                        } else args.push(undefined);
+                        
                         break;
                     case InjectionTypes.TEMPLATE_MODEL_PARAM:
                         args.push(new ViewModel());
