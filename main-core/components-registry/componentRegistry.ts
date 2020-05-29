@@ -130,6 +130,9 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
             }else {
                 instance = component.componentInstance.getClassHandler();
             }
+
+            // This verification should never be called as instance may have parameters in its constructor. 
+            // When this method is used, it should be used after initialization of dependencies
             if(!ReflectUtils.checkClassInitialized(instance)) instance = new instance();
 
             return instance instanceof classType;
@@ -147,7 +150,7 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
     }
 
     public resolveDependencies(): void {
-        return DI.componentDependencyResolver(this);
+        return DI.Factory.componentDependencyResolver(this);
     }
 
     private connectRepositoryToProxy(repositoryObject: Mandarine.MandarineCore.ComponentRegistryContext) {

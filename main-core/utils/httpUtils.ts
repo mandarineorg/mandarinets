@@ -57,6 +57,6 @@ export class HttpUtils {
           return out;
         }
         return {};
-      }
+    }
     
 }
