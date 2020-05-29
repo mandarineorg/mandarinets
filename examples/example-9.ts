@@ -1,12 +1,7 @@
-import { Configuration } from "../main-core/decorators/stereotypes/configuration/configuration.ts";
-import { Injectable } from "../main-core/dependency-injection/decorators/injectable.ts";
 import { Service } from "../main-core/decorators/stereotypes/service/service.ts";
 import { Controller } from "../mvc-framework/core/decorators/stereotypes/controller/controller.ts";
 import { GET } from "../mvc-framework/core/decorators/stereotypes/controller/routingDecorator.ts";
-import { MandarineMVC } from "../mvc-framework/mandarineMVC.ts";
-import { Inject } from "../main-core/dependency-injection/decorators/Inject.ts";
-import { Reflect } from "../main-core/reflectMetadata.ts";
-import { ApplicationContext } from "../main-core/application-context/mandarineApplicationContext.ts";
+import { MandarineCore } from "../mod.ts";
 
 @Service()
 export class Service3 {
@@ -43,4 +38,4 @@ export class Controller1 {
 
 }
 
-new MandarineMVC().run();
+new MandarineCore().MVC().run();

@@ -1,7 +1,7 @@
 import { Controller } from "../mvc-framework/core/decorators/stereotypes/controller/controller.ts";
 import { GET } from "../mvc-framework/core/decorators/stereotypes/controller/routingDecorator.ts";
 import { Session } from "../mvc-framework/core/decorators/stereotypes/controller/parameterDecorator.ts";
-import { MandarineMVC } from "../mvc-framework/mandarineMVC.ts";
+import { MandarineCore } from "../mod.ts";
 
 @Controller()
 class TestController {
@@ -16,4 +16,4 @@ class TestController {
 
 }
 
-new MandarineMVC().run();
+new MandarineCore().MVC().run();
