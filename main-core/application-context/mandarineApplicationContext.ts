@@ -1,6 +1,7 @@
 import { ComponentsRegistry } from "../components-registry/componentRegistry.ts";
 import { Mandarine } from "../Mandarine.ns.ts";
 import { MandarineSecurity } from "../../security-core/mandarine-security.ns.ts";
+import { DI } from "../dependency-injection/di.ns.ts";
 
 /**
 * Contains the "application context" of mandarine.
@@ -67,6 +68,10 @@ export class ApplicationContext implements Mandarine.ApplicationContext.IApplica
 
     public getTemplateManager(): Mandarine.MandarineCore.ITemplatesManager {
         return Mandarine.Global.getTemplateManager();
+    }
+
+    public getDIFactory(): DI.FactoryClass {
+        return DI.Factory;
     }
 
 }

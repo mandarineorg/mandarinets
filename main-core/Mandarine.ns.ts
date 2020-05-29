@@ -7,6 +7,7 @@ import { MandarineMvc } from "../mvc-framework/mandarine-mvc.ns.ts";
 import { MandarineORM } from "../orm-core/mandarine-orm.ns.ts";
 import { TemplatesManager } from "./templates-registry/templatesRegistry.ts";
 import { TemplateEngineException } from "../mvc-framework/core/exceptions/templateEngineException.ts";
+import { DI } from "./dependency-injection/di.ns.ts";
 
 /**
 * This namespace contains all the essentials for mandarine to work
@@ -221,6 +222,7 @@ export namespace Mandarine {
             initializeMetadata(): void;
             changeSessionContainer(newSessionContainer: MandarineSecurity.Sessions.SessionContainer): void;
             getInstance?: () => ApplicationContext.IApplicationContext;
+            getDIFactory(): DI.FactoryClass;
         }
     };
 
