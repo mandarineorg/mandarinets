@@ -36,6 +36,7 @@ export namespace MandarineORM {
             deleteWhereStatement(tableMetadata: Entity.TableMetadata): string;
             selectColumnSyntax(colName: string, operator: string, colValue: string, secureParameter?: boolean): string;
             insertStatement(tableMetadata: Entity.TableMetadata, entity: Entity.Table, values: object, secureParameter?: boolean): any;
+            updateStatement(tableMetadata: Entity.TableMetadata, entity: Entity.Table, values: object): any;
         }
     }
 

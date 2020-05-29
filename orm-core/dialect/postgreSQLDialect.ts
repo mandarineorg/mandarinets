@@ -201,4 +201,26 @@ export class PostgreSQLDialect implements Mandarine.ORM.Dialect.Dialect {
         };
     }
 
+    public updateStatement(tableMetadata: Mandarine.ORM.Entity.TableMetadata, entity: Mandarine.ORM.Entity.Table, values: object): any {
+        let syntax: string = `UPDATE ${this.getTableName(tableMetadata)} SET (%columns%) = (%values%) WHERE ${entity.primaryKey.name} = %primaryKeyValue%`;
+
+        let updateValues = {};
+        entity.columns.forEach((column) => {
+            let value = values[column.name];
+            if(value == undefined) value = null;
+
+            updateValues[column.name] = value;
+        });
+
+        let setters: Array<any> = new Array<any>();
+
+        let columnsForModification = Object.keys(updateValues);
+        syntax = syntax.replace('%columns%', columnsForModification.join(", "));
+
+        return {
+            query: syntax,
+            updateValuesObject: updateValues
+        };
+    }
+
 }

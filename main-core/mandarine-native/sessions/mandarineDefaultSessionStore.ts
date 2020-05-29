@@ -64,7 +64,7 @@ export class MandarineStorageHandler implements Mandarine.Security.Sessions.Sess
         } else {
             let sessionContainer: Array<Mandarine.Security.Sessions.MandarineSession> = this.getSessionsContainer();
             const sessionIndex: number = sessionContainer.findIndex(ses => ses.sessionID === sessionID);
-            sessionContainer = sessionContainer.filter(ses => ses.sessionID != sessionID);
+            (window as any).mandarineSessionsContainer = sessionContainer.filter(ses => ses.sessionID != sessionID);
             callback(undefined, true);
         }
     }

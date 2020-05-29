@@ -3,6 +3,7 @@ import { ApplicationContext } from "../../main-core/application-context/mandarin
 import { PostgreSQLDialect } from "../dialect/postgreSQLDialect.ts";
 import { PostgresConnector } from "../connectors/postgreSQLConnector.ts";
 import { ReflectUtils } from "../../main-core/utils/reflectUtils.ts";
+import { MandarineORMException } from "../core/exceptions/mandarineORMException.ts";
 
 /**
  * This class is one of the most important class for MQL
@@ -52,41 +53,76 @@ export class RepositoryProxy<T> {
     }
 
     public async save(repositoryMethodParameterNames: Array<string>, model: any): Promise<any> {
-        if(!ReflectUtils.checkClassInitialized(model)) {/*TODO THROW ERROR*/}
-
+        if(!ReflectUtils.checkClassInitialized(model)) throw new MandarineORMException(MandarineORMException.INSTANCE_IN_SAVE, "RepositoryProxy");
         let entityManager: Mandarine.ORM.Entity.EntityManager = this.getEntityManager();
         let columns: Array<Mandarine.ORM.Entity.Column> = this.entity.columns;
-        let modelObject: object = JSON.parse(JSON.stringify(model));
 
+        let modelObject: object = JSON.parse(JSON.stringify(model));
         Object.keys(modelObject).forEach((modelColumn) => {
             if(!columns.some(col => col.name.toLowerCase() == modelColumn.toLowerCase())) delete modelObject[modelColumn];
         });
 
         let dialect = entityManager.getDialectClass();
 
-        switch(entityManager.getDialect()) {
-            case Mandarine.ORM.Dialect.Dialects.POSTGRESQL:
-                let insertionValues: Array<any> = new Array<any>();
-                let queryData = dialect.insertStatement(dialect.getTableMetadata(this.entity), this.entity, modelObject, true);
-                let query = queryData.query;
-                let queryColumnValues = queryData.insertionValuesObject;
-                Object.keys(queryColumnValues).forEach((col, index) => {
-                    insertionValues.push(`$${index + 1}`);
-                });
-                query = query.replace("%values%", insertionValues.join(", "));
+        if(this.entity.primaryKey == (undefined || null) || model[this.entity.primaryKey.fieldName] == (null || undefined)) {
+            // INSERTION
 
-                let saveQuery = await this.executeQuery({
-                    text: query,
-                    args: Object.values(queryColumnValues)
-                }, entityManager);
+            switch(entityManager.getDialect()) {
+                case Mandarine.ORM.Dialect.Dialects.POSTGRESQL:
+                    let insertionValues: Array<any> = new Array<any>();
+                    let queryData = dialect.insertStatement(dialect.getTableMetadata(this.entity), this.entity, modelObject, true);
+                    let query = queryData.query;
+                    let queryColumnValues = queryData.insertionValuesObject;
+                    Object.keys(queryColumnValues).forEach((col, index) => {
+                        insertionValues.push(`$${index + 1}`);
+                    });
+                    query = query.replace("%values%", insertionValues.join(", "));
 
-                if(saveQuery === undefined) {
-                    return false;
-                } else {
-                    return true;
-                }
+                    let saveQuery = await this.executeQuery({
+                        text: query,
+                        args: Object.values(queryColumnValues)
+                    }, entityManager);
 
-            break;
+                    if(saveQuery === undefined) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+
+                break;
+            }
+        } else {
+            // UPDATE
+
+            switch(entityManager.getDialect()) {
+                case Mandarine.ORM.Dialect.Dialects.POSTGRESQL:
+                    let updateValues: Array<any> = new Array<any>();
+                    let queryData = dialect.updateStatement(dialect.getTableMetadata(this.entity), this.entity, modelObject);
+                    let query = queryData.query;
+                    let queryColumnValues = queryData.updateValuesObject;
+                    Object.keys(queryColumnValues).forEach((col, index) => updateValues.push(`$${index + 1}`));
+                    query = query.replace("%values%", updateValues.join(", "));
+
+                    // Primary key value
+                    query = query.replace("%primaryKeyValue%", `$${updateValues.length + 1}`);
+
+                    // Query args
+                    let queryArgs = Object.values(queryColumnValues);
+                    queryArgs.push(model[this.entity.primaryKey.fieldName]);
+                    
+                    let saveQuery = await this.executeQuery({
+                        text: query,
+                        args: queryArgs
+                    }, entityManager);
+
+                    if(saveQuery === undefined) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                    
+                break;
+            }
         }
 
     }

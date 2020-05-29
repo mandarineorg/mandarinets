@@ -71,6 +71,16 @@ export class myController {
         return true;
     }
 
+    @GET('/update')
+    public async updateRecord() {
+        let anastasia = await this.repository.findByFirstnameAndCountry("Anastasov", "Croatia");
+        let model = <Users> anastasia[0];
+        model.firstname = "Anastasov";
+        model.lastname = "Emerenkov";
+        model.country = "United States";
+        return await this.repository.save(model);
+    }
+
     @GET('/get-people-from-united-states')
     public async handleGetPeopleFromUnitedStates() {
         return await this.repository.findByCountry("United States");
