@@ -1,9 +1,9 @@
 import { Controller } from "../mvc-framework/core/decorators/stereotypes/controller/controller.ts";
 import { GET } from "../mvc-framework/core/decorators/stereotypes/controller/routingDecorator.ts";
 import { Render } from "../mvc-framework/core/decorators/stereotypes/view-engine/viewEngineDecorators.ts";
-import { MandarineMVC } from "../mvc-framework/mandarineMVC.ts";
 import { Model } from "../mvc-framework/core/decorators/stereotypes/controller/parameterDecorator.ts";
 import { ViewModel } from "../mvc-framework/core/modules/view-engine/viewModel.ts";
+import { MandarineCore } from "../mod.ts";
 
 @Controller()
 export class MyController {
@@ -35,4 +35,4 @@ export class MyController {
 
 }
 
-new MandarineMVC().run();
+new MandarineCore().MVC().run();

@@ -9,9 +9,9 @@ import { Log } from "../../logger/log.ts";
 /**
  * Contains methods that are necessary for the MVC engine to start
  */
-export class MandarineMvcFrameworkEngineMethods {
+export class MandarineTSFrameworkEngineMethods {
 
-    public static logger: Log = Log.getLogger("MandarineMvcFrameworkStarter");
+    public static logger: Log = Log.getLogger(MandarineTSFrameworkEngineMethods);
 
     public static initializeEngineMethods() {
         this.initializeInternalManualComponents();
@@ -57,22 +57,5 @@ export class MandarineMvcFrameworkEngineMethods {
         if(middleware.length > 0) {
             this.logger.info(`A total of ${middleware.length} Middleware have been registered`);
         }
-    }
-
-    public static initializeDefaultsForResponse(context: any) {
-        context.response.redirect = HttpUtils.redirect(context.response);
-    }
-
-    public static assignContentType(context: any) {
-        let contentType: string = getMandarineConfiguration().mandarine.server.responseType;
-
-        if(context.response.body != (null || undefined)) {
-            switch(typeof context.response.body) {
-                case "object":
-                    contentType = Mandarine.MandarineMVC.MediaTypes.APPLICATION_JSON;
-                break;
-            }
-        }
-        context.response.headers.set('Content-Type', contentType);
     }
 }

@@ -1,7 +1,4 @@
-import { Mandarine } from "../main-core/Mandarine.ns.ts";
-import { MandarineMVC } from "../mvc-framework/mandarineMVC.ts";
 import { MandarineRepository } from "../orm-core/repository/mandarineRepository.ts";
-import { ApplicationContext } from "../main-core/application-context/mandarineApplicationContext.ts";
 import { Controller } from "../mvc-framework/core/decorators/stereotypes/controller/controller.ts";
 import { Inject } from "../main-core/dependency-injection/decorators/Inject.ts";
 import { GET } from "../mvc-framework/core/decorators/stereotypes/controller/routingDecorator.ts";
@@ -118,4 +115,4 @@ export class myController {
     }
 }
 MandarineCore.setConfiguration('./config.json');
-new MandarineMVC().run();
+new MandarineCore().MVC().run();

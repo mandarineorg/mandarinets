@@ -2,8 +2,8 @@ import { Middleware } from "../main-core/decorators/stereotypes/middleware/Middl
 import { MiddlewareTarget } from "../main-core/components/middleware-component/middlewareTarget.ts";
 import { Controller } from "../mvc-framework/core/decorators/stereotypes/controller/controller.ts";
 import { GET } from "../mvc-framework/core/decorators/stereotypes/controller/routingDecorator.ts";
-import { MandarineMVC } from "../mvc-framework/mandarineMVC.ts";
 import { ResponseParam } from "../mvc-framework/core/decorators/stereotypes/controller/parameterDecorator.ts";
+import { MandarineCore } from "../mod.ts";
 
 @Middleware(new RegExp('/api/*'))
 export class Middleware1 implements MiddlewareTarget {
@@ -28,4 +28,4 @@ export class MyController {
 
 }
 
-new MandarineMVC().run();
+new MandarineCore().MVC().run();

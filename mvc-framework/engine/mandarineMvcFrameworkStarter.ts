@@ -2,14 +2,11 @@ import { Router } from "https://deno.land/x/oak/router.ts";
 import { ApplicationContext } from "../../main-core/application-context/mandarineApplicationContext.ts";
 import { ControllerComponent } from "../core/internal/components/routing/controllerContext.ts";
 import { requestResolver, middlewareResolver } from "../core/internal/components/routing/routingResolver.ts";
-import { MandarineLoading } from "../../main-core/mandarineLoading.ts";
 import { Log } from "../../logger/log.ts";
-import { Request } from "https://deno.land/x/oak/request.ts";
 import { SessionMiddleware } from "../core/middlewares/sessionMiddleware.ts";
-import { MandarineMvcFrameworkEngineMethods } from "./mandarineMvcFrameworkEngineMethods.ts";
 import { MiddlewareComponent } from "../../main-core/components/middleware-component/middlewareComponent.ts";
 import { Mandarine } from "../../main-core/Mandarine.ns.ts";
-import { Cookies } from "https://deno.land/x/oak/cookies.ts";
+import { getMandarineConfiguration } from "../../main-core/configuration/getMandarineConfiguration.ts";
 
 /**
  * This class works as the MVC engine and it is responsible for the initialization & behavior of HTTP requests.
@@ -29,51 +26,13 @@ export class MandarineMvcFrameworkStarter {
     }
 
     constructor() {
-
-        MandarineLoading();
-
-        // ORDER OF THINGS MATTER
-        // If the repository proxy is resolved after the dependencies, then the dependencies will have an empty repository
-        this.resolveRepositoriesProxy();
-        this.resolveComponentsDependencies();
-
-        MandarineMvcFrameworkEngineMethods.initializeEngineMethods();
-
-        this.initializeControllers();
-        this.initializeTemplates();
+        this.logger.info("Starting MVC Module");
         this.intializeControllersRoutes();
         this.initializeEssentials();
-        this.initializeEntityManager();
-    }
-
-    private initializeEntityManager() {
-        let entityManager = ApplicationContext.getInstance().getEntityManager();
-        if(entityManager.getDataSource() != undefined) {
-            entityManager.initializeEssentials();
-            entityManager.initializeAllEntities();
-        }
-    }
-
-    private resolveComponentsDependencies(): void {
-        ApplicationContext.getInstance().getComponentsRegistry().resolveDependencies();
-    }
-
-    private resolveRepositoriesProxy(): void {
-        ApplicationContext.getInstance().getComponentsRegistry().connectRepositoriesToProxy();
     }
 
     private initializeEssentials() {
         this.essentials.sessionMiddleware = new SessionMiddleware();
-    }
-
-    private initializeControllers() {
-        ApplicationContext.getInstance().getComponentsRegistry().getControllers().forEach((controller) => {
-            (<ControllerComponent>controller.componentInstance).initializeControllerFunctionality();
-        })
-    }
-
-    private initializeTemplates() {
-        ApplicationContext.getInstance().getTemplateManager().initializeTemplates();
     }
 
     private intializeControllersRoutes(): void {
@@ -129,8 +88,6 @@ export class MandarineMvcFrameworkStarter {
         let availableMiddlewares: Array<MiddlewareComponent> = Mandarine.Global.getMiddleware();
 
         let responseHandler = async (context) => {
-            
-            MandarineMvcFrameworkEngineMethods.initializeDefaultsForResponse(context);
 
             this.preRequestInternalMiddlewares(context); // Execute internal middleware like sessions
             let continueRequest: boolean = await this.executeUserMiddlewares(true, availableMiddlewares, context, routingAction); // If the user has any middleware, execute it
@@ -139,7 +96,7 @@ export class MandarineMvcFrameworkStarter {
 
                 await requestResolver(routingAction, context);
 
-                MandarineMvcFrameworkEngineMethods.assignContentType(context);
+                MandarineMvcFrameworkStarter.assignContentType(context);
 
                 this.executeUserMiddlewares(false, availableMiddlewares, context, routingAction);
                 this.postRequestInternalMiddlewares(context);
@@ -166,5 +123,18 @@ export class MandarineMvcFrameworkStarter {
 
     public getRouter(): Router {
         return this.router;
+    }
+
+    private static assignContentType(context: any) {
+        let contentType: string = getMandarineConfiguration().mandarine.server.responseType;
+
+        if(context.response.body != (null || undefined)) {
+            switch(typeof context.response.body) {
+                case "object":
+                    contentType = Mandarine.MandarineMVC.MediaTypes.APPLICATION_JSON;
+                break;
+            }
+        }
+        context.response.headers.set('Content-Type', contentType);
     }
 }
