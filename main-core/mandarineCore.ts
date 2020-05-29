@@ -12,7 +12,7 @@ export class MandarineCore {
      * Sets a new configuration for mandarine.
      * @param configFilePath receives the path for the new configuration.json file
      * Configuration.json file should follow Mandarine properties structure.
-     * https://github.com/mandarineorg/mandarinets/wiki/Mandarine-Properties
+     * https://mandarineframework.gitbook.io/mandarine-ts/mandarine-core/properties
      * If structure is ignored, some properties may be set to their default values
      */
     public static setConfiguration(configFilePath: string) {
