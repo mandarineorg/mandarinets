@@ -38,7 +38,7 @@ export class MandarineMVC {
         }
     }
 
-    public initializeMVCApplication(): Application {
+    private initializeMVCApplication(): Application {
         let starter:MandarineMvcFrameworkStarter = new MandarineMvcFrameworkStarter();
         
         let app: Application = new Application()
