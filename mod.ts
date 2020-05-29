@@ -1,3 +1,5 @@
+export { ApplicationContext } from "./main-core/application-context/mandarineApplicationContext.ts";
+
 export { Mandarine } from "./main-core/Mandarine.ns.ts";
 export { DI } from "./main-core/dependency-injection/di.ns.ts";
 export { MandarineSecurity } from "./security-core/mandarine-security.ns.ts";
