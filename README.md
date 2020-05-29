@@ -23,7 +23,7 @@ export class Boo {
 
 }
 
-new MandarineMVC().run();
+new MandarineCore.MVC().run();
 
 # request => http://localhost:4444/api/hello-world => Hello World
 ```
