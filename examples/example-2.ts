@@ -8,7 +8,11 @@ export class ValueAnnotationTest {
     @Value('mandarine.server.host')
     public host: string;
 
+    @Value('customKey')
+    public static customKey: string;
+
 }
 
 console.log(ValueAnnotationTest.hostPort);
 console.log(new ValueAnnotationTest().host);
+console.log(ValueAnnotationTest.customKey);

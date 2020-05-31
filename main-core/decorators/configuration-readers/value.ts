@@ -1,4 +1,5 @@
 import { getMandarineConfiguration } from "../../configuration/getMandarineConfiguration.ts";
+import { Reflect } from "../../reflectMetadata.ts";
 
 /**
  * **Decorator**
@@ -6,28 +7,32 @@ import { getMandarineConfiguration } from "../../configuration/getMandarineConfi
  *
  * `@Value('mandarine.server.host')`
  */
-export const Value = (key: string): Function => {
+export const Value = (propertyKey: string): Function => {
     return (target: any, propertyName: string) => {
         try {
             let propertyObject = getMandarineConfiguration();
 
-            let parts = key.split('.');
+            if(propertyKey.includes('.')) {
+                let parts = propertyKey.split('.');
 
-            if (Array.isArray(parts)) {
-                let last = parts.pop();
-                let keyPropertiesLength = parts.length;
-                let propertiesStartingIndex = 1;
+                if (Array.isArray(parts)) {
+                    let last = parts.pop();
+                    let keyPropertiesLength = parts.length;
+                    let propertiesStartingIndex = 1;
 
-                let currentProperty = parts[0];
-        
-                while((propertyObject = propertyObject[currentProperty]) && propertiesStartingIndex < keyPropertiesLength) {
-                    currentProperty = parts[propertiesStartingIndex];
-                    propertiesStartingIndex++;
+                    let currentProperty = parts[0];
+            
+                    while((propertyObject = propertyObject[currentProperty]) && propertiesStartingIndex < keyPropertiesLength) {
+                        currentProperty = parts[propertiesStartingIndex];
+                        propertiesStartingIndex++;
+                    }
+                    
+                    target[propertyName] = propertyObject[last];
+                } else {
+                    target[propertyName] = undefined;
                 }
-                
-                target[propertyName] = propertyObject[last];
             } else {
-                target[propertyName] = undefined;
+                target[propertyName] = propertyObject[propertyKey];
             }
         } catch(error) {
             target[propertyName] = undefined;

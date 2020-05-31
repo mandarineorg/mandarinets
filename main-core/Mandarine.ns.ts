@@ -8,12 +8,15 @@ import { MandarineORM } from "../orm-core/mandarine-orm.ns.ts";
 import { TemplatesManager } from "./templates-registry/templatesRegistry.ts";
 import { TemplateEngineException } from "../mvc-framework/core/exceptions/templateEngineException.ts";
 import { DI } from "./dependency-injection/di.ns.ts";
+import { Log } from "../logger/log.ts";
 
 /**
 * This namespace contains all the essentials for mandarine to work
 * Gnerally, global functionings are added to this namespace in order to be easily accesible across Mandarine
 */
 export namespace Mandarine {
+
+    export const logger: Log = Log.getLogger("MandarineCompiler")
 
     /**
      * Used to verify that a method is async
@@ -139,7 +142,16 @@ export namespace Mandarine {
             let mandarineGlobal: MandarineGlobalInterface = getMandarineGlobal();
 
             if(mandarineGlobal.mandarineProperties == (null || undefined)) {
-                mandarineGlobal.mandarineProperties = Defaults.MandarineDefaultConfiguration;
+
+                try {
+                    const propertiesData = JSON.parse(CommonUtils.readFile(Defaults.mandarinePropertiesFile));
+                   
+                    setConfiguration(propertiesData);
+                } catch(error) {
+                    mandarineGlobal.mandarineProperties = Defaults.MandarineDefaultConfiguration;
+                    logger.warn(`properties.json could not be found or parsed. Using default values. `);
+                }
+
             }
     
             return mandarineGlobal.mandarineProperties;
@@ -335,6 +347,9 @@ export namespace Mandarine {
     * Contains the default information Mandarine needs to work.
     */
     export namespace Defaults {
+
+        export const mandarinePropertiesFile = "./src/main/resources/properties.json";
+
         export const MandarineDefaultConfiguration: Properties = {
             mandarine: {
                 server: {

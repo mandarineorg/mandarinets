@@ -10,4 +10,18 @@ export class CommonUtils {
         var bKeys = Object.keys(b).sort();
         return JSON.stringify(aKeys) === JSON.stringify(bKeys);
     }
+
+    public static readFile(filePath: string, decoderType?: string): any {
+        if(decoderType == (null || undefined)) decoderType = "utf-8";
+
+        let decoder;
+        try {
+            decoder = new TextDecoder(decoderType);
+        } catch(error) {
+            decoder = new TextDecoder();
+        }
+
+        const data = Deno.readFileSync(filePath);
+        return decoder.decode(data);
+    }
 }
