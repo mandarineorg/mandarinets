@@ -1,10 +1,10 @@
-import { Application } from "https://deno.land/x/oak/mod.ts";
 import { MandarineMvcFrameworkStarter } from "./engine/mandarineMvcFrameworkStarter.ts";
 import routingErrorHandler from "./core/internal/components/routing/middlewares/routingErrorHandler.ts";
 import notFoundHandler from "./core/internal/components/routing/middlewares/notFoundHandler.ts";
 import { Log } from "../logger/log.ts";
 import { getMandarineConfiguration } from "../main-core/configuration/getMandarineConfiguration.ts";
 import { Mandarine } from "../main-core/Mandarine.ns.ts";
+import { Application } from "../deps.ts";
 
 /**
 * This class is the bridge between the HTTP server & the Mandarine Compiler.

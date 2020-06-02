@@ -1,4 +1,3 @@
-import { Router } from "https://deno.land/x/oak/router.ts";
 import { ApplicationContext } from "../../main-core/application-context/mandarineApplicationContext.ts";
 import { ControllerComponent } from "../core/internal/components/routing/controllerContext.ts";
 import { requestResolver, middlewareResolver } from "../core/internal/components/routing/routingResolver.ts";
@@ -7,6 +6,7 @@ import { SessionMiddleware } from "../core/middlewares/sessionMiddleware.ts";
 import { MiddlewareComponent } from "../../main-core/components/middleware-component/middlewareComponent.ts";
 import { Mandarine } from "../../main-core/Mandarine.ns.ts";
 import { getMandarineConfiguration } from "../../main-core/configuration/getMandarineConfiguration.ts";
+import { Router } from "../../deps.ts";
 
 /**
  * This class works as the MVC engine and it is responsible for the initialization & behavior of HTTP requests.

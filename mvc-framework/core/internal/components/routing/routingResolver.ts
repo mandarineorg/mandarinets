@@ -1,13 +1,10 @@
 import { ControllerComponent } from "./controllerContext.ts";
 import { ApplicationContext } from "../../../../../main-core/application-context/mandarineApplicationContext.ts";
-import { Request } from "https://deno.land/x/oak/request.ts";
 import { DI } from "../../../../../main-core/dependency-injection/di.ns.ts";
 import { MiddlewareComponent } from "../../../../../main-core/components/middleware-component/middlewareComponent.ts";
 import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
-import { Cookies } from "https://deno.land/x/oak/cookies.ts";
 import { Reflect } from "../../../../../main-core/reflectMetadata.ts";
 import { MandarineConstants } from "../../../../../main-core/mandarineConstants.ts";
-import { ViewModel } from "../../../modules/view-engine/viewModel.ts";
 
 /**
  * Resolves the request made to an endpoint. 

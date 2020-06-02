@@ -1,6 +1,5 @@
 import { EntityRegistry } from "../entity-registry/entityRegistry.ts";
 import { Mandarine } from "../../main-core/Mandarine.ns.ts";
-import { Value } from "../../main-core/decorators/configuration-readers/value.ts";
 import { PostgreSQLDialect } from "../dialect/postgreSQLDialect.ts";
 import { PostgresConnector } from "../connectors/postgreSQLConnector.ts";
 import { MandarineORMException } from "./exceptions/mandarineORMException.ts";

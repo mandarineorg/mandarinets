@@ -1,4 +1,3 @@
-import { ComponentsRegistry } from "../components-registry/componentRegistry.ts";
 import { Mandarine } from "../Mandarine.ns.ts";
 import { MandarineSecurity } from "../../security-core/mandarine-security.ns.ts";
 import { DI } from "../dependency-injection/di.ns.ts";

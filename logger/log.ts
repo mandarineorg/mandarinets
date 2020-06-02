@@ -1,4 +1,5 @@
-import { bold, magenta, green, yellow, red } from "https://deno.land/std/fmt/colors.ts";export class Log {
+import { bold, magenta, green, yellow, red } from "https://deno.land/std/fmt/colors.ts";
+export class Log {
 
     private className: string = null;
 

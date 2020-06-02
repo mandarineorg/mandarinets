@@ -1,4 +1,3 @@
-import { ComponentFactoryError } from "../../mvc-framework/core/exceptions/mandarine/componentFactoryError.ts";
 import { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
 import { ServiceComponent } from "../components/service-component/serviceComponent.ts";
 import { ConfigurationComponent } from "../components/configuration-component/configurationComponent.ts";

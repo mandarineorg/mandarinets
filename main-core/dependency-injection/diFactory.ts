@@ -4,9 +4,9 @@ import { ReflectUtils } from "../utils/reflectUtils.ts";
 import { Reflect } from "../reflectMetadata.ts";
 import { MandarineConstants } from "../mandarineConstants.ts";
 import { RoutingUtils } from "../../mvc-framework/core/utils/mandarine/routingUtils.ts";
-import { Cookies } from "https://deno.land/x/oak/cookies.ts";
 import { HttpUtils } from "../utils/httpUtils.ts";
 import { ApplicationContext } from "../application-context/mandarineApplicationContext.ts";
+import { Cookies } from "../../deps.ts";
 
 export class DependencyInjectionFactory {
 

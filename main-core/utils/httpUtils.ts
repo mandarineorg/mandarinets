@@ -1,8 +1,8 @@
-import { Request } from "https://deno.land/x/oak/request.ts";
 import { decoder } from "https://deno.land/std/encoding/utf8.ts";
 import { assert } from "https://deno.land/std/testing/asserts.ts";
 import { Mandarine } from "../Mandarine.ns.ts";
 import { Log } from "../../logger/log.ts";
+import { Request } from "../../deps.ts";
 
 export class HttpUtils {
 

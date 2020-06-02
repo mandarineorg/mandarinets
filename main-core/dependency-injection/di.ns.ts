@@ -1,20 +1,6 @@
-import { ComponentsRegistry } from "../components-registry/componentRegistry.ts";
-import { ReflectUtils } from "../utils/reflectUtils.ts";
-import { Reflect } from "../reflectMetadata.ts";
-import { MandarineConstants } from "../mandarineConstants.ts";
-import { RoutingUtils } from "../../mvc-framework/core/utils/mandarine/routingUtils.ts";
-import { Request } from "https://deno.land/x/oak/request.ts";
-import { HttpUtils } from "../utils/httpUtils.ts";
-import { ApplicationContext } from "../application-context/mandarineApplicationContext.ts";
-import { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
-import { ServiceComponent } from "../components/service-component/serviceComponent.ts";
-import { ConfigurationComponent } from "../components/configuration-component/configurationComponent.ts";
-import { ComponentComponent } from "../components/component-component/componentComponent.ts";
 import { Mandarine } from "../Mandarine.ns.ts";
-import { getCookies } from "https://deno.land/std@0.51.0/http/cookie.ts";
-import { Cookies } from "https://deno.land/x/oak/cookies.ts";
-import { ViewModel } from "../../mvc-framework/core/modules/view-engine/viewModel.ts";
 import { DependencyInjectionFactory } from "./diFactory.ts";
+import { Cookies, Request } from "../../deps.ts";
 
 export namespace DI {
 
