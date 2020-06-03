@@ -1,5 +1,3 @@
-import { Mandarine } from "./main-core/Mandarine.ns.ts";
-
 export const structure = {
     folders: [
         "/test",
@@ -10,7 +8,21 @@ export const structure = {
         "/src/main/resources/templates"
     ],
     files: {
-        "/src/main/resources/properties.json": JSON.stringify(Mandarine.Defaults.MandarineDefaultConfiguration),
+        "/src/main/resources/properties.json": `
+        {
+            "mandarine": {
+                "server": {
+                    "host":"0.0.0.0",
+                    "port":8080,
+                    "responseType":"text/html"
+                },
+                "templateEngine": {
+                    "path":"./src/main/resources/templates",
+                    "engine":"ejs"
+                }
+            }
+        }
+        `,
         "/src/main/mandarine/app.ts": `
 
         import { MandarineCore } from "https://deno.land/x/mandarinets/mod.ts";
