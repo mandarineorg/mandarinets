@@ -1,30 +1,8 @@
-const mandarineDefaultConfig = `
-{
-    "mandarine": {
-        "server": {
-            "host":"0.0.0.0",
-            "port":8080,
-            "responseType":"text/html"
-        },
-        "templateEngine": {
-            "path":"./src/main/resources/templates",
-            "engine":"ejs"
-        }
-    }
-}`;
+import { CommonUtils } from "./main-core/utils/commonUtils.ts";
 
-const mandarineDefaultAppFile = `
-import { MandarineCore } from "https://deno.land/x/mandarinets/mod.ts";
+const mandarineDefaultConfig = CommonUtils.readFile('./defaults/config.json');
 
-const services = [];
-const middleware = [];
-const repositories = [];
-const configurations = [];
-const components = [];
-const otherModules = [];
-
-new MandarineCore().MVC().run();
-`;
+const mandarineDefaultAppFile = CommonUtils.readFile('./defaults/app.ts');
 
 export const structure = {
     folders: [

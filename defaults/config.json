@@ -1,0 +1,13 @@
+{
+    "mandarine": {
+        "server": {
+            "host":"0.0.0.0",
+            "port":8080,
+            "responseType":"text/html"
+        },
+        "templateEngine": {
+            "path":"./src/main/resources/templates",
+            "engine":"ejs"
+        }
+    }
+}
