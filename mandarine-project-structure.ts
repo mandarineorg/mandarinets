@@ -8,6 +8,7 @@ export const structure = {
         "/src/main/resources/templates"
     ],
     files: [
-        "/src/main/resources/properties.json"
+        "/src/main/resources/properties.json",
+        "/src/main/mandarine/app.ts"
     ]
 }
