@@ -1,5 +1,4 @@
-const mandarineDefaultConfig = `
-{
+const mandarineDefaultConfig = `{
     "mandarine": {
         "server": {
             "host":"0.0.0.0",
@@ -13,8 +12,7 @@ const mandarineDefaultConfig = `
     }
 }`;
 
-const mandarineDefaultHelloWorldEndpoint = `
-import { MandarineCore, Controller, GET } from "https://deno.land/x/mandarinets/mod.ts";
+const mandarineDefaultHelloWorldEndpoint = `import { MandarineCore, Controller, GET } from "https://deno.land/x/mandarinets/mod.ts";
 
 @Controller()
 export class MyController {
@@ -27,8 +25,7 @@ export class MyController {
 }
 `;
 
-const mandarineDefaultAppFile = `
-import { MandarineCore } from "https://deno.land/x/mandarinets/mod.ts";
+const mandarineDefaultAppFile = `import { MandarineCore } from "https://deno.land/x/mandarinets/mod.ts";
 import { MyController } from "./hello-world/helloWorld.ts";
 
 const controllers = [MyController];
