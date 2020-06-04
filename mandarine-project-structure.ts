@@ -42,6 +42,21 @@ const otherModules = [];
 new MandarineCore().MVC().run();
 `;
 
+const mandarineDefaultTsConfig = `{
+    "compilerOptions": {
+        "strict": false,
+        "noImplicitAny": false,
+        "noImplicitThis": false,
+        "alwaysStrict": false,
+        "strictNullChecks": false,
+        "strictFunctionTypes": true,
+        "strictPropertyInitialization": false,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "allowUmdGlobalAccess": false,
+    }
+}`;
+
 export const structure = {
     folders: [
         "/test",
@@ -50,11 +65,12 @@ export const structure = {
         "/src/main/mandarine",
         "/src/main/mandarine/hello-world",
         "/src/main/resources",
-        "/src/main/resources/templates"
+        "/src/main/resources/templates",
     ],
     files: {
         "/src/main/resources/properties.json": mandarineDefaultConfig,
         "/src/main/mandarine/app.ts": mandarineDefaultAppFile,
-        "/src/main/mandarine/hello-world/helloWorld.ts": mandarineDefaultHelloWorldEndpoint
+        "/src/main/mandarine/hello-world/helloWorld.ts": mandarineDefaultHelloWorldEndpoint,
+        "/tsconfig.json": mandarineDefaultTsConfig
     }
 };
