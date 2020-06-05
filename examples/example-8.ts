@@ -3,7 +3,7 @@ import { GET } from "../mvc-framework/core/decorators/stereotypes/controller/rou
 import { Render } from "../mvc-framework/core/decorators/stereotypes/view-engine/viewEngineDecorators.ts";
 import { Model } from "../mvc-framework/core/decorators/stereotypes/controller/parameterDecorator.ts";
 import { ViewModel } from "../mvc-framework/core/modules/view-engine/viewModel.ts";
-import { MandarineCore } from "../mod.ts";
+import { MandarineCore, Mandarine } from "../mod.ts";
 
 @Controller()
 export class MyController {
@@ -31,6 +31,22 @@ export class MyController {
         return {
             name: "Andres"
         };
+    }
+
+    @GET('/denjucks')
+    @Render(`<p>Hello {{ txt }}</p>`, {manual: true}, Mandarine.MandarineMVC.TemplateEngine.Engines.DENJUCKS)
+    public httpHandler3() {
+        return {
+            txt: "Andres"
+        }
+    }
+
+    @GET('/denjucks-template-file')
+    @Render('denjucks.html', {manual: false}, Mandarine.MandarineMVC.TemplateEngine.Engines.DENJUCKS)
+    public httpHandler4() {
+        return {
+            txt: "Andres"
+        }
     }
 
 }

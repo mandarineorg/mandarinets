@@ -1,6 +1,7 @@
 import { Mandarine } from "../../../../main-core/Mandarine.ns.ts";
 import { renderEjs } from "https://deno.land/x/view_engine/lib/engines/ejs.ts";
 import { renderHandlebars } from "https://deno.land/x/view_engine/lib/engines/handlebars.ts";
+import { renderDenjuck } from "https://deno.land/x/view_engine/lib/engines/denjuck.ts";
 import { ApplicationContext } from "../../../../main-core/application-context/mandarineApplicationContext.ts";
 import { ViewModel } from "./viewModel.ts";
 import { TemplateEngineException } from "../../exceptions/templateEngineException.ts";
@@ -21,6 +22,9 @@ export class RenderEngineClass {
                 break;
             case  Mandarine.MandarineMVC.TemplateEngine.Engines.HANDLEBARS:
                 viewEngine = renderHandlebars;
+                break;
+            case Mandarine.MandarineMVC.TemplateEngine.Engines.DENJUCKS:
+                viewEngine = renderDenjuck;
                 break;
             default:
                 throw new TemplateEngineException(TemplateEngineException.INVALID_ENGINE, "RenderEngine");
