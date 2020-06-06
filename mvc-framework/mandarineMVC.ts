@@ -4,7 +4,9 @@ import notFoundHandler from "./core/internal/components/routing/middlewares/notF
 import { Log } from "../logger/log.ts";
 import { getMandarineConfiguration } from "../main-core/configuration/getMandarineConfiguration.ts";
 import { Mandarine } from "../main-core/Mandarine.ns.ts";
-import { Application } from "../deps.ts";
+import { Application, send } from "../deps.ts";
+import { ApplicationContext } from "../main-core/application-context/mandarineApplicationContext.ts";
+import { ResourceHandlerMiddleware } from "./core/middlewares/resourceHandlerMiddleware.ts";
 
 /**
 * This class is the bridge between the HTTP server & the Mandarine Compiler.
@@ -44,6 +46,7 @@ export class MandarineMVC {
         let app: Application = new Application()
         .use(starter.getRouter().routes())
         .use(starter.getRouter().allowedMethods())
+        .use(ResourceHandlerMiddleware)
         .use(routingErrorHandler)
         .use(notFoundHandler);
 

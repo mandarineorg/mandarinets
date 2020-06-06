@@ -1,1 +1,1 @@
-export { Application, Cookies, Request, Router } from "https://deno.land/x/oak@v5.0.0/mod.ts";
+export { Application, Cookies, Request, Router, send } from "https://deno.land/x/oak@v5.0.0/mod.ts";

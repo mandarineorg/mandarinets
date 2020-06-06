@@ -5,6 +5,9 @@ const mandarineDefaultConfig = `{
             "port":8080,
             "responseType":"text/html"
         },
+        "resources": {
+            "staticFolder": "/src/main/resources/static"
+        }
         "templateEngine": {
             "path":"./src/main/resources/templates",
             "engine":"ejs"

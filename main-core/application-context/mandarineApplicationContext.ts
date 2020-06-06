@@ -73,4 +73,8 @@ export class ApplicationContext implements Mandarine.ApplicationContext.IApplica
         return DI.Factory;
     }
 
+    public getResourceHandlerRegistry(): Mandarine.MandarineCore.IResourceHandlerRegistry {
+        return Mandarine.Global.getResourceHandlerRegistry();
+    }
+
 }

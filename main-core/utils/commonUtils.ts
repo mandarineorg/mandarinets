@@ -24,4 +24,13 @@ export class CommonUtils {
         const data = Deno.readFileSync(filePath);
         return decoder.decode(data);
     }
+
+    public static fileDirExists(path: string): boolean  {
+        try {
+          Deno.statSync(path);
+          return true;
+        } catch (error) {
+          return false;
+        }
+    }
 }
