@@ -27,14 +27,19 @@ export const ResourceHandlerMiddleware = (): Middleware => {
 
                     if(results != (null || undefined)) {
                         let resource = results[1];
-                        if(resource == "" || resource == (null || undefined)) {
+                        let index: boolean = false;
+
+                        if(resource === "" || resource == (null || undefined)) {
                             if(resourceHandlerIndex != (null || undefined)) {
                                 resource = `${resourceHandlerLocation}/${resourceHandlerIndex}`;
+                                index = true;
+                            } else {
+                                await next();
+                                return;
                             }
                         }
-
-                        resource = `${resourceHandlerLocation}/${resource}`;
                         
+                        resource = (index) ? resource : `${resourceHandlerLocation}/${resource}`;
                         context.response.body = resourceHandler.resourceResolver.resolve(context, resource);
                     }
                 }
