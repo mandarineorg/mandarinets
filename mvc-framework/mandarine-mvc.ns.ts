@@ -545,7 +545,8 @@ export namespace MandarineMvc {
          */
         export enum Engines {
             HANDLEBARS = "handlebars",
-            EJS = "ejs"
+            EJS = "ejs",
+            DENJUCKS = "denjucks"
         }
 
         /**
