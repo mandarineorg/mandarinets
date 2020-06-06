@@ -1,6 +1,6 @@
 import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
 
-export class ResourceHandler {
+export class ResourceHandler implements Mandarine.MandarineCore.IResourceHandler {
 
     public resourceHandlerPath: Array<RegExp>;
     public resourceHandlerLocations: Array<string>;
@@ -22,7 +22,7 @@ export class ResourceHandler {
         return this;
     }
 
-    public addResourceResolver(resolver: Mandarine.MandarineMVC.HTTPResolvers.ResourceResolver) {
+    public addResourceResolver(resolver: Mandarine.MandarineMVC.HTTPResolvers.ResourceResolver): ResourceHandler {
         this.resourceResolver = resolver;
         return this;
     }

@@ -359,11 +359,29 @@ export namespace Mandarine {
 
         export class MandarineTemplateManager extends TemplatesManager {}
 
+        /**
+        * Refers to the resource handler registry.
+        * All the resource handlers either initialized by the user or by Mandarine will be located here.
+        */
         export interface IResourceHandlerRegistry {
             overriden: boolean;
             addResourceHandler(input: ResourceHandler): IResourceHandlerRegistry;
             getResourceHandlers(): Array<ResourceHandler>;
             getNew(): IResourceHandlerRegistry;
+        }
+
+        /**
+        * Handlers the information of a resource handler that will be processed.
+        */
+        export interface IResourceHandler {
+            resourceHandlerPath: Array<RegExp>;
+            resourceHandlerLocations: Array<string>;
+            resourceHandlerIndex: Array<string>;
+            resourceResolver: Mandarine.MandarineMVC.HTTPResolvers.ResourceResolver;
+            addResourceHandler(...resourceHandlerPath: Array<RegExp>): ResourceHandler;
+            addResourceHandlerLocation(...resourceHandlerLocations: Array<string>): ResourceHandler;
+            addResourceHandlerIndex(...resourceHandlerIndex: Array<string>): ResourceHandler;
+            addResourceResolver(resolver: Mandarine.MandarineMVC.HTTPResolvers.ResourceResolver): ResourceHandler
         }
 
         export class MandarineResourceHandlerRegistry extends ResourceHandlerRegistry {}

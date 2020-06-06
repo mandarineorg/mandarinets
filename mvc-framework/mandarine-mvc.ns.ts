@@ -590,6 +590,11 @@ export namespace MandarineMvc {
 
     export namespace HTTPResolvers {
 
+        /**
+         * Resolves the requested resource.
+         * @param httpContext is injected
+         * @param resourcePath is injected
+         */
         export interface ResourceResolver {
             resolve(httpContext: Context, resourcePath: string): Uint8Array;
         }
