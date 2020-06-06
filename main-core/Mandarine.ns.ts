@@ -9,7 +9,8 @@ import { TemplatesManager } from "./templates-registry/templatesRegistry.ts";
 import { TemplateEngineException } from "../mvc-framework/core/exceptions/templateEngineException.ts";
 import { DI } from "./dependency-injection/di.ns.ts";
 import { Log } from "../logger/log.ts";
-
+import { ResourceHandlerRegistry } from "../mvc-framework/core/internal/components/resource-handler-registry/resourceHandlerRegistry.ts";
+import { ResourceHandler } from "../mvc-framework/core/internal/components/resource-handler-registry/resourceHandler.ts";
 /**
 * This namespace contains all the essentials for mandarine to work
 * Gnerally, global functionings are added to this namespace in order to be easily accesible across Mandarine
@@ -35,6 +36,11 @@ export namespace Mandarine {
                 host?: string,
                 port: number,
                 responseType?: MandarineMVC.MediaTypes
+            } & any,
+            resources: {
+                staticRegExpPattern?: string,
+                staticFolder?: string,
+                staticIndex?: string,
             } & any,
             templateEngine: {
                 engine: Mandarine.MandarineMVC.TemplateEngine.Engines,
@@ -67,6 +73,7 @@ export namespace Mandarine {
             mandarineSessionContainer: MandarineSecurity.Sessions.SessionContainer;
             mandarineEntityManager: Mandarine.ORM.Entity.EntityManager;
             mandarineTemplatesManager: MandarineCore.ITemplatesManager,
+            mandarineResourceHandlerRegistry: MandarineCore.IResourceHandlerRegistry
             mandarineProperties: Properties;
             mandarineMiddleware: Array<MiddlewareComponent>;
         };
@@ -82,6 +89,7 @@ export namespace Mandarine {
                     mandarineEntityManager: undefined,
                     mandarineProperties: undefined,
                     mandarineMiddleware: undefined,
+                    mandarineResourceHandlerRegistry: undefined,
                     mandarineTemplatesManager: undefined
                 }
             }
@@ -135,6 +143,19 @@ export namespace Mandarine {
         };
 
         /**
+        * Get the resource handler registry for incoming requests.
+        */
+       export function getResourceHandlerRegistry(): Mandarine.MandarineCore.IResourceHandlerRegistry { 
+        let mandarineGlobal: MandarineGlobalInterface = getMandarineGlobal();
+
+        if(mandarineGlobal.mandarineResourceHandlerRegistry == (null || undefined)) {
+            mandarineGlobal.mandarineResourceHandlerRegistry = new Mandarine.MandarineCore.MandarineResourceHandlerRegistry();
+        }
+
+        return mandarineGlobal.mandarineResourceHandlerRegistry;
+    };
+
+        /**
         * Get the properties mandarine is using.
         * If no properties are set by the user then it gets the default properties.
         */
@@ -172,7 +193,8 @@ export namespace Mandarine {
             if(properties.mandarine.templateEngine == (null || undefined)) properties.mandarine.templateEngine = defaultConfiguration.mandarine.templateEngine;
             if(properties.mandarine.templateEngine.path == (null || undefined)) properties.mandarine.templateEngine.path == defaultConfiguration.mandarine.templateEngine.path;
             if(properties.mandarine.templateEngine.engine == (null || undefined)) properties.mandarine.templateEngine.engine == defaultConfiguration.mandarine.templateEngine.engine;
-
+            if(properties.mandarine.resources == (null || undefined)) properties.mandarine.resources = defaultConfiguration.mandarine.resources;
+            
             if(!Object.values(Mandarine.MandarineMVC.TemplateEngine.Engines).includes(properties.mandarine.templateEngine.engine)) throw new TemplateEngineException(TemplateEngineException.INVALID_ENGINE, "MandarineCore");
 
             mandarineGlobal.mandarineProperties = properties;
@@ -235,6 +257,8 @@ export namespace Mandarine {
             changeSessionContainer(newSessionContainer: MandarineSecurity.Sessions.SessionContainer): void;
             getInstance?: () => ApplicationContext.IApplicationContext;
             getDIFactory(): DI.FactoryClass;
+            getResourceHandlerRegistry(): Mandarine.MandarineCore.IResourceHandlerRegistry;
+            changeResourceHandlers(newResourceHandlerRegistry: Mandarine.MandarineCore.IResourceHandlerRegistry): void;
         }
     };
 
@@ -335,6 +359,15 @@ export namespace Mandarine {
 
         export class MandarineTemplateManager extends TemplatesManager {}
 
+        export interface IResourceHandlerRegistry {
+            overriden: boolean;
+            addResourceHandler(input: ResourceHandler): IResourceHandlerRegistry;
+            getResourceHandlers(): Array<ResourceHandler>;
+            getNew(): IResourceHandlerRegistry;
+        }
+
+        export class MandarineResourceHandlerRegistry extends ResourceHandlerRegistry {}
+
     };
 
     /**
@@ -356,6 +389,10 @@ export namespace Mandarine {
                     host: "0.0.0.0",
                     port: 8080,
                     responseType: MandarineMVC.MediaTypes.TEXT_HTML
+                },
+                resources: {
+                    staticFolder: "./src/main/resources/static",
+                    staticRegExpPattern: "/(.*)"
                 },
                 templateEngine: {
                     path: "./src/main/resources/templates",

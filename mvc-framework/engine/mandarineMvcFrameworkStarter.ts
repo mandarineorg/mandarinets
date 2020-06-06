@@ -7,6 +7,7 @@ import { MiddlewareComponent } from "../../main-core/components/middleware-compo
 import { Mandarine } from "../../main-core/Mandarine.ns.ts";
 import { getMandarineConfiguration } from "../../main-core/configuration/getMandarineConfiguration.ts";
 import { Router } from "../../deps.ts";
+import { WebMVCConfigurer } from "../core/internal/configurers/webMvcConfigurer.ts";
 
 /**
  * This class works as the MVC engine and it is responsible for the initialization & behavior of HTTP requests.
@@ -20,9 +21,11 @@ export class MandarineMvcFrameworkStarter {
     private logger: Log = Log.getLogger(MandarineMvcFrameworkStarter);
 
     private essentials: {
-        sessionMiddleware: SessionMiddleware
+        sessionMiddleware: SessionMiddleware,
+        webMvcConfigurer: WebMVCConfigurer
     } = {
-        sessionMiddleware: undefined
+        sessionMiddleware: undefined,
+        webMvcConfigurer: undefined
     }
 
     constructor() {
@@ -33,6 +36,7 @@ export class MandarineMvcFrameworkStarter {
 
     private initializeEssentials() {
         this.essentials.sessionMiddleware = new SessionMiddleware();
+        this.essentials.webMvcConfigurer = new WebMVCConfigurer();
     }
 
     private intializeControllersRoutes(): void {
@@ -69,7 +73,8 @@ export class MandarineMvcFrameworkStarter {
 
     private async executeUserMiddlewares(preRequestMiddleware: boolean, middlewares: Array<MiddlewareComponent>, context: any, routingAction: Mandarine.MandarineMVC.Routing.RoutingAction): Promise<boolean> {
         for(const middlewareComponent of middlewares) {
-            if(middlewareComponent.regexRoute.test(context.request.url.toString())) {
+            let finalRegex = new RegExp(context.request.url.host + middlewareComponent.regexRoute.source);
+            if(finalRegex.test(context.request.url.host + context.request.url.pathname)) {
                 let middlewareResolved: boolean = await middlewareResolver(preRequestMiddleware, middlewareComponent, routingAction, context);
 
                 if(preRequestMiddleware) {

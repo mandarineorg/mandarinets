@@ -53,6 +53,14 @@ export class ApplicationContext implements Mandarine.ApplicationContext.IApplica
         };
     }
 
+    public changeResourceHandlers(newResourceHandlerRegistry: Mandarine.MandarineCore.IResourceHandlerRegistry): void {
+        if(newResourceHandlerRegistry.getResourceHandlers().length > 0) {
+            let mandarineGlobal: Mandarine.Global.MandarineGlobalInterface  = Mandarine.Global.getMandarineGlobal();
+            mandarineGlobal.mandarineResourceHandlerRegistry = newResourceHandlerRegistry;
+            mandarineGlobal.mandarineResourceHandlerRegistry.overriden = true;
+        } 
+    }
+
     public static getInstance(): Mandarine.ApplicationContext.IApplicationContext {
         if(ApplicationContext.applicationContextSingleton == (null || undefined)) { 
             ApplicationContext.applicationContextSingleton = new ApplicationContext(); 
@@ -71,6 +79,10 @@ export class ApplicationContext implements Mandarine.ApplicationContext.IApplica
 
     public getDIFactory(): DI.FactoryClass {
         return DI.Factory;
+    }
+
+    public getResourceHandlerRegistry(): Mandarine.MandarineCore.IResourceHandlerRegistry {
+        return Mandarine.Global.getResourceHandlerRegistry();
     }
 
 }
