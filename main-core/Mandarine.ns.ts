@@ -11,8 +11,6 @@ import { DI } from "./dependency-injection/di.ns.ts";
 import { Log } from "../logger/log.ts";
 import { ResourceHandlerRegistry } from "../mvc-framework/core/internal/components/resource-handler-registry/resourceHandlerRegistry.ts";
 import { ResourceHandler } from "../mvc-framework/core/internal/components/resource-handler-registry/resourceHandler.ts";
-import { WebMVCConfigurer } from "../mvc-framework/core/internal/configurers/webMvcConfigurer.ts";
-
 /**
 * This namespace contains all the essentials for mandarine to work
 * Gnerally, global functionings are added to this namespace in order to be easily accesible across Mandarine
@@ -40,6 +38,7 @@ export namespace Mandarine {
                 responseType?: MandarineMVC.MediaTypes
             } & any,
             resources: {
+                staticRegExpPattern?: string,
                 staticFolder?: string,
                 staticIndex?: string,
             } & any,
@@ -259,6 +258,7 @@ export namespace Mandarine {
             getInstance?: () => ApplicationContext.IApplicationContext;
             getDIFactory(): DI.FactoryClass;
             getResourceHandlerRegistry(): Mandarine.MandarineCore.IResourceHandlerRegistry;
+            changeResourceHandlers(newResourceHandlerRegistry: Mandarine.MandarineCore.IResourceHandlerRegistry): void;
         }
     };
 
@@ -360,9 +360,12 @@ export namespace Mandarine {
         export class MandarineTemplateManager extends TemplatesManager {}
 
         export interface IResourceHandlerRegistry {
-            addResourceHandler(input: ResourceHandler): void;
+            overriden: boolean;
+            addResourceHandler(input: ResourceHandler): IResourceHandlerRegistry;
             getResourceHandlers(): Array<ResourceHandler>;
+            getNew(): IResourceHandlerRegistry;
         }
+
         export class MandarineResourceHandlerRegistry extends ResourceHandlerRegistry {}
 
     };
@@ -388,7 +391,8 @@ export namespace Mandarine {
                     responseType: MandarineMVC.MediaTypes.TEXT_HTML
                 },
                 resources: {
-                    staticFolder: "./src/main/resources/static"
+                    staticFolder: "./src/main/resources/static",
+                    staticRegExpPattern: "/(.*)"
                 },
                 templateEngine: {
                     path: "./src/main/resources/templates",

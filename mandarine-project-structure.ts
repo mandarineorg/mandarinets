@@ -6,7 +6,8 @@ const mandarineDefaultConfig = `{
             "responseType":"text/html"
         },
         "resources": {
-            "staticFolder": "/src/main/resources/static"
+            "staticFolder": "/src/main/resources/static",
+            "staticRegExpPattern": "/(.*)"
         }
         "templateEngine": {
             "path":"./src/main/resources/templates",

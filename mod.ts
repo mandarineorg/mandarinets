@@ -28,3 +28,6 @@ export { MandarineRepository } from "./orm-core/repository/mandarineRepository.t
 export { CustomQuery, Repository } from "./orm-core/core/decorators/Repository.ts";
 export { Table , Column, Id, GeneratedValue } from "./orm-core/core/decorators/entityDecorators.ts";
 export { Types as SQLTypes } from "./orm-core/sql/types.ts";
+
+export { ResourceHandler } from "./mvc-framework/core/internal/components/resource-handler-registry/resourceHandler.ts";
+export { MandarineResourceResolver } from "./mvc-framework/core/internal/components/resource-handler-registry/mandarineResourceResolver.ts";

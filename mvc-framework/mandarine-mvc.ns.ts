@@ -1,5 +1,7 @@
 import { DI } from "../main-core/dependency-injection/di.ns.ts";
 import { RenderEngineClass } from "./core/modules/view-engine/renderEngine.ts";
+import { Context } from "../deps.ts";
+import { Mandarine } from "../mod.ts";
 
 /**
 * This namespace contains all the essentials for Mandarine MVC to work
@@ -577,5 +579,19 @@ export namespace MandarineMvc {
         }
 
         export class RenderEngine extends RenderEngineClass {}
+    }
+
+    export namespace Configurers {
+        export interface WebMVCConfigurer {
+            addResourceHandlers(): Mandarine.MandarineCore.IResourceHandlerRegistry;
+        }
+    }
+
+    export namespace HTTPResolvers {
+
+        export interface ResourceResolver {
+            resolve(httpContext: Context, resourcePath: string): Uint8Array;
+        }
+
     }
 }
