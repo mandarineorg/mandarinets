@@ -191,8 +191,8 @@ export namespace Mandarine {
             if(properties.mandarine.server.port == (null || undefined)) properties.mandarine.server.port = defaultConfiguration.mandarine.server.port;
             if(properties.mandarine.server.responseType == (null || undefined)) properties.mandarine.server.responseType = defaultConfiguration.mandarine.server.responseType;
             if(properties.mandarine.templateEngine == (null || undefined)) properties.mandarine.templateEngine = defaultConfiguration.mandarine.templateEngine;
-            if(properties.mandarine.templateEngine.path == (null || undefined)) properties.mandarine.templateEngine.path == defaultConfiguration.mandarine.templateEngine.path;
-            if(properties.mandarine.templateEngine.engine == (null || undefined)) properties.mandarine.templateEngine.engine == defaultConfiguration.mandarine.templateEngine.engine;
+            if(properties.mandarine.templateEngine.path == (null || undefined)) properties.mandarine.templateEngine.path = defaultConfiguration.mandarine.templateEngine.path;
+            if(properties.mandarine.templateEngine.engine == (null || undefined)) properties.mandarine.templateEngine.engine = defaultConfiguration.mandarine.templateEngine.engine;
             if(properties.mandarine.resources == (null || undefined)) properties.mandarine.resources = defaultConfiguration.mandarine.resources;
             if(properties.mandarine.resources.staticFolder == (null || undefined)) properties.mandarine.resources.staticFolder = defaultConfiguration.mandarine.resources.staticFolder;
             if(properties.mandarine.resources.staticRegExpPattern == (null || undefined)) properties.mandarine.resources.staticRegExpPattern = defaultConfiguration.mandarine.resources.staticRegExpPattern;
