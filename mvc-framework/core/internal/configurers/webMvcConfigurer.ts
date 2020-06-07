@@ -14,7 +14,7 @@ export class WebMVCConfigurer implements Mandarine.MandarineMVC.Configurers.WebM
         let resourceHandlerRegistry = Mandarine.Global.getResourceHandlerRegistry();
 
         let mandarineConfiguration = getMandarineConfiguration();
-        if(resourceHandlerRegistry.overriden == false) {
+        if(resourceHandlerRegistry.overriden == false && mandarineConfiguration.mandarine.resources.staticFolder != (null || undefined) && mandarineConfiguration.mandarine.resources.staticRegExpPattern != (null || undefined)) {
             resourceHandlerRegistry.addResourceHandler(
                 new ResourceHandler()
                 .addResourceHandler(new RegExp(mandarineConfiguration.mandarine.resources.staticRegExpPattern))
