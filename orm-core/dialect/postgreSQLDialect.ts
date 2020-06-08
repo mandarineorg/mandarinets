@@ -1,6 +1,6 @@
 import { Mandarine } from "../../mod.ts";
-import { Types } from "../sql/types.ts";
 import { MandarineORMException } from "../core/exceptions/mandarineORMException.ts";
+import { Types } from "../sql/types.ts";
 
 export class PostgreSQLDialect implements Mandarine.ORM.Dialect.Dialect {
 

@@ -1,5 +1,12 @@
 import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
 
+/**
+ * This class works as a container for resource handlers.
+ * This class contains the paths where the resolver will be invoked.
+ * This class contains the locations where the resolver should look up for resources.
+ * This class contains the indexes of the paths.
+ * This class contains the resolver to be used when intercepting.
+ */
 export class ResourceHandler implements Mandarine.MandarineCore.IResourceHandler {
 
     public resourceHandlerPath: Array<RegExp>;

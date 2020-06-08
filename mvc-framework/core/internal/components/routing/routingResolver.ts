@@ -1,10 +1,10 @@
-import { ControllerComponent } from "./controllerContext.ts";
 import { ApplicationContext } from "../../../../../main-core/application-context/mandarineApplicationContext.ts";
-import { DI } from "../../../../../main-core/dependency-injection/di.ns.ts";
 import { MiddlewareComponent } from "../../../../../main-core/components/middleware-component/middlewareComponent.ts";
+import { DI } from "../../../../../main-core/dependency-injection/di.ns.ts";
 import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
-import { Reflect } from "../../../../../main-core/reflectMetadata.ts";
 import { MandarineConstants } from "../../../../../main-core/mandarineConstants.ts";
+import { Reflect } from "../../../../../main-core/reflectMetadata.ts";
+import { ControllerComponent } from "./controllerContext.ts";
 
 /**
  * Resolves the request made to an endpoint. 

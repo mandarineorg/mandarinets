@@ -6,8 +6,8 @@ export class MandarineException extends Error {
     public static INVALID_PROPERTY_FILE: string = "The property file (%propertyFile%) you are trying to use is either invalid or could not be parsed";
     public static INVALID_STATIC_FOLDER: string = "Found static folder (%staticFolder%) but the path is either invalid or does not exist.";
   
-    constructor(public message: string, public objectName: string) {
-      super(message + " ~ Object name: " + objectName);
+    constructor(public message: string) {
+      super(message);
       this.name = "MandarineException";
       this.stack = (this).stack;
     }

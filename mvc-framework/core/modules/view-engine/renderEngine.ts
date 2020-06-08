@@ -1,10 +1,10 @@
-import { Mandarine } from "../../../../main-core/Mandarine.ns.ts";
+import { renderDenjuck } from "https://deno.land/x/view_engine/lib/engines/denjuck.ts";
 import { renderEjs } from "https://deno.land/x/view_engine/lib/engines/ejs.ts";
 import { renderHandlebars } from "https://deno.land/x/view_engine/lib/engines/handlebars.ts";
-import { renderDenjuck } from "https://deno.land/x/view_engine/lib/engines/denjuck.ts";
 import { ApplicationContext } from "../../../../main-core/application-context/mandarineApplicationContext.ts";
+import { TemplateEngineException } from "../../../../main-core/exceptions/templateEngineException.ts";
+import { Mandarine } from "../../../../main-core/Mandarine.ns.ts";
 import { ViewModel } from "./viewModel.ts";
-import { TemplateEngineException } from "../../exceptions/templateEngineException.ts";
 
 /**
  * This class executes the rendering of a template inside the templates container
@@ -27,14 +27,14 @@ export class RenderEngineClass {
                 viewEngine = renderDenjuck;
                 break;
             default:
-                throw new TemplateEngineException(TemplateEngineException.INVALID_ENGINE, "RenderEngine");
+                throw new TemplateEngineException(TemplateEngineException.INVALID_ENGINE);
                 break;
         }
 
         let manual: boolean = renderData.options != undefined && renderData.options.manual == true;
 
         let template: Mandarine.MandarineMVC.TemplateEngine.Template = templatesManager.getTemplate(renderData, manual);
-        if(template == undefined) throw new TemplateEngineException(TemplateEngineException.INVALID_TEMPLATE_PROCESSING, "RenderEngine");
+        if(template == undefined) throw new TemplateEngineException(TemplateEngineException.INVALID_TEMPLATE_PROCESSING);
         
         return viewEngine(template.content, (model instanceof ViewModel) ? model.toObject() : model);
     }

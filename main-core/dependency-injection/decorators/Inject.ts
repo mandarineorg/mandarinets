@@ -1,5 +1,5 @@
-import { DependencyInjectionUtil } from "../di.util.ts";
 import { DI } from "../di.ns.ts";
+import { DependencyInjectionUtil } from "../di.util.ts";
 
 /**
  * **Decorator**

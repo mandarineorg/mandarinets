@@ -1,5 +1,5 @@
-import { RoutingUtils } from "../../../utils/mandarine/routingUtils.ts";
 import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
+import { RoutingUtils } from "../../../utils/mandarine/routingUtils.ts";
 
 /**
  * **Decorator**

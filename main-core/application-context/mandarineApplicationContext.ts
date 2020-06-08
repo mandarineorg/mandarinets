@@ -1,6 +1,6 @@
-import { Mandarine } from "../Mandarine.ns.ts";
 import { MandarineSecurity } from "../../security-core/mandarine-security.ns.ts";
 import { DI } from "../dependency-injection/di.ns.ts";
+import { Mandarine } from "../Mandarine.ns.ts";
 
 /**
 * Contains the "application context" of mandarine.

@@ -1,12 +1,12 @@
 import { ServerRequest } from "https://deno.land/std/http/server.ts";
-import { ControllerComponent } from "../../internal/components/routing/controllerContext.ts";
-import { AnnotationMetadataContext } from "../../interfaces/mandarine/mandarineAnnotationMetadataContext.ts";
-import { DependencyInjectionUtil } from "../../../../main-core/dependency-injection/di.util.ts";
-import { ReflectUtils } from "../../../../main-core/utils/reflectUtils.ts";
-import { Reflect } from "../../../../main-core/reflectMetadata.ts"
-import { MandarineConstants } from "../../../../main-core/mandarineConstants.ts";
 import { DI } from "../../../../main-core/dependency-injection/di.ns.ts";
+import { DependencyInjectionUtil } from "../../../../main-core/dependency-injection/di.util.ts";
 import { Mandarine } from "../../../../main-core/Mandarine.ns.ts";
+import { MandarineConstants } from "../../../../main-core/mandarineConstants.ts";
+import { Reflect } from "../../../../main-core/reflectMetadata.ts";
+import { ReflectUtils } from "../../../../main-core/utils/reflectUtils.ts";
+import { AnnotationMetadataContext } from "../../interfaces/mandarine/mandarineAnnotationMetadataContext.ts";
+import { ControllerComponent } from "../../internal/components/routing/controllerContext.ts";
 
 /**
  * Contains all the util methods that are related to the router and routings

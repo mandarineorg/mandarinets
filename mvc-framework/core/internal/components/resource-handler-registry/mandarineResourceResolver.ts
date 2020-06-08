@@ -1,8 +1,13 @@
-import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
 import { Context } from "../../../../../deps.ts";
-import { ResourceHandler } from "./resourceHandler.ts";
+import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
 import { CommonUtils } from "../../../../../main-core/utils/commonUtils.ts";
 
+/**
+ * This class represents the default resolver for resources.
+ * It is used by Mandarine to resolve static content.
+ * It can be overriden or you can create a personalized resolver with your own code.
+ * Refer to the documentation https://mandarineframework.gitbook.io/mandarine-ts/mandarine-core/resource-handlers/resource-resolver
+ */
 export class MandarineResourceResolver implements Mandarine.MandarineMVC.HTTPResolvers.ResourceResolver {
 
     public resolve(httpContext: Context, resourcePath: string): Uint8Array {

@@ -1,7 +1,7 @@
-import { DI } from "../main-core/dependency-injection/di.ns.ts";
-import { RenderEngineClass } from "./core/modules/view-engine/renderEngine.ts";
 import { Context } from "../deps.ts";
+import { DI } from "../main-core/dependency-injection/di.ns.ts";
 import { Mandarine } from "../mod.ts";
+import { RenderEngineClass } from "./core/modules/view-engine/renderEngine.ts";
 
 /**
 * This namespace contains all the essentials for Mandarine MVC to work
