@@ -10,7 +10,7 @@ import { MandarineMVC } from "../mvc-framework/mandarineMVC.ts";
  * Contains core methods & information related to Mandarine
  */
 export class MandarineCore {
-    public static releaseVersion: string = "1.0.0";
+    public static releaseVersion: string = "1.0.1";
     
     public static logger: Log = Log.getLogger(MandarineCore);
 
