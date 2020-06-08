@@ -1,6 +1,5 @@
-import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
 import { Context } from "../../../../../deps.ts";
-import { ResourceHandler } from "./resourceHandler.ts";
+import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
 import { CommonUtils } from "../../../../../main-core/utils/commonUtils.ts";
 
 export class MandarineResourceResolver implements Mandarine.MandarineMVC.HTTPResolvers.ResourceResolver {

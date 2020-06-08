@@ -1,13 +1,11 @@
-import { RoutingException } from "../../../exceptions/routingException.ts";
-import { RoutingUtils } from "../../../utils/mandarine/routingUtils.ts";
-import { AnnotationMetadataContext } from "../../../interfaces/mandarine/mandarineAnnotationMetadataContext.ts";
-import { Reflect } from "../../../../../main-core/reflectMetadata.ts";
+import { RoutingException } from "../../../../../main-core/exceptions/routingException.ts";
+import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
 import { MandarineConstants } from "../../../../../main-core/mandarineConstants.ts";
+import { Reflect } from "../../../../../main-core/reflectMetadata.ts";
 import { ReflectUtils } from "../../../../../main-core/utils/reflectUtils.ts";
 import { ResponseStatusMetadataContext } from "../../../decorators/stereotypes/controller/responseStatus.ts";
-import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
-import { ApplicationContext } from "../../../../../main-core/application-context/mandarineApplicationContext.ts";
-import { Sha256 } from "../../../../../security-core/hash/sha256.ts";
+import { AnnotationMetadataContext } from "../../../interfaces/mandarine/mandarineAnnotationMetadataContext.ts";
+import { RoutingUtils } from "../../../utils/mandarine/routingUtils.ts";
 
 /**
  * This class is used in the DI Container for Mandarine to store components annotated as @Controller
@@ -39,7 +37,7 @@ export class ControllerComponent {
         let actionName: string = this.getActionName(routeAction.actionMethodName);
         let routingAction: Mandarine.MandarineMVC.Routing.RoutingAction = this.actions.get(actionName);
 
-        if(routingAction != null && routingAction.initializationStatus == Mandarine.MandarineMVC.Routing.RouteInitializationStatus.CREATED) throw new RoutingException(RoutingException.EXISTENT_ACTION, actionName);
+        if(routingAction != null && routingAction.initializationStatus == Mandarine.MandarineMVC.Routing.RouteInitializationStatus.CREATED) throw new RoutingException(RoutingException.EXISTENT_ACTION);
 
         this.initializeRoutingActionContext(routeAction);
         

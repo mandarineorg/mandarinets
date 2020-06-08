@@ -1,9 +1,9 @@
-import { EntityRegistry } from "../entity-registry/entityRegistry.ts";
-import { Mandarine } from "../../main-core/Mandarine.ns.ts";
-import { PostgreSQLDialect } from "../dialect/postgreSQLDialect.ts";
-import { PostgresConnector } from "../connectors/postgreSQLConnector.ts";
-import { MandarineORMException } from "./exceptions/mandarineORMException.ts";
 import { Log } from "../../logger/log.ts";
+import { Mandarine } from "../../main-core/Mandarine.ns.ts";
+import { PostgresConnector } from "../connectors/postgreSQLConnector.ts";
+import { PostgreSQLDialect } from "../dialect/postgreSQLDialect.ts";
+import { EntityRegistry } from "../entity-registry/entityRegistry.ts";
+import { MandarineORMException } from "./exceptions/mandarineORMException.ts";
 
 /**
  * This class represents the entity manager which contains all the necessary methods & references for Mandarine to interact with your database.

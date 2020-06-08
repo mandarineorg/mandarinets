@@ -1,5 +1,5 @@
-import { ResourceHandler } from "./resourceHandler.ts";
 import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
+import { ResourceHandler } from "./resourceHandler.ts";
 
 export class ResourceHandlerRegistry implements Mandarine.MandarineCore.IResourceHandlerRegistry {
 

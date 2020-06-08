@@ -1,9 +1,9 @@
-import { MandarineMvcFrameworkStarter } from "./engine/mandarineMvcFrameworkStarter.ts";
+import { Application } from "../deps.ts";
 import { Log } from "../logger/log.ts";
 import { getMandarineConfiguration } from "../main-core/configuration/getMandarineConfiguration.ts";
 import { Mandarine } from "../main-core/Mandarine.ns.ts";
-import { Application } from "../deps.ts";
 import { ResourceHandlerMiddleware } from "./core/middlewares/resourceHandlerMiddleware.ts";
+import { MandarineMvcFrameworkStarter } from "./engine/mandarineMvcFrameworkStarter.ts";
 
 /**
 * This class is the bridge between the HTTP server & the Mandarine Compiler.

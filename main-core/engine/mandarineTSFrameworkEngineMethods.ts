@@ -1,7 +1,7 @@
+import { Log } from "../../logger/log.ts";
 import { ApplicationContext } from "../../main-core/application-context/mandarineApplicationContext.ts";
 import { MiddlewareComponent } from "../../main-core/components/middleware-component/middlewareComponent.ts";
 import { Mandarine } from "../../main-core/Mandarine.ns.ts";
-import { Log } from "../../logger/log.ts";
 
 /**
  * Contains methods that are necessary for the MVC engine to start

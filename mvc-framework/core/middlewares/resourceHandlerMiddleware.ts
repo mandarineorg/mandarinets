@@ -1,7 +1,7 @@
-import { ApplicationContext } from "../../../mod.ts";
-import { Mandarine } from "../../../main-core/Mandarine.ns.ts";
+import { Middleware } from "../../../deps.ts";
 import { getMandarineConfiguration } from "../../../main-core/configuration/getMandarineConfiguration.ts";
-import { Context, Middleware } from "../../../deps.ts";
+import { Mandarine } from "../../../main-core/Mandarine.ns.ts";
+import { ApplicationContext } from "../../../mod.ts";
 
 export const ResourceHandlerMiddleware = (): Middleware => {
     return async (context, next) => {

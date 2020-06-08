@@ -1,6 +1,6 @@
-import { MandarineCore } from "./mandarineCore.ts";
 import { rgb8 } from "https://deno.land/std/fmt/colors.ts";
 import { Log } from "../logger/log.ts";
+import { MandarineCore } from "./mandarineCore.ts";
 
 /**
  * Loads the visualization of Mandarine's Compiler

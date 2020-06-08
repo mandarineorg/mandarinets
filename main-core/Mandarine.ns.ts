@@ -1,16 +1,16 @@
-import { MiddlewareComponent } from "./components/middleware-component/middlewareComponent.ts";
-import { ComponentsRegistry } from "./components-registry/componentRegistry.ts";
-import { CommonUtils } from "./utils/commonUtils.ts";
-import { MandarineStorageHandler } from "./mandarine-native/sessions/mandarineDefaultSessionStore.ts";
-import { MandarineSecurity } from "../security-core/mandarine-security.ns.ts";
+import { Log } from "../logger/log.ts";
+import { TemplateEngineException } from "../main-core/exceptions/templateEngineException.ts";
+import { ResourceHandler } from "../mvc-framework/core/internal/components/resource-handler-registry/resourceHandler.ts";
+import { ResourceHandlerRegistry } from "../mvc-framework/core/internal/components/resource-handler-registry/resourceHandlerRegistry.ts";
 import { MandarineMvc } from "../mvc-framework/mandarine-mvc.ns.ts";
 import { MandarineORM } from "../orm-core/mandarine-orm.ns.ts";
-import { TemplatesManager } from "./templates-registry/templatesRegistry.ts";
-import { TemplateEngineException } from "../mvc-framework/core/exceptions/templateEngineException.ts";
+import { MandarineSecurity } from "../security-core/mandarine-security.ns.ts";
+import { ComponentsRegistry } from "./components-registry/componentRegistry.ts";
+import { MiddlewareComponent } from "./components/middleware-component/middlewareComponent.ts";
 import { DI } from "./dependency-injection/di.ns.ts";
-import { Log } from "../logger/log.ts";
-import { ResourceHandlerRegistry } from "../mvc-framework/core/internal/components/resource-handler-registry/resourceHandlerRegistry.ts";
-import { ResourceHandler } from "../mvc-framework/core/internal/components/resource-handler-registry/resourceHandler.ts";
+import { MandarineStorageHandler } from "./mandarine-native/sessions/mandarineDefaultSessionStore.ts";
+import { TemplatesManager } from "./templates-registry/templatesRegistry.ts";
+import { CommonUtils } from "./utils/commonUtils.ts";
 /**
 * This namespace contains all the essentials for mandarine to work
 * Gnerally, global functionings are added to this namespace in order to be easily accesible across Mandarine
@@ -197,7 +197,7 @@ export namespace Mandarine {
             if(properties.mandarine.resources.staticFolder == (null || undefined)) properties.mandarine.resources.staticFolder = defaultConfiguration.mandarine.resources.staticFolder;
             if(properties.mandarine.resources.staticRegExpPattern == (null || undefined)) properties.mandarine.resources.staticRegExpPattern = defaultConfiguration.mandarine.resources.staticRegExpPattern;
             
-            if(!Object.values(Mandarine.MandarineMVC.TemplateEngine.Engines).includes(properties.mandarine.templateEngine.engine)) throw new TemplateEngineException(TemplateEngineException.INVALID_ENGINE, "MandarineCore");
+            if(!Object.values(Mandarine.MandarineMVC.TemplateEngine.Engines).includes(properties.mandarine.templateEngine.engine)) throw new TemplateEngineException(TemplateEngineException.INVALID_ENGINE);
 
             mandarineGlobal.mandarineProperties = properties;
        }
