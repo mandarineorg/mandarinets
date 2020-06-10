@@ -65,14 +65,14 @@ export class Optional<T> {
      * if @param value is an Optional, it will invoke "get", otherwise it will return the whole value. If not value is present, it will return undefined.
      */
     public orElseGet(value: Optional<T> | T): T {
-        if(value != null) {
-            if(value instanceof Optional) {
-                return value.get();
+        if(this.value != (null || undefined)) {
+            if(this.value instanceof Optional) {
+                return this.value.get();
             } else {
-                return value;
+                return this.value;
             }
         } else {
-            return undefined;
+            return <any> value;
         }
     }
 
