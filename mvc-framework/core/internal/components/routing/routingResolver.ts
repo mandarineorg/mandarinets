@@ -1,6 +1,7 @@
 import { ApplicationContext } from "../../../../../main-core/application-context/mandarineApplicationContext.ts";
 import { MiddlewareComponent } from "../../../../../main-core/components/middleware-component/middlewareComponent.ts";
 import { DI } from "../../../../../main-core/dependency-injection/di.ns.ts";
+import { Optional } from "../../../../../main-core/internals/classes/optional.ts";
 import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
 import { MandarineConstants } from "../../../../../main-core/mandarineConstants.ts";
 import { Reflect } from "../../../../../main-core/reflectMetadata.ts";
@@ -48,7 +49,7 @@ export const requestResolver = async (routingAction: Mandarine.MandarineMVC.Rout
     if(isRenderable) {
         context.response.body = Mandarine.MandarineMVC.TemplateEngine.RenderEngine.render(renderInformation, renderInformation.engine, (methodValue == (null || undefined)) ? {} : methodValue);
     } else {
-        context.response.body = methodValue;
+        context.response.body = Optional.ofNullable(methodValue).orElseGet(undefined);
     }
 };
 
