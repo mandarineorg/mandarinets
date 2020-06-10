@@ -34,15 +34,6 @@ export class HttpUtils {
         }
     }
 
-    public static redirect(response: any): Function {
-        // This is not good practice. No good design
-        // This should be change as soon as Deno allows redirection natively.
-        return (url: string) => {
-            response.headers.append("Location", url);
-            response.status = 302;
-        }
-    }
-
     public static getCookies(req: any): Mandarine.MandarineCore.Cookies {
         const cookie = req.headers.get("Cookie");
         if (cookie != null) {
