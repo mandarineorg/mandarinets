@@ -8,6 +8,7 @@ import { ControllerComponent } from "../core/internal/components/routing/control
 import { middlewareResolver, requestResolver } from "../core/internal/components/routing/routingResolver.ts";
 import { WebMVCConfigurer } from "../core/internal/configurers/webMvcConfigurer.ts";
 import { SessionMiddleware } from "../core/middlewares/sessionMiddleware.ts";
+import { handleCors } from "../core/middlewares/cors/corsMiddleware.ts";
 
 /**
  * This class works as the MVC engine and it is responsible for the initialization & behavior of HTTP requests.
@@ -63,8 +64,9 @@ export class MandarineMvcFrameworkStarter {
 
     }
 
-    private preRequestInternalMiddlewares(context: any): void {
+    private preRequestInternalMiddlewares(context: any, controllerComponent: ControllerComponent): void {
         this.essentials.sessionMiddleware.createSessionCookie(context);
+        handleCors(context, controllerComponent.options.cors);
     }
 
     private postRequestInternalMiddlewares(context: any): void {
@@ -94,7 +96,7 @@ export class MandarineMvcFrameworkStarter {
 
         let responseHandler = async (context) => {
 
-            this.preRequestInternalMiddlewares(context); // Execute internal middleware like sessions
+            this.preRequestInternalMiddlewares(context, controllerComponent); // Execute internal middleware like sessions
             let continueRequest: boolean = await this.executeUserMiddlewares(true, availableMiddlewares, context, routingAction); // If the user has any middleware, execute it
 
             if(continueRequest) {

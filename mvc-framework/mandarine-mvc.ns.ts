@@ -483,7 +483,8 @@ export namespace MandarineMvc {
         * Refers to the possible configurations a route can have.
         */
         export interface RoutingOptions {
-            responseStatus?: HttpStatusCode
+            responseStatus?: HttpStatusCode,
+            cors?: CorsMiddlewareOption
         }
 
         /**
@@ -536,6 +537,15 @@ export namespace MandarineMvc {
         parameterIndex: number;
         parameterType: DI.InjectionTypes;
         className?: string;
+    }
+
+    export interface CorsMiddlewareOption {
+        origin: string | RegExp | Array<any>;
+        methods?: Array<string>;
+        allowedHeaders?: Array<string>;
+        exposedHeaders?: Array<string>;
+        credentials?: boolean;
+        maxAge?: boolean;
     }
 
     /**

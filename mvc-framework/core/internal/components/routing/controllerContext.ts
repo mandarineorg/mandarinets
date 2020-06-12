@@ -31,6 +31,7 @@ export class ControllerComponent {
     public initializeControllerFunctionality() {
         this.initializeRoutes();
         this.initializeDefaultResponseStatus();
+        this.initializeCorsMiddlewareOptions();
     }
 
     public registerAction(routeAction: Mandarine.MandarineMVC.Routing.RoutingAction): void {
@@ -66,6 +67,17 @@ export class ControllerComponent {
 
         let defaultStatusAnnotationContext: ResponseStatusMetadataContext = <ResponseStatusMetadataContext> Reflect.getMetadata(defaultResponseStatusMetadataKey, this.getClassHandlerType());
         this.options.responseStatus = defaultStatusAnnotationContext.responseStatus;
+    }
+
+    private initializeCorsMiddlewareOptions(): void {
+        let metadataKeysFromClass: Array<any> = Reflect.getMetadataKeys(this.getClassHandlerType());
+        if(metadataKeysFromClass == (null || undefined)) return;
+
+        let defaultCorsMiddlewareMetadataKey: Array<any> = metadataKeysFromClass.find((metadataKey: string) => metadataKey === `${MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_CORS_MIDDLEWARE}`);
+        if(defaultCorsMiddlewareMetadataKey) {
+            let defaultStatusAnnotationContext: Mandarine.MandarineMVC.CorsMiddlewareOption = <Mandarine.MandarineMVC.CorsMiddlewareOption> Reflect.getMetadata(defaultCorsMiddlewareMetadataKey, this.getClassHandlerType());
+            this.options.cors = defaultStatusAnnotationContext;
+        }
     }
 
     private initializeRoutes(): void {
