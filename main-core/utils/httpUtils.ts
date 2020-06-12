@@ -1,6 +1,6 @@
 import { decoder } from "https://deno.land/std/encoding/utf8.ts";
 import { assert } from "https://deno.land/std/testing/asserts.ts";
-import { Request } from "../../deps.ts";
+import { Request, FormDataReader } from "../../deps.ts";
 import { Log } from "../../logger/log.ts";
 import { Mandarine } from "../Mandarine.ns.ts";
 
@@ -9,7 +9,8 @@ export class HttpUtils {
     public static async parseBody(request: Request): Promise<any> {
         const body = await Deno.readAll(request.serverRequest.body);
         let decodedBody: string = decoder.decode(body);
-        const contentType = request.serverRequest.headers.get("content-type");
+        let contentType = request.serverRequest.headers.get("content-type");
+        if(contentType.includes('multipart/form-data; boundary=')) contentType = "multipart/form-data";
 
         switch(contentType) {
             case "application/json":
@@ -21,6 +22,11 @@ export class HttpUtils {
                 }
 
                 break;
+            
+            case "multipart/form-data":
+                let multipartBody = (await request.body()).value;
+                console.log(await ((<FormDataReader> multipartBody)).read());
+            break;
 
             case "application/x-www-form-urlencoded":
                 let returningElements: {[key: string]: string} = {};
