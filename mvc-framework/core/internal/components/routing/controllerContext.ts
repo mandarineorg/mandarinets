@@ -92,6 +92,11 @@ export class ControllerComponent {
             let annotationContext: AnnotationMetadataContext = <AnnotationMetadataContext> Reflect.getMetadata(value, classHandler);
             if(annotationContext.type == "ROUTE") {
                 let routeContext: Mandarine.MandarineMVC.Routing.RoutingAnnotationContext = <Mandarine.MandarineMVC.Routing.RoutingAnnotationContext> annotationContext.context;
+                if(!routeContext.options) routeContext.options = {};
+
+                let routeCors: Mandarine.MandarineMVC.CorsMiddlewareOption = this.getRouteCors(classHandler, routeContext.methodName);
+                if(routeCors) routeContext.options.cors = routeCors;
+
                 this.registerAction({
                     actionParent: routeContext.className,
                     actionType: routeContext.methodType,
@@ -102,6 +107,10 @@ export class ControllerComponent {
                 });
             }
         });
+    }
+
+    private getRouteCors(classHandler, methodName): Mandarine.MandarineMVC.CorsMiddlewareOption {
+        return Reflect.getMetadata(`${MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_CORS_MIDDLEWARE}:${methodName}`, classHandler, methodName);
     }
 
     private initializeRoutingActionContext(routeAction: Mandarine.MandarineMVC.Routing.RoutingAction) {

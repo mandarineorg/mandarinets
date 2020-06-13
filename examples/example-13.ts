@@ -5,11 +5,24 @@ import { MandarineCore } from "../main-core/mandarineCore.ts";
 
 @Controller('/api')
 @Cors({
-    origin: "http://localhost:8181"
+    origin: "https://stackoverflow.com"
 })
 export class MyApi {
 
     @GET('/hello')
+    public handler() {
+        return "hello";
+    }
+
+}
+
+@Controller('/api2')
+export class MyApi2 {
+
+    @GET('/hello')
+    @Cors({
+        origin: "https://stackoverflow.com"
+    })
     public handler() {
         return "hello";
     }

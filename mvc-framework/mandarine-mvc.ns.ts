@@ -510,7 +510,8 @@ export namespace MandarineMvc {
             actionMethodName: string; 
             route: string;
             routingOptions?: {
-                responseStatus?: HttpStatusCode
+                responseStatus?: HttpStatusCode,
+                cors?: CorsMiddlewareOption
             };
             routeParams?: RoutingParams[];
             initializationStatus: RouteInitializationStatus;
@@ -525,7 +526,8 @@ export namespace MandarineMvc {
             methodType: HttpMethods;
             methodName: string;
             options: {
-                responseStatus?: HttpStatusCode
+                responseStatus?: HttpStatusCode,
+                cors?: CorsMiddlewareOption
             };
             className?: string;
         }
