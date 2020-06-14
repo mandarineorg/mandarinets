@@ -436,6 +436,12 @@ export namespace Mandarine {
             saveUninitialized: false,
             store: new MandarineStorageHandler()
         };
+
+        export const MandarineDefaultCorsOptions: Mandarine.MandarineMVC.CorsMiddlewareOption = {
+            origin: '*',
+            methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+            optionsSuccessStatus: 204
+        }
     };
 
     /**

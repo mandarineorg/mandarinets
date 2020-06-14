@@ -548,6 +548,7 @@ export namespace MandarineMvc {
         exposedHeaders?: Array<string>;
         credentials?: boolean;
         maxAge?: boolean;
+        optionsSuccessStatus?: number;
     }
 
     /**

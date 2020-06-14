@@ -25,7 +25,7 @@ const configureCredentials = (corsOptions, res) => {
 }
 
 export const handleCors = (requestContext: Context, corsOptions: Mandarine.MandarineMVC.CorsMiddlewareOption) => {
-    if(!corsOptions) return;
+    if(!corsOptions) corsOptions = Mandarine.Defaults.MandarineDefaultCorsOptions;
 
     let req = requestContext.request;
     let res = requestContext.response;
@@ -55,7 +55,7 @@ export const handleCors = (requestContext: Context, corsOptions: Mandarine.Manda
         configureCredentials(corsOptions, res);
 
         res.headers.set("access-control-max-age", `${(corsOptions.maxAge == (null || undefined)) ? 0 : corsOptions.maxAge}`);
-        res.status = <any> Mandarine.MandarineMVC.HttpStatusCode.NO_CONTENT;
+        res.status = (corsOptions.optionsSuccessStatus) ? corsOptions.optionsSuccessStatus : <any> Mandarine.MandarineMVC.HttpStatusCode.NO_CONTENT;
     } else {
         configureOrigin(corsOptions, res, requestOrigin);
         configureExposeHeaders(corsOptions, res);

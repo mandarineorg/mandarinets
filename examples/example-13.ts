@@ -35,6 +35,11 @@ export class MyApi2 {
         return "hello2";
     }
 
+    @GET('/hello3')
+    public handler3() {
+        return "hello3";
+    }
+
 }
 
 new MandarineCore().MVC().run();
