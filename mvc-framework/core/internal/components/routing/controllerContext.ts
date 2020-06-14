@@ -31,6 +31,7 @@ export class ControllerComponent {
     public initializeControllerFunctionality() {
         this.initializeRoutes();
         this.initializeDefaultResponseStatus();
+        this.initializeCorsMiddlewareOptions();
     }
 
     public registerAction(routeAction: Mandarine.MandarineMVC.Routing.RoutingAction): void {
@@ -68,6 +69,17 @@ export class ControllerComponent {
         this.options.responseStatus = defaultStatusAnnotationContext.responseStatus;
     }
 
+    private initializeCorsMiddlewareOptions(): void {
+        let metadataKeysFromClass: Array<any> = Reflect.getMetadataKeys(this.getClassHandlerType());
+        if(metadataKeysFromClass == (null || undefined)) return;
+
+        let defaultCorsMiddlewareMetadataKey: Array<any> = metadataKeysFromClass.find((metadataKey: string) => metadataKey === `${MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_CORS_MIDDLEWARE}`);
+        if(defaultCorsMiddlewareMetadataKey) {
+            let defaultStatusAnnotationContext: Mandarine.MandarineMVC.CorsMiddlewareOption = <Mandarine.MandarineMVC.CorsMiddlewareOption> Reflect.getMetadata(defaultCorsMiddlewareMetadataKey, this.getClassHandlerType());
+            this.options.cors = defaultStatusAnnotationContext;
+        }
+    }
+
     private initializeRoutes(): void {
         let classHandler: any = this.getClassHandler();
         classHandler = (ReflectUtils.checkClassInitialized(this.getClassHandler())) ? classHandler : new classHandler();
@@ -80,6 +92,11 @@ export class ControllerComponent {
             let annotationContext: AnnotationMetadataContext = <AnnotationMetadataContext> Reflect.getMetadata(value, classHandler);
             if(annotationContext.type == "ROUTE") {
                 let routeContext: Mandarine.MandarineMVC.Routing.RoutingAnnotationContext = <Mandarine.MandarineMVC.Routing.RoutingAnnotationContext> annotationContext.context;
+                if(!routeContext.options) routeContext.options = {};
+
+                let routeCors: Mandarine.MandarineMVC.CorsMiddlewareOption = this.getRouteCors(classHandler, routeContext.methodName);
+                if(routeCors) routeContext.options.cors = routeCors;
+
                 this.registerAction({
                     actionParent: routeContext.className,
                     actionType: routeContext.methodType,
@@ -90,6 +107,10 @@ export class ControllerComponent {
                 });
             }
         });
+    }
+
+    private getRouteCors(classHandler, methodName): Mandarine.MandarineMVC.CorsMiddlewareOption {
+        return Reflect.getMetadata(`${MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_CORS_MIDDLEWARE}:${methodName}`, classHandler, methodName);
     }
 
     private initializeRoutingActionContext(routeAction: Mandarine.MandarineMVC.Routing.RoutingAction) {
