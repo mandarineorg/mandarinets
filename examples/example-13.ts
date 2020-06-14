@@ -27,6 +27,14 @@ export class MyApi2 {
         return "hello";
     }
 
+    @GET('/hello2')
+    @Cors({
+        origin: "http://localhost"
+    })
+    public handler2() {
+        return "hello2";
+    }
+
 }
 
 new MandarineCore().MVC().run();

@@ -25,6 +25,8 @@ const configureCredentials = (corsOptions, res) => {
 }
 
 export const handleCors = (requestContext: Context, corsOptions: Mandarine.MandarineMVC.CorsMiddlewareOption) => {
+    if(!corsOptions) return;
+
     let req = requestContext.request;
     let res = requestContext.response;
     const requestOrigin = req.headers.get("origin");
