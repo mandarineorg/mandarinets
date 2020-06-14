@@ -1,7 +1,7 @@
-import { DI } from "../main-core/dependency-injection/di.ns.ts";
-import { RenderEngineClass } from "./core/modules/view-engine/renderEngine.ts";
 import { Context } from "../deps.ts";
+import { DI } from "../main-core/dependency-injection/di.ns.ts";
 import { Mandarine } from "../mod.ts";
+import { RenderEngineClass } from "./core/modules/view-engine/renderEngine.ts";
 
 /**
 * This namespace contains all the essentials for Mandarine MVC to work
@@ -483,7 +483,8 @@ export namespace MandarineMvc {
         * Refers to the possible configurations a route can have.
         */
         export interface RoutingOptions {
-            responseStatus?: HttpStatusCode
+            responseStatus?: HttpStatusCode,
+            cors?: CorsMiddlewareOption
         }
 
         /**
@@ -509,7 +510,8 @@ export namespace MandarineMvc {
             actionMethodName: string; 
             route: string;
             routingOptions?: {
-                responseStatus?: HttpStatusCode
+                responseStatus?: HttpStatusCode,
+                cors?: CorsMiddlewareOption
             };
             routeParams?: RoutingParams[];
             initializationStatus: RouteInitializationStatus;
@@ -524,7 +526,8 @@ export namespace MandarineMvc {
             methodType: HttpMethods;
             methodName: string;
             options: {
-                responseStatus?: HttpStatusCode
+                responseStatus?: HttpStatusCode,
+                cors?: CorsMiddlewareOption
             };
             className?: string;
         }
@@ -536,6 +539,16 @@ export namespace MandarineMvc {
         parameterIndex: number;
         parameterType: DI.InjectionTypes;
         className?: string;
+    }
+
+    export interface CorsMiddlewareOption {
+        origin: string | RegExp | Array<string | RegExp>;
+        methods?: Array<string>;
+        allowedHeaders?: Array<string>;
+        exposedHeaders?: Array<string>;
+        credentials?: boolean;
+        maxAge?: boolean;
+        optionsSuccessStatus?: number;
     }
 
     /**

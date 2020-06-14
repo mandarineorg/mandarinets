@@ -1,6 +1,6 @@
 import { Cookie } from "https://deno.land/std/http/cookie.ts";
-import { MandarineSecurity } from "../mandarine-security.ns.ts";
 import { KeyStack } from "../keyStack.ts";
+import { MandarineSecurity } from "../mandarine-security.ns.ts";
 
 /**
  * Contains all the util methods used by the session middleware

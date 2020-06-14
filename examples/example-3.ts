@@ -15,3 +15,5 @@ class TestController {
     }
 
 }
+
+new MandarineCore().MVC().run();

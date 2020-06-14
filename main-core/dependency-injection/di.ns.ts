@@ -1,6 +1,6 @@
+import { Cookies, Request } from "../../deps.ts";
 import { Mandarine } from "../Mandarine.ns.ts";
 import { DependencyInjectionFactory } from "./diFactory.ts";
-import { Cookies, Request } from "../../deps.ts";
 
 export namespace DI {
 

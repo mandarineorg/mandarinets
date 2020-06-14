@@ -1,5 +1,5 @@
-import { Types } from "./sql/types.ts";
 import { EntityManagerClass } from "./core/entityManager.ts";
+import { Types } from "./sql/types.ts";
 
 /**
  * Contains all the essentials for Mandarine's ORM to work.

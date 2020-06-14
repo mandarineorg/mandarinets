@@ -1,8 +1,8 @@
 import { decoder } from "https://deno.land/std/encoding/utf8.ts";
 import { assert } from "https://deno.land/std/testing/asserts.ts";
-import { Mandarine } from "../Mandarine.ns.ts";
-import { Log } from "../../logger/log.ts";
 import { Request } from "../../deps.ts";
+import { Log } from "../../logger/log.ts";
+import { Mandarine } from "../Mandarine.ns.ts";
 
 export class HttpUtils {
 
@@ -34,15 +34,6 @@ export class HttpUtils {
         }
     }
 
-    public static redirect(response: any): Function {
-        // This is not good practice. No good design
-        // This should be change as soon as Deno allows redirection natively.
-        return (url: string) => {
-            response.headers.append("Location", url);
-            response.status = 302;
-        }
-    }
-
     public static getCookies(req: any): Mandarine.MandarineCore.Cookies {
         const cookie = req.headers.get("Cookie");
         if (cookie != null) {
@@ -57,6 +48,21 @@ export class HttpUtils {
           return out;
         }
         return {};
+    }
+
+    public static verifyCorsOrigin(origin: string | RegExp | Array<string | RegExp>, requestOrigin: string): boolean {
+        if (typeof origin === "string") {
+            return origin === requestOrigin;
+        } else if (origin instanceof RegExp) {
+            return requestOrigin.match(origin) != null;
+        } else if (Array.isArray(origin)) {
+            for(const originValue in origin) {
+                if(this.verifyCorsOrigin(originValue, requestOrigin)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
     
 }

@@ -31,3 +31,6 @@ export { Types as SQLTypes } from "./orm-core/sql/types.ts";
 
 export { ResourceHandler } from "./mvc-framework/core/internal/components/resource-handler-registry/resourceHandler.ts";
 export { MandarineResourceResolver } from "./mvc-framework/core/internal/components/resource-handler-registry/mandarineResourceResolver.ts";
+
+export { Optional } from "./pluggins/optional.ts";
+export { PromiseRepeater } from "./pluggins/promiseRepeater.ts";

@@ -1,5 +1,5 @@
-import { RoutingUtils } from "../../../utils/mandarine/routingUtils.ts";
 import { DI } from "../../../../../main-core/dependency-injection/di.ns.ts";
+import { RoutingUtils } from "../../../utils/mandarine/routingUtils.ts";
 
 /**
  * **Decorator**

@@ -1,8 +1,8 @@
-import { ControllerComponent } from "../../../internal/components/routing/controllerContext.ts";
-import { ReflectUtils } from "../../../../../main-core/utils/reflectUtils.ts";
-import { ComponentUtils } from "../../../../../main-core/utils/componentUtils.ts";
 import { ApplicationContext } from "../../../../../main-core/application-context/mandarineApplicationContext.ts";
 import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
+import { ComponentUtils } from "../../../../../main-core/utils/componentUtils.ts";
+import { ReflectUtils } from "../../../../../main-core/utils/reflectUtils.ts";
+import { ControllerComponent } from "../../../internal/components/routing/controllerContext.ts";
 
 /**
  * **Decorator**

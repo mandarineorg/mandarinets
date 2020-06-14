@@ -67,6 +67,7 @@ export const structure = {
         "/src/main/mandarine/hello-world",
         "/src/main/resources",
         "/src/main/resources/templates",
+        "/src/main/resources/static",
     ],
     files: {
         "/src/main/resources/properties.json": mandarineDefaultConfig,

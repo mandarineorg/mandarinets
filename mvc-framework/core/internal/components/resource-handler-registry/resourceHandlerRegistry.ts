@@ -1,6 +1,10 @@
-import { ResourceHandler } from "./resourceHandler.ts";
 import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
+import { ResourceHandler } from "./resourceHandler.ts";
 
+/**
+ * This class serves as a registry for all the resources that have been added by the user (overriding behavior https://mandarineframework.gitbook.io/mandarine-ts/mandarine-core/resource-handlers/resource-handler)
+ * or the default handlers Mandarine has.
+ */
 export class ResourceHandlerRegistry implements Mandarine.MandarineCore.IResourceHandlerRegistry {
 
     public overriden: boolean = false;

@@ -1,19 +1,19 @@
+import { Log } from "../../logger/log.ts";
 import { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
-import { ServiceComponent } from "../components/service-component/serviceComponent.ts";
-import { ConfigurationComponent } from "../components/configuration-component/configurationComponent.ts";
-import { ComponentComponent } from "../components/component-component/componentComponent.ts";
-import { DI } from "../dependency-injection/di.ns.ts";
-import { MiddlewareComponent } from "../components/middleware-component/middlewareComponent.ts";
-import { Mandarine } from "../Mandarine.ns.ts";
-import { ReflectUtils } from "../utils/reflectUtils.ts";
-import { RepositoryComponent } from "../components/repository-component/repositoryComponent.ts";
 import { MandarineRepository } from "../../orm-core/repository/mandarineRepository.ts";
 import { RepositoryProxy } from "../../orm-core/repository/repositoryProxy.ts";
 import { ApplicationContext } from "../application-context/mandarineApplicationContext.ts";
-import { Reflect } from "../reflectMetadata.ts";
+import { ComponentComponent } from "../components/component-component/componentComponent.ts";
+import { ConfigurationComponent } from "../components/configuration-component/configurationComponent.ts";
+import { MiddlewareComponent } from "../components/middleware-component/middlewareComponent.ts";
+import { RepositoryComponent } from "../components/repository-component/repositoryComponent.ts";
+import { ServiceComponent } from "../components/service-component/serviceComponent.ts";
+import { DI } from "../dependency-injection/di.ns.ts";
+import { Mandarine } from "../Mandarine.ns.ts";
 import { MandarineConstants } from "../mandarineConstants.ts";
-import { Log } from "../../logger/log.ts";
+import { Reflect } from "../reflectMetadata.ts";
 import { CommonUtils } from "../utils/commonUtils.ts";
+import { ReflectUtils } from "../utils/reflectUtils.ts";
 
 /**
 * This class is also known as the DI container.

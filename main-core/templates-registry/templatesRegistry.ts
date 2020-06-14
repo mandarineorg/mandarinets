@@ -1,12 +1,12 @@
-import { Mandarine } from "../Mandarine.ns.ts";
-import { MandarineException } from "../exceptions/mandarineException.ts";
+import { Log } from "../../logger/log.ts";
+import { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
 import { TemplateUtils } from "../../mvc-framework/core/utils/templateUtils.ts";
 import { ApplicationContext } from "../application-context/mandarineApplicationContext.ts";
-import { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
-import { ReflectUtils } from "../utils/reflectUtils.ts";
-import { Reflect } from "../reflectMetadata.ts";
+import { MandarineException } from "../exceptions/mandarineException.ts";
+import { Mandarine } from "../Mandarine.ns.ts";
 import { MandarineConstants } from "../mandarineConstants.ts";
-import { Log } from "../../logger/log.ts";
+import { Reflect } from "../reflectMetadata.ts";
+import { ReflectUtils } from "../utils/reflectUtils.ts";
 
 export class TemplatesManager implements Mandarine.MandarineCore.ITemplatesManager {
 
@@ -34,10 +34,10 @@ export class TemplatesManager implements Mandarine.MandarineCore.ITemplatesManag
 
                     this.templates.set(fullPath, context);
                 }catch(error) {
-                    throw new MandarineException(MandarineException.INVALID_TEMPLATE.replace("%templatePath%", fullPath), "TemplateManager");
+                    throw new MandarineException(MandarineException.INVALID_TEMPLATE.replace("%templatePath%", fullPath));
                 }
             } else {
-                throw new MandarineException(MandarineException.UNDEFINED_TEMPLATE, "TemplateManager");
+                throw new MandarineException(MandarineException.UNDEFINED_TEMPLATE);
             }
         } else {
             this.templates.set(TemplateUtils.getTemplateKey(renderData), {

@@ -1,6 +1,6 @@
 import { ComponentsRegistryUtil } from "../../../main-core/components-registry/componentRegistry.util.ts";
-import { Reflect } from "../../../main-core/reflectMetadata.ts";
 import { MandarineConstants } from "../../../main-core/mandarineConstants.ts";
+import { Reflect } from "../../../main-core/reflectMetadata.ts";
 
 /**
  * **Decorator**
