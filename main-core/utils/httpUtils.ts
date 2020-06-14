@@ -50,7 +50,7 @@ export class HttpUtils {
         return {};
     }
 
-    public static verifyCorsOrigin(origin: string | RegExp | Array<any>, requestOrigin: string): boolean {
+    public static verifyCorsOrigin(origin: string | RegExp | Array<string | RegExp>, requestOrigin: string): boolean {
         if (typeof origin === "string") {
             return origin === requestOrigin;
         } else if (origin instanceof RegExp) {

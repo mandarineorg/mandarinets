@@ -542,7 +542,7 @@ export namespace MandarineMvc {
     }
 
     export interface CorsMiddlewareOption {
-        origin: string | RegExp | Array<any>;
+        origin: string | RegExp | Array<string | RegExp>;
         methods?: Array<string>;
         allowedHeaders?: Array<string>;
         exposedHeaders?: Array<string>;
