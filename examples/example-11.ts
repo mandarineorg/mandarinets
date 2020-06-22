@@ -15,6 +15,9 @@ export class WebMVCConfigurer implements Mandarine.MandarineMVC.Configurers.WebM
             new ResourceHandler()
             .addResourceHandler(new RegExp("/static/(.*)"))
             .addResourceHandlerLocation("./src/main/resources/static/newStatic")
+            .addResourceCors({
+                origin: "https://stackoverflow.com"
+            })
             .addResourceResolver(new MandarineResourceResolver())
         ).addResourceHandler(
             new ResourceHandler()
@@ -22,7 +25,6 @@ export class WebMVCConfigurer implements Mandarine.MandarineMVC.Configurers.WebM
             .addResourceHandlerLocation("./src/main/resources/static")
             .addResourceResolver(new MandarineResourceResolver())
         );
-
         return resourceHandlerRegistry;
     }
 

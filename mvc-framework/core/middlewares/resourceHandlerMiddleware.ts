@@ -1,12 +1,11 @@
 import { Middleware } from "../../../deps.ts";
-import { getMandarineConfiguration } from "../../../main-core/configuration/getMandarineConfiguration.ts";
 import { Mandarine } from "../../../main-core/Mandarine.ns.ts";
 import { ApplicationContext } from "../../../mod.ts";
+import { handleCors } from "./cors/corsMiddleware.ts";
 
 export const ResourceHandlerMiddleware = (): Middleware => {
     return async (context, next) => {
         let resourceHandlerRegistry: Mandarine.MandarineCore.IResourceHandlerRegistry = ApplicationContext.getInstance().getResourceHandlerRegistry();
-        let mandarineConfiguration = getMandarineConfiguration();
 
         let resources = resourceHandlerRegistry.getResourceHandlers();
         for(let i = 0; i<resources.length; i++) {
@@ -26,6 +25,10 @@ export const ResourceHandlerMiddleware = (): Middleware => {
                     let results = regex.exec(search);
 
                     if(results != (null || undefined)) {
+                        if(resourceHandler.resourceCors) {
+                            handleCors(context, resourceHandler.resourceCors, false);
+                        }
+                        
                         let resource = results[1];
                         let index: boolean = false;
 
