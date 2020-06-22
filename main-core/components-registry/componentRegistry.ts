@@ -1,7 +1,7 @@
 import { Log } from "../../logger/log.ts";
 import { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
 import { MandarineRepository } from "../../orm-core/repository/mandarineRepository.ts";
-import { RepositoryProxy } from "../../orm-core/repository/repositoryProxy.ts";
+import { PostgresRepositoryProxy } from "../../orm-core/repository/repositoryPostgresProxy.ts";
 import { ApplicationContext } from "../application-context/mandarineApplicationContext.ts";
 import { ComponentComponent } from "../components/component-component/componentComponent.ts";
 import { ConfigurationComponent } from "../components/configuration-component/configurationComponent.ts";
@@ -159,7 +159,17 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
         let mandarineRepositoryMethods: Array<string> = ReflectUtils.getMethodsFromClass(MandarineRepository);
         repositoryMethods = repositoryMethods.concat(mandarineRepositoryMethods);
         
-        let repositoryProxy = new RepositoryProxy<any>(repositoryInstance.extraData.entity);
+        let repositoryProxy: Mandarine.ORM.RepositoryProxy;
+        let dialect: Mandarine.ORM.Dialect.Dialects = Mandarine.Global.getMandarineConfiguration().mandarine.dataSource.dialect;
+
+        switch(dialect) {
+            case Mandarine.ORM.Dialect.Dialects.POSTGRESQL:
+                repositoryProxy = new PostgresRepositoryProxy<any>(repositoryInstance.extraData.entity);
+            break;
+            default:
+                throw new Error(`${dialect} is not supported inside Mandarine's ORM`);
+            break;
+        }
 
         repositoryMethods.forEach((methodName) => {
 
@@ -202,7 +212,7 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
                     break;
                 case 'save':
                     repositoryTarget.prototype[methodName] = (model) => {
-                        return repositoryProxy.save(methodParameterNames, model);
+                        return repositoryProxy.save(model);
                     }
                     return;
                     break;
@@ -210,19 +220,19 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
 
             if(methodName.startsWith('find')) {
                 repositoryTarget.prototype[methodName] = (...args) => { 
-                    return repositoryProxy.mainProxy(methodName, methodParameterNames, "findBy", args);
+                    return repositoryProxy.mainProxy(methodName, "findBy", args);
                 }
             } else if(methodName.startsWith('exists')) {
                 repositoryTarget.prototype[methodName] = (...args) => { 
-                    return repositoryProxy.mainProxy(methodName, methodParameterNames, "existsBy", args);
+                    return repositoryProxy.mainProxy(methodName, "existsBy", args);
                 }
             } else if(methodName.startsWith('delete')) {
                 repositoryTarget.prototype[methodName] = (...args) => { 
-                    return repositoryProxy.mainProxy(methodName, methodParameterNames, "deleteBy", args);
+                    return repositoryProxy.mainProxy(methodName, "deleteBy", args);
                 }
             } else if(methodName.startsWith('count')) {
                 repositoryTarget.prototype[methodName] = (...args) => { 
-                    return repositoryProxy.mainProxy(methodName, methodParameterNames, "countBy", args);
+                    return repositoryProxy.mainProxy(methodName, "countBy", args);
                 }
             }
         });
