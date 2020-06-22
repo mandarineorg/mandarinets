@@ -41,6 +41,7 @@ export namespace Mandarine {
                 staticRegExpPattern?: string,
                 staticFolder?: string,
                 staticIndex?: string,
+                cors?: MandarineMVC.CorsMiddlewareOption;
             } & any,
             templateEngine: {
                 engine: Mandarine.MandarineMVC.TemplateEngine.Engines,
