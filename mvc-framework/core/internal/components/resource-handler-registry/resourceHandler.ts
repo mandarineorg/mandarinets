@@ -13,6 +13,7 @@ export class ResourceHandler implements Mandarine.MandarineCore.IResourceHandler
     public resourceHandlerLocations: Array<string>;
     public resourceHandlerIndex: Array<string>;
     public resourceResolver: Mandarine.MandarineMVC.HTTPResolvers.ResourceResolver;
+    public resourceCors: Mandarine.MandarineMVC.CorsMiddlewareOption;
     
     public addResourceHandler(...resourceHandlerPath: Array<RegExp>): ResourceHandler {
         this.resourceHandlerPath = resourceHandlerPath;
@@ -31,6 +32,15 @@ export class ResourceHandler implements Mandarine.MandarineCore.IResourceHandler
 
     public addResourceResolver(resolver: Mandarine.MandarineMVC.HTTPResolvers.ResourceResolver): ResourceHandler {
         this.resourceResolver = resolver;
+        return this;
+    }
+
+    public addResourceCors(cors: Mandarine.MandarineMVC.CorsMiddlewareOption): ResourceHandler {
+        if(cors.origin == (null || undefined)) cors.origin = Mandarine.Defaults.MandarineDefaultCorsOptions.origin;
+        if(cors.methods == (null || undefined)) cors.methods = Mandarine.Defaults.MandarineDefaultCorsOptions.methods;
+        if(cors.optionsSuccessStatus == (null || undefined)) cors.optionsSuccessStatus = Mandarine.Defaults.MandarineDefaultCorsOptions.optionsSuccessStatus;
+        
+        this.resourceCors = cors;
         return this;
     }
 

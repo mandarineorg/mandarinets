@@ -67,7 +67,7 @@ export class MandarineMvcFrameworkStarter {
     private handleCorsMiddleware(context: any, routingAction: Mandarine.MandarineMVC.Routing.RoutingAction, controllerComponent: ControllerComponent) {
         let classLevelCors = controllerComponent.options.cors;
         let methodLevelCors = routingAction.routingOptions.cors;
-        handleCors(context, (classLevelCors) ? classLevelCors : methodLevelCors);
+        handleCors(context, (classLevelCors) ? classLevelCors : methodLevelCors, true);
     }
 
     private preRequestInternalMiddlewares(context: any, routingAction: Mandarine.MandarineMVC.Routing.RoutingAction, controllerComponent: ControllerComponent): void {

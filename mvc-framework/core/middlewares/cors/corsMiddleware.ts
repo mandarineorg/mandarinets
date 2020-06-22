@@ -24,8 +24,8 @@ const configureCredentials = (corsOptions, res) => {
     }
 }
 
-export const handleCors = (requestContext: Context, corsOptions: Mandarine.MandarineMVC.CorsMiddlewareOption) => {
-    if(!corsOptions) corsOptions = Mandarine.Defaults.MandarineDefaultCorsOptions;
+export const handleCors = (requestContext: Context, corsOptions: Mandarine.MandarineMVC.CorsMiddlewareOption, useDefaultCors?: boolean) => {
+    if(!corsOptions && useDefaultCors) corsOptions = Mandarine.Defaults.MandarineDefaultCorsOptions;
 
     let req = requestContext.request;
     let res = requestContext.response;

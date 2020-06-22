@@ -383,7 +383,8 @@ export namespace Mandarine {
             addResourceHandler(...resourceHandlerPath: Array<RegExp>): ResourceHandler;
             addResourceHandlerLocation(...resourceHandlerLocations: Array<string>): ResourceHandler;
             addResourceHandlerIndex(...resourceHandlerIndex: Array<string>): ResourceHandler;
-            addResourceResolver(resolver: Mandarine.MandarineMVC.HTTPResolvers.ResourceResolver): ResourceHandler
+            addResourceResolver(resolver: Mandarine.MandarineMVC.HTTPResolvers.ResourceResolver): ResourceHandler;
+            addResourceCors(cors: Mandarine.MandarineMVC.CorsMiddlewareOption): ResourceHandler;
         }
 
         export class MandarineResourceHandlerRegistry extends ResourceHandlerRegistry {}
