@@ -1,1 +1,1 @@
-export { Application, Cookies, Request, Router, Context, Middleware, isHttpError, Status, FormDataReader } from "https://deno.land/x/oak@v5.1.0/mod.ts";
+export { Application, Cookies, Request, Router, Context, Middleware, isHttpError, Status } from "https://raw.githubusercontent.com/mandarineorg/mandarinets-modules/master/oak/5.3.1/mod.ts";

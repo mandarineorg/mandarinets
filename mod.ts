@@ -20,6 +20,7 @@ export { Controller } from "./mvc-framework/core/decorators/stereotypes/controll
 export { Param, RouteParam, QueryParam, RequestParam, Session, ServerRequestParam, ResponseParam, CookieParam, Model, RequestBody } from "./mvc-framework/core/decorators/stereotypes/controller/parameterDecorator.ts";
 export { ResponseStatus } from "./mvc-framework/core/decorators/stereotypes/controller/responseStatus.ts";
 export { GET, POST, DELETE, PATCH, PUT, HEAD, OPTIONS } from "./mvc-framework/core/decorators/stereotypes/controller/routingDecorator.ts";
+export { Cors } from "./mvc-framework/core/decorators/stereotypes/controller/corsMiddlewareDecorator.ts";
 export { Render } from "./mvc-framework/core/decorators/stereotypes/view-engine/viewEngineDecorators.ts";
 export { ViewModel } from "./mvc-framework/core/modules/view-engine/viewModel.ts";
 export { MandarineMVC } from "./mvc-framework/mandarineMVC.ts"

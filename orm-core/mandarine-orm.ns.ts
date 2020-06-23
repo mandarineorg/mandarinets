@@ -6,6 +6,21 @@ import { Types } from "./sql/types.ts";
  */
 export namespace MandarineORM {
 
+    export type ProxyType = "findBy" | "existsBy" | "deleteBy" | "countBy";
+
+    export interface RepositoryProxy {
+        entity: Entity.Table;
+        executeQuery(query: any): void;
+        getEntityManager(): Entity.EntityManager;
+        save(model: any): Promise<any>;
+        findAll(): Promise<any>;
+        countAll(): Promise<any>;
+        deleteAll(): Promise<any>;
+        lexicalProcessor(methodName: string, proxyType: ProxyType): string;
+        mainProxy(nativeMethodName: string, proxyType: ProxyType, args: Array<any>): Promise<any>;
+        manualProxy(query: String, secure: boolean, args: Array<any>): Promise<any>;
+    }
+
     export namespace Dialect {
 
         /**

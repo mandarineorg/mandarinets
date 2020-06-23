@@ -55,5 +55,20 @@ export class HttpUtils {
         }
         return {};
     }
+
+    public static verifyCorsOrigin(origin: string | RegExp | Array<string | RegExp>, requestOrigin: string): boolean {
+        if (typeof origin === "string") {
+            return origin === requestOrigin;
+        } else if (origin instanceof RegExp) {
+            return requestOrigin.match(origin) != null;
+        } else if (Array.isArray(origin)) {
+            for(const originValue in origin) {
+                if(this.verifyCorsOrigin(originValue, requestOrigin)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     
 }

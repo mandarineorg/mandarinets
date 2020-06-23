@@ -44,6 +44,12 @@ abstract class usersRepository extends MandarineRepository<Users> {
     public findByFirstnameAndCountry(firstname: string, country: string) {}
     public countByCountry(country: string) {}
     public existsByLastname(lastname: string) {}
+    public findByCountryIsNotNull(){}
+    public findByCountryIsNull() {}
+    public findByFirstnameIsNotEmptyAndCountryIsEmpty() {}
+    public findByLastnameStartingWith(lastname: string) {}
+    public findByLastnameAndCountryLikeAndFirstnameEndsWith(lastname: string, country: string, firstname: string) {}
+    public findByFirstnameAndCountryAndLastnameEndsWithAndFirstnameIsNotNullOrLastnameIsNullAndCountryLike() {}
 
     @CustomQuery("SELECT * FROM public.users WHERE country = $1 AND firstname = 'Andres'")
     public myCustomQuery(country: string) {}
@@ -57,15 +63,30 @@ export class myController {
 
     @GET('/add-people')
     public async handleAddPeople() {
-        let user1 = new Users("Andres", "Pirela", "United States");
-        let user2 = new Users("Anastasia", "Skymonov", "Russia");
-        let user3 = new Users("Bill", "Gates", "United States");
+        let user1 = new Users("Anastasov", "Lewin", "Croatia");
+        // let user2 = new Users("Anastasia", "Skymonov", "Russia");
+        // let user3 = new Users("Bill", "Gates", "United States");
 
         await this.repository.save(user1);
-        await this.repository.save(user2);
-        await this.repository.save(user3);
+        // await this.repository.save(user2);
+        // await this.repository.save(user3);
 
         return true;
+    }
+
+    @GET('/handle-new-operators')
+    public handleNewOperators() {
+        this.repository.findByCountry("United States");
+        this.repository.findByFirstnameAndCountry("Anastasov", "Croatia");
+        this.repository.findByCountryIsNotNull();
+        this.repository.countAll();
+        this.repository.countByCountry("Russia");
+        this.repository.findByCountryIsNull();
+        this.repository.findByFirstnameIsNotEmptyAndCountryIsEmpty();
+        this.repository.findByLastnameStartingWith("Pirela");
+        this.repository.countByCountry("United States");
+        this.repository.findByLastnameAndCountryLikeAndFirstnameEndsWith("Pirela", "United", "res");
+        this.repository.existsByLastname("Gates");
     }
 
     @GET('/update')
