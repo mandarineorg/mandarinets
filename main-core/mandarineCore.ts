@@ -10,7 +10,7 @@ import { MandarineLoading } from "./mandarineLoading.ts";
  * Contains core methods & information related to Mandarine
  */
 export class MandarineCore {
-    public static releaseVersion: string = "1.1.0";
+    public static releaseVersion: string = "1.1.1";
     
     public static logger: Log = Log.getLogger(MandarineCore);
 
