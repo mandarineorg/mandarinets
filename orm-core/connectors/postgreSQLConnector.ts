@@ -1,6 +1,6 @@
-import { PoolClient } from "https://deno.land/x/postgres/client.ts";
-import { Pool } from "https://deno.land/x/postgres/mod.ts";
-import { QueryConfig, QueryResult } from "https://deno.land/x/postgres/query.ts";
+import { PoolClient } from "https://raw.githubusercontent.com/mandarineorg/mandarine-postgres/master/client.ts";
+import { Pool } from "https://raw.githubusercontent.com/mandarineorg/mandarine-postgres/master/mod.ts";
+import { QueryConfig, QueryResult } from "https://raw.githubusercontent.com/mandarineorg/mandarine-postgres/master/query.ts";
 import { Log } from "../../logger/log.ts";
 import { Mandarine } from "../../main-core/Mandarine.ns.ts";
 import { MandarineORMException } from "../core/exceptions/mandarineORMException.ts";
