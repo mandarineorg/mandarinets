@@ -19,6 +19,7 @@ export class WebMVCConfigurer implements Mandarine.MandarineMVC.Configurers.WebM
                 .addResourceHandler(new RegExp(mandarineConfiguration.mandarine.resources.staticRegExpPattern))
                 .addResourceHandlerLocation(mandarineConfiguration.mandarine.resources.staticFolder)
                 .addResourceHandlerIndex(mandarineConfiguration.mandarine.resources.staticIndex)
+                .addResourceCors(mandarineConfiguration.mandarine.resources.cors)
                 .addResourceResolver(new MandarineResourceResolver())
             );
         }

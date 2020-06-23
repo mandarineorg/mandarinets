@@ -551,6 +551,21 @@ export namespace MandarineMvc {
         optionsSuccessStatus?: number;
     }
 
+    export interface MultipartFormData {
+        fields?: {
+            [prop: string]: any
+        },
+        files?: {
+            [filename: string]: Uint8Array | Uint16Array | Uint32Array | BigUint64Array
+        }
+    }
+
+
+    export interface MultipartHeader {
+        name: string,
+        isFile: boolean
+    };
+
     /**
      * Refers to all the information that the rendering engine needs to work out.
      */

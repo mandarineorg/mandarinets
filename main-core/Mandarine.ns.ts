@@ -41,6 +41,7 @@ export namespace Mandarine {
                 staticRegExpPattern?: string,
                 staticFolder?: string,
                 staticIndex?: string,
+                cors?: MandarineMVC.CorsMiddlewareOption;
             } & any,
             templateEngine: {
                 engine: Mandarine.MandarineMVC.TemplateEngine.Engines,
@@ -383,7 +384,8 @@ export namespace Mandarine {
             addResourceHandler(...resourceHandlerPath: Array<RegExp>): ResourceHandler;
             addResourceHandlerLocation(...resourceHandlerLocations: Array<string>): ResourceHandler;
             addResourceHandlerIndex(...resourceHandlerIndex: Array<string>): ResourceHandler;
-            addResourceResolver(resolver: Mandarine.MandarineMVC.HTTPResolvers.ResourceResolver): ResourceHandler
+            addResourceResolver(resolver: Mandarine.MandarineMVC.HTTPResolvers.ResourceResolver): ResourceHandler;
+            addResourceCors(cors: Mandarine.MandarineMVC.CorsMiddlewareOption): ResourceHandler;
         }
 
         export class MandarineResourceHandlerRegistry extends ResourceHandlerRegistry {}
