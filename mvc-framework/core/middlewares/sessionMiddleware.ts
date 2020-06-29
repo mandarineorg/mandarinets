@@ -5,7 +5,7 @@ import { Mandarine } from "../../../main-core/Mandarine.ns.ts";
 import { CommonUtils } from "../../../main-core/utils/commonUtils.ts";
 import { HttpUtils } from "../../../main-core/utils/httpUtils.ts";
 import { KeyStack } from "../../../security-core/keyStack.ts";
-import { SessionsUtils } from "../../../security-core/sessions/sessions.util.ts";
+import { SessionsUtils } from "../../../security-core/utils/sessions.util.ts";
 
 /**
  * This class handles the creation and manipulation of sessions

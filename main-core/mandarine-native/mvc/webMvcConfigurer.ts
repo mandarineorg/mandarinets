@@ -1,7 +1,7 @@
-import { getMandarineConfiguration } from "../../../../main-core/configuration/getMandarineConfiguration.ts";
-import { Mandarine } from "../../../../main-core/Mandarine.ns.ts";
-import { MandarineResourceResolver } from "../components/resource-handler-registry/mandarineResourceResolver.ts";
-import { ResourceHandler } from "../components/resource-handler-registry/resourceHandler.ts";
+import { ResourceHandler } from "../../../mvc-framework/core/internal/components/resource-handler-registry/resourceHandler.ts";
+import { getMandarineConfiguration } from "../../configuration/getMandarineConfiguration.ts";
+import { Mandarine } from "../../Mandarine.ns.ts";
+import { MandarineResourceResolver } from "./mandarineResourceResolver.ts";
 
 export class WebMVCConfigurer implements Mandarine.MandarineMVC.Configurers.WebMVCConfigurer {
 

@@ -3,10 +3,10 @@ import { Log } from "../../logger/log.ts";
 import { ApplicationContext } from "../../main-core/application-context/mandarineApplicationContext.ts";
 import { MiddlewareComponent } from "../../main-core/components/middleware-component/middlewareComponent.ts";
 import { getMandarineConfiguration } from "../../main-core/configuration/getMandarineConfiguration.ts";
+import { WebMVCConfigurer } from "../../main-core/mandarine-native/mvc/webMvcConfigurer.ts";
 import { Mandarine } from "../../main-core/Mandarine.ns.ts";
 import { ControllerComponent } from "../core/internal/components/routing/controllerContext.ts";
 import { middlewareResolver, requestResolver } from "../core/internal/components/routing/routingResolver.ts";
-import { WebMVCConfigurer } from "../core/internal/configurers/webMvcConfigurer.ts";
 import { handleCors } from "../core/middlewares/cors/corsMiddleware.ts";
 import { SessionMiddleware } from "../core/middlewares/sessionMiddleware.ts";
 
