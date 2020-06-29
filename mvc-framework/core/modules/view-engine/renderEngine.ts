@@ -1,4 +1,4 @@
-import { renderDenjuck } from "https://raw.githubusercontent.com/mandarineorg/mandarinets-modules/master/view-engine/1.1.1/lib/engines/denjuck.ts";
+import { renderDenjuck } from "https://deno.land/x/view_engine/lib/engines/denjuck.ts";
 import { renderEjs } from "https://raw.githubusercontent.com/mandarineorg/mandarinets-modules/master/view-engine/1.1.1/lib/engines/ejs.ts";
 import { renderHandlebars } from "https://raw.githubusercontent.com/mandarineorg/mandarinets-modules/master/view-engine/1.1.1/lib/engines/handlebars.ts";
 import { ApplicationContext } from "../../../../main-core/application-context/mandarineApplicationContext.ts";
