@@ -60,6 +60,18 @@ export namespace Mandarine {
             } & any
         } & any
     };
+
+    /**
+     * Structure for mandarine.json
+     * If mandarine.json is present, some behaviors of the Mandarine starter can be altered such as the location of the properties.json file
+     */
+    export interface MandarineInitialProperties {
+        propertiesFilePath: string;
+        denoEnv: {
+            [prop: string]: string
+        }
+    }
+
     /**
     * Handles the interaction with the global environment of Mandarine
     * Mandarine uses a global environment to store and manipulate essential information to work
@@ -76,6 +88,7 @@ export namespace Mandarine {
             mandarineTemplatesManager: MandarineCore.ITemplatesManager,
             mandarineResourceHandlerRegistry: MandarineCore.IResourceHandlerRegistry
             mandarineProperties: Properties;
+            mandarineInitialProperties: MandarineInitialProperties;
             mandarineMiddleware: Array<MiddlewareComponent>;
         };
 
@@ -91,7 +104,8 @@ export namespace Mandarine {
                     mandarineProperties: undefined,
                     mandarineMiddleware: undefined,
                     mandarineResourceHandlerRegistry: undefined,
-                    mandarineTemplatesManager: undefined
+                    mandarineTemplatesManager: undefined,
+                    mandarineInitialProperties: undefined
                 }
             }
         };
@@ -166,7 +180,10 @@ export namespace Mandarine {
             if(mandarineGlobal.mandarineProperties == (null || undefined)) {
 
                 try {
-                    const propertiesData = JSON.parse(CommonUtils.readFile(Defaults.mandarinePropertiesFile));
+                    const initialProperties: MandarineInitialProperties = getMandarineInitialProps();
+                    let mandarinePropertiesFile = Defaults.mandarinePropertiesFile;
+                    if(initialProperties && initialProperties.propertiesFilePath) mandarinePropertiesFile = initialProperties.propertiesFilePath;
+                    const propertiesData = JSON.parse(CommonUtils.readFile(mandarinePropertiesFile));
                    
                     setConfiguration(propertiesData);
                 } catch(error) {
@@ -178,6 +195,34 @@ export namespace Mandarine {
     
             return mandarineGlobal.mandarineProperties;
         };
+
+        /**
+         * Get the properties (MandarineJsonProperties) from `mandarine.json`
+         */
+        export function getMandarineInitialProps() {
+            let mandarineGlobal: MandarineGlobalInterface = getMandarineGlobal();
+            let defaultMandarineInitialProps: MandarineInitialProperties = mandarineGlobal.mandarineInitialProperties;
+
+            if(defaultMandarineInitialProps == undefined) {
+                defaultMandarineInitialProps = Defaults.MandarineDefaultInitialProperties;
+                try {
+                    const propertiesData: MandarineInitialProperties = JSON.parse(CommonUtils.readFile("./mandarine.json"));
+                    if(propertiesData) {
+                        if(propertiesData.propertiesFilePath) defaultMandarineInitialProps.propertiesFilePath = propertiesData.propertiesFilePath;
+                        if(propertiesData.denoEnv) {
+                            CommonUtils.setEnvironmentVariablesFromObject(propertiesData.denoEnv);
+                            defaultMandarineInitialProps.denoEnv = propertiesData.denoEnv;
+                        }
+                        mandarineGlobal.mandarineInitialProperties = propertiesData;
+                    }
+
+                } catch (error) {
+                    // DO NOTHING
+                }
+            }
+
+            return mandarineGlobal.mandarineInitialProperties;
+        }
 
         /**
         * Set a new configuration for the mandarine properties
@@ -422,6 +467,11 @@ export namespace Mandarine {
                 }
             }
         };
+
+        export const MandarineDefaultInitialProperties: MandarineInitialProperties = {
+            propertiesFilePath: undefined,
+            denoEnv: {}
+        }
 
         export const MandarineDefaultSessionContainer: MandarineSecurity.Sessions.SessionContainer = {
             cookie: {

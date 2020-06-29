@@ -160,15 +160,17 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
         repositoryMethods = repositoryMethods.concat(mandarineRepositoryMethods);
         
         let repositoryProxy: Mandarine.ORM.RepositoryProxy;
-        let dialect: Mandarine.ORM.Dialect.Dialects = Mandarine.Global.getMandarineConfiguration().mandarine.dataSource.dialect;
-
-        switch(dialect) {
-            case Mandarine.ORM.Dialect.Dialects.POSTGRESQL:
-                repositoryProxy = new PostgresRepositoryProxy<any>(repositoryInstance.extraData.entity);
-            break;
-            default:
-                throw new Error(`${dialect} is not supported inside Mandarine's ORM`);
-            break;
+        let dialect: Mandarine.ORM.Dialect.Dialects = Mandarine.Global.getMandarineConfiguration().mandarine?.dataSource?.dialect;
+        
+        if(dialect) {
+            switch(dialect) {
+                case Mandarine.ORM.Dialect.Dialects.POSTGRESQL:
+                    repositoryProxy = new PostgresRepositoryProxy<any>(repositoryInstance.extraData.entity);
+                break;
+                default:
+                    throw new Error(`${dialect} is not supported inside Mandarine's ORM`);
+                break;
+            }
         }
 
         repositoryMethods.forEach((methodName) => {
