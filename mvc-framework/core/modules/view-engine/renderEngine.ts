@@ -1,6 +1,6 @@
-import { renderDenjuck } from "https://raw.githubusercontent.com/mandarineorg/mandarinets-modules/master/view-engine/1.1.1/lib/engines/denjuck.ts";
 import { renderEjs } from "https://raw.githubusercontent.com/mandarineorg/mandarinets-modules/master/view-engine/1.1.1/lib/engines/ejs.ts";
 import { renderHandlebars } from "https://raw.githubusercontent.com/mandarineorg/mandarinets-modules/master/view-engine/1.1.1/lib/engines/handlebars.ts";
+import { Log } from "../../../../logger/log.ts";
 import { ApplicationContext } from "../../../../main-core/application-context/mandarineApplicationContext.ts";
 import { TemplateEngineException } from "../../../../main-core/exceptions/templateEngineException.ts";
 import { Mandarine } from "../../../../main-core/Mandarine.ns.ts";
@@ -11,6 +11,9 @@ import { ViewModel } from "./viewModel.ts";
  * This class contains all elements related to the execution of the template
  */
 export class RenderEngineClass {
+
+    public static logger: Log = Log.getLogger(RenderEngineClass);
+
     public static render(renderData: Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData, engine: Mandarine.MandarineMVC.TemplateEngine.Engines, model: any): string {
         let templatesManager: Mandarine.MandarineCore.ITemplatesManager = ApplicationContext.getInstance().getTemplateManager();
 
@@ -24,7 +27,8 @@ export class RenderEngineClass {
                 viewEngine = renderHandlebars;
                 break;
             case Mandarine.MandarineMVC.TemplateEngine.Engines.DENJUCKS:
-                viewEngine = renderDenjuck;
+                this.logger.warn("Denjucks have been temporarily disabled.");
+                return undefined;
                 break;
             default:
                 throw new TemplateEngineException(TemplateEngineException.INVALID_ENGINE);

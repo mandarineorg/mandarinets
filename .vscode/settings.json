@@ -1,9 +1,0 @@
-// .vscode/settings.json
-{
-    "deno.enable": true,
-    "deno.autoFmtOnSave": true,
-    "deno.alwaysShowStatus": true,
-    "editor.codeActionsOnSave": {
-        "source.organizeImports": true
-      }
-}
