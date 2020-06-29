@@ -1,6 +1,6 @@
-import { Context } from "../../../../../deps.ts";
-import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
-import { CommonUtils } from "../../../../../main-core/utils/commonUtils.ts";
+import { Context } from "../../../deps.ts";
+import { Mandarine } from "../../Mandarine.ns.ts";
+import { CommonUtils } from "../../utils/commonUtils.ts";
 
 /**
  * This class represents the default resolver for resources.
