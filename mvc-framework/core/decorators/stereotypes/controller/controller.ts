@@ -1,8 +1,8 @@
 import { ApplicationContext } from "../../../../../main-core/application-context/mandarineApplicationContext.ts";
 import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
-import { ComponentUtils } from "../../../../../main-core/utils/componentUtils.ts";
 import { ReflectUtils } from "../../../../../main-core/utils/reflectUtils.ts";
 import { ControllerComponent } from "../../../internal/components/routing/controllerContext.ts";
+import { MVCDecoratorsProxy } from "../../../proxys/mvcCoreDecorators.ts";
 
 /**
  * **Decorator**
@@ -25,7 +25,7 @@ export const Controller = (baseRoute?: string): Function => {
 
                 getComponentsRegistry.update(className, objectContext);
             } else {
-                ComponentUtils.createControllerComponent({ pathRoute: baseRoute }, target);
+                MVCDecoratorsProxy.registerControllerComponent(target, baseRoute);
             }
     };
 };

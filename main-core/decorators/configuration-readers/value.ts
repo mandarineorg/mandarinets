@@ -1,4 +1,5 @@
-import { getMandarineConfiguration } from "../../configuration/getMandarineConfiguration.ts";
+import { ComponentUtils } from "../../utils/componentUtils.ts";
+import { MainCoreDecoratorProxy } from "../../proxys/mainCoreDecorator.ts";
 
 /**
  * **Decorator**
@@ -6,35 +7,8 @@ import { getMandarineConfiguration } from "../../configuration/getMandarineConfi
  *
  * `@Value('mandarine.server.host')`
  */
-export const Value = (propertyKey: string): Function => {
+export const Value = (configKey: string): Function => {
     return (target: any, propertyName: string) => {
-        try {
-            let propertyObject = getMandarineConfiguration();
-
-            if(propertyKey.includes('.')) {
-                let parts = propertyKey.split('.');
-
-                if (Array.isArray(parts)) {
-                    let last = parts.pop();
-                    let keyPropertiesLength = parts.length;
-                    let propertiesStartingIndex = 1;
-
-                    let currentProperty = parts[0];
-            
-                    while((propertyObject = propertyObject[currentProperty]) && propertiesStartingIndex < keyPropertiesLength) {
-                        currentProperty = parts[propertiesStartingIndex];
-                        propertiesStartingIndex++;
-                    }
-                    
-                    target[propertyName] = propertyObject[last];
-                } else {
-                    target[propertyName] = undefined;
-                }
-            } else {
-                target[propertyName] = propertyObject[propertyKey];
-            }
-        } catch(error) {
-            target[propertyName] = undefined;
-        }
+        MainCoreDecoratorProxy.valueDecorator(target, configKey, propertyName);
     }
 };

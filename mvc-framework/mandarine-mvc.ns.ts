@@ -533,6 +533,12 @@ export namespace MandarineMvc {
         }
     }
 
+    export interface ResponseStatusMetadataContext {
+        classParentName: string;
+        responseStatus: Mandarine.MandarineMVC.HttpStatusCode;
+        methodName?: string;
+    }
+    
     export interface routingParamContext {
         methodName: string;
         parameterName: string;
@@ -559,7 +565,6 @@ export namespace MandarineMvc {
             [filename: string]: Uint8Array | Uint16Array | Uint32Array | BigUint64Array
         }
     }
-
 
     export interface MultipartHeader {
         name: string,
