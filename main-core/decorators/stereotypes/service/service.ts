@@ -1,5 +1,5 @@
-import { ComponentsRegistryUtil } from "../../../components-registry/componentRegistry.util.ts";
 import { Mandarine } from "../../../Mandarine.ns.ts";
+import { MainCoreDecoratorProxy } from "../../../proxys/mainCoreDecorator.ts";
 
 /**
  * **Decorator**
@@ -11,6 +11,6 @@ import { Mandarine } from "../../../Mandarine.ns.ts";
  */
 export const Service = (): Function => {
     return (target: any, methodName: string, index: number) => {
-        ComponentsRegistryUtil.registerComponent(target, Mandarine.MandarineCore.ComponentTypes.SERVICE, {}, index);
+        MainCoreDecoratorProxy.registerMandarinePoweredComponent(target, Mandarine.MandarineCore.ComponentTypes.SERVICE, {}, index);
     };
 };
