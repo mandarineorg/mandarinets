@@ -38,8 +38,8 @@ export class MVCDecoratorsProxy {
         ComponentUtils.createControllerComponent({ pathRoute: baseRoute }, targetClass);
     }
 
-    public static registerRoutingParam(parameterType: DI.InjectionTypes, target: any, methodName: string, parameterIndex: number, specificParameterName?: string) {
-        DependencyInjectionUtil.defineInjectionMetadata(parameterType, target, methodName, parameterIndex, specificParameterName);
+    public static registerRoutingParam(targetClass: any, parameterType: DI.InjectionTypes, methodName: string, parameterIndex: number, specificParameterName?: string) {
+        DependencyInjectionUtil.defineInjectionMetadata(parameterType, targetClass, methodName, parameterIndex, specificParameterName);
     }
 
     public static registerHttpAction(route: string, methodType: Mandarine.MandarineMVC.HttpMethods, target: any, methodName: string, options: Mandarine.MandarineMVC.Routing.RoutingOptions) {
