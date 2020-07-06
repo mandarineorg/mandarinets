@@ -18,14 +18,13 @@ export class ApplicationContext implements Mandarine.ApplicationContext.IApplica
 
     constructor() {
         this.initializeMetadata();
-        this.initializeDefaultSessionContainer();
     }
 
     public getComponentsRegistry(): Mandarine.MandarineCore.IComponentsRegistry { 
         return Mandarine.Global.getComponentsRegistry();
     }
 
-    private initializeDefaultSessionContainer(): void {
+    public initializeDefaultSessionContainer(): void {
         Mandarine.Global.initializeDefaultSessionContainer();
     }
 

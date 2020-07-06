@@ -25,12 +25,13 @@ export class MVCDecoratorsProxy {
 
     public static registerCORSMiddlewareDecorator(targetClass: any, corsOptions: Mandarine.MandarineMVC.CorsMiddlewareOption, methodName: string) {
         let isMethod: boolean = methodName != null;
+        let newCors: Mandarine.MandarineMVC.CorsMiddlewareOption = Object.assign({}, corsOptions);
         if(!isMethod) {
             let corsAnnotationMetadataName: string = `${MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_CORS_MIDDLEWARE}`;
-            Reflect.defineMetadata(corsAnnotationMetadataName, corsOptions, targetClass);
+            Reflect.defineMetadata(corsAnnotationMetadataName, newCors, targetClass);
         } else {
             let corsAnnotationMetadataName: string = `${MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_CORS_MIDDLEWARE}:${methodName}`;
-            Reflect.defineMetadata(corsAnnotationMetadataName, corsOptions, targetClass, methodName);
+            Reflect.defineMetadata(corsAnnotationMetadataName, newCors, targetClass, methodName);
         }
     }
 

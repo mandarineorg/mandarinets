@@ -35,6 +35,6 @@ export class CommonUtils {
     }
 
     public static setEnvironmentVariablesFromObject(object: object) {
-        Object.keys(object).forEach((key) => Deno.env.set(key, object[key]));
+        Object.keys(object).forEach((key) => Deno.env.set(key, object[key].toString()));
     }
 }

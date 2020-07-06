@@ -24,7 +24,9 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
 
     private components: Map<string, Mandarine.MandarineCore.ComponentRegistryContext> = new Map<string, Mandarine.MandarineCore.ComponentRegistryContext>();
 
-    private logger: Log = Log.getLogger(ComponentsRegistry);
+    private logger: Log = Log.getLogger(ComponentsRegistry, {
+        logDuringTesting: Deno.env.get("LOG_DURING_TESTING")
+    });
 
     public register(componentName: string, componentInstance: any, componentType: Mandarine.MandarineCore.ComponentTypes, configuration: any): void {
         let componentExist: boolean = this.exist(componentName);
@@ -71,6 +73,10 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
 
     public get(itemName: string): Mandarine.MandarineCore.ComponentRegistryContext {
         return this.components.get(itemName);
+    }
+
+    public clearComponentRegistry(): void {
+        this.components.clear();
     }
 
     public update(itemName: string, newValue: Mandarine.MandarineCore.ComponentRegistryContext): void {
@@ -266,5 +272,11 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
             if(!ReflectUtils.checkClassInitialized(instance)) instance = new instance();
             return instance instanceof classType;
         });
+    }
+
+    public initializeControllers(): void {
+        this.getControllers().forEach((controller) => {
+            (<ControllerComponent>controller.componentInstance).initializeControllerFunctionality();
+        })
     }
 }

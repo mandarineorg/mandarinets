@@ -184,7 +184,6 @@ export namespace Mandarine {
                     let mandarinePropertiesFile = Defaults.mandarinePropertiesFile;
                     if(initialProperties && initialProperties.propertiesFilePath) mandarinePropertiesFile = initialProperties.propertiesFilePath;
                     const propertiesData = JSON.parse(CommonUtils.readFile(mandarinePropertiesFile));
-                   
                     setConfiguration(propertiesData);
                 } catch(error) {
                     mandarineGlobal.mandarineProperties = Defaults.MandarineDefaultConfiguration;
@@ -266,6 +265,7 @@ export namespace Mandarine {
             let mandarineGlobal: MandarineGlobalInterface = getMandarineGlobal();
             if(mandarineGlobal.mandarineSessionContainer == (undefined || null)) {
                 mandarineGlobal.mandarineSessionContainer = Defaults.MandarineDefaultSessionContainer;
+                mandarineGlobal.mandarineSessionContainer.store = new MandarineStorageHandler();
             }
         };
 
@@ -302,6 +302,7 @@ export namespace Mandarine {
             getEntityManager(): Mandarine.ORM.Entity.EntityManager;
             getTemplateManager(): Mandarine.MandarineCore.ITemplatesManager;
             initializeMetadata(): void;
+            initializeDefaultSessionContainer(): void;
             changeSessionContainer(newSessionContainer: MandarineSecurity.Sessions.SessionContainer): void;
             getInstance?: () => ApplicationContext.IApplicationContext;
             getDIFactory(): DI.FactoryClass;
@@ -377,6 +378,7 @@ export namespace Mandarine {
         export interface IComponentsRegistry {
             register(componentName: string, componentInstance: any, componentType: ComponentTypes, configuration: any): void;
             get(componentName: string): ComponentRegistryContext;
+            clearComponentRegistry(): void;
             update(itemName: string, newValue: ComponentRegistryContext): void;
             exist(itemName: string): boolean;
             getAllComponentNames(): Array<string>
@@ -391,6 +393,7 @@ export namespace Mandarine {
             resolveDependencies(): void;
             getRepositoryByHandlerType(classType: any): Mandarine.MandarineCore.ComponentRegistryContext;
             connectRepositoriesToProxy(): void;
+            initializeControllers(): void;
         };
 
         /**
@@ -473,7 +476,7 @@ export namespace Mandarine {
             denoEnv: {}
         }
 
-        export const MandarineDefaultSessionContainer: MandarineSecurity.Sessions.SessionContainer = {
+        export const MandarineDefaultSessionContainer: MandarineSecurity.Sessions.SessionContainer & any = {
             cookie: {
                 path: '/', 
                 httpOnly: false, 
@@ -486,7 +489,7 @@ export namespace Mandarine {
             resave: false,
             rolling: false,
             saveUninitialized: false,
-            store: new MandarineStorageHandler()
+            store: undefined
         };
 
         export const MandarineDefaultCorsOptions: Mandarine.MandarineMVC.CorsMiddlewareOption = {
@@ -504,3 +507,6 @@ export namespace Mandarine {
 
     export import ORM = MandarineORM; 
 }
+
+// Initialize configuration
+Mandarine.Global.getMandarineConfiguration();

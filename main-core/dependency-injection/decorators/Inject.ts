@@ -1,5 +1,4 @@
-import { DI } from "../di.ns.ts";
-import { DependencyInjectionUtil } from "../di.util.ts";
+import { DependencyInjectionDecoratorsProxy } from "../../proxys/dependencyInjectionDecorator.ts";
 
 /**
  * **Decorator**
@@ -13,6 +12,6 @@ import { DependencyInjectionUtil } from "../di.util.ts";
 export const Inject = (): Function => {
     return (target: any, propertyName: string, index: number) => {
          // If index is not null then it is a parameter otherwise it is a class property.
-        DependencyInjectionUtil.defineInjectionMetadata(DI.InjectionTypes.INJECTABLE_OBJECT, target, propertyName, index);
+        DependencyInjectionDecoratorsProxy.registerInject(target, propertyName, index);
     };
 };

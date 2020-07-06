@@ -1,9 +1,16 @@
-import { bold, magenta, green, yellow, red } from "https://deno.land/std/fmt/colors.ts";
+import { bold, green, magenta, red, yellow } from "https://deno.land/std/fmt/colors.ts";
+
+export interface LogOptions {
+    logDuringTesting: string;
+}
+
 export class Log {
 
     private className: string = null;
+    public logOptions: LogOptions;
 
-    constructor(source: any | string) {
+    constructor(source: any | string, options?: LogOptions) {
+        this.logOptions = options;
         if(typeof source === 'string') {
             this.className = <string> source + ".class";
             return;
@@ -32,6 +39,8 @@ export class Log {
     }
 
     private emitLogMessage(msgType: "debug" | "info" | "warn" | "error", msg: string, supportingDetails: any[]) {
+        
+        if(this.logOptions && this.logOptions.logDuringTesting === "false") return;
 
         let finalMessage: string = null;
 
@@ -54,7 +63,7 @@ export class Log {
         else console[msgType](finalMessage);
     }
 
-    public static getLogger(source: any) {
-        return new Log(source);
+    public static getLogger(source: any, options?: LogOptions) {
+        return new Log(source, options);
     }
 }
