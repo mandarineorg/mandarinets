@@ -37,21 +37,15 @@ export class ComponentsRegistryUtil {
     }
 
     public static registerRepositoryComponent(repositoryTarget: any) {
-        try {
-            let mandarineRepository: object & MandarineRepository<any> = new repositoryTarget();
-            let entity: Mandarine.ORM.Entity.Table = mandarineRepository.getModeler().entity;
-            
-            if(entity != (null || undefined)) {
-                this.registerComponent(repositoryTarget, Mandarine.MandarineCore.ComponentTypes.REPOSITORY, {
-                    table: entity.tableName,
-                    schema: entity.schema,
-                    entity: entity
-                }, null);
-            } else {
-                throw new MandarineORMException(MandarineORMException.INVALID_REPOSITORY, ReflectUtils.getClassName(repositoryTarget));
-            }
-
-        } catch(error) {
+        let mandarineRepository: object & MandarineRepository<any> = new repositoryTarget();
+        let entity: Mandarine.ORM.Entity.Table = mandarineRepository.getModeler().entity;
+        if(entity != (null || undefined)) {
+            this.registerComponent(repositoryTarget, Mandarine.MandarineCore.ComponentTypes.REPOSITORY, {
+                table: entity.tableName,
+                schema: entity.schema,
+                entity: entity
+            }, null);
+        } else {
             throw new MandarineORMException(MandarineORMException.INVALID_REPOSITORY, ReflectUtils.getClassName(repositoryTarget));
         }
     }

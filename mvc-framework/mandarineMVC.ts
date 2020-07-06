@@ -4,6 +4,7 @@ import { getMandarineConfiguration } from "../main-core/configuration/getMandari
 import { Mandarine } from "../main-core/Mandarine.ns.ts";
 import { ResourceHandlerMiddleware } from "./core/middlewares/resourceHandlerMiddleware.ts";
 import { MandarineMvcFrameworkStarter } from "./engine/mandarineMvcFrameworkStarter.ts";
+import { ApplicationContext } from "../main-core/application-context/mandarineApplicationContext.ts";
 
 /**
 * This class is the bridge between the HTTP server & the Mandarine Compiler.
@@ -14,6 +15,7 @@ export class MandarineMVC {
 
     constructor() {
         this.getConfiguration();
+        ApplicationContext.getInstance().initializeDefaultSessionContainer();
     }
 
     private getConfiguration(): Mandarine.Properties {
@@ -40,7 +42,10 @@ export class MandarineMVC {
     }
 
     private initializeMVCApplication(): Application {
-        let starter:MandarineMvcFrameworkStarter = new MandarineMvcFrameworkStarter();
+        let starter:MandarineMvcFrameworkStarter = new MandarineMvcFrameworkStarter((engine) => {
+            engine.intializeControllersRoutes();
+            engine.initializeEssentials();
+        });
         
         let app: Application = new Application()
         .use(starter.getRouter().routes())

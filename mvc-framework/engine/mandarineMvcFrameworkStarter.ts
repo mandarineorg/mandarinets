@@ -19,7 +19,9 @@ export class MandarineMvcFrameworkStarter {
 
     private router: Router = new Router();
 
-    private logger: Log = Log.getLogger(MandarineMvcFrameworkStarter);
+    private logger: Log = Log.getLogger(MandarineMvcFrameworkStarter, {
+        logDuringTesting: Deno.env.get("LOG_DURING_TESTING")
+    });
 
     private essentials: {
         sessionMiddleware: SessionMiddleware,
@@ -29,10 +31,12 @@ export class MandarineMvcFrameworkStarter {
         webMvcConfigurer: undefined
     }
 
-    constructor() {
+    constructor(callback?: Function) {
         this.logger.info("Starting MVC Module");
-        this.intializeControllersRoutes();
-        this.initializeEssentials();
+
+        if(callback) {
+            callback(this);
+        }
     }
 
     private initializeEssentials() {

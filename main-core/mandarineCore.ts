@@ -1,5 +1,4 @@
 import { Log } from "../logger/log.ts";
-import { ControllerComponent } from "../mvc-framework/core/internal/components/routing/controllerContext.ts";
 import { MandarineMVC } from "../mvc-framework/mandarineMVC.ts";
 import { ApplicationContext } from "./application-context/mandarineApplicationContext.ts";
 import { MandarineTSFrameworkEngineMethods } from "./engine/mandarineTSFrameworkEngineMethods.ts";
@@ -14,8 +13,10 @@ export class MandarineCore {
     
     public static logger: Log = Log.getLogger(MandarineCore);
 
-    constructor() {
-        MandarineLoading();
+    constructor(showLoading?: boolean) {
+        if(showLoading === undefined || showLoading === true) {
+            MandarineLoading();
+        }
 
         // ORDER OF THINGS MATTER
         // If the repository proxy is resolved after the dependencies, then the dependencies will have an empty repository
@@ -38,9 +39,7 @@ export class MandarineCore {
     }
 
     private initializeControllers() {
-        ApplicationContext.getInstance().getComponentsRegistry().getControllers().forEach((controller) => {
-            (<ControllerComponent>controller.componentInstance).initializeControllerFunctionality();
-        })
+        ApplicationContext.getInstance().getComponentsRegistry().initializeControllers();
     }
 
     private initializeTemplates() {

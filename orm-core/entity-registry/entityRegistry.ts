@@ -32,6 +32,10 @@ export class EntityRegistry {
         }
     }
 
+    public getEntity(schema: string, table: string) {
+        return this.entities.get(`${schema}.${table}`);
+    }
+
     public getColumnsFromEntity(entityInstance: any): Array<Mandarine.ORM.Entity.Decorators.Column> {
         let columns: Array<Mandarine.ORM.Entity.Decorators.Column> = new Array<Mandarine.ORM.Entity.Decorators.Column>();
         let initializedInstance: any = new entityInstance();

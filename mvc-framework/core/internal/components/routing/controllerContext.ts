@@ -95,7 +95,6 @@ export class ControllerComponent {
 
                 let routeCors: Mandarine.MandarineMVC.CorsMiddlewareOption = this.getRouteCors(classHandler, routeContext.methodName);
                 if(routeCors) routeContext.options.cors = routeCors;
-
                 this.registerAction({
                     actionParent: routeContext.className,
                     actionType: routeContext.methodType,

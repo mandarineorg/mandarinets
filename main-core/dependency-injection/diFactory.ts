@@ -43,6 +43,7 @@ export class DependencyInjectionFactory {
      *
      */
     public componentDependencyResolver(componentRegistry: ComponentsRegistry) {
+        // Initialize all components
         componentRegistry.getAllComponentNames().forEach((componentName) => {
             let component: Mandarine.MandarineCore.ComponentRegistryContext = componentRegistry.get(componentName);
     
@@ -57,7 +58,16 @@ export class DependencyInjectionFactory {
             } else {
                 component.componentInstance.setClassHandler(new componentClassHandler());
             }
+        });
+        
+        // Initialize manual injections after components have been initialized
+        componentRegistry.getAllComponentNames().forEach((componentName) => {
+            let component: Mandarine.MandarineCore.ComponentRegistryContext = componentRegistry.get(componentName);
     
+            if(component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT || component.componentType == Mandarine.MandarineCore.ComponentTypes.REPOSITORY) {
+                return;
+            }
+
             let componentHandler: any = component.componentInstance.getClassHandler();
     
             let reflectMetadataInjectionKeys = Reflect.getMetadataKeys(componentHandler);
@@ -74,7 +84,7 @@ export class DependencyInjectionFactory {
                     });
                 }
             }
-        });
+        })
     }
 
     /** 
@@ -84,7 +94,6 @@ export class DependencyInjectionFactory {
      */
     public async methodArgumentResolver(object: any, methodName: string, extraData: DI.ArgumentsResolverExtraData) {
         const args: Array<DI.ArgumentValue> = [];
-
         let componentMethodParams: Array<string> = ReflectUtils.getParamNames(object[methodName]);
     
         let methodAnnotationMetadata: Array<any> = Reflect.getMetadataKeys(object, methodName);
