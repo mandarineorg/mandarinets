@@ -20,7 +20,7 @@ export class MandarineMVC {
         return getMandarineConfiguration();
     }
 
-    async run() {
+    run() {
         let app: Application = this.initializeMVCApplication();
 
         let mandarineConfiguration: Mandarine.Properties = this.getConfiguration();
@@ -29,9 +29,11 @@ export class MandarineMVC {
         this.logger.info(`Server has started ~ ${serverConfig}`);
 
         try {
-            await app.listen({
-                port: mandarineConfiguration.mandarine.server.port
-            });
+            setTimeout(async () => {
+                app.listen({
+                    port: mandarineConfiguration.mandarine.server.port
+                });
+            }, 1000);
         } catch(error) {
             this.logger.error(`Server has been shut down`, error);
         }
