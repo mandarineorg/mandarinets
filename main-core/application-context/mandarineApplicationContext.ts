@@ -18,8 +18,6 @@ export class ApplicationContext implements Mandarine.ApplicationContext.IApplica
 
     public static applicationContextSingleton: Mandarine.ApplicationContext.IApplicationContext;
 
-    public componentsRegistry: Mandarine.MandarineCore.IComponentsRegistry;
-
     constructor() {
         this.initializeMetadata();
     }

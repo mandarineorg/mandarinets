@@ -9,10 +9,10 @@ import { ComponentsRegistry } from "./components-registry/componentRegistry.ts";
 import { MiddlewareComponent } from "./components/middleware-component/middlewareComponent.ts";
 import { DI } from "./dependency-injection/di.ns.ts";
 import { MandarineStorageHandler } from "./mandarine-native/sessions/mandarineDefaultSessionStore.ts";
+import { MandarineLoading } from "./mandarineLoading.ts";
 import { TemplatesManager } from "./templates-registry/templatesRegistry.ts";
 import { CommonUtils } from "./utils/commonUtils.ts";
 import { MandarineUtils } from "./utils/mandarineUtils.ts";
-import { MandarineLoading } from "./mandarineLoading.ts";
 /**
 * This namespace contains all the essentials for mandarine to work
 * Gnerally, global functionings are added to this namespace in order to be easily accesible across Mandarine
@@ -334,7 +334,6 @@ export namespace Mandarine {
         }
 
         export interface IApplicationContext {
-            componentsRegistry: Mandarine.MandarineCore.IComponentsRegistry;
             getComponentsRegistry(): MandarineCore.IComponentsRegistry;
             getEntityManager(): Mandarine.ORM.Entity.EntityManager;
             getTemplateManager(): Mandarine.MandarineCore.ITemplatesManager;
@@ -548,6 +547,7 @@ export namespace Mandarine {
 (() => {
     MandarineLoading();
     
+    Mandarine.Global.getMandarineDotEnv();
     Mandarine.Global.initializeMandarineGlobal();
     Mandarine.Global.getMandarineInitialProps();
     Mandarine.Global.getMandarineConfiguration();
@@ -557,5 +557,4 @@ export namespace Mandarine {
     Mandarine.Global.getResourceHandlerRegistry();
     Mandarine.Global.getSessionContainer();
     Mandarine.Global.initializeMiddleware();
-    Mandarine.Global.getMandarineDotEnv();
 })();
