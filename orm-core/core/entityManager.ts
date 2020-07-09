@@ -4,6 +4,7 @@ import { PostgresConnector } from "../connectors/postgreSQLConnector.ts";
 import { PostgreSQLDialect } from "../dialect/postgreSQLDialect.ts";
 import { EntityRegistry } from "../entity-registry/entityRegistry.ts";
 import { MandarineORMException } from "./exceptions/mandarineORMException.ts";
+import { ApplicationContext } from "../../main-core/application-context/mandarineApplicationContext.ts";
 
 /**
  * This class represents the entity manager which contains all the necessary methods & references for Mandarine to interact with your database.
@@ -88,9 +89,7 @@ export class EntityManagerClass {
             break;
         }
 
-        if(entities.length > 0) {
-            this.logger.info(`A total of ${entities.length} database entities have been found`);
-        }
+        ApplicationContext.CONTEXT_METADATA.engineMetadata.orm.dbEntitiesAmount = entities.length;
     }
 
     public getDataSource(): any {

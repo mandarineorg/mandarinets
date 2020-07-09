@@ -1,6 +1,5 @@
 import { ComponentsRegistryUtil } from "../components-registry/componentRegistry.util.ts";
 import { Mandarine } from "../Mandarine.ns.ts";
-import { getMandarineConfiguration } from "../configuration/getMandarineConfiguration.ts";
 
 export class MainCoreDecoratorProxy {
 
@@ -11,7 +10,7 @@ export class MainCoreDecoratorProxy {
 
     public static valueDecorator(targetClass: any, configKey: string, propertyName: string) {
         try {
-            let propertyObject = getMandarineConfiguration();
+            let propertyObject = Mandarine.Global.getMandarineConfiguration();
 
             if(configKey.includes('.')) {
                 let parts = configKey.split('.');

@@ -5,12 +5,12 @@ import { Mandarine } from "../../Mandarine.ns.ts";
 */
 export class ServiceComponent implements Mandarine.MandarineCore.ComponentCommonInterface {
 
-    name?: string;
-    classHandler: any;
+    public name?: string;
+    public classHandler: any;
 
     constructor(name?: string, classHandler?: any) {
         this.name = name;
-        this.classHandler= classHandler;
+        this.classHandler = classHandler;
     }
 
     public getName() {

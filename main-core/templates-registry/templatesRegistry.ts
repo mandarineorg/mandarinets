@@ -84,7 +84,7 @@ export class TemplatesManager implements Mandarine.MandarineCore.ITemplatesManag
         });
 
         let numberOfTemplates: number = Array.from(this.templates.keys()).length;
-        if(numberOfTemplates > 0) this.logger.info(`A total of ${numberOfTemplates} templates have been found`);
+        ApplicationContext.CONTEXT_METADATA.engineMetadata.mvc.templatesAmount = numberOfTemplates;
     }
 
 }

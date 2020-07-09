@@ -140,7 +140,11 @@ export class ORMTests {
         ApplicationContext.getInstance().getComponentsRegistry().resolveDependencies();
         let repository = ApplicationContext.getInstance().getComponentsRegistry().get("MyRepository");
         DenoAsserts.assert(repository.componentInstance instanceof RepositoryComponent)
-
+        let handler = repository.componentInstance.getClassHandler();
+        DenoAsserts.assert(typeof handler.save === 'function');
+        DenoAsserts.assert(typeof handler.findAll === 'function');
+        DenoAsserts.assert(typeof handler.deleteAll === 'function');
+        DenoAsserts.assert(typeof handler.countAll === 'function');
     }
 
 }

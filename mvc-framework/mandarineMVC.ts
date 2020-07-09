@@ -1,10 +1,8 @@
 import { Application } from "../deps.ts";
 import { Log } from "../logger/log.ts";
-import { getMandarineConfiguration } from "../main-core/configuration/getMandarineConfiguration.ts";
 import { Mandarine } from "../main-core/Mandarine.ns.ts";
 import { ResourceHandlerMiddleware } from "./core/middlewares/resourceHandlerMiddleware.ts";
 import { MandarineMvcFrameworkStarter } from "./engine/mandarineMvcFrameworkStarter.ts";
-import { ApplicationContext } from "../main-core/application-context/mandarineApplicationContext.ts";
 
 /**
 * This class is the bridge between the HTTP server & the Mandarine Compiler.
@@ -13,22 +11,16 @@ export class MandarineMVC {
 
     public logger: Log = Log.getLogger(MandarineMVC);
 
-    constructor() {
-        this.getConfiguration();
-        ApplicationContext.getInstance().initializeDefaultSessionContainer();
+    constructor(onInitialization?: Function, private readonly onRun?: Function) {
+        if(onInitialization) {
+            onInitialization(this);
+        }
     }
 
-    private getConfiguration(): Mandarine.Properties {
-        return getMandarineConfiguration();
-    }
-
-    run() {
+    public run() {
         let app: Application = this.initializeMVCApplication();
 
-        let mandarineConfiguration: Mandarine.Properties = this.getConfiguration();
-        let serverConfig: string = `127.0.0.1:${mandarineConfiguration.mandarine.server.port}`;
-
-        this.logger.info(`Server has started ~ ${serverConfig}`);
+        let mandarineConfiguration: Mandarine.Properties = Mandarine.Global.getMandarineConfiguration();
 
         try {
             setTimeout(async () => {
@@ -37,12 +29,17 @@ export class MandarineMVC {
                 });
             }, 1000)
         } catch(error) {
-            this.logger.error(`Server has been shut down`, error);
+            this.logger.compiler(`Server has been shut down`, "error", error);
+        }
+
+        if(this.onRun) {
+            this.onRun(this);
         }
     }
 
     private initializeMVCApplication(): Application {
-        let starter:MandarineMvcFrameworkStarter = new MandarineMvcFrameworkStarter((engine) => {
+
+        let starter:MandarineMvcFrameworkStarter = new MandarineMvcFrameworkStarter((engine: MandarineMvcFrameworkStarter) => {
             engine.intializeControllersRoutes();
             engine.initializeEssentials();
         });
@@ -56,9 +53,12 @@ export class MandarineMVC {
         });
 
         app.addEventListener("error", (event) => {
-            this.logger.error("Fatal error", event.error);
+            this.logger.compiler("Fatal error", "error", event.error);
         });
 
+        app.addEventListener("listen", (options) => {
+            this.logger.compiler(`Server has started ~ ${options.secure ? "https://" : "http://"}${options.hostname ?? "localhost" }:${options.port}`, "info");
+        });
         return app;
     }
     

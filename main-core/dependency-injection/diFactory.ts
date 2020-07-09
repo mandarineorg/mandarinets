@@ -44,10 +44,13 @@ export class DependencyInjectionFactory {
      */
     public componentDependencyResolver(componentRegistry: ComponentsRegistry) {
         // Initialize all components
+
+        const ignoreComponentIf = (component): boolean => component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT || component.componentType == Mandarine.MandarineCore.ComponentTypes.REPOSITORY;
+
         componentRegistry.getAllComponentNames().forEach((componentName) => {
             let component: Mandarine.MandarineCore.ComponentRegistryContext = componentRegistry.get(componentName);
     
-            if(component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT || component.componentType == Mandarine.MandarineCore.ComponentTypes.REPOSITORY) {
+            if(ignoreComponentIf(component)) {
                 return;
             }
     
@@ -64,7 +67,7 @@ export class DependencyInjectionFactory {
         componentRegistry.getAllComponentNames().forEach((componentName) => {
             let component: Mandarine.MandarineCore.ComponentRegistryContext = componentRegistry.get(componentName);
     
-            if(component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT || component.componentType == Mandarine.MandarineCore.ComponentTypes.REPOSITORY) {
+            if(ignoreComponentIf(component)) {
                 return;
             }
 

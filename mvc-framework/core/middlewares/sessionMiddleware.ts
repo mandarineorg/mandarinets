@@ -16,7 +16,7 @@ export class SessionMiddleware {
     private logger: Log = Log.getLogger(SessionMiddleware);
 
     constructor() {
-        this.logger.info("Session handler middleware has been initialized");
+        this.logger.compiler("Session handler middleware has been initialized", "info");
     }
 
     private getSessionContainer(): Mandarine.Security.Sessions.SessionContainer {

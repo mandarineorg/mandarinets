@@ -56,8 +56,6 @@ export class MandarineTSFrameworkEngineMethods {
 
         }
 
-        if(middleware.length > 0) {
-            this.logger.info(`A total of ${middleware.length} Middleware have been registered`);
-        }
+        ApplicationContext.CONTEXT_METADATA.engineMetadata.mvc.middlewareAmount = middleware.length;
     }
 }
