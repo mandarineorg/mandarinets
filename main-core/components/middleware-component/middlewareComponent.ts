@@ -7,9 +7,9 @@ import { MiddlewareTarget } from "./middlewareTarget.ts";
 */
 export class MiddlewareComponent implements Mandarine.MandarineCore.ComponentCommonInterface {
 
-    name?: string;
-    regexRoute?: RegExp;
-    classHandler: any;
+    public name?: string;
+    public regexRoute?: RegExp;
+    public classHandler: any;
 
     constructor(name?: string, regexRoute?: RegExp, classHandler?: any) {
         this.name = name;

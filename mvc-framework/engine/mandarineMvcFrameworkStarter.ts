@@ -19,9 +19,7 @@ export class MandarineMvcFrameworkStarter {
 
     private router: Router = new Router();
 
-    private logger: Log = Log.getLogger(MandarineMvcFrameworkStarter, {
-        logDuringTesting: Deno.env.get("LOG_DURING_TESTING")
-    });
+    private logger: Log = Log.getLogger(MandarineMvcFrameworkStarter);
 
     private essentials: {
         sessionMiddleware: SessionMiddleware,
@@ -32,38 +30,32 @@ export class MandarineMvcFrameworkStarter {
     }
 
     constructor(callback?: Function) {
-        this.logger.info("Starting MVC Module");
+        this.logger.compiler("Starting MVC Module", "info");
 
         if(callback) {
             callback(this);
         }
     }
 
-    private initializeEssentials() {
+    public initializeEssentials() {
         this.essentials.sessionMiddleware = new SessionMiddleware();
         this.essentials.webMvcConfigurer = new WebMVCConfigurer();
     }
 
-    private intializeControllersRoutes(): void {
+    public intializeControllersRoutes(): void {
         let mvcControllers: Mandarine.MandarineCore.ComponentRegistryContext[] = ApplicationContext.getInstance().getComponentsRegistry().getControllers();
 
-        if(mvcControllers.length == 0) {
-            this.logger.warn("No controllers have been found"); 
-            return;
-        }
+        ApplicationContext.CONTEXT_METADATA.engineMetadata.mvc.controllersAmount = mvcControllers.length;
 
         try {
-
             mvcControllers.forEach((component: Mandarine.MandarineCore.ComponentRegistryContext, index) => {
                 let controller: ControllerComponent = <ControllerComponent> component.componentInstance;
                 controller.getActions().forEach((value, key) => {
                     this.router = this.addPathToRouter(this.router, value, controller);
                 });
             });
-
-            this.logger.info(`A total of ${mvcControllers.length} controllers have been initialized`);
         }catch(error){
-            this.logger.error(`Controllers could not be initialized`, error);
+            this.logger.compiler(`Controllers could not be initialized`, "error", error);
         }
 
     }
@@ -143,7 +135,7 @@ export class MandarineMvcFrameworkStarter {
     }
 
     private static assignContentType(context: any) {
-        let contentType: string = getMandarineConfiguration().mandarine.server.responseType;
+        let contentType: string = Mandarine.Global.getMandarineConfiguration().mandarine.server.responseType;
 
         if(context.response.body != (null || undefined)) {
             switch(typeof context.response.body) {

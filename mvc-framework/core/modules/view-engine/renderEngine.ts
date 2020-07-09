@@ -27,7 +27,7 @@ export class RenderEngineClass {
                 viewEngine = renderHandlebars;
                 break;
             case Mandarine.MandarineMVC.TemplateEngine.Engines.DENJUCKS:
-                this.logger.warn("Denjucks have been temporarily disabled.");
+                this.logger.compiler("Denjucks have been temporarily disabled.", "warn");
                 return undefined;
                 break;
             default:

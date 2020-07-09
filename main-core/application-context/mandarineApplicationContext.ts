@@ -8,11 +8,15 @@ import { Mandarine } from "../Mandarine.ns.ts";
 */
 export class ApplicationContext implements Mandarine.ApplicationContext.IApplicationContext {
 
-    public static applicationContextSingleton: Mandarine.ApplicationContext.IApplicationContext;
+    public static CONTEXT_METADATA: Mandarine.ApplicationContext.ApplicationContextMetadata = {
+        startupDate: undefined,
+        engineMetadata: {
+            orm: {},
+            mvc: {}
+        }
+    };
 
-    public contextMetadata: {    
-        startupDate?: number;
-    } = {};
+    public static applicationContextSingleton: Mandarine.ApplicationContext.IApplicationContext;
 
     public componentsRegistry: Mandarine.MandarineCore.IComponentsRegistry;
 
@@ -29,7 +33,7 @@ export class ApplicationContext implements Mandarine.ApplicationContext.IApplica
     }
 
     public initializeMetadata(): void {
-        this.contextMetadata.startupDate = Math.round(+new Date()/1000);
+        ApplicationContext.CONTEXT_METADATA.startupDate = Math.round(+new Date()/1000);
     }
 
     public changeSessionContainer(newSessionContainer: MandarineSecurity.Sessions.SessionContainer): void {
