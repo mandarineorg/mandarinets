@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 /**
    * Define the behavior of a user-side middleware
    * The middleware target will be called at the time of a request.

@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { Context } from "../../../../deps.ts";
 import { Mandarine } from "../../../../main-core/Mandarine.ns.ts";
 import { HttpUtils } from "../../../../main-core/utils/httpUtils.ts";

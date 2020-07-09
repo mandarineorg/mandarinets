@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 export class MandarineConstants {
 
     public static RELEASE_VERSION = "1.1.1";

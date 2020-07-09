@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 export class InvalidAnnotationError extends Error {
 
     public static CLASS_ONLY_ANNOTATION: string = "The annotation is not valid in the current context. Annotation should only be used for class type.";

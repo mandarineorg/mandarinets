@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { Context } from "../deps.ts";
 import { DI } from "../main-core/dependency-injection/di.ns.ts";
 import { Mandarine } from "../mod.ts";

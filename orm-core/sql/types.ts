@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 /**
  * Enum to define the SQL Types of every Column.
  * The majority of this file is from the Java source code

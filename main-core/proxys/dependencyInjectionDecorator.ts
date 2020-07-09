@@ -1,7 +1,9 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { ApplicationContext } from "../application-context/mandarineApplicationContext.ts";
-import { Mandarine } from "../Mandarine.ns.ts";
 import { DI } from "../dependency-injection/di.ns.ts";
 import { DependencyInjectionUtil } from "../dependency-injection/di.util.ts";
+import { Mandarine } from "../Mandarine.ns.ts";
 
 export class DependencyInjectionDecoratorsProxy {
 

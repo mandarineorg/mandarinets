@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { DI } from "../../../../../main-core/dependency-injection/di.ns.ts";
 import { MVCDecoratorsProxy } from "../../../proxys/mvcCoreDecorators.ts";
 

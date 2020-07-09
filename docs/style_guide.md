@@ -3,7 +3,7 @@
 ## Copyright Headers
 Every file related to the functionality of Mandarine must have the following copyright header
 ```
-// Copyright 2020 the MandarineTS Framework authors. All rights reserved. MIT license.
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 ```
 If the code originates elsewhere such as a third-party module or piece of code, ensure that the file has proper copyright headers. We only allow **MIT** licensed code.
 ## Use Camel case

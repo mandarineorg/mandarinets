@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 /**
  * This class serves as a modeler for templates. 
  * A modeler is used to make working with templates & its variables easier
