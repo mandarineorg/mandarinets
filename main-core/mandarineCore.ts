@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { Log } from "../logger/log.ts";
 import { MandarineMVC } from "../mvc-framework/mandarineMVC.ts";
 import { ApplicationContext } from "./application-context/mandarineApplicationContext.ts";

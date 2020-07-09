@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { Mandarine } from "../../mod.ts";
 import { MandarineORMException } from "../core/exceptions/mandarineORMException.ts";
 import { Types } from "../sql/types.ts";

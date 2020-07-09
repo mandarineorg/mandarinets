@@ -1,10 +1,12 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { ApplicationContext } from "../../../../../main-core/application-context/mandarineApplicationContext.ts";
 import { MiddlewareComponent } from "../../../../../main-core/components/middleware-component/middlewareComponent.ts";
 import { DI } from "../../../../../main-core/dependency-injection/di.ns.ts";
-import { Optional } from "../../../../../pluggins/optional.ts";
 import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
 import { MandarineConstants } from "../../../../../main-core/mandarineConstants.ts";
 import { Reflect } from "../../../../../main-core/reflectMetadata.ts";
+import { Optional } from "../../../../../pluggins/optional.ts";
 import { ControllerComponent } from "./controllerContext.ts";
 
 /**

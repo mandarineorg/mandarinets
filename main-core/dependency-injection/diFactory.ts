@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { Cookies } from "../../deps.ts";
 import { ComponentsRegistry, Mandarine, ViewModel } from "../../mod.ts";
 import { RoutingUtils } from "../../mvc-framework/core/utils/mandarine/routingUtils.ts";

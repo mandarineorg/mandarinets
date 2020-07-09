@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { Log } from "../../logger/log.ts";
 import { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
 import { TemplateUtils } from "../../mvc-framework/core/utils/templateUtils.ts";

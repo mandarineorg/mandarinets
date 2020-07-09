@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { MandarineException } from "../../exceptions/mandarineException.ts";
 import { Mandarine } from "../../Mandarine.ns.ts";
 import { MiddlewareTarget } from "./middlewareTarget.ts";

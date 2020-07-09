@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { assert } from "https://deno.land/std@0.51.0/testing/asserts.ts";
 import { HmacSha256 } from "../hash/sha256.ts";
 

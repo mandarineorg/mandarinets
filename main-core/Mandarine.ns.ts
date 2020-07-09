@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { Log } from "../logger/log.ts";
 import { TemplateEngineException } from "../main-core/exceptions/templateEngineException.ts";
 import { ResourceHandler } from "../mvc-framework/core/internal/components/resource-handler-registry/resourceHandler.ts";

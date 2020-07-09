@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { MandarineORMException } from "../../orm-core/core/exceptions/mandarineORMException.ts";
 import { MandarineRepository } from "../../orm-core/repository/mandarineRepository.ts";
 import { ApplicationContext } from "../application-context/mandarineApplicationContext.ts";
