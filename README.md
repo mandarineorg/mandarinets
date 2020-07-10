@@ -12,7 +12,7 @@ To see all the available documentation of Mandarine.TS, please [Click here](http
 
 ## Basic usage
 
-```
+```typescript
 @Controller('/api')
 export class Boo {
      
