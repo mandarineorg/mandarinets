@@ -2,7 +2,7 @@ import { ApplicationContext } from "../../main-core/application-context/mandarin
 import { Mandarine } from "../../main-core/Mandarine.ns.ts";
 import { DependencyInjectionDecoratorsProxy } from "../../main-core/proxys/dependencyInjectionDecorator.ts";
 import { MainCoreDecoratorProxy } from "../../main-core/proxys/mainCoreDecorator.ts";
-import { DenoAsserts, mockDecorator, Orange, Test } from "./mod.ts";
+import { DenoAsserts, mockDecorator, Orange, Test } from "../mod.ts";
 
 export class DependencyInjectionTest {
 

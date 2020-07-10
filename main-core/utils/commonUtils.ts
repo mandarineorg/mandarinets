@@ -39,4 +39,10 @@ export class CommonUtils {
     public static setEnvironmentVariablesFromObject(object: object) {
         Object.keys(object).forEach((key) => Deno.env.set(key, object[key].toString()));
     }
+
+    public static sleep(seconds: number) 
+    {
+        let e = new Date().getTime() + (seconds * 1000);
+        while (new Date().getTime() <= e) {}
+    }
 }

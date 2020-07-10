@@ -1,4 +1,4 @@
-import { Test, DenoAsserts, Orange } from "./mod.ts";
+import { Test, DenoAsserts, Orange } from "../mod.ts";
 import { MainCoreDecoratorProxy } from "../../main-core/proxys/mainCoreDecorator.ts";
 import { Mandarine } from "../../main-core/Mandarine.ns.ts";
 import { Reflect } from "../../main-core/reflectMetadata.ts";

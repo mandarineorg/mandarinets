@@ -4,7 +4,7 @@ import { ControllerComponent } from "../../mvc-framework/core/internal/component
 import { handleCors } from "../../mvc-framework/core/middlewares/cors/corsMiddleware.ts";
 import { MVCDecoratorsProxy } from "../../mvc-framework/core/proxys/mvcCoreDecorators.ts";
 import { MandarineMvc } from "../../mvc-framework/mandarine-mvc.ns.ts";
-import { DenoAsserts, Orange, Test } from "./mod.ts";
+import { DenoAsserts, Orange, Test } from "../mod.ts";
 
 export class CORSTest {
 
