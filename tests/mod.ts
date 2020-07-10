@@ -5,3 +5,5 @@ export * as DenoAsserts from "https://deno.land/std/testing/asserts.ts";
 export function mockDecorator() {
     return (target: any, propertyName?: string) => {}
 }
+
+export const INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY = "./tests/integration-tests/files";

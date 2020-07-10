@@ -9,6 +9,9 @@ import { RenderEngineClass } from "./core/modules/view-engine/renderEngine.ts";
 * This namespace contains all the essentials for Mandarine MVC to work
 */
 export namespace MandarineMvc {
+
+    export const MVC_ABORT_CONTROLLER = new AbortController();
+
     /**
      * Hypertext Transfer Protocol (HTTP) response status codes.
      * @see {@link https://en.wikipedia.org/wiki/List_of_HTTP_status_codes}

@@ -1,8 +1,8 @@
 import { Configuration } from "../main-core/decorators/stereotypes/configuration/configuration.ts";
-import { Mandarine } from "../main-core/Mandarine.ns.ts";
-import { ResourceHandler } from "../mvc-framework/core/internal/components/resource-handler-registry/resourceHandler.ts";
-import { MandarineResourceResolver, MandarineCore } from "../mod.ts";
 import { Injectable } from "../main-core/dependency-injection/decorators/injectable.ts";
+import { Mandarine } from "../main-core/Mandarine.ns.ts";
+import { MandarineCore, MandarineResourceResolver } from "../mod.ts";
+import { ResourceHandler } from "../mvc-framework/core/internal/components/resource-handler-registry/resourceHandler.ts";
 
 @Configuration()
 export class WebMVCConfigurer implements Mandarine.MandarineMVC.Configurers.WebMVCConfigurer {

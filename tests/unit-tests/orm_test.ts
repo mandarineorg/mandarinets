@@ -1,6 +1,6 @@
 import { ApplicationContext } from "../../main-core/application-context/mandarineApplicationContext.ts";
 import { ORMCoreDecoratorProxy } from "../../orm-core/core/proxys/ormCoreDecoratorProxy.ts";
-import { mockDecorator, Orange, Test, DenoAsserts } from "./mod.ts";
+import { mockDecorator, Orange, Test, DenoAsserts } from "../mod.ts";
 import { Types } from "../../orm-core/sql/types.ts";
 import { MandarineRepository } from "../../orm-core/repository/mandarineRepository.ts";
 import { RepositoryComponent } from "../../main-core/components/repository-component/repositoryComponent.ts";

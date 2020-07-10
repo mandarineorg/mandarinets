@@ -19,7 +19,7 @@ export class MandarineMVC {
         }
     }
 
-    public run() {
+    public run(options?: { hostname?: string, port?: number }) {
         let app: Application = this.initializeMVCApplication();
 
         let mandarineConfiguration: Mandarine.Properties = Mandarine.Global.getMandarineConfiguration();
@@ -27,9 +27,11 @@ export class MandarineMVC {
         try {
             setTimeout(async () => {
                 app.listen({
-                    port: mandarineConfiguration.mandarine.server.port
+                    hostname: (options && options.hostname) ? options.hostname : mandarineConfiguration.mandarine.server.host,
+                    port: (options && options.port) ? options.port : mandarineConfiguration.mandarine.server.port,
+                    signal: Mandarine.MandarineMVC.MVC_ABORT_CONTROLLER.signal
                 });
-            }, 1000)
+            }, 1000);
         } catch(error) {
             this.logger.compiler(`Server has been shut down`, "error", error);
         }

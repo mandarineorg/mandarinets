@@ -6,7 +6,7 @@ import { ViewModel } from "../../mvc-framework/core/modules/view-engine/viewMode
 import { MVCDecoratorsProxy } from "../../mvc-framework/core/proxys/mvcCoreDecorators.ts";
 import { MandarineMvcFrameworkStarter } from "../../mvc-framework/engine/mandarineMvcFrameworkStarter.ts";
 import { MandarineMvc } from "../../mvc-framework/mandarine-mvc.ns.ts";
-import { DenoAsserts, mockDecorator, Orange, Test } from "./mod.ts";
+import { DenoAsserts, mockDecorator, Orange, Test } from "../mod.ts";
 
 export class HttpHandlersTest {
 
