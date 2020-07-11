@@ -1,9 +1,10 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { RoutingException } from "../../../../../main-core/exceptions/routingException.ts";
 import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
 import { MandarineConstants } from "../../../../../main-core/mandarineConstants.ts";
 import { Reflect } from "../../../../../main-core/reflectMetadata.ts";
 import { ReflectUtils } from "../../../../../main-core/utils/reflectUtils.ts";
-import { ResponseStatusMetadataContext } from "../../../decorators/stereotypes/controller/responseStatus.ts";
 import { AnnotationMetadataContext } from "../../../interfaces/mandarine/mandarineAnnotationMetadataContext.ts";
 import { RoutingUtils } from "../../../utils/mandarine/routingUtils.ts";
 
@@ -65,7 +66,7 @@ export class ControllerComponent {
             return;
         }
 
-        let defaultStatusAnnotationContext: ResponseStatusMetadataContext = <ResponseStatusMetadataContext> Reflect.getMetadata(defaultResponseStatusMetadataKey, this.getClassHandlerType());
+        let defaultStatusAnnotationContext: Mandarine.MandarineMVC.ResponseStatusMetadataContext = <Mandarine.MandarineMVC.ResponseStatusMetadataContext> Reflect.getMetadata(defaultResponseStatusMetadataKey, this.getClassHandlerType());
         this.options.responseStatus = defaultStatusAnnotationContext.responseStatus;
     }
 
@@ -96,7 +97,6 @@ export class ControllerComponent {
 
                 let routeCors: Mandarine.MandarineMVC.CorsMiddlewareOption = this.getRouteCors(classHandler, routeContext.methodName);
                 if(routeCors) routeContext.options.cors = routeCors;
-
                 this.registerAction({
                     actionParent: routeContext.className,
                     actionType: routeContext.methodType,

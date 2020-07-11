@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { MandarineConstants } from "../../main-core/mandarineConstants.ts";
 import { Reflect } from "../../main-core/reflectMetadata.ts";
 import { ReflectUtils } from "../../main-core/utils/reflectUtils.ts";
@@ -30,6 +32,10 @@ export class EntityRegistry {
             });
 
         }
+    }
+
+    public getEntity(schema: string, table: string) {
+        return this.entities.get(`${schema}.${table}`);
     }
 
     public getColumnsFromEntity(entityInstance: any): Array<Mandarine.ORM.Entity.Decorators.Column> {

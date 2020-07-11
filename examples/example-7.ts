@@ -135,5 +135,4 @@ export class myController {
         return await this.repository.myCustomQuery("United States");
     }
 }
-MandarineCore.setConfiguration('./config.json');
 new MandarineCore().MVC().run();

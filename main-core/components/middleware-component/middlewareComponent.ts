@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { MandarineException } from "../../exceptions/mandarineException.ts";
 import { Mandarine } from "../../Mandarine.ns.ts";
 import { MiddlewareTarget } from "./middlewareTarget.ts";
@@ -7,9 +9,9 @@ import { MiddlewareTarget } from "./middlewareTarget.ts";
 */
 export class MiddlewareComponent implements Mandarine.MandarineCore.ComponentCommonInterface {
 
-    name?: string;
-    regexRoute?: RegExp;
-    classHandler: any;
+    public name?: string;
+    public regexRoute?: RegExp;
+    public classHandler: any;
 
     constructor(name?: string, regexRoute?: RegExp, classHandler?: any) {
         this.name = name;

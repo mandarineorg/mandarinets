@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { PoolClient } from "https://raw.githubusercontent.com/mandarineorg/mandarine-postgres/master/client.ts";
 import { Pool } from "https://raw.githubusercontent.com/mandarineorg/mandarine-postgres/master/mod.ts";
 import { QueryConfig, QueryResult } from "https://raw.githubusercontent.com/mandarineorg/mandarine-postgres/master/query.ts";
@@ -47,7 +49,7 @@ export class PostgresConnector implements PostgresConnectorInterface {
           port: port ?? 5432,
         }, poolSize ?? 100, true);
       } catch(error) {
-        this.logger.error("Aborting database client", error);
+        this.logger.compiler("Aborting database client", "error", error);
         throw new MandarineORMException(MandarineORMException.IMPOSSIBLE_CONNECTION, "PostgresConnector");
       }
     }
@@ -56,7 +58,7 @@ export class PostgresConnector implements PostgresConnectorInterface {
       try {
         return await this.clientPooler.connect();
       }catch(error) {
-        this.logger.error("Database connection could not be reached");
+        this.logger.compiler("Database connection could not be reached", "error");
       }
     }
 
@@ -66,7 +68,7 @@ export class PostgresConnector implements PostgresConnectorInterface {
         let result: Promise<QueryResult> = connection.query(query);
         return result;
       }catch(error) {
-        this.logger.error("Query statement could not be executed", error);
+        this.logger.compiler("Query statement could not be executed", "error", error);
       }
     }
 
@@ -75,7 +77,7 @@ export class PostgresConnector implements PostgresConnectorInterface {
         let result: Promise<QueryResult> = connection.query(query);
         return result;
       }catch(error) {
-        this.logger.error("Query & connection have failed to be reached", error);
+        this.logger.compiler("Query & connection have failed to be reached", "error", error);
       }
   }
 }

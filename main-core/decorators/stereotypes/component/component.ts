@@ -1,5 +1,7 @@
-import { ComponentsRegistryUtil } from "../../../components-registry/componentRegistry.util.ts";
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { Mandarine } from "../../../Mandarine.ns.ts";
+import { MainCoreDecoratorProxy } from "../../../proxys/mainCoreDecorator.ts";
 
 /**
  * **Decorator**
@@ -11,6 +13,6 @@ import { Mandarine } from "../../../Mandarine.ns.ts";
  */
 export const Component = (): Function => {
     return (target: any, methodName: string, index: number) => {
-        ComponentsRegistryUtil.registerComponent(target, Mandarine.MandarineCore.ComponentTypes.COMPONENT, {}, index);
+        MainCoreDecoratorProxy.registerMandarinePoweredComponent(target, Mandarine.MandarineCore.ComponentTypes.COMPONENT, {}, index);
     };
 };

@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { Mandarine } from "../../Mandarine.ns.ts";
 
 /**
@@ -5,12 +7,12 @@ import { Mandarine } from "../../Mandarine.ns.ts";
 */
 export class ComponentComponent implements Mandarine.MandarineCore.ComponentCommonInterface {
 
-    name?: string;
-    classHandler: any;
+    public name?: string;
+    public classHandler: any;
 
     constructor(name?: string, classHandler?: any) {
         this.name = name;
-        this.classHandler= classHandler;
+        this.classHandler = classHandler;
     }
 
     public getName() {

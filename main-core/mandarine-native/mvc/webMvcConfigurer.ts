@@ -1,7 +1,8 @@
-import { getMandarineConfiguration } from "../../../../main-core/configuration/getMandarineConfiguration.ts";
-import { Mandarine } from "../../../../main-core/Mandarine.ns.ts";
-import { MandarineResourceResolver } from "../components/resource-handler-registry/mandarineResourceResolver.ts";
-import { ResourceHandler } from "../components/resource-handler-registry/resourceHandler.ts";
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
+import { ResourceHandler } from "../../../mvc-framework/core/internal/components/resource-handler-registry/resourceHandler.ts";
+import { Mandarine } from "../../Mandarine.ns.ts";
+import { MandarineResourceResolver } from "./mandarineResourceResolver.ts";
 
 export class WebMVCConfigurer implements Mandarine.MandarineMVC.Configurers.WebMVCConfigurer {
 
@@ -12,7 +13,7 @@ export class WebMVCConfigurer implements Mandarine.MandarineMVC.Configurers.WebM
     public addResourceHandlers(): Mandarine.MandarineCore.IResourceHandlerRegistry {
         let resourceHandlerRegistry = Mandarine.Global.getResourceHandlerRegistry();
 
-        let mandarineConfiguration = getMandarineConfiguration();
+        let mandarineConfiguration = Mandarine.Global.getMandarineConfiguration();
         if(resourceHandlerRegistry.overriden == false && mandarineConfiguration.mandarine.resources.staticFolder != (null || undefined) && mandarineConfiguration.mandarine.resources.staticRegExpPattern != (null || undefined)) {
             resourceHandlerRegistry.addResourceHandler(
                 new ResourceHandler()

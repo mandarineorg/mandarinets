@@ -1,10 +1,11 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { Context } from "../../../../deps.ts";
 import { Mandarine } from "../../../../main-core/Mandarine.ns.ts";
 import { HttpUtils } from "../../../../main-core/utils/httpUtils.ts";
 
 const configureOrigin = (corsOptions, res, requestOrigin) => {
     let allowOrigin = HttpUtils.verifyCorsOrigin(corsOptions.origin, requestOrigin);
-
     if(corsOptions.origin === "*") {
         res.headers.set("access-control-allow-origin", "*");
     } else {
@@ -54,7 +55,9 @@ export const handleCors = (requestContext: Context, corsOptions: Mandarine.Manda
 
         configureCredentials(corsOptions, res);
 
-        res.headers.set("access-control-max-age", `${(corsOptions.maxAge == (null || undefined)) ? 0 : corsOptions.maxAge}`);
+        let finalMaxAge = `${(corsOptions.maxAge == (null || undefined)) ? 0 : corsOptions.maxAge}`;
+        res.headers.set("access-control-max-age", finalMaxAge);
+        
         res.status = (corsOptions.optionsSuccessStatus) ? corsOptions.optionsSuccessStatus : <any> Mandarine.MandarineMVC.HttpStatusCode.NO_CONTENT;
     } else {
         configureOrigin(corsOptions, res, requestOrigin);

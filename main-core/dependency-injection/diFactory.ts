@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { Cookies } from "../../deps.ts";
 import { ComponentsRegistry, Mandarine, ViewModel } from "../../mod.ts";
 import { RoutingUtils } from "../../mvc-framework/core/utils/mandarine/routingUtils.ts";
@@ -43,10 +45,14 @@ export class DependencyInjectionFactory {
      *
      */
     public componentDependencyResolver(componentRegistry: ComponentsRegistry) {
+        // Initialize all components
+
+        const ignoreComponentIf = (component): boolean => component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT || component.componentType == Mandarine.MandarineCore.ComponentTypes.REPOSITORY;
+
         componentRegistry.getAllComponentNames().forEach((componentName) => {
             let component: Mandarine.MandarineCore.ComponentRegistryContext = componentRegistry.get(componentName);
     
-            if(component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT || component.componentType == Mandarine.MandarineCore.ComponentTypes.REPOSITORY) {
+            if(ignoreComponentIf(component)) {
                 return;
             }
     
@@ -57,7 +63,16 @@ export class DependencyInjectionFactory {
             } else {
                 component.componentInstance.setClassHandler(new componentClassHandler());
             }
+        });
+        
+        // Initialize manual injections after components have been initialized
+        componentRegistry.getAllComponentNames().forEach((componentName) => {
+            let component: Mandarine.MandarineCore.ComponentRegistryContext = componentRegistry.get(componentName);
     
+            if(ignoreComponentIf(component)) {
+                return;
+            }
+
             let componentHandler: any = component.componentInstance.getClassHandler();
     
             let reflectMetadataInjectionKeys = Reflect.getMetadataKeys(componentHandler);
@@ -74,7 +89,7 @@ export class DependencyInjectionFactory {
                     });
                 }
             }
-        });
+        })
     }
 
     /** 
@@ -84,7 +99,6 @@ export class DependencyInjectionFactory {
      */
     public async methodArgumentResolver(object: any, methodName: string, extraData: DI.ArgumentsResolverExtraData) {
         const args: Array<DI.ArgumentValue> = [];
-
         let componentMethodParams: Array<string> = ReflectUtils.getParamNames(object[methodName]);
     
         let methodAnnotationMetadata: Array<any> = Reflect.getMetadataKeys(object, methodName);

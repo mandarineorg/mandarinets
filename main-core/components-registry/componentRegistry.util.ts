@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { MandarineORMException } from "../../orm-core/core/exceptions/mandarineORMException.ts";
 import { MandarineRepository } from "../../orm-core/repository/mandarineRepository.ts";
 import { ApplicationContext } from "../application-context/mandarineApplicationContext.ts";
@@ -37,21 +39,15 @@ export class ComponentsRegistryUtil {
     }
 
     public static registerRepositoryComponent(repositoryTarget: any) {
-        try {
-            let mandarineRepository: object & MandarineRepository<any> = new repositoryTarget();
-            let entity: Mandarine.ORM.Entity.Table = mandarineRepository.getModeler().entity;
-            
-            if(entity != (null || undefined)) {
-                this.registerComponent(repositoryTarget, Mandarine.MandarineCore.ComponentTypes.REPOSITORY, {
-                    table: entity.tableName,
-                    schema: entity.schema,
-                    entity: entity
-                }, null);
-            } else {
-                throw new MandarineORMException(MandarineORMException.INVALID_REPOSITORY, ReflectUtils.getClassName(repositoryTarget));
-            }
-
-        } catch(error) {
+        let mandarineRepository: object & MandarineRepository<any> = new repositoryTarget();
+        let entity: Mandarine.ORM.Entity.Table = mandarineRepository.getModeler().entity;
+        if(entity != (null || undefined)) {
+            this.registerComponent(repositoryTarget, Mandarine.MandarineCore.ComponentTypes.REPOSITORY, {
+                table: entity.tableName,
+                schema: entity.schema,
+                entity: entity
+            }, null);
+        } else {
             throw new MandarineORMException(MandarineORMException.INVALID_REPOSITORY, ReflectUtils.getClassName(repositoryTarget));
         }
     }

@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { Log } from "../logger/log.ts";
 import { TemplateEngineException } from "../main-core/exceptions/templateEngineException.ts";
 import { ResourceHandler } from "../mvc-framework/core/internal/components/resource-handler-registry/resourceHandler.ts";
@@ -9,8 +11,10 @@ import { ComponentsRegistry } from "./components-registry/componentRegistry.ts";
 import { MiddlewareComponent } from "./components/middleware-component/middlewareComponent.ts";
 import { DI } from "./dependency-injection/di.ns.ts";
 import { MandarineStorageHandler } from "./mandarine-native/sessions/mandarineDefaultSessionStore.ts";
+import { MandarineLoading } from "./mandarineLoading.ts";
 import { TemplatesManager } from "./templates-registry/templatesRegistry.ts";
 import { CommonUtils } from "./utils/commonUtils.ts";
+import { MandarineUtils } from "./utils/mandarineUtils.ts";
 /**
 * This namespace contains all the essentials for mandarine to work
 * Gnerally, global functionings are added to this namespace in order to be easily accesible across Mandarine
@@ -23,6 +27,8 @@ export namespace Mandarine {
      * Used to verify that a method is async
      */
     export const AsyncFunction = (async () => {}).constructor;
+
+    export type IniFile = { [prop: string]: string; };
 
    /**
    * Structure of Mandarine Properties.
@@ -184,7 +190,6 @@ export namespace Mandarine {
                     let mandarinePropertiesFile = Defaults.mandarinePropertiesFile;
                     if(initialProperties && initialProperties.propertiesFilePath) mandarinePropertiesFile = initialProperties.propertiesFilePath;
                     const propertiesData = JSON.parse(CommonUtils.readFile(mandarinePropertiesFile));
-                   
                     setConfiguration(propertiesData);
                 } catch(error) {
                     mandarineGlobal.mandarineProperties = Defaults.MandarineDefaultConfiguration;
@@ -225,6 +230,24 @@ export namespace Mandarine {
         }
 
         /**
+         * Read .env file located under the current working directory and adds its values to Deno.env
+         */
+        export function getMandarineDotEnv() {
+            let compilerAlert = () => logger.compiler("No `.env` file was found or it could not be read", "warn");
+            try {
+                if(CommonUtils.fileDirExists('./.env')) {
+                    const environmentVariablesString = CommonUtils.readFile('./.env');
+                    const enviromentVariables = MandarineUtils.parseConfigurationFile(environmentVariablesString);
+                    Object.keys(enviromentVariables).forEach((key) => Deno.env.set(key, enviromentVariables[key]));
+                } else {
+                    compilerAlert();
+                }
+            } catch {
+                compilerAlert();
+            }
+        }
+
+        /**
         * Set a new configuration for the mandarine properties
         * If properties are ignored, it will set the default values.
         */   
@@ -254,7 +277,6 @@ export namespace Mandarine {
         */
         export function getMiddleware(): Array<MiddlewareComponent> {
             initializeMiddleware();
-
             return getMandarineGlobal().mandarineMiddleware;
         };
 
@@ -266,6 +288,7 @@ export namespace Mandarine {
             let mandarineGlobal: MandarineGlobalInterface = getMandarineGlobal();
             if(mandarineGlobal.mandarineSessionContainer == (undefined || null)) {
                 mandarineGlobal.mandarineSessionContainer = Defaults.MandarineDefaultSessionContainer;
+                mandarineGlobal.mandarineSessionContainer.store = new MandarineStorageHandler();
             }
         };
 
@@ -296,12 +319,28 @@ export namespace Mandarine {
     * It is a singleton class
     */
     export namespace ApplicationContext {
+
+        export interface ApplicationContextMetadata {    
+            startupDate?: number;
+            engineMetadata?: {
+                orm?: {
+                    dbEntitiesAmount?: number;
+                    repositoriesAmount?: number;
+                },
+                mvc?: {
+                    middlewareAmount?: number;
+                    templatesAmount?: number;
+                    controllersAmount?: number;
+                }
+            }
+        }
+
         export interface IApplicationContext {
-            componentsRegistry: Mandarine.MandarineCore.IComponentsRegistry;
             getComponentsRegistry(): MandarineCore.IComponentsRegistry;
             getEntityManager(): Mandarine.ORM.Entity.EntityManager;
             getTemplateManager(): Mandarine.MandarineCore.ITemplatesManager;
             initializeMetadata(): void;
+            initializeDefaultSessionContainer(): void;
             changeSessionContainer(newSessionContainer: MandarineSecurity.Sessions.SessionContainer): void;
             getInstance?: () => ApplicationContext.IApplicationContext;
             getDIFactory(): DI.FactoryClass;
@@ -377,6 +416,7 @@ export namespace Mandarine {
         export interface IComponentsRegistry {
             register(componentName: string, componentInstance: any, componentType: ComponentTypes, configuration: any): void;
             get(componentName: string): ComponentRegistryContext;
+            clearComponentRegistry(): void;
             update(itemName: string, newValue: ComponentRegistryContext): void;
             exist(itemName: string): boolean;
             getAllComponentNames(): Array<string>
@@ -384,13 +424,11 @@ export namespace Mandarine {
             getComponents(): ComponentRegistryContext[];
             getControllers(): ComponentRegistryContext[];
             getComponentsByComponentType(componentType: Mandarine.MandarineCore.ComponentTypes): Mandarine.MandarineCore.ComponentRegistryContext[];
-            getComponentDefinitionNames(componentType?: ComponentTypes): Array<string>;
-            isComponentHandlerTypeMatch(componentName: string, classType: any): boolean;
             getComponentByHandlerType(classType: any): ComponentRegistryContext;
-            getComponentType(componentName: string): string;
             resolveDependencies(): void;
             getRepositoryByHandlerType(classType: any): Mandarine.MandarineCore.ComponentRegistryContext;
             connectRepositoriesToProxy(): void;
+            initializeControllers(): void;
         };
 
         /**
@@ -444,6 +482,14 @@ export namespace Mandarine {
     export import MandarineMVC = MandarineMvc;
 
     /**
+    * Refers to the namespace of the Mandarine Security module.
+    * Inside this module, you can find everything that is related to the Security Engine, like Sessions.
+    */
+   export import Security = MandarineSecurity; 
+
+   export import ORM = MandarineORM; 
+
+    /**
     * Contains the default information Mandarine needs to work.
     */
     export namespace Defaults {
@@ -473,7 +519,7 @@ export namespace Mandarine {
             denoEnv: {}
         }
 
-        export const MandarineDefaultSessionContainer: MandarineSecurity.Sessions.SessionContainer = {
+        export const MandarineDefaultSessionContainer: MandarineSecurity.Sessions.SessionContainer & any = {
             cookie: {
                 path: '/', 
                 httpOnly: false, 
@@ -486,7 +532,7 @@ export namespace Mandarine {
             resave: false,
             rolling: false,
             saveUninitialized: false,
-            store: new MandarineStorageHandler()
+            store: undefined
         };
 
         export const MandarineDefaultCorsOptions: Mandarine.MandarineMVC.CorsMiddlewareOption = {
@@ -495,12 +541,22 @@ export namespace Mandarine {
             optionsSuccessStatus: 204
         }
     };
-
-    /**
-    * Refers to the namespace of the Mandarine Security module.
-    * Inside this module, you can find everything that is related to the Security Engine, like Sessions.
-    */
-    export import Security = MandarineSecurity; 
-
-    export import ORM = MandarineORM; 
 }
+
+/**
+ * The method below initializes what is needed for the Core to run.
+ */
+(() => {
+    MandarineLoading();
+    
+    Mandarine.Global.getMandarineDotEnv();
+    Mandarine.Global.initializeMandarineGlobal();
+    Mandarine.Global.getMandarineInitialProps();
+    Mandarine.Global.getMandarineConfiguration();
+    Mandarine.Global.getComponentsRegistry();
+    Mandarine.Global.getEntityManager();
+    Mandarine.Global.getTemplateManager();
+    Mandarine.Global.getResourceHandlerRegistry();
+    Mandarine.Global.getSessionContainer();
+    Mandarine.Global.initializeMiddleware();
+})();

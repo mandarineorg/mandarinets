@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 export class ComponentExceptions extends Error {
 
     public static EXISTENT_COMPONENT: string = "A component with the same name (%component%) has been registered already. Components cannot be duplicated.";

@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { v4 } from "https://deno.land/std/uuid/mod.ts";
 
 export class CommonUtils {
@@ -35,6 +37,12 @@ export class CommonUtils {
     }
 
     public static setEnvironmentVariablesFromObject(object: object) {
-        Object.keys(object).forEach((key) => Deno.env.set(key, object[key]));
+        Object.keys(object).forEach((key) => Deno.env.set(key, object[key].toString()));
+    }
+
+    public static sleep(seconds: number) 
+    {
+        let e = new Date().getTime() + (seconds * 1000);
+        while (new Date().getTime() <= e) {}
     }
 }

@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { Cookie } from "https://deno.land/std/http/cookie.ts";
 import { Cookies } from "../../../deps.ts";
 import { Log } from "../../../logger/log.ts";
@@ -5,7 +7,7 @@ import { Mandarine } from "../../../main-core/Mandarine.ns.ts";
 import { CommonUtils } from "../../../main-core/utils/commonUtils.ts";
 import { HttpUtils } from "../../../main-core/utils/httpUtils.ts";
 import { KeyStack } from "../../../security-core/keyStack.ts";
-import { SessionsUtils } from "../../../security-core/sessions/sessions.util.ts";
+import { SessionsUtils } from "../../../security-core/utils/sessions.util.ts";
 
 /**
  * This class handles the creation and manipulation of sessions
@@ -16,7 +18,7 @@ export class SessionMiddleware {
     private logger: Log = Log.getLogger(SessionMiddleware);
 
     constructor() {
-        this.logger.info("Session handler middleware has been initialized");
+        this.logger.compiler("Session handler middleware has been initialized", "info");
     }
 
     private getSessionContainer(): Mandarine.Security.Sessions.SessionContainer {

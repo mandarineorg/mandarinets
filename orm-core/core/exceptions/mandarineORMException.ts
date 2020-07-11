@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 export class MandarineORMException extends Error {
 
     public static INVALID_REPOSITORY: string = "The repository could not be loaded because it is an incorrect repository or it has an invalid model.";

@@ -1,12 +1,13 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { Router } from "../../deps.ts";
 import { Log } from "../../logger/log.ts";
 import { ApplicationContext } from "../../main-core/application-context/mandarineApplicationContext.ts";
 import { MiddlewareComponent } from "../../main-core/components/middleware-component/middlewareComponent.ts";
-import { getMandarineConfiguration } from "../../main-core/configuration/getMandarineConfiguration.ts";
+import { WebMVCConfigurer } from "../../main-core/mandarine-native/mvc/webMvcConfigurer.ts";
 import { Mandarine } from "../../main-core/Mandarine.ns.ts";
 import { ControllerComponent } from "../core/internal/components/routing/controllerContext.ts";
 import { middlewareResolver, requestResolver } from "../core/internal/components/routing/routingResolver.ts";
-import { WebMVCConfigurer } from "../core/internal/configurers/webMvcConfigurer.ts";
 import { handleCors } from "../core/middlewares/cors/corsMiddleware.ts";
 import { SessionMiddleware } from "../core/middlewares/sessionMiddleware.ts";
 
@@ -29,37 +30,33 @@ export class MandarineMvcFrameworkStarter {
         webMvcConfigurer: undefined
     }
 
-    constructor() {
-        this.logger.info("Starting MVC Module");
-        this.intializeControllersRoutes();
-        this.initializeEssentials();
+    constructor(callback?: Function) {
+        this.logger.compiler("Starting MVC Module", "info");
+
+        if(callback) {
+            callback(this);
+        }
     }
 
-    private initializeEssentials() {
+    public initializeEssentials() {
         this.essentials.sessionMiddleware = new SessionMiddleware();
         this.essentials.webMvcConfigurer = new WebMVCConfigurer();
     }
 
-    private intializeControllersRoutes(): void {
+    public intializeControllersRoutes(): void {
         let mvcControllers: Mandarine.MandarineCore.ComponentRegistryContext[] = ApplicationContext.getInstance().getComponentsRegistry().getControllers();
 
-        if(mvcControllers.length == 0) {
-            this.logger.warn("No controllers have been found"); 
-            return;
-        }
+        ApplicationContext.CONTEXT_METADATA.engineMetadata.mvc.controllersAmount = mvcControllers.length;
 
         try {
-
             mvcControllers.forEach((component: Mandarine.MandarineCore.ComponentRegistryContext, index) => {
                 let controller: ControllerComponent = <ControllerComponent> component.componentInstance;
                 controller.getActions().forEach((value, key) => {
                     this.router = this.addPathToRouter(this.router, value, controller);
                 });
             });
-
-            this.logger.info(`A total of ${mvcControllers.length} controllers have been initialized`);
         }catch(error){
-            this.logger.error(`Controllers could not be initialized`, error);
+            this.logger.compiler(`Controllers could not be initialized`, "error", error);
         }
 
     }
@@ -139,7 +136,7 @@ export class MandarineMvcFrameworkStarter {
     }
 
     private static assignContentType(context: any) {
-        let contentType: string = getMandarineConfiguration().mandarine.server.responseType;
+        let contentType: string = Mandarine.Global.getMandarineConfiguration().mandarine.server.responseType;
 
         if(context.response.body != (null || undefined)) {
             switch(typeof context.response.body) {

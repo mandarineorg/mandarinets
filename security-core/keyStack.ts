@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 // This was inspired by [keygrip](https://github.com/crypto-utils/keygrip/)
 // which allows signing of data (cookies) to prevent tampering, but also allows
 // for easy key rotation without needing to resign the data.

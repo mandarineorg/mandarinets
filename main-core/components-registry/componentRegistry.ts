@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { Log } from "../../logger/log.ts";
 import { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
 import { MandarineRepository } from "../../orm-core/repository/mandarineRepository.ts";
@@ -73,6 +75,10 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
         return this.components.get(itemName);
     }
 
+    public clearComponentRegistry(): void {
+        this.components.clear();
+    }
+
     public update(itemName: string, newValue: Mandarine.MandarineCore.ComponentRegistryContext): void {
         this.components.set(itemName, newValue);
     }
@@ -106,21 +112,6 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
         return this.getComponentsByComponentType(Mandarine.MandarineCore.ComponentTypes.REPOSITORY);
     }
 
-    public getComponentDefinitionNames(componentType?: Mandarine.MandarineCore.ComponentTypes): Array<string> {
-        if(componentType == (null || undefined)) return this.getAllComponentNames();
-        else return this.getAllComponentNamesByType(componentType);
-    }
-
-    public isComponentHandlerTypeMatch(componentName: string, classType: any): boolean {
-        let componentContext: Mandarine.MandarineCore.ComponentRegistryContext = this.get(componentName);
-        if(componentContext.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT) return componentContext.componentInstance instanceof classType;
-        else {
-            let classHandler = componentContext.componentInstance.getClassHandler();
-            if(ReflectUtils.checkClassInitialized(classHandler)) classHandler = new classHandler();
-            return classHandler instanceof classType;
-        }
-    }
-
     public getComponentByHandlerType(classType: any): Mandarine.MandarineCore.ComponentRegistryContext {
         return this.getComponents().find(component => {
             let instance = undefined;
@@ -136,16 +127,6 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
 
             return instance instanceof classType;
         });
-    }
-
-    public getComponentType(componentName: string): string {
-        let componentContext: Mandarine.MandarineCore.ComponentRegistryContext = this.get(componentName);
-        switch(componentContext.componentType) {
-            case Mandarine.MandarineCore.ComponentTypes.CONTROLLER:
-                let component: ControllerComponent = <ControllerComponent> componentContext.componentInstance;
-                return component.getClassHandler().constructor.name; 
-            break;
-        }
     }
 
     public resolveDependencies(): void {
@@ -169,7 +150,6 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
                 break;
                 default:
                     throw new Error(`${dialect} is not supported inside Mandarine's ORM`);
-                break;
             }
         }
 
@@ -177,13 +157,12 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
 
             if(ApplicationContext.getInstance().getEntityManager().getDataSource() == undefined) {
                 repositoryTarget.prototype[methodName] = (...args) => {
-                    this.logger.warn("A data source is required for repositories. Operation not supported");
+                    this.logger.compiler("A data source is required for repositories. Operation not supported", "warn");
                     return undefined;
                 }
                 return;
             }
 
-            let methodParameterNames: Array<string> = ReflectUtils.getParamNames(repositoryTarget.prototype[methodName]);
             let manualQuery: { query: string, secure?: boolean } = Reflect.getMetadata(`${MandarineConstants.REFLECTION_MANDARINE_REPOSITORY_METHOD_MANUAL_QUERY}:${methodName}`, new repositoryTarget(), methodName);
             
             if(manualQuery != undefined) {
@@ -199,25 +178,21 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
                         return repositoryProxy.findAll();
                     }
                     return;
-                    break;
                 case 'countAll':
                     repositoryTarget.prototype[methodName] = () => {
                         return repositoryProxy.countAll();
                     }
                     return;
-                    break;
                 case 'deleteAll':
                     repositoryTarget.prototype[methodName] = () => {
                         return repositoryProxy.deleteAll();
                     }
                     return;
-                    break;
                 case 'save':
                     repositoryTarget.prototype[methodName] = (model) => {
                         return repositoryProxy.save(model);
                     }
                     return;
-                    break;
             }
 
             if(methodName.startsWith('find')) {
@@ -254,9 +229,7 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
             this.update(repo.componentName, repo);
         });
 
-        if(repositoriesArray != undefined && repositoriesArray.length > 0) {
-            this.logger.info(`A total of ${repositoriesArray.length} repositories have been found`);
-        }
+        ApplicationContext.CONTEXT_METADATA.engineMetadata.orm.repositoriesAmount = repositoriesArray.length;
     }
 
     public getRepositoryByHandlerType(classType: any): Mandarine.MandarineCore.ComponentRegistryContext {
@@ -266,5 +239,11 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
             if(!ReflectUtils.checkClassInitialized(instance)) instance = new instance();
             return instance instanceof classType;
         });
+    }
+
+    public initializeControllers(): void {
+        this.getControllers().forEach((controller) => {
+            (<ControllerComponent>controller.componentInstance).initializeControllerFunctionality();
+        })
     }
 }

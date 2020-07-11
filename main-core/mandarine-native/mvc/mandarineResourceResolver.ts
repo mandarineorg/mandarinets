@@ -1,6 +1,8 @@
-import { Context } from "../../../../../deps.ts";
-import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
-import { CommonUtils } from "../../../../../main-core/utils/commonUtils.ts";
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
+import { Context } from "../../../deps.ts";
+import { Mandarine } from "../../Mandarine.ns.ts";
+import { CommonUtils } from "../../utils/commonUtils.ts";
 
 /**
  * This class represents the default resolver for resources.

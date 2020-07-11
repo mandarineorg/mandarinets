@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { Log } from "../../logger/log.ts";
 import { ApplicationContext } from "../../main-core/application-context/mandarineApplicationContext.ts";
 import { MiddlewareComponent } from "../../main-core/components/middleware-component/middlewareComponent.ts";
@@ -56,8 +58,6 @@ export class MandarineTSFrameworkEngineMethods {
 
         }
 
-        if(middleware.length > 0) {
-            this.logger.info(`A total of ${middleware.length} Middleware have been registered`);
-        }
+        ApplicationContext.CONTEXT_METADATA.engineMetadata.mvc.middlewareAmount = middleware.length;
     }
 }

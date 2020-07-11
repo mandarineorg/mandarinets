@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 /**
  * The optional class is used to avoid repetitive validation with If's.
  * If an object is present, you can verify this with Optional.isPresent()

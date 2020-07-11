@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 export { ApplicationContext } from "./main-core/application-context/mandarineApplicationContext.ts";
 
 export { Mandarine } from "./main-core/Mandarine.ns.ts";
@@ -15,7 +17,6 @@ export { MiddlewareTarget } from "./main-core/components/middleware-component/mi
 export { Inject } from "./main-core/dependency-injection/decorators/Inject.ts";
 export { Injectable } from "./main-core/dependency-injection/decorators/injectable.ts";
 export { MandarineCore } from "./main-core/mandarineCore.ts";
-export { RequestMethod } from "./mvc-framework/core/decorators/stereotypes/controller/action.ts";
 export { Controller } from "./mvc-framework/core/decorators/stereotypes/controller/controller.ts";
 export { Param, RouteParam, QueryParam, RequestParam, Session, ServerRequestParam, ResponseParam, CookieParam, Model, RequestBody } from "./mvc-framework/core/decorators/stereotypes/controller/parameterDecorator.ts";
 export { ResponseStatus } from "./mvc-framework/core/decorators/stereotypes/controller/responseStatus.ts";
@@ -31,7 +32,7 @@ export { Table , Column, Id, GeneratedValue } from "./orm-core/core/decorators/e
 export { Types as SQLTypes } from "./orm-core/sql/types.ts";
 
 export { ResourceHandler } from "./mvc-framework/core/internal/components/resource-handler-registry/resourceHandler.ts";
-export { MandarineResourceResolver } from "./mvc-framework/core/internal/components/resource-handler-registry/mandarineResourceResolver.ts";
+export { MandarineResourceResolver } from "./main-core/mandarine-native/mvc/mandarineResourceResolver.ts";
 
 export { Optional } from "./pluggins/optional.ts";
 export { PromiseRepeater } from "./pluggins/promiseRepeater.ts";

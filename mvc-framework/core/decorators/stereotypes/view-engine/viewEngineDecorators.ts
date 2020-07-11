@@ -1,5 +1,7 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
-import { RoutingUtils } from "../../../utils/mandarine/routingUtils.ts";
+import { MVCDecoratorsProxy } from "../../../proxys/mvcCoreDecorators.ts";
 
 /**
  * **Decorator**
@@ -10,6 +12,6 @@ import { RoutingUtils } from "../../../utils/mandarine/routingUtils.ts";
  */
 export const Render = (template: string, options?: Mandarine.MandarineMVC.TemplateEngine.RenderingOptions, engine?: Mandarine.MandarineMVC.TemplateEngine.Engines) => {
     return (target: any, methodName: string) => {
-        RoutingUtils.registerRenderHandler(target, methodName, template, engine, options);
+        MVCDecoratorsProxy.registerRenderHandler(target, methodName, template, engine, options);
     };
 };

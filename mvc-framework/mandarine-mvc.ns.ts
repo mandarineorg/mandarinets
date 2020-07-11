@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { Context } from "../deps.ts";
 import { DI } from "../main-core/dependency-injection/di.ns.ts";
 import { Mandarine } from "../mod.ts";
@@ -7,6 +9,9 @@ import { RenderEngineClass } from "./core/modules/view-engine/renderEngine.ts";
 * This namespace contains all the essentials for Mandarine MVC to work
 */
 export namespace MandarineMvc {
+
+    export const MVC_ABORT_CONTROLLER = new AbortController();
+
     /**
      * Hypertext Transfer Protocol (HTTP) response status codes.
      * @see {@link https://en.wikipedia.org/wiki/List_of_HTTP_status_codes}
@@ -533,6 +538,12 @@ export namespace MandarineMvc {
         }
     }
 
+    export interface ResponseStatusMetadataContext {
+        classParentName: string;
+        responseStatus: Mandarine.MandarineMVC.HttpStatusCode;
+        methodName?: string;
+    }
+    
     export interface routingParamContext {
         methodName: string;
         parameterName: string;
@@ -547,7 +558,7 @@ export namespace MandarineMvc {
         allowedHeaders?: Array<string>;
         exposedHeaders?: Array<string>;
         credentials?: boolean;
-        maxAge?: boolean;
+        maxAge?: number;
         optionsSuccessStatus?: number;
     }
 
@@ -559,7 +570,6 @@ export namespace MandarineMvc {
             [filename: string]: Uint8Array | Uint16Array | Uint32Array | BigUint64Array
         }
     }
-
 
     export interface MultipartHeader {
         name: string,
