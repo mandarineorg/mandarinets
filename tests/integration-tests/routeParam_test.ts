@@ -4,7 +4,7 @@ import { CommonUtils } from "../../main-core/utils/commonUtils.ts";
 
 export class RouteParamTest {
 
-    public MAX_COMPILATION_TIMEOUT_SECONDS = 20;
+    public MAX_COMPILATION_TIMEOUT_SECONDS = 50;
 
     constructor() {
         Orange.setOptions(this, {
