@@ -1,4 +1,7 @@
 # Mandarine.TS
+[![MandarineTS CI](https://github.com/mandarineorg/mandarinets/workflows/ci/badge.svg)](https://github.com/mandarineorg/mandarinets)
+[![deno doc](https://doc.deno.land/badge.svg)](https://doc.deno.land/https/raw.githubusercontent.com/mandarineorg/mandarinets/master/mod.ts)
+
 ![Mandarine.ts Logo](https://user-images.githubusercontent.com/60560109/81625975-6c6c4a80-93c8-11ea-8cd3-c5718fd56d52.png)
 
 MandarineTS is a typescript framework for creating websites using the Model-View-Controller pattern (MVC). The use of typescript functionalities such as its decorators make this framework adaptable to many use cases and design patterns.  
