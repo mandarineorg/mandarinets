@@ -1,9 +1,9 @@
 {
-    "name":"Mandarine.TS",
+    "name":"MandarineTS",
     "description":"Mandarine.TS is a framework that allows you to create any kind of application with built-in systems such as Dependency Injection, ORM, Components and More. It is divided in 4 modules: Core, Data, Security and MVC.",
     "stable":true,
     "entry": "./mod.ts",
-    "unlisted": true,
+    "unlisted": false,
     "repository": "https://github.com/mandarineorg/mandarinets",
     "files": [
         "./docs/**/*",
