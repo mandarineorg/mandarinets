@@ -1,6 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { assert } from "https://deno.land/std@0.61.0/testing/asserts.ts";
+import { assert } from "https://deno.land/std@0.60.0/testing/asserts.ts";
 import { HmacSha256 } from "../hash/sha256.ts";
 
 // Part of this class is a fraction of https://github.com/oakserver/oak/blob/master/tssCompare.ts
