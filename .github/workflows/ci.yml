@@ -18,4 +18,4 @@ jobs:
         with:
           deno-version: ${{ matrix.deno }}
       - name: run tests
-        run: deno test -c tsconfig.json --allow-all
+        run: deno test -c tsconfig.json --reload --allow-all
