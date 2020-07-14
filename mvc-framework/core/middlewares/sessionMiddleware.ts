@@ -1,6 +1,5 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { Cookie } from "https://deno.land/std/http/cookie.ts";
 import { Cookies } from "../../../deps.ts";
 import { Log } from "../../../logger/log.ts";
 import { Mandarine } from "../../../main-core/Mandarine.ns.ts";
@@ -27,7 +26,7 @@ export class SessionMiddleware {
 
     private createSessionContext(sessionContainerConfig: Mandarine.Security.Sessions.SessionContainer, context: any) {
         let sesId = sessionContainerConfig.genId();
-        let sessionCookie: Cookie = SessionsUtils.getCookieForSession(sessionContainerConfig, sesId);
+        let sessionCookie: Mandarine.MandarineMVC.Cookie = SessionsUtils.getCookieForSession(sessionContainerConfig, sesId);
 
         context.cookies.set(sessionCookie.name, sessionCookie.value, {
             domain: sessionCookie.domain,
@@ -61,7 +60,7 @@ export class SessionMiddleware {
             sesId = sessionCookieName.split(':')[1];
             let digestData = cookiesFromRequest[sessionCookieName]; // Necessary to verify the signature of the cookie.
             
-            let sessionCookie: Cookie = SessionsUtils.getCookieForSession(sessionContainerConfig, sesId);
+            let sessionCookie: Mandarine.MandarineMVC.Cookie = SessionsUtils.getCookieForSession(sessionContainerConfig, sesId);
 
             const cookieDataForSignature: string = `${sessionContainerConfig.sessionPrefix}:${sesId}=${sesId}`;
 

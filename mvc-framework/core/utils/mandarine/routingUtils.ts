@@ -1,8 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { ServerRequest } from "https://deno.land/std/http/server.ts";
 import { Mandarine } from "../../../../main-core/Mandarine.ns.ts";
-import { ControllerComponent } from "../../internal/components/routing/controllerContext.ts";
 
 /**
  * Contains all the util methods that are related to the router and routings
@@ -29,20 +27,5 @@ export class RoutingUtils {
 
     public static getRouteParamPattern(route: string): RegExp  {
         return new RegExp(route.replace(/:[^\s/]+/g, '([\\w-]+)'));
-    }
-
-    public static getRouteParamValues(controllerComponent: ControllerComponent, routeAction: Mandarine.MandarineMVC.Routing.RoutingAction, request: ServerRequest): any {
-        if(routeAction.routeParams == (null || undefined)) return null;
-        if(routeAction.routeParams.length == 0) return null;
-        let paramValues: any = new URL("http://localhost" + request.url).pathname.match(RoutingUtils.getRouteParamPattern(controllerComponent.getActionRoute(routeAction)));
-        
-        if(paramValues == null) return null;
-
-        let objectOfValues = {};
-        for (var i = 1; i < paramValues.length; i++) {
-            objectOfValues[routeAction.routeParams[i - 1].routeName] = paramValues[i];
-        }
-
-        return objectOfValues;
     }
 }

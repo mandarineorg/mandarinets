@@ -1,6 +1,5 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { assert } from "https://deno.land/std@0.60.0/testing/asserts.ts";
 import { HmacSha256 } from "../hash/sha256.ts";
 
 // Part of this class is a fraction of https://github.com/oakserver/oak/blob/master/tssCompare.ts
@@ -9,7 +8,7 @@ import { HmacSha256 } from "../hash/sha256.ts";
  */
 export class SecurityUtils {
     public static compareArrayBuffer(a: ArrayBuffer, b: ArrayBuffer): boolean {
-        assert(a.byteLength === b.byteLength, "ArrayBuffer lengths must match.");
+        if(!(a.byteLength === b.byteLength)) throw new Error("ArrayBuffer lengths must match.");
         const va = new DataView(a);
         const vb = new DataView(b);
         const length = va.byteLength;
