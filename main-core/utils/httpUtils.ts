@@ -1,7 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { decoder } from "https://deno.land/std/encoding/utf8.ts";
-import { assert } from "https://deno.land/std@0.60.0/testing/asserts.ts";
+import { decoder } from "https://deno.land/std@0.61.0/encoding/utf8.ts";
 import { Request } from "../../deps.ts";
 import { Log } from "../../logger/log.ts";
 import { Mandarine } from "../Mandarine.ns.ts";
@@ -48,7 +47,7 @@ export class HttpUtils {
           const c = cookie.split(";");
           for (const kv of c) {
             const [cookieKey, ...cookieVal] = kv.split("=");
-            assert(cookieKey != null);
+            if(!(cookieKey != null)) continue;
             const key = cookieKey.trim();
             out[key] = cookieVal.join("=");
           }
