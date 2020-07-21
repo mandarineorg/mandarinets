@@ -19,6 +19,8 @@ $ mandarine [OPTIONS] [SUBCOMMAND]
 &nbsp;
 
 **Options**
+
+
 | Option | Description |
 | ------ | ----------- |
 | `-h, --help` | Shows the help information of Mandarine's CLI.
@@ -27,6 +29,8 @@ $ mandarine [OPTIONS] [SUBCOMMAND]
 &nbsp;
 
 **Subcommands**
+
+
 | Subcommand | Alias | Description |
 | ---------- | ----- | ----------- |
 | new | n | Creates a Mandarine-powered application (following Mandarine's project structure) in the current working directory.

@@ -10,6 +10,7 @@ $ mandarine new [OPTIONS]
 ```
 
 **Options**
+
 | Option | Description | Required |
 | ------ | ----------- | -------- |
 | `--directory (-d)` | Indicates the directory where the mandarine-powered application will be created. | No

@@ -10,6 +10,8 @@ $ mandarine generate [MODULE NAME] [TYPES]
 ```
 
 **Arguments:**
+
+
 | Argument | Description |
 | -------- | ----------- |
 | [Module name] | Name of the module to create
@@ -17,6 +19,8 @@ $ mandarine generate [MODULE NAME] [TYPES]
 &nbsp;
 
 **Types:**
+
+
 | Type | Description |
 | ---- | ----------- |
 | --controller (-c) | Adds a Controller component to the module.

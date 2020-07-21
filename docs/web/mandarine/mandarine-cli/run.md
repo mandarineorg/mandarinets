@@ -12,6 +12,7 @@ $ mandarine run [OPTIONS]
 &nbsp;
 
 **Options**
+
 | Option | Description | Required |
 | ------ | ----------- | -------- |
 | --entry-point | Defines where Mandarine's entry point file is located.<br> Default: `[DENO_CWD]/src/main/mandarine/app.ts` | No
