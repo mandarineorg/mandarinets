@@ -194,5 +194,21 @@
     {
       "url": "promise-repeater-plugin",
       "document": "plugins/promise-repeater.md"
+    },
+    {
+      "url": "cli-introduction",
+      "document": "mandarine-cli/introduction.md"
+    },
+    {
+      "url": "cli-new",
+      "document": "mandarine-cli/new.md"
+    },
+    {
+      "url": "cli-generate",
+      "document": "mandarine-cli/generate.md"
+    },
+    {
+      "url": "cli-run",
+      "document": "mandarine-cli/run.md"
     }
 ]

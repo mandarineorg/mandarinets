@@ -229,6 +229,27 @@
       ]
     },
     {
+      "title": "Mandarine CLI",
+      "children": [
+        {
+          "title": "Introduction",
+          "url": "cli-introduction"
+        },
+        {
+          "title": "new",
+          "url": "cli-new"
+        },
+        {
+          "title": "generate",
+          "url": "cli-generate"
+        },
+        {
+          "title": "run",
+          "url": "cli-run"
+        }
+      ]
+    },
+    {
       "title": "Plugins",
       "children": [
         {
