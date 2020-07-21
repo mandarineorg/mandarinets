@@ -165,15 +165,15 @@
     },
     {
       "url": "mandarine-data-introduction",
-      "document": "mandarine-mvc/mandarine-data-introduction.md"
+      "document": "mandarine-data/mandarine-data-introduction.md"
     },
     {
       "url": "data-models",
-      "document": "mandarine-mvc/data-models.md"
+      "document": "mandarine-data/data-models.md"
     },
     {
       "url": "data-repositories",
-      "document": "mandarine-mvc/data-repositories.md"
+      "document": "mandarine-data/data-repositories.md"
     },
     {
       "url": "mandarine-query-language",
