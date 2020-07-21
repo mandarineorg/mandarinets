@@ -1,0 +1,200 @@
+{
+  "mandarine": [
+    {
+      "url": "introduction",
+      "document": "introduction.md"
+    },
+    {
+      "url": "installation",
+      "document": "installation.md"
+    },
+    {
+      "url": "main-configuration",
+      "document": "main-configuration.md"
+    },
+    {
+      "url": "hello-world",
+      "document": "hello-world.md"
+    },
+    {
+      "url": "installation-prerequisites",
+      "document": "prerequisites.md"
+    },
+    {
+      "url": "getting-started-introduction",
+      "document": "getting-started-introduction.md"
+    },
+    {
+      "url": "fundamentals",
+      "document": "fundamentals.md"
+    },
+    {
+      "url": "project-structure",
+      "document": "project-structure.md"
+    },
+    {
+      "url": "components",
+      "document": "components.md"
+    },
+    {
+      "url": "controller",
+      "document": "component-controllers.md"
+    },
+    {
+      "url": "middleware",
+      "document": "component-middleware.md"
+    },
+    {
+      "url": "repository",
+      "document": "component-repository.md"
+    },
+    {
+      "url": "component",
+      "document": "component-component.md"
+    },
+    {
+      "url": "service",
+      "document": "component-service.md"
+    },
+    {
+      "url": "configuration",
+      "document": "component-configuration.md"
+    },
+    {
+      "url": "manual-components",
+      "document": "manual-components.md"
+    },
+    {
+      "url": "dependency-injection",
+      "document": "dependency-injection.md"
+    },
+    {
+      "url": "dot-env-file",
+      "document": "dot-env-file.md"
+    },
+    {
+      "url": "mandarine-json-file",
+      "document": "mandarine-json-file.md"
+    },
+    {
+      "url": "properties",
+      "document": "mandarine-properties.md"
+    },
+    {
+      "url": "custom-properties",
+      "document": "custom-properties.md"
+    },
+    {
+      "url": "value-decorator",
+      "document": "value-decorator.md"
+    },
+    {
+      "url": "lifecycle",
+      "document": "lifecycle.md"
+    },
+    {
+      "url": "mandarine-core",
+      "document": "mandarine-core.md"
+    },
+    {
+      "url": "mandarine-mvc-introduction",
+      "document": "mandarine-mvc-introduction.md"
+    },
+    {
+      "url": "resource-handlers",
+      "document": "resource-handlers.md"
+    },
+    {
+      "url": "resource-handler-registry",
+      "document": "resource-handler-registry.md"
+    },
+    {
+      "url": "resource-handler",
+      "document": "resource-handler.md"
+    },
+    {
+      "url": "resource-resolver",
+      "document": "resource-resolver.md"
+    },
+    {
+      "url": "mvc-controllers",
+      "document": "mvc-controllers.md"
+    },
+    {
+      "url": "routes",
+      "document": "mvc-controllers-routes.md"
+    },
+    {
+      "url": "parameterized-routes",
+      "document": "mvc-controllers-parameterized-routes.md"
+    },
+    {
+      "url": "response-status-decorator",
+      "document": "response-status-decorator.md"
+    },
+    {
+      "url": "http-handlers",
+      "document": "http-handlers.md"
+    },
+    {
+      "url": "custom-middleware",
+      "document": "custom-middleware.md"
+    },
+    {
+      "url": "session-middleware",
+      "document": "session-middleware.md"
+    },
+    {
+      "url": "cors-middleware",
+      "document": "cors-middleware.md"
+    },
+    {
+      "url": "template-engine",
+      "document": "template-engine.md"
+    },
+    {
+      "url": "accessing-data-from-template",
+      "document": "accessing-data-from-templates.md"
+    },
+    {
+      "url": "serving-static-content",
+      "document": "serving-static-content.md"
+    },
+    {
+      "url": "multipart-formdata",
+      "document": "multipart-formdata.md"
+    },
+    {
+      "url": "mandarine-data-introduction",
+      "document": "mandarine-data-introduction.md"
+    },
+    {
+      "url": "data-models",
+      "document": "data-models.md"
+    },
+    {
+      "url": "data-repositories",
+      "document": "data-repositories.md"
+    },
+    {
+      "url": "mandarine-query-language",
+      "document": "mql.md"
+    },
+    {
+      "url": "data-interaction",
+      "document": "data-interacting.md"
+    },
+    {
+      "url": "data-updating",
+      "document": "data-updating.md"
+    },
+    {
+      "url": "optional-plugin",
+      "document": "optional-plugin.md"
+    },
+    {
+      "url": "promise-repeater-plugin",
+      "document": "promise-repeater.md"
+    }
+  ]
+}
