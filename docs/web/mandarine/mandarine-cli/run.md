@@ -1,4 +1,4 @@
-# `mandarine generate`
+# `mandarine run`
 Compiles & Run the mandarine application located in the current working directory.
 
 -----
