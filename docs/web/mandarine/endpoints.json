@@ -1,5 +1,4 @@
-{
-  "mandarine": [
+[
     {
       "url": "introduction",
       "document": "introduction.md"
@@ -196,5 +195,4 @@
       "url": "promise-repeater-plugin",
       "document": "promise-repeater.md"
     }
-  ]
-}
+]
