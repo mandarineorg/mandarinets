@@ -1,0 +1,244 @@
+[
+    {
+      "title": "Getting Started",
+      "children": [
+        {
+          "title": "Introduction",
+          "url": "introduction"
+        },
+        {
+          "title": "Installation",
+          "url": "installation",
+          "children": [
+            {
+              "title": "Prerequisites",
+              "url": "installation-prerequisites"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Main Concepts",
+      "children": [
+        {
+          "title": "Introduction",
+          "url": "getting-started-introduction",
+          "children": [
+            {
+              "title": "Fundamentals",
+              "url": "fundamentals"
+            },
+            {
+              "title": "Project Structure",
+              "url": "project-structure"
+            }
+          ]
+        },
+        {
+          "title": "Main Configuration",
+          "url": "main-configuration"
+        },
+        {
+          "title": "Hello World",
+          "url": "hello-world"
+        },
+        {
+          "title": "Components",
+          "url": "components",
+          "children": [
+            {
+              "title": "Controllers",
+              "url": "controller"
+            },
+            {
+              "title": "Middleware",
+              "url": "middleware"
+            },
+            {
+              "title": "Repositories",
+              "url": "repository"
+            },
+            {
+              "title": "Components",
+              "url": "component"
+            },
+            {
+              "title": "Services",
+              "url": "service"
+            },
+            {
+              "title": "Configuration",
+              "url": "configuration"
+            },
+            {
+              "title": "Manual Components",
+              "url": "manual-components"
+            }
+          ]
+        },
+        {
+          "title": "Dependency Injection",
+          "url": "dependency-injection"
+        },
+        {
+          "title": ".Env File",
+          "url": "dot-env-file"
+        },
+        {
+          "title": "Mandarine.json File",
+          "url": "mandarine-json-file"
+        },
+        {
+          "title": "Properties",
+          "url": "properties",
+          "children": [
+            {
+              "title": "Custom Properties",
+              "url": "custom-properties"
+            },
+            {
+              "title": "@Value Decorator",
+              "url": "value-decorator"
+            }
+          ]
+        },
+        {
+          "title": "Lifecycle",
+          "url": "lifecycle"
+        }
+      ]
+    },
+    {
+      "title": "Mandarine Core",
+      "children": [
+        {
+          "title": "Introduction",
+          "url": "mandarine-core"
+        }
+      ]
+    },
+    {
+      "title": "Mandarine MVC",
+      "children": [
+        {
+          "title": "Introduction",
+          "url": "mandarine-mvc-introduction"
+        },
+        {
+          "title": "Resource Handlers",
+          "url": "resource-handlers",
+          "children": [
+            {
+              "title": "Resource Handler",
+              "url": "resource-handler"
+            },
+            {
+              "title": "Resource Registry",
+              "url": "resource-handler-registry"
+            },
+            {
+              "title": "Resource Resolver",
+              "url": "resource-resolver"
+            }
+          ]
+        },
+        {
+          "title": "Controllers",
+          "url": "mvc-controllers",
+          "children": [
+            {
+              "title": "Routes",
+              "url": "routes"
+            },
+            {
+              "title": "Parameterized Routes",
+              "url": "parameterized-routes"
+            },
+            {
+              "title": "@ResponseStatus",
+              "url": "response-status-decorator"
+            }
+          ]
+        },
+        {
+          "title": "HTTP Handlers",
+          "url": "http-handlers"
+        },
+        {
+          "title": "Custom Middleware",
+          "url": "custom-middleware"
+        },
+        {
+          "title": "Session Middleware",
+          "url": "session-middleware"
+        },
+        {
+          "title": "CORS Middleware",
+          "url": "cors-middleware"
+        },
+        {
+          "title": "Template Engine",
+          "url": "template-engine",
+          "children": [
+            {
+              "title": "Data Binding",
+              "url": "accessing-data-from-template"
+            }
+          ]
+        },
+        {
+          "title": "Static Content",
+          "url": "serving-static-content"
+        },
+        {
+          "title": "Multipart Form Data",
+          "url": "multipart-formdata"
+        }
+      ]
+    },
+    {
+      "title": "Mandarine Data",
+      "children": [
+        {
+          "title": "Introduction",
+          "url": "mandarine-data-introduction"
+        },
+        {
+          "title": "MQL",
+          "url": "mandarine-query-language"
+        },
+        {
+          "title": "Data Models",
+          "url": "data-models"
+        },
+        {
+          "title": "Repositories",
+          "url": "data-repositories",
+          "children": [
+            {
+              "title": "Data Interaction",
+              "url": "data-interaction"
+            },
+            {
+              "title": "Updating Data",
+              "url": "data-updating"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Plugins",
+      "children": [
+        {
+          "title": "Optional",
+          "url": "optional-plugin"
+        },
+        {
+          "title": "Promise Repeater",
+          "url": "promise-repeater-plugin"
+        }
+      ]
+    }
+  ]
