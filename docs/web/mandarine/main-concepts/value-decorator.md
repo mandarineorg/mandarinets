@@ -5,11 +5,16 @@ The `@Value` decorator allows you to access properties from your Mandarine's pro
 
 ## Syntax
 ```typescript
-@Value(propertyKey: string)
+@Value(propertyKey: string, scope: Mandarine.MandarineCore.ValueScopes)
 ```
+
+See [Mandarine.MandarineCore.ValueScopes](https://doc.deno.land/https/raw.githubusercontent.com/mandarineorg/mandarinets/master/main-core/Mandarine.ns.ts#Mandarine.MandarineCore.ValueScopes)
 
 - propertyKey
     - Key reference of your property. If nested, separate by using dots (.)
+- scope
+    - `CONFIGURATION`: Retrieves values from property file
+    - `ENVIRONMENTAL`: Retrieves values from Deno environmental variables (`Deno.env`)
 
 &nbsp;
 
