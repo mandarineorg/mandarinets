@@ -1,5 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
+import { Mandarine } from "../../Mandarine.ns.ts";
 import { MainCoreDecoratorProxy } from "../../proxys/mainCoreDecorator.ts";
 
 /**
@@ -8,8 +9,8 @@ import { MainCoreDecoratorProxy } from "../../proxys/mainCoreDecorator.ts";
  *
  * `@Value('mandarine.server.host')`
  */
-export const Value = (configKey: string): Function => {
+export const Value = (configKey: string, scope: Mandarine.MandarineCore.ValueScopes = Mandarine.MandarineCore.ValueScopes.CONFIGURATION): Function => {
     return (target: any, propertyName: string) => {
-        MainCoreDecoratorProxy.valueDecorator(target, configKey, propertyName);
+        MainCoreDecoratorProxy.valueDecorator(target, configKey, scope, propertyName);
     }
 };

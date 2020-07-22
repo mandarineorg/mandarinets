@@ -2,7 +2,7 @@
 
 import { rgb8 } from "https://deno.land/std@0.61.0/fmt/colors.ts";
 import { Log } from "../logger/log.ts";
-import { MandarineCore } from "./mandarineCore.ts";
+import { MandarineConstants } from "./mandarineConstants.ts";
 
 /**
  * Loads the visualization of Mandarine's Compiler
@@ -16,8 +16,8 @@ export const MandarineLoading = () => {
     console.log(" |_|  |_|\\__,_|_| |_|\\__,_|\\__,_|_|  |_|_| |_|\\___|    |_| |_____/ ");
     console.log("                                                                   ");
     console.log(" ================================================================= ");
-    console.log(` ${rgb8("Mandarine.TS Framework", 208)} :: ${MandarineCore.releaseVersion}`);
+    console.log(` ${rgb8("Mandarine.TS Framework", 208)} :: ${MandarineConstants.RELEASE_VERSION}`);
     console.log("");
-    Log.getLogger(MandarineCore).info(`Starting framework with PID ${Deno.pid}`);
+    Log.getLogger("MandarineCore").info(`Starting framework with PID ${Deno.pid}`);
     
 };

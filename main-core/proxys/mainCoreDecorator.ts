@@ -10,9 +10,11 @@ export class MainCoreDecoratorProxy {
         return;
     }
 
-    public static valueDecorator(targetClass: any, configKey: string, propertyName: string) {
+    public static valueDecorator(targetClass: any, configKey: string, scope: Mandarine.MandarineCore.ValueScopes, propertyName: string) {
         try {
-            let propertyObject = Mandarine.Global.getMandarineConfiguration();
+            let propertyObject;
+            if(scope == Mandarine.MandarineCore.ValueScopes.CONFIGURATION) propertyObject = Mandarine.Global.getMandarineConfiguration();
+            if(scope == Mandarine.MandarineCore.ValueScopes.ENVIRONMENTAL) propertyObject = Deno.env.toObject();
 
             if(configKey.includes('.')) {
                 let parts = configKey.split('.');

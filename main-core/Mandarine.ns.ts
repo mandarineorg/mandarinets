@@ -354,6 +354,11 @@ export namespace Mandarine {
     */
     export namespace MandarineCore {
 
+        export enum ValueScopes {
+            CONFIGURATION,
+            ENVIRONMENTAL
+        }
+
         export interface Cookies {
             [key: string]: string;
         }
