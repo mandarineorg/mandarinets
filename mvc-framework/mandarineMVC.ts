@@ -13,6 +13,18 @@ export class MandarineMVC {
 
     public logger: Log = Log.getLogger(MandarineMVC);
 
+    get handle() {
+        let app: Application = this.initializeMVCApplication();
+        
+        let mandarineConfiguration: Mandarine.Properties = Mandarine.Global.getMandarineConfiguration();
+
+        if(this.onRun) {
+            this.onRun(this);
+        }
+
+        return app.handle;
+    }
+
     constructor(onInitialization?: Function, private readonly onRun?: Function) {
         if(onInitialization) {
             onInitialization(this);
@@ -39,18 +51,6 @@ export class MandarineMVC {
         if(this.onRun) {
             this.onRun(this);
         }
-    }
-
-    public deploy() {
-        let app: Application = this.initializeMVCApplication();
-        
-        let mandarineConfiguration: Mandarine.Properties = Mandarine.Global.getMandarineConfiguration();
-
-        if(this.onRun) {
-            this.onRun(this);
-        }
-
-        return app;
     }
 
     private initializeMVCApplication(): Application {
