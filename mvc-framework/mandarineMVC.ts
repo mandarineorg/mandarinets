@@ -41,6 +41,18 @@ export class MandarineMVC {
         }
     }
 
+    public deploy() {
+        let app: Application = this.initializeMVCApplication();
+        
+        let mandarineConfiguration: Mandarine.Properties = Mandarine.Global.getMandarineConfiguration();
+
+        if(this.onRun) {
+            this.onRun(this);
+        }
+
+        return app;
+    }
+
     private initializeMVCApplication(): Application {
 
         let starter:MandarineMvcFrameworkStarter = new MandarineMvcFrameworkStarter((engine: MandarineMvcFrameworkStarter) => {
