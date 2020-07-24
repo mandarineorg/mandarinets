@@ -193,7 +193,7 @@ export namespace Mandarine {
                     setConfiguration(propertiesData);
                 } catch(error) {
                     mandarineGlobal.mandarineProperties = Defaults.MandarineDefaultConfiguration;
-                    logger.warn(`properties.json could not be found or parsed. Using default values. `);
+                    logger.warn(`properties.json could not be found or parsed. Using default values. `, error);
                 }
 
             }
