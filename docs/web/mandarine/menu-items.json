@@ -261,5 +261,13 @@
           "url": "promise-repeater-plugin"
         }
       ]
+    },
+    {
+      "title": "FAQ",
+      "url": "faq"
+    },
+    {
+      "title": "Special Thanks",
+      "url": "special-thanks"
     }
-  ]
+]

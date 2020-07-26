@@ -210,5 +210,13 @@
     {
       "url": "cli-run",
       "document": "mandarine-cli/run.md"
+    },
+    {
+      "url": "faq",
+      "document": "faq.md"
+    },
+    {
+      "url": "special-thanks",
+      "document": "thanksto.md"
     }
 ]
