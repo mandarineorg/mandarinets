@@ -3,4 +3,4 @@ A list of people Mandarine owes a lot!. Without these awesome collaborators, Man
 
 ----------
 
-- Jorge Baez ([Click here](https://www.instagram.com/jabadesigner/)) for its designs.
+- [Jorge Baez](https://www.instagram.com/jabadesigner/) for his beautiful designs.
