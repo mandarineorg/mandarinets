@@ -33,7 +33,7 @@ Routes are declared by using specific decorators (_each route has a different de
 
 ```typescript
 
-import { GET, POST, PUT, HEAD, DELETE, OPTIONS, PATCH, Controller, MandarineCore } from "https://x.nest.land/MandarineTS@1.2.1/mod.ts";
+import { GET, POST, PUT, HEAD, DELETE, OPTIONS, PATCH, Controller, MandarineCore } from "https://x.nest.land/MandarineTS@1.2.2/mod.ts";
 
 @Controller()
 export class MyController {

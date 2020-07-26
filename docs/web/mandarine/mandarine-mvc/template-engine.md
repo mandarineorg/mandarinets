@@ -46,7 +46,7 @@ See [Mandarine.MandarineMVC.TemplateEngine.Engines](https://doc.deno.land/https/
 <h2>Hello Bill! Nice to see you here again</h2>
 ```
 ```typescript
-import { Controller, GET, Render, MandarineCore } from "https://x.nest.land/MandarineTS@1.2.1/mod.ts";
+import { Controller, GET, Render, MandarineCore } from "https://x.nest.land/MandarineTS@1.2.2/mod.ts";
 
 @Controller()
 export class MyController {

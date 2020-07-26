@@ -21,7 +21,7 @@ Mandarine's stereotypes are also useful for modularity purposes since they allow
 ## Usage
 
 ```typescript
-import { Service } from "https://x.nest.land/MandarineTS@1.2.1/mod.ts";
+import { Service } from "https://x.nest.land/MandarineTS@1.2.2/mod.ts";
 
 @Service()
 export class MyService {
