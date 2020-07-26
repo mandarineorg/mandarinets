@@ -71,13 +71,12 @@ export class MandarineMVC {
         .use(starter.getRouter().routes())
         .use(starter.getRouter().allowedMethods())
         .use(ResourceHandlerMiddleware())
+        .use(async (ctx, next) => {
+            await next();
+        });
 
         this.oakMiddleware.forEach((middleware) => {
             app = app.use(middleware);
-        });
-
-        app = app.use(async (ctx, next) => {
-            await next();
         });
 
         app.addEventListener("error", (event) => {
