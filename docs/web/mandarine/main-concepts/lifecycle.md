@@ -6,4 +6,4 @@ The responsible cores for bootstrapping a Mandarine-powered application are: **C
 
 -------------
 <br>
-<img src="/assets/docs/mandarine/images/MandarineLifecycle.svg" />
+<img src="https://raw.githubusercontent.com/mandarineorg/mandarinets/master/docs/web/mandarine/images/MandarineLifecycle.svg" />
