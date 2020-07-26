@@ -32,7 +32,7 @@ Dependencies are essentially classes that rely on other classes (also dependents
 
 -----
 
-<center><img src="/assets/docs/mandarine/images/DependencyInjectionDiagram.svg" /></center>
+<center><img src="https://raw.githubusercontent.com/mandarineorg/mandarinets/master/docs/web/mandarine/images/DependencyInjectionDiagram.svg" /></center>
 
 -----
 
