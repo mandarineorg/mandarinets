@@ -33,22 +33,6 @@ export class MyController {
         };
     }
 
-    @GET('/denjucks')
-    @Render(`<p>Hello {{ txt }}</p>`, {manual: true}, Mandarine.MandarineMVC.TemplateEngine.Engines.DENJUCKS)
-    public httpHandler3() {
-        return {
-            txt: "Andres"
-        }
-    }
-
-    @GET('/denjucks-template-file')
-    @Render('denjucks.html', {manual: false}, Mandarine.MandarineMVC.TemplateEngine.Engines.DENJUCKS)
-    public httpHandler4() {
-        return {
-            txt: "Andres"
-        }
-    }
-
 }
 
 new MandarineCore().MVC().run();
