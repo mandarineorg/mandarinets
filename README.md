@@ -2,16 +2,15 @@
 [![MandarineTS CI](https://github.com/mandarineorg/mandarinets/workflows/ci/badge.svg)](https://github.com/mandarineorg/mandarinets)
 [![deno doc](https://doc.deno.land/badge.svg)](https://doc.deno.land/https/raw.githubusercontent.com/mandarineorg/mandarinets/master/mod.ts)
 
-![Mandarine.ts Logo](https://user-images.githubusercontent.com/60560109/81625975-6c6c4a80-93c8-11ea-8cd3-c5718fd56d52.png)
+<img src="https://www.mandarinets.org/assets/images/full-logo-simple.svg" width="180" height="180" />
 
-MandarineTS is a typescript framework for creating websites using the Model-View-Controller pattern (MVC). The use of typescript functionalities such as its decorators make this framework adaptable to many use cases and design patterns.  
-MandarineTS aims to provide an affordable and easy way to create typescript web-applications that run on **[Deno](https://deno.land/)**.  
+MandarineTS. A minimalist, decorator-driven, MVC, typescript framework for [Deno](https://deno.land).  
 
-With the use of multiple systems and design patterns, Mandarine offers you the ability to develop complex MVC web applications. Dependency Injection & Components are one of the few things you can take advantage of.
+[Official website](https://www.mandarinets.org)
 
 ## Documentation
-To see all the available documentation of Mandarine.TS, please [Click here](https://mandarineframework.gitbook.io/mandarine-ts/).  
-[Click here](https://mandarineframework.gitbook.io/mandarine-ts/getting-started) to see how to set-up your Mandarine application
+To see all the available documentation of Mandarine.TS, please [Click here](https://www.mandarinets.org/docs/mandarine/introduction).  
+Don't know where to start? [Click here](https://www.mandarinets.org/docs/master/mandarine/hello-world) for our quickstart
 
 ## Basic usage
 
@@ -33,7 +32,7 @@ new MandarineCore.MVC().run();
 
 **Note** tsconfig.json file is required, please refer to [this link](https://mandarineframework.gitbook.io/mandarine-ts/getting-started#typescript-configuration) to understand more.
 ## Mandarine.TS Main features
-Built-in [Dependency Injection](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-core/dependency-injection) Framework, [Components](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-core/components/component), [Automatization for routes creation](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-mvc/controllers/using-routes-and-http-handlers), [Middlewares](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-mvc/custom-middleware), [Sessions](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-mvc/session-middleware), [built-in ORM](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-data/orm), [MQL](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-data/mandarine-query-language) (Mandarine Query Language), [Template Engine](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-mvc/template-engine)
+Built-in [Dependency Injection](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-core/dependency-injection) Framework, [Components](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-core/components/component), [Automatization for routes creation](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-mvc/controllers/using-routes-and-http-handlers), [Middleware](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-mvc/custom-middleware), [Sessions](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-mvc/session-middleware), [built-in ORM](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-data/orm), [MQL](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-data/mandarine-query-language) (Mandarine Query Language), [Template Engine](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-mvc/template-engine)
 
 ## Want to help?
 ### Interested in coding
