@@ -258,6 +258,8 @@ export namespace Mandarine {
             let mandarineGlobal: MandarineGlobalInterface = getMandarineGlobal();
             let defaultConfiguration: Properties = Defaults.MandarineDefaultConfiguration;
 
+            if(!properties) (properties as any) = {};
+            if(!properties.mandarine) properties.mandarine = {};
             if(properties.mandarine.server == (null || undefined)) properties.mandarine.server = defaultConfiguration.mandarine.server;
             if(properties.mandarine.server.host == (null || undefined)) properties.mandarine.server.host = defaultConfiguration.mandarine.server.host;
             if(properties.mandarine.server.port == (null || undefined)) properties.mandarine.server.port = defaultConfiguration.mandarine.server.port;
