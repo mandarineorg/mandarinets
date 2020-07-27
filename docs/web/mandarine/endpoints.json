@@ -222,5 +222,13 @@
     {
       "url": "environmental-variables",
       "document": "main-concepts/environmental-variables.md"
+    },
+    {
+      "url": "adding-oak-middleware",
+      "document": "mandarine-mvc/adding-oak-middleware.md"
+    },
+    {
+      "url": "accessing-mvc-handler",
+      "document": "mandarine-mvc/accessing-mvc-handler.md"
     }
 ]

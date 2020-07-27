@@ -182,6 +182,14 @@
           "url": "cors-middleware"
         },
         {
+          "title": "Adding OAK Middleware",
+          "url": "adding-oak-middleware"
+        },
+        {
+          "title": "MVC Handler",
+          "url": "accessing-mvc-handler"
+        },
+        {
           "title": "Template Engine",
           "url": "template-engine",
           "children": [
