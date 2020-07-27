@@ -1,2 +1,4 @@
 .vscode/
 .tests/
+.playground/
+/playground
