@@ -104,6 +104,10 @@
           ]
         },
         {
+          "title": "Environmental Variables",
+          "url": "environmental-variables"
+        },
+        {
           "title": "Lifecycle",
           "url": "lifecycle"
         }

@@ -218,5 +218,9 @@
     {
       "url": "special-thanks",
       "document": "thanksto.md"
+    },
+    {
+      "url": "environmental-variables",
+      "document": "main-concepts/environmental-variables.md"
     }
 ]
