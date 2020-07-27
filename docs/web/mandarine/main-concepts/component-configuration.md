@@ -25,7 +25,7 @@ Mandarine's stereotypes are also useful for modularity purposes since they allow
 ## Usage
 
 ```typescript
-import { Configuration } from "https://x.nest.land/MandarineTS@1.2.1/mod.ts";
+import { Configuration } from "https://x.nest.land/MandarineTS@1.2.2/mod.ts";
 
 @Configuration()
 export class MyConfiguration {

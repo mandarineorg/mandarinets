@@ -27,7 +27,7 @@ When using [ViewModel](https://doc.deno.land/https/raw.githubusercontent.com/man
 ```
 
 ```typescript
-import { Controller, GET, Render, Model, ViewModel, MandarineCore } from "https://x.nest.land/MandarineTS@1.2.1/mod.ts";
+import { Controller, GET, Render, Model, ViewModel, MandarineCore } from "https://x.nest.land/MandarineTS@1.2.2/mod.ts";
 
 @Controller()
 export class MyController {

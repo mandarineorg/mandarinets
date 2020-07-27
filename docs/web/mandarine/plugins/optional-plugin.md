@@ -18,7 +18,7 @@ The optional class lets you handle possible null values in a programmatic way, t
 ## API
 
 ```typescript
-import { Optional } from "https://x.nest.land/MandarineTS@1.2.1/mod.ts";
+import { Optional } from "https://x.nest.land/MandarineTS@1.2.2/mod.ts";
 
 let myNullVariable = null;
 Optional.of(myNullVariable).ifPresent(); // Returns `false` because value is null.

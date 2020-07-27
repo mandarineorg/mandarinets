@@ -11,6 +11,7 @@ import { ComponentsRegistry } from "./components-registry/componentRegistry.ts";
 import { MiddlewareComponent } from "./components/middleware-component/middlewareComponent.ts";
 import { DI } from "./dependency-injection/di.ns.ts";
 import { MandarineStorageHandler } from "./mandarine-native/sessions/mandarineDefaultSessionStore.ts";
+import { MandarineEnvironmentalConstants } from "./MandarineEnvConstants.ts";
 import { MandarineLoading } from "./mandarineLoading.ts";
 import { TemplatesManager } from "./templates-registry/templatesRegistry.ts";
 import { CommonUtils } from "./utils/commonUtils.ts";
@@ -187,7 +188,7 @@ export namespace Mandarine {
 
                 try {
                     const initialProperties: MandarineInitialProperties = getMandarineInitialProps();
-                    let mandarinePropertiesFile = Defaults.mandarinePropertiesFile;
+                    let mandarinePropertiesFile = Deno.env.get(MandarineEnvironmentalConstants.MANDARINE_PROPERTY_FILE) || Defaults.mandarinePropertiesFile;
                     if(initialProperties && initialProperties.propertiesFilePath) mandarinePropertiesFile = initialProperties.propertiesFilePath;
                     const propertiesData = JSON.parse(CommonUtils.readFile(mandarinePropertiesFile));
                     setConfiguration(propertiesData);
@@ -211,7 +212,9 @@ export namespace Mandarine {
             if(defaultMandarineInitialProps == undefined) {
                 defaultMandarineInitialProps = Defaults.MandarineDefaultInitialProperties;
                 try {
-                    const propertiesData: MandarineInitialProperties = JSON.parse(CommonUtils.readFile("./mandarine.json"));
+                    const propertiesEnvVariable = Deno.env.get(MandarineEnvironmentalConstants.MANDARINE_JSON_FILE);
+                    const mandarineJsonFile = propertiesEnvVariable || "./mandarine.json";
+                    const propertiesData: MandarineInitialProperties = JSON.parse(CommonUtils.readFile(mandarineJsonFile));
                     if(propertiesData) {
                         if(propertiesData.propertiesFilePath) defaultMandarineInitialProps.propertiesFilePath = propertiesData.propertiesFilePath;
                         if(propertiesData.denoEnv) {

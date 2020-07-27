@@ -1,6 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { Application } from "../deps.ts";
+import { Application, Middleware } from "../deps.ts";
 import { Log } from "../logger/log.ts";
 import { Mandarine } from "../main-core/Mandarine.ns.ts";
 import { ResourceHandlerMiddleware } from "./core/middlewares/resourceHandlerMiddleware.ts";
@@ -12,6 +12,25 @@ import { MandarineMvcFrameworkStarter } from "./engine/mandarineMvcFrameworkStar
 export class MandarineMVC {
 
     public logger: Log = Log.getLogger(MandarineMVC);
+
+    private oakMiddleware: Array<Middleware> = new Array<Middleware>();
+
+    get handle() {
+        let app: Application = this.initializeMVCApplication();
+        
+        let mandarineConfiguration: Mandarine.Properties = Mandarine.Global.getMandarineConfiguration();
+
+        if(this.onRun) {
+            this.onRun(this);
+        }
+
+        return app.handle;
+    }
+
+    public addMiddleware(middleware: Middleware): MandarineMVC {
+        this.oakMiddleware.push(middleware);
+        return this;
+    }
 
     constructor(onInitialization?: Function, private readonly onRun?: Function) {
         if(onInitialization) {
@@ -41,18 +60,6 @@ export class MandarineMVC {
         }
     }
 
-    public deploy() {
-        let app: Application = this.initializeMVCApplication();
-        
-        let mandarineConfiguration: Mandarine.Properties = Mandarine.Global.getMandarineConfiguration();
-
-        if(this.onRun) {
-            this.onRun(this);
-        }
-
-        return app;
-    }
-
     private initializeMVCApplication(): Application {
 
         let starter:MandarineMvcFrameworkStarter = new MandarineMvcFrameworkStarter((engine: MandarineMvcFrameworkStarter) => {
@@ -66,6 +73,10 @@ export class MandarineMVC {
         .use(ResourceHandlerMiddleware())
         .use(async (ctx, next) => {
             await next();
+        });
+
+        this.oakMiddleware.forEach((middleware) => {
+            app = app.use(middleware);
         });
 
         app.addEventListener("error", (event) => {

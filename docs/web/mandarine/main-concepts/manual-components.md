@@ -18,7 +18,7 @@ Mandarine's manual components are used when wanting to _Mandarine-power_ a third
 
 Usage example:
 ```typescript
-import { Configuration, Injectable, Component, Inject } from "https://x.nest.land/MandarineTS@1.2.1/mod.ts";
+import { Configuration, Injectable, Component, Inject } from "https://x.nest.land/MandarineTS@1.2.2/mod.ts";
 
 export class ManualInjectionService {
 

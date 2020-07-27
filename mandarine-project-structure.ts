@@ -10,7 +10,7 @@ const mandarineDefaultConfig = `{
         "resources": {
             "staticFolder": "/src/main/resources/static",
             "staticRegExpPattern": "/(.*)"
-        }
+        },
         "templateEngine": {
             "path":"./src/main/resources/templates",
             "engine":"ejs"

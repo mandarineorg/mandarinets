@@ -210,5 +210,25 @@
     {
       "url": "cli-run",
       "document": "mandarine-cli/run.md"
+    },
+    {
+      "url": "faq",
+      "document": "faq.md"
+    },
+    {
+      "url": "special-thanks",
+      "document": "thanksto.md"
+    },
+    {
+      "url": "environmental-variables",
+      "document": "main-concepts/environmental-variables.md"
+    },
+    {
+      "url": "adding-oak-middleware",
+      "document": "mandarine-mvc/adding-oak-middleware.md"
+    },
+    {
+      "url": "accessing-mvc-handler",
+      "document": "mandarine-mvc/accessing-mvc-handler.md"
     }
 ]
