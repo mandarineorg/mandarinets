@@ -520,6 +520,7 @@ export namespace MandarineMvc {
                 cors?: CorsMiddlewareOption
             };
             routeParams?: RoutingParams[];
+            routeSignature: Array<string>;
             initializationStatus: RouteInitializationStatus;
         }
 
