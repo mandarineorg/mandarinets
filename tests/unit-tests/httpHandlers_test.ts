@@ -75,7 +75,8 @@ export class HttpHandlersTest {
                 route: "/api-get",
                 routingOptions: {},
                 initializationStatus: 1,
-                routeParams: []
+                routeParams: [],
+                routeSignature: ["api-get"]
               },
               {
                 actionParent: "MyControllerWithRoutes",
@@ -84,7 +85,8 @@ export class HttpHandlersTest {
                 route: "/api-post",
                 routingOptions: {},
                 initializationStatus: 1,
-                routeParams: []
+                routeParams: [],
+                routeSignature: ["api-post"]
               },
               {
                 actionParent: "MyControllerWithRoutes",
@@ -93,7 +95,8 @@ export class HttpHandlersTest {
                 route: "/api-put",
                 routingOptions: {},
                 initializationStatus: 1,
-                routeParams: []
+                routeParams: [],
+                routeSignature: ["api-put"]
               },
               {
                 actionParent: "MyControllerWithRoutes",
@@ -102,7 +105,8 @@ export class HttpHandlersTest {
                 route: "/api-delete",
                 routingOptions: {},
                 initializationStatus: 1,
-                routeParams: []
+                routeParams: [],
+                routeSignature: ["api-delete"]
               },
               {
                 actionParent: "MyControllerWithRoutes",
@@ -111,7 +115,8 @@ export class HttpHandlersTest {
                 route: "/api-head",
                 routingOptions: {},
                 initializationStatus: 1,
-                routeParams: []
+                routeParams: [],
+                routeSignature: ["api-head"]
               },
               {
                 actionParent: "MyControllerWithRoutes",
@@ -120,7 +125,8 @@ export class HttpHandlersTest {
                 route: "/api-options",
                 routingOptions: {},
                 initializationStatus: 1,
-                routeParams: []
+                routeParams: [],
+                routeSignature: ["api-options"]
               },
               {
                 actionParent: "MyControllerWithRoutes",
@@ -129,7 +135,8 @@ export class HttpHandlersTest {
                 route: "/api-patch",
                 routingOptions: {},
                 initializationStatus: 1,
-                routeParams: []
+                routeParams: [],
+                routeSignature: ["api-patch"]
               }
         ]);
     }
