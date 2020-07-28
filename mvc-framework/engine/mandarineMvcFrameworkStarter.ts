@@ -93,7 +93,7 @@ export class MandarineMvcFrameworkStarter {
     }
 
     private addPathToRouter(router: Router, routingAction: Mandarine.MandarineMVC.Routing.RoutingAction, controllerComponent: ControllerComponent): Router {
-        let route: string = controllerComponent.getActionRoute(routingAction);
+        let route: string = routingAction.route;
 
         let availableMiddlewares: Array<MiddlewareComponent> = Mandarine.Global.getMiddleware();
 

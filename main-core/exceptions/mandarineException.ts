@@ -7,6 +7,7 @@ export class MandarineException extends Error {
     public static UNDEFINED_TEMPLATE: string = "The template could not be initialized because its path is undefined";
     public static INVALID_PROPERTY_FILE: string = "The property file (%propertyFile%) you are trying to use is either invalid or could not be parsed";
     public static INVALID_STATIC_FOLDER: string = "Found static folder (%staticFolder%) but the path is either invalid or does not exist.";
+    public static ROUTE_ALREADY_EXIST: string = "Mandarine cannot be initialized because a route ($s) already exists. Routes must be different.";
   
     constructor(public message: string) {
       super(message);
