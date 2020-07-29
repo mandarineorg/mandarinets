@@ -1,6 +1,5 @@
-import { mockDecorator, Orange, Test, DenoAsserts, INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY } from "../mod.ts";
-import { ApplicationContext } from "../../main-core/application-context/mandarineApplicationContext.ts";
 import { CommonUtils } from "../../main-core/utils/commonUtils.ts";
+import { DenoAsserts, INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY, Orange, Test } from "../mod.ts";
 
 export class RouteParamTest {
 
@@ -28,9 +27,9 @@ export class RouteParamTest {
 
         CommonUtils.sleep(this.MAX_COMPILATION_TIMEOUT_SECONDS);
 
-        let sayHiNameEndpoint = (await (await fetch("http://localhost:8081/say-hi/Andres")).json());
-        let apiSayHiNameEndpoint = (await (await fetch("http://localhost:8081/api/say-hi/Bill")).json());
-        let sayHiSecondEndpoint = (await (await fetch("http://localhost:8081/say-hi-2/Hannibal")).json());
+        let sayHiNameEndpoint = (await (await fetch("http://localhost:8081/say-hi-1/Andres")).json());
+        let apiSayHiNameEndpoint = (await (await fetch("http://localhost:8081/api/say-hi-2/Bill")).json());
+        let sayHiSecondEndpoint = (await (await fetch("http://localhost:8081/say-hi-3/Hannibal")).json());
         let errorThrown = undefined;
 
         try {
