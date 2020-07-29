@@ -1,14 +1,15 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { MandarineException } from "../../../../../main-core/exceptions/mandarineException.ts";
 import { RoutingException } from "../../../../../main-core/exceptions/routingException.ts";
 import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
 import { MandarineConstants } from "../../../../../main-core/mandarineConstants.ts";
 import { Reflect } from "../../../../../main-core/reflectMetadata.ts";
-import { CommonUtils } from "../../../../../main-core/utils/commonUtils.ts";
 import { ReflectUtils } from "../../../../../main-core/utils/reflectUtils.ts";
 import { AnnotationMetadataContext } from "../../../interfaces/mandarine/mandarineAnnotationMetadataContext.ts";
+import { MandarineMVCContext } from "../../../mandarineMvcContext.ts";
 import { RoutingUtils } from "../../../utils/mandarine/routingUtils.ts";
+import { CommonUtils } from "../../../../../main-core/utils/commonUtils.ts";
+import { MandarineException } from "../../../../../main-core/exceptions/mandarineException.ts";
 import { red } from "https://deno.land/std@0.61.0/fmt/colors.ts";
 /**
  * This class is used in the DI Container for Mandarine to store components annotated as @Controller
@@ -120,7 +121,7 @@ export class ControllerComponent {
     }
 
     private initializeRoutingActionContext(routeAction: Mandarine.MandarineMVC.Routing.RoutingAction) {
-        this.existRouteBySignature(routeAction.routeSignature);
+        this.validateRouteSignature(routeAction.routeSignature);
         routeAction.actionParent = this.getName();
         routeAction.routeParams = new Array<Mandarine.MandarineMVC.Routing.RoutingParams>();
         this.processParamRoutes(routeAction);
@@ -150,12 +151,15 @@ export class ControllerComponent {
         else return true;
     }
 
-    public existRouteBySignature(routeSignature: Array<string>) {
-        let routeExist: boolean = Array.from(this.actions.values()).some((route) => CommonUtils.arrayIdentical(route.routeSignature, routeSignature));
-        if(routeExist) {
+    public validateRouteSignature(routeSignature: Array<string>) {
+        const currentRoutes = MandarineMVCContext.getInstance().routeSignatures;
+
+        if(currentRoutes.some((currentRouteSignature) => CommonUtils.arrayIdentical(currentRouteSignature, routeSignature))) {
             let errorMessage = MandarineException.ROUTE_ALREADY_EXIST.replace("$s", red(routeSignature.join("/")));
             throw new MandarineException(errorMessage);
         }
+
+        MandarineMVCContext.getInstance().routeSignatures.push(routeSignature);
     }
 
     public getActionName(methodName: string): string {
