@@ -6,7 +6,7 @@ import { MandarineCore } from "../../../main-core/mandarineCore.ts";
 @Controller()
 class RouteParamControllerTest {
 
-    @GET('/say-hi/:name')
+    @GET('/say-hi-1/:name')
     public helloWorld(@RouteParam('name') personsName: string): object {
         return {
             name: personsName
@@ -18,7 +18,7 @@ class RouteParamControllerTest {
 @Controller('/api')
 class RouteParamControllerWithBaseTest {
 
-    @GET('/say-hi/:personsName')
+    @GET('/say-hi-2/:personsName')
     public helloWorld2(@RouteParam() personsName: string): object {
         return {
             name: personsName
@@ -30,7 +30,7 @@ class RouteParamControllerWithBaseTest {
 @Controller()
 class RouteParamControllerTestWithUnknownRoute {
 
-    @GET('/say-hi-2/:personsName')
+    @GET('/say-hi-3/:personsName')
     public helloWorld2(@RouteParam() whateverRoute: string): object {
         return {
             name: (whateverRoute) ? whateverRoute : "undefined"

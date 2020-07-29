@@ -62,7 +62,7 @@ export class CORSTest {
             optionsSuccessStatus: 200
         };
 
-        MVCDecoratorsProxy.registerHttpAction("/api-get", MandarineMvc.HttpMethods.GET, MyController.prototype, "getRoute", undefined);
+        MVCDecoratorsProxy.registerHttpAction("/api-get-6", MandarineMvc.HttpMethods.GET, MyController.prototype, "getRoute", undefined);
         MVCDecoratorsProxy.registerCORSMiddlewareDecorator(MyController.prototype, cors, "getRoute");
         MVCDecoratorsProxy.registerControllerComponent(MyController, undefined);
         ApplicationContext.getInstance().getComponentsRegistry().resolveDependencies();

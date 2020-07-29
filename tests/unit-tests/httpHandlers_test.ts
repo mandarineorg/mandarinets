@@ -156,7 +156,7 @@ export class HttpHandlersTest {
 
         }
 
-        MVCDecoratorsProxy.registerHttpAction("/api-get", MandarineMvc.HttpMethods.GET, MyController.prototype, "getRoute", undefined);
+        MVCDecoratorsProxy.registerHttpAction("/api-get-2", MandarineMvc.HttpMethods.GET, MyController.prototype, "getRoute", undefined);
         MVCDecoratorsProxy.registerRoutingParam(MyController.prototype, DI.InjectionTypes.QUERY_PARAM, "getRoute", 2, "name");
         MVCDecoratorsProxy.registerRoutingParam(MyController.prototype, DI.InjectionTypes.QUERY_PARAM, "getRoute", 4, "framework");
         MVCDecoratorsProxy.registerControllerComponent(MyController, undefined);
@@ -167,7 +167,7 @@ export class HttpHandlersTest {
         let action = actions.get(controller.getActionName("getRoute"));
         let args = await DI.Factory.methodArgumentResolver(controller.getClassHandler(), action.actionMethodName, <any> {
             request: {
-                url: new URL("http://localhost/api-get?name=testing&framework=Mandarine")
+                url: new URL("http://localhost/api-get-2?name=testing&framework=Mandarine")
             }
         });
         // We test undefined parameters because order should not matter
@@ -189,7 +189,7 @@ export class HttpHandlersTest {
 
         }
 
-        MVCDecoratorsProxy.registerHttpAction("/api-get/:name/:lastname", MandarineMvc.HttpMethods.GET, MyController.prototype, "getRoute", undefined);
+        MVCDecoratorsProxy.registerHttpAction("/api-get-3/:name/:lastname", MandarineMvc.HttpMethods.GET, MyController.prototype, "getRoute", undefined);
         MVCDecoratorsProxy.registerRoutingParam(MyController.prototype, DI.InjectionTypes.ROUTE_PARAM, "getRoute", 1, "name");
         MVCDecoratorsProxy.registerRoutingParam(MyController.prototype, DI.InjectionTypes.ROUTE_PARAM, "getRoute", 2, "lastname");
         MVCDecoratorsProxy.registerControllerComponent(MyController, undefined);
@@ -200,7 +200,7 @@ export class HttpHandlersTest {
         let action = actions.get(controller.getActionName("getRoute"));
         let args = await DI.Factory.methodArgumentResolver(controller.getClassHandler(), action.actionMethodName, <any> {
             request: {
-                url: new URL("http://localhost/api-get/Steve/Jobs")
+                url: new URL("http://localhost/api-get-3/Steve/Jobs")
             },
             params: {
                 name: "Steve",
@@ -226,7 +226,7 @@ export class HttpHandlersTest {
 
         }
 
-        MVCDecoratorsProxy.registerHttpAction("/api-get", MandarineMvc.HttpMethods.GET, MyController.prototype, "getRoute", undefined);
+        MVCDecoratorsProxy.registerHttpAction("/api-get-4", MandarineMvc.HttpMethods.GET, MyController.prototype, "getRoute", undefined);
         MVCDecoratorsProxy.registerRoutingParam(MyController.prototype, DI.InjectionTypes.SESSION_PARAM, "getRoute", 1, undefined);
         MVCDecoratorsProxy.registerControllerComponent(MyController, undefined);
         ApplicationContext.getInstance().getComponentsRegistry().resolveDependencies();
@@ -237,7 +237,7 @@ export class HttpHandlersTest {
 
         let args = await DI.Factory.methodArgumentResolver(controller.getClassHandler(), action.actionMethodName, <any> {
             request: {
-                url: new URL("http://localhost/api-get"),
+                url: new URL("http://localhost/api-get-4"),
                 session: {}
             }
         });
@@ -267,7 +267,7 @@ export class HttpHandlersTest {
 
         }
 
-        MVCDecoratorsProxy.registerHttpAction("/api-get", MandarineMvc.HttpMethods.GET, MyController.prototype, "getRoute", undefined);
+        MVCDecoratorsProxy.registerHttpAction("/api-get-5", MandarineMvc.HttpMethods.GET, MyController.prototype, "getRoute", undefined);
         MVCDecoratorsProxy.registerRoutingParam(MyController.prototype, DI.InjectionTypes.TEMPLATE_MODEL_PARAM, "getRoute", 1, undefined);
         MVCDecoratorsProxy.registerControllerComponent(MyController, undefined);
         ApplicationContext.getInstance().getComponentsRegistry().resolveDependencies();
@@ -278,7 +278,7 @@ export class HttpHandlersTest {
 
         let args = await DI.Factory.methodArgumentResolver(controller.getClassHandler(), action.actionMethodName, <any> {
             request: {
-                url: new URL("http://localhost/api-get")
+                url: new URL("http://localhost/api-get-5")
             }
         });
 
