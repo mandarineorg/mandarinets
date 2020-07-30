@@ -6,6 +6,7 @@ import { ApplicationContext } from "../../main-core/application-context/mandarin
 import { MiddlewareComponent } from "../../main-core/components/middleware-component/middlewareComponent.ts";
 import { WebMVCConfigurer } from "../../main-core/mandarine-native/mvc/webMvcConfigurer.ts";
 import { Mandarine } from "../../main-core/Mandarine.ns.ts";
+import { CommonUtils } from "../../main-core/utils/commonUtils.ts";
 import { ControllerComponent } from "../core/internal/components/routing/controllerContext.ts";
 import { middlewareResolver, requestResolver } from "../core/internal/components/routing/routingResolver.ts";
 import { handleCors } from "../core/middlewares/cors/corsMiddleware.ts";
@@ -139,11 +140,11 @@ export class MandarineMvcFrameworkStarter {
         let contentType: string = Mandarine.Global.getMandarineConfiguration().mandarine.server.responseType;
 
         if(context.response.body != (null || undefined)) {
-            switch(typeof context.response.body) {
-                case "object":
-                    contentType = Mandarine.MandarineMVC.MediaTypes.APPLICATION_JSON;
-                break;
-            }
+           if(CommonUtils.isObject(context.response.body)) {
+                contentType = Mandarine.MandarineMVC.MediaTypes.APPLICATION_JSON;
+           } else {
+               contentType = Mandarine.Defaults.MandarineDefaultConfiguration.mandarine.server.responseType;
+           }
         }
         context.response.headers.set('Content-Type', contentType);
     }
