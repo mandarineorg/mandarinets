@@ -1,16 +1,16 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
+import { red, blue } from "https://deno.land/std@0.61.0/fmt/colors.ts";
+import { MandarineException } from "../../../../../main-core/exceptions/mandarineException.ts";
 import { RoutingException } from "../../../../../main-core/exceptions/routingException.ts";
 import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
 import { MandarineConstants } from "../../../../../main-core/mandarineConstants.ts";
 import { Reflect } from "../../../../../main-core/reflectMetadata.ts";
+import { CommonUtils } from "../../../../../main-core/utils/commonUtils.ts";
 import { ReflectUtils } from "../../../../../main-core/utils/reflectUtils.ts";
 import { AnnotationMetadataContext } from "../../../interfaces/mandarine/mandarineAnnotationMetadataContext.ts";
 import { MandarineMVCContext } from "../../../mandarineMvcContext.ts";
 import { RoutingUtils } from "../../../utils/mandarine/routingUtils.ts";
-import { CommonUtils } from "../../../../../main-core/utils/commonUtils.ts";
-import { MandarineException } from "../../../../../main-core/exceptions/mandarineException.ts";
-import { red } from "https://deno.land/std@0.61.0/fmt/colors.ts";
 /**
  * This class is used in the DI Container for Mandarine to store components annotated as @Controller
  * It contains all the behavior of a controller, like its routes and the methods of the routes.
@@ -108,7 +108,7 @@ export class ControllerComponent {
                     route: fullRoute,
                     routingOptions: routeContext.options,
                     initializationStatus: Mandarine.MandarineMVC.Routing.RouteInitializationStatus.CREATED,
-                    routeSignature: RoutingUtils.findRouteParamSignature(fullRoute)
+                    routeSignature: RoutingUtils.findRouteParamSignature(fullRoute, routeContext.methodType)
                 };
 
                 this.registerAction(routingAction);
@@ -155,7 +155,7 @@ export class ControllerComponent {
         const currentRoutes = MandarineMVCContext.getInstance().routeSignatures;
 
         if(currentRoutes.some((currentRouteSignature) => CommonUtils.arrayIdentical(currentRouteSignature, routeSignature))) {
-            let errorMessage = MandarineException.ROUTE_ALREADY_EXIST.replace("$s", red(routeSignature.join("/")));
+            let errorMessage = MandarineException.ROUTE_ALREADY_EXIST.replace("$s", `${blue(Mandarine.MandarineMVC.HttpMethods[routeSignature[0]])} ${red(routeSignature.slice(1).join("/"))}`);
             throw new MandarineException(errorMessage);
         }
 
