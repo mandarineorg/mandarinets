@@ -25,9 +25,10 @@ export class RoutingUtils {
         }, []);
     }
     
-    public static findRouteParamSignature(route: string): Array<string> {
+    public static findRouteParamSignature(route: string, method: Mandarine.MandarineMVC.HttpMethods): Array<string> {
         if(route == null) return null;
         return route.split('/').reduce((acc: string[], el: string, i: any) => {
+            if(acc.length === 0) acc.push(`${method}`);
             if (/:[A-Za-z1-9]{1,}/.test(el)) {
                 acc.push(":param");
             }  else if(el && el != "") { 
