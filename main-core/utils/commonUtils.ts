@@ -55,4 +55,8 @@ export class CommonUtils {
         }
         return true; 
     }
+
+    public static isObject(o: any): boolean {
+        return o instanceof Object && o.constructor === Object;
+    }
 }
