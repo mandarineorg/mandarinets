@@ -98,7 +98,12 @@ export class MandarineMvcFrameworkStarter {
 
         let availableMiddlewares: Array<MiddlewareComponent> = Mandarine.Global.getMiddleware();
 
-        let responseHandler = async (context) => {
+        let responseHandler = async (context, next) => {
+
+            if(context.isResource) {
+                await next();
+                return;
+            }
 
             this.preRequestInternalMiddlewares(context, routingAction, controllerComponent); // Execute internal middleware like sessions
             let continueRequest: boolean = await this.executeUserMiddlewares(true, availableMiddlewares, context, routingAction); // If the user has any middleware, execute it
