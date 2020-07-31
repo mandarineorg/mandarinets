@@ -122,7 +122,7 @@ export class MandarineMvcFrameworkStarter {
                     await next();
                 }
             }
-            console.log(context.request.url.pathname, routingAction, context.mynum);
+
         };
 
         switch(routingAction.actionType) {
