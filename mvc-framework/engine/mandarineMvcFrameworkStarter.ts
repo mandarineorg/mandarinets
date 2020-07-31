@@ -116,6 +116,8 @@ export class MandarineMvcFrameworkStarter {
 
                 this.executeUserMiddlewares(false, availableMiddlewares, context, routingAction);
                 this.postRequestInternalMiddlewares(context);
+
+                await next();
             }
         };
 
