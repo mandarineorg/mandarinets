@@ -68,9 +68,9 @@ export class MandarineMVC {
         });
         
         let app: Application = new Application()
+        .use(ResourceHandlerMiddleware())
         .use(starter.getRouter().routes())
         .use(starter.getRouter().allowedMethods())
-        .use(ResourceHandlerMiddleware())
         .use(async (ctx, next) => {
             await next();
         });
