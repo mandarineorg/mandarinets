@@ -286,5 +286,52 @@ export class HttpHandlersTest {
         DenoAsserts.assert(args[1] instanceof ViewModel);
     }
 
+    @Test({
+        name: "Test @Parameters",
+        description: "should get all the parameters (query, route) present in the request"
+    })
+    public async testHTTPParametersDecorator() {
+
+        @mockDecorator()
+        class MyController {
+            
+            @mockDecorator()
+            public getRoute(invalidParam, myAllParameters) {
+            }
+
+        }
+
+        MVCDecoratorsProxy.registerHttpAction("/api-get-test-parameters/:param1/:param2", MandarineMvc.HttpMethods.GET, MyController.prototype, "getRoute", undefined);
+        MVCDecoratorsProxy.registerRoutingParam(MyController.prototype, DI.InjectionTypes.PARAMETERS_PARAM, "getRoute", 1, undefined);
+        MVCDecoratorsProxy.registerControllerComponent(MyController, undefined);
+        ApplicationContext.getInstance().getComponentsRegistry().resolveDependencies();
+        ApplicationContext.getInstance().getComponentsRegistry().initializeControllers();
+        let controller: ControllerComponent = ApplicationContext.getInstance().getComponentsRegistry().get("MyController").componentInstance;
+        let actions: Map<String, Mandarine.MandarineMVC.Routing.RoutingAction> = controller.getActions();
+        let action = actions.get(controller.getActionName("getRoute"));
+
+        let args = await DI.Factory.methodArgumentResolver(controller.getClassHandler(), action.actionMethodName, <any> {
+            request: {
+                url: new URL("http://localhost/api-get-test-parameters/hello/world?favoriteMovie=Interstellar")
+            },
+            params: {
+                param1: "hello",
+                param2: "world"
+            }
+        });
+
+        DenoAsserts.assertEquals(args[0], undefined);
+        DenoAsserts.assertEquals(args[1], {
+            query: {
+                favoriteMovie: "Interstellar"
+            },
+            route: {
+                param1: "hello",
+                param2: "world"
+            }
+        });
+
+    }
+
 
 }
