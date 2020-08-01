@@ -1,6 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { bold, green, magenta, red, yellow } from "https://deno.land/std@0.61.0/fmt/colors.ts";
+import { bold, green, magenta, red, yellow } from "https://deno.land/std@0.62.0/fmt/colors.ts";
 
 export interface LogOptions {
     logDuringTesting: string;

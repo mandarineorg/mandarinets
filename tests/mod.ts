@@ -1,5 +1,5 @@
+export * as DenoAsserts from "https://deno.land/std@0.62.0/testing/asserts.ts";
 export { Orange, Test } from "https://x.nest.land/Orange@0.2.6/mod.ts";
-export * as DenoAsserts from "https://deno.land/std@0.61.0/testing/asserts.ts"; 
 
 // Mocking a decorator will give us "design:paramtypes", otherwise it will fail
 export function mockDecorator() {
