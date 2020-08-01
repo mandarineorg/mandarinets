@@ -11,6 +11,7 @@ export namespace MandarineORM {
     export type ProxyType = "findBy" | "existsBy" | "deleteBy" | "countBy";
 
     export interface RepositoryProxy {
+        SUPPORTED_KEYWORDS: Array<string>;
         entity: Entity.Table;
         executeQuery(query: any): void;
         getEntityManager(): Entity.EntityManager;
