@@ -170,20 +170,25 @@
           "url": "http-handlers"
         },
         {
-          "title": "Custom Middleware",
-          "url": "custom-middleware"
-        },
-        {
-          "title": "Session Middleware",
-          "url": "session-middleware"
-        },
-        {
-          "title": "CORS Middleware",
-          "url": "cors-middleware"
-        },
-        {
-          "title": "Adding OAK Middleware",
-          "url": "adding-oak-middleware"
+          "title": "Middleware",
+          "children": [
+            {
+              "title": "Custom Middleware",
+              "url": "custom-middleware"
+            },
+            {
+              "title": "Session Middleware",
+              "url": "session-middleware"
+            },
+            {
+              "title": "CORS Middleware",
+              "url": "cors-middleware"
+            },
+            {
+              "title": "Adding OAK Middleware",
+              "url": "adding-oak-middleware"
+            }
+          ]
         },
         {
           "title": "MVC Handler",

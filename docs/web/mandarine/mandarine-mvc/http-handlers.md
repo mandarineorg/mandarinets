@@ -18,7 +18,8 @@ They are decorators that are used in the parameters of a HTTP Handler. Every dec
 | `@ServerRequestParam()` | It will retrieve all the information available from the request made by a client. <br> The result is a [ServerRequest](https://doc.deno.land/https/raw.githubusercontent.com/denoland/deno/master/std/http/server.ts#ServerRequest) object | None
 | `@RequestParam()` | It will retrieve all the information available from the request made by a client. <br> The result is a [Request](https://doc.deno.land/https/raw.githubusercontent.com/oakserver/oak/master/request.ts#Request) object from Oak. | None
 | `@ResponseParam()` | It will retrieve the value from the current response given by the server before being delivered to the client. <br **Note that** modifications to the request can and will affect the outcome of the response delivered to the client after the HTTP handler has been executed. | None
-| `@Model()` | It will inject the [ViewModel](https://doc.deno.land/https/raw.githubusercontent.com/mandarineorg/mandarinets/master/mvc-framework/core/modules/view-engine/viewModel.ts) object, used to create data models for templates.
+| `@Model()` | It will inject the [ViewModel](https://doc.deno.land/https/raw.githubusercontent.com/mandarineorg/mandarinets/master/mvc-framework/core/modules/view-engine/viewModel.ts) object, used to create data models for templates. | None
+| `@Parameters()` | It will inject an object of interface [`AllParameters`](https://doc.deno.land/https/raw.githubusercontent.com/mandarineorg/mandarinets/develop/mvc-framework/mandarine-mvc.ns.ts#MandarineMvc.AllParameters). This object will have all the parameters (both route parameters and query parameters) present in the request. | None
 
 ## API
 

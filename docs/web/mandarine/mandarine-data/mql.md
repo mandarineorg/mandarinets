@@ -34,6 +34,8 @@ Currently, MQL only supports the following operators:
 - StartingWith
 - EndsWith
 - Like
+- GreaterThan
+- LessThan
 
 -----
 
