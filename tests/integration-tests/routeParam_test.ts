@@ -30,12 +30,23 @@ export class RouteParamTest {
         let sayHiNameEndpoint = (await (await fetch("http://localhost:8081/say-hi-1/Andres")).json());
         let apiSayHiNameEndpoint = (await (await fetch("http://localhost:8081/api/say-hi-2/Bill")).json());
         let sayHiSecondEndpoint = (await (await fetch("http://localhost:8081/say-hi-3/Hannibal")).json());
+        let getAllParameters = (await (await fetch("http://localhost:8081/parameters/Elon/Musk?age=49")).json());
+        
         let errorThrown = undefined;
 
         try {
             DenoAsserts.assertEquals(sayHiNameEndpoint, { name: "Andres" });
             DenoAsserts.assertEquals(apiSayHiNameEndpoint, { name: "Bill" });
             DenoAsserts.assertEquals(sayHiSecondEndpoint, { name: "undefined" });
+            DenoAsserts.assertEquals(getAllParameters, {
+                query: {
+                    age: "49"
+                },
+                route: {
+                    name: "Elon",
+                    lastname: "Musk"
+                }
+            })
         } catch(error) {
             errorThrown = error;
         }

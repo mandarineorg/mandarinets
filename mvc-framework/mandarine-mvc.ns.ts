@@ -582,6 +582,15 @@ export namespace MandarineMvc {
     export interface Cookie extends MandarineCookie {
     }
 
+    export interface AllParameters {
+        query: {
+            [prop: string]: any;
+        },
+        route: {
+            [prop: string]: any;
+        }
+    }
+
     /**
      * Refers to all the information that the rendering engine needs to work out.
      */

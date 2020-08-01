@@ -1,7 +1,7 @@
-import { Controller } from "../../../mvc-framework/core/decorators/stereotypes/controller/controller.ts";
-import { RouteParam } from "../../../mvc-framework/core/decorators/stereotypes/controller/parameterDecorator.ts";
-import { GET } from "../../../mvc-framework/core/decorators/stereotypes/controller/routingDecorator.ts";
 import { MandarineCore } from "../../../main-core/mandarineCore.ts";
+import { Controller } from "../../../mvc-framework/core/decorators/stereotypes/controller/controller.ts";
+import { Parameters, RouteParam } from "../../../mvc-framework/core/decorators/stereotypes/controller/parameterDecorator.ts";
+import { GET } from "../../../mvc-framework/core/decorators/stereotypes/controller/routingDecorator.ts";
 
 @Controller()
 class RouteParamControllerTest {
@@ -35,6 +35,16 @@ class RouteParamControllerTestWithUnknownRoute {
         return {
             name: (whateverRoute) ? whateverRoute : "undefined"
         };
+    }
+
+}
+
+@Controller()
+class ControllerGetAllParameters {
+
+    @GET('/parameters/:name/:lastname')
+    public helloWorld2(@Parameters() allParameters) {
+        return allParameters;
     }
 
 }

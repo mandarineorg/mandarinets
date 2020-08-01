@@ -161,6 +161,13 @@ export class DependencyInjectionFactory {
                     case DI.InjectionTypes.TEMPLATE_MODEL_PARAM:
                         args.push(new ViewModel());
                         break;
+                    case DI.InjectionTypes.PARAMETERS_PARAM:
+                        const allParameters: Mandarine.MandarineMVC.AllParameters = { 
+                            query: Object.fromEntries(queryParams), 
+                            route: extraData.params 
+                        };
+                        args.push(allParameters);
+                        break;
                 }
             }
         }
