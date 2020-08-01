@@ -21,3 +21,7 @@ Mandarine relies on some typescript configuration properties that are not part o
 ## I am getting a lot of compiling errors
 This is probably because your project does not have a proper `tsconfig.json` file. [Click here](https://www.mandarinets.org/docs/master/mandarine/main-configuration#typescript-configuration) to find Mandarine's tsconfig.json.
 
+&nbsp;
+
+## When does Mandarine Compile Time (MCT) start?
+Mandarine Compiling process starts at the time your application includes any component from Mandarine's repository. Decorators, Mandarine's native classes & any other mandarine reference invokes Mandarine's compiler.
