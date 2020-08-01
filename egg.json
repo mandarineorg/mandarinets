@@ -6,7 +6,6 @@
     "unlisted": false,
     "repository": "https://github.com/mandarineorg/mandarinets",
     "files": [
-        "./docs/**/*",
         "./cli/**/*",
         "./logger/**/*",
         "./main-core/**/*",
