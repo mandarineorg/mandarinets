@@ -1,6 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { v4 } from "https://deno.land/std@0.61.0/uuid/mod.ts";
+import { v4 } from "https://deno.land/std@0.62.0/uuid/mod.ts";
 
 export class CommonUtils {
     public static generateUUID(): string {
@@ -44,5 +44,19 @@ export class CommonUtils {
     {
         let e = new Date().getTime() + (seconds * 1000);
         while (new Date().getTime() <= e) {}
+    }
+
+    public static arrayIdentical(arr1, arr2){
+        if (arr1.length !== arr2.length) return false;
+        for (var i = 0, len = arr1.length; i < len; i++){
+            if (arr1[i] !== arr2[i]){
+                return false;
+            }
+        }
+        return true; 
+    }
+
+    public static isObject(o: any): boolean {
+        return o instanceof Object && o.constructor === Object;
     }
 }

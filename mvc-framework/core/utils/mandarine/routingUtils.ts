@@ -24,6 +24,19 @@ export class RoutingUtils {
             return acc;
         }, []);
     }
+    
+    public static findRouteParamSignature(route: string, method: Mandarine.MandarineMVC.HttpMethods): Array<string> {
+        if(route == null) return null;
+        return route.split('/').reduce((acc: string[], el: string, i: any) => {
+            if(acc.length === 0) acc.push(`${method}`);
+            if (/:[A-Za-z1-9]{1,}/.test(el)) {
+                acc.push(":param");
+            }  else if(el && el != "") { 
+                acc.push(el) 
+            }
+            return acc;
+        }, []);
+    }
 
     public static getRouteParamPattern(route: string): RegExp  {
         return new RegExp(route.replace(/:[^\s/]+/g, '([\\w-]+)'));

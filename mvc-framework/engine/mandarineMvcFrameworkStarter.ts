@@ -6,6 +6,7 @@ import { ApplicationContext } from "../../main-core/application-context/mandarin
 import { MiddlewareComponent } from "../../main-core/components/middleware-component/middlewareComponent.ts";
 import { WebMVCConfigurer } from "../../main-core/mandarine-native/mvc/webMvcConfigurer.ts";
 import { Mandarine } from "../../main-core/Mandarine.ns.ts";
+import { CommonUtils } from "../../main-core/utils/commonUtils.ts";
 import { ControllerComponent } from "../core/internal/components/routing/controllerContext.ts";
 import { middlewareResolver, requestResolver } from "../core/internal/components/routing/routingResolver.ts";
 import { handleCors } from "../core/middlewares/cors/corsMiddleware.ts";
@@ -93,24 +94,35 @@ export class MandarineMvcFrameworkStarter {
     }
 
     private addPathToRouter(router: Router, routingAction: Mandarine.MandarineMVC.Routing.RoutingAction, controllerComponent: ControllerComponent): Router {
-        let route: string = controllerComponent.getActionRoute(routingAction);
+        let route: string = routingAction.route;
 
         let availableMiddlewares: Array<MiddlewareComponent> = Mandarine.Global.getMiddleware();
 
-        let responseHandler = async (context) => {
+        let responseHandler = async (context, next) => {
+
+            if(context.isResource) {
+                await next();
+                return;
+            }
 
             this.preRequestInternalMiddlewares(context, routingAction, controllerComponent); // Execute internal middleware like sessions
             let continueRequest: boolean = await this.executeUserMiddlewares(true, availableMiddlewares, context, routingAction); // If the user has any middleware, execute it
 
             if(continueRequest) {
-
                 await requestResolver(routingAction, context);
 
                 MandarineMvcFrameworkStarter.assignContentType(context);
 
                 this.executeUserMiddlewares(false, availableMiddlewares, context, routingAction);
                 this.postRequestInternalMiddlewares(context);
+
+                if(context.request.url.pathname === routingAction.route) {
+                    return;
+                } else {
+                    await next();
+                }
             }
+
         };
 
         switch(routingAction.actionType) {
@@ -139,11 +151,11 @@ export class MandarineMvcFrameworkStarter {
         let contentType: string = Mandarine.Global.getMandarineConfiguration().mandarine.server.responseType;
 
         if(context.response.body != (null || undefined)) {
-            switch(typeof context.response.body) {
-                case "object":
-                    contentType = Mandarine.MandarineMVC.MediaTypes.APPLICATION_JSON;
-                break;
-            }
+           if(CommonUtils.isObject(context.response.body)) {
+                contentType = Mandarine.MandarineMVC.MediaTypes.APPLICATION_JSON;
+           } else {
+               contentType = Mandarine.Defaults.MandarineDefaultConfiguration.mandarine.server.responseType;
+           }
         }
         context.response.headers.set('Content-Type', contentType);
     }

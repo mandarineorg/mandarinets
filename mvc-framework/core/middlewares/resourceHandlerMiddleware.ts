@@ -45,7 +45,13 @@ export const ResourceHandlerMiddleware = (): Middleware => {
                         }
                         
                         resource = (index) ? resource : `${resourceHandlerLocation}/${resource}`;
-                        context.response.body = resourceHandler.resourceResolver.resolve(context, resource);
+                        const resourceData = resourceHandler.resourceResolver.resolve(context, resource);
+                        context.response.body = resourceData;
+                        
+                        if(resourceData) {
+                            // Resource is valid
+                            (context as any).isResource = true;
+                        }
                     }
                 }
             }

@@ -3,8 +3,9 @@
 import { Context } from "../deps.ts";
 import { DI } from "../main-core/dependency-injection/di.ns.ts";
 import { Mandarine } from "../mod.ts";
+import { Cookie as MandarineCookie } from "./core/interfaces/http/cookie.ts";
+import { MandarineMVCContext } from "./core/mandarineMvcContext.ts";
 import { RenderEngineClass } from "./core/modules/view-engine/renderEngine.ts";
-import { Cookie as MandarineCookie } from "./core/interfaces/http/cookie.ts"
 
 /**
 * This namespace contains all the essentials for Mandarine MVC to work
@@ -520,6 +521,7 @@ export namespace MandarineMvc {
                 cors?: CorsMiddlewareOption
             };
             routeParams?: RoutingParams[];
+            routeSignature: Array<string>;
             initializationStatus: RouteInitializationStatus;
         }
 
@@ -580,6 +582,15 @@ export namespace MandarineMvc {
     export interface Cookie extends MandarineCookie {
     }
 
+    export interface AllParameters {
+        query: {
+            [prop: string]: any;
+        },
+        route: {
+            [prop: string]: any;
+        }
+    }
+
     /**
      * Refers to all the information that the rendering engine needs to work out.
      */
@@ -589,8 +600,7 @@ export namespace MandarineMvc {
          */
         export enum Engines {
             HANDLEBARS = "handlebars",
-            EJS = "ejs",
-            DENJUCKS = "denjucks"
+            EJS = "ejs"
         }
 
         /**
@@ -643,3 +653,8 @@ export namespace MandarineMvc {
 
     }
 }
+
+(() => {
+    // Initialize MVC Context
+    MandarineMVCContext.getInstance();
+})();

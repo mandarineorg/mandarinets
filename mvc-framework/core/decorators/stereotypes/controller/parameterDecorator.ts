@@ -158,3 +158,19 @@ export const RequestBody = (): Function => {
         MVCDecoratorsProxy.registerRoutingParam(target, DI.InjectionTypes.TEMPLATE_MODEL_PARAM, propertyName, index);
      }
  }
+
+ /**
+ * **Decorator**
+ * 
+ * Gets all the parameters (query & route) present in the current request.
+ * 
+ * `@Parameters()
+ *  Target: Method parameter`
+ * 
+ * @returns an object of Mandarine.MandarineMVC.AllParameters
+ */
+export const Parameters = (): Function => {
+    return (target: any, propertyName: string, index: number) => {
+        MVCDecoratorsProxy.registerRoutingParam(target, DI.InjectionTypes.PARAMETERS_PARAM, propertyName, index);
+    }
+}

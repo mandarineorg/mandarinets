@@ -1,13 +1,16 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
+import { blue, red } from "https://deno.land/std@0.62.0/fmt/colors.ts";
+import { MandarineException } from "../../../../../main-core/exceptions/mandarineException.ts";
 import { RoutingException } from "../../../../../main-core/exceptions/routingException.ts";
 import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
 import { MandarineConstants } from "../../../../../main-core/mandarineConstants.ts";
 import { Reflect } from "../../../../../main-core/reflectMetadata.ts";
+import { CommonUtils } from "../../../../../main-core/utils/commonUtils.ts";
 import { ReflectUtils } from "../../../../../main-core/utils/reflectUtils.ts";
 import { AnnotationMetadataContext } from "../../../interfaces/mandarine/mandarineAnnotationMetadataContext.ts";
+import { MandarineMVCContext } from "../../../mandarineMvcContext.ts";
 import { RoutingUtils } from "../../../utils/mandarine/routingUtils.ts";
-
 /**
  * This class is used in the DI Container for Mandarine to store components annotated as @Controller
  * It contains all the behavior of a controller, like its routes and the methods of the routes.
@@ -97,14 +100,18 @@ export class ControllerComponent {
 
                 let routeCors: Mandarine.MandarineMVC.CorsMiddlewareOption = this.getRouteCors(classHandler, routeContext.methodName);
                 if(routeCors) routeContext.options.cors = routeCors;
-                this.registerAction({
+                const fullRoute = this.getFullRoute(routeContext.route);
+                const routingAction = {
                     actionParent: routeContext.className,
                     actionType: routeContext.methodType,
                     actionMethodName: routeContext.methodName,
-                    route: routeContext.route,
+                    route: fullRoute,
                     routingOptions: routeContext.options,
-                    initializationStatus: Mandarine.MandarineMVC.Routing.RouteInitializationStatus.CREATED
-                });
+                    initializationStatus: Mandarine.MandarineMVC.Routing.RouteInitializationStatus.CREATED,
+                    routeSignature: RoutingUtils.findRouteParamSignature(fullRoute, routeContext.methodType)
+                };
+
+                this.registerAction(routingAction);
             }
         });
     }
@@ -114,6 +121,7 @@ export class ControllerComponent {
     }
 
     private initializeRoutingActionContext(routeAction: Mandarine.MandarineMVC.Routing.RoutingAction) {
+        this.validateRouteSignature(routeAction.routeSignature);
         routeAction.actionParent = this.getName();
         routeAction.routeParams = new Array<Mandarine.MandarineMVC.Routing.RoutingParams>();
         this.processParamRoutes(routeAction);
@@ -125,9 +133,13 @@ export class ControllerComponent {
         routeParams.forEach((value) => routeAction.routeParams.push(value));
     }
 
+    public getFullRoute(route: string) {
+        if(this.getRoute() != null) return this.getRoute() + route;
+        else return route;
+    }
+
     public getActionRoute(routeAction: Mandarine.MandarineMVC.Routing.RoutingAction): string {
-        if(this.getRoute() != null) return this.getRoute() + routeAction.route;
-        else return routeAction.route;
+        return this.getFullRoute(routeAction.route);
     }
 
     public getRoutingAction(actionMethodName: string): Mandarine.MandarineMVC.Routing.RoutingAction {
@@ -137,6 +149,17 @@ export class ControllerComponent {
     public existRoutingAction(actionMethodName: string): boolean {
         if(this.getRoutingAction(actionMethodName) == null) return false;
         else return true;
+    }
+
+    public validateRouteSignature(routeSignature: Array<string>) {
+        const currentRoutes = MandarineMVCContext.getInstance().routeSignatures;
+
+        if(currentRoutes.some((currentRouteSignature) => CommonUtils.arrayIdentical(currentRouteSignature, routeSignature))) {
+            let errorMessage = MandarineException.ROUTE_ALREADY_EXIST.replace("$s", `${blue(Mandarine.MandarineMVC.HttpMethods[routeSignature[0]])} ${red(routeSignature.slice(1).join("/"))}`);
+            throw new MandarineException(errorMessage);
+        }
+
+        MandarineMVCContext.getInstance().routeSignatures.push(routeSignature);
     }
 
     public getActionName(methodName: string): string {

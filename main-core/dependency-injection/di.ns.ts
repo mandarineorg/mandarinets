@@ -62,7 +62,8 @@ export namespace DI {
         REQUEST_BODY_PARAM,
         RESPONSE_PARAM,
         COOKIE_PARAM,
-        TEMPLATE_MODEL_PARAM
+        TEMPLATE_MODEL_PARAM,
+        PARAMETERS_PARAM
     }
 
     /**

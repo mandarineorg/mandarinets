@@ -1,12 +1,12 @@
-import { Controller } from "../../../mvc-framework/core/decorators/stereotypes/controller/controller.ts";
-import { RouteParam } from "../../../mvc-framework/core/decorators/stereotypes/controller/parameterDecorator.ts";
-import { GET } from "../../../mvc-framework/core/decorators/stereotypes/controller/routingDecorator.ts";
 import { MandarineCore } from "../../../main-core/mandarineCore.ts";
+import { Controller } from "../../../mvc-framework/core/decorators/stereotypes/controller/controller.ts";
+import { Parameters, RouteParam } from "../../../mvc-framework/core/decorators/stereotypes/controller/parameterDecorator.ts";
+import { GET } from "../../../mvc-framework/core/decorators/stereotypes/controller/routingDecorator.ts";
 
 @Controller()
 class RouteParamControllerTest {
 
-    @GET('/say-hi/:name')
+    @GET('/say-hi-1/:name')
     public helloWorld(@RouteParam('name') personsName: string): object {
         return {
             name: personsName
@@ -18,7 +18,7 @@ class RouteParamControllerTest {
 @Controller('/api')
 class RouteParamControllerWithBaseTest {
 
-    @GET('/say-hi/:personsName')
+    @GET('/say-hi-2/:personsName')
     public helloWorld2(@RouteParam() personsName: string): object {
         return {
             name: personsName
@@ -30,11 +30,21 @@ class RouteParamControllerWithBaseTest {
 @Controller()
 class RouteParamControllerTestWithUnknownRoute {
 
-    @GET('/say-hi-2/:personsName')
+    @GET('/say-hi-3/:personsName')
     public helloWorld2(@RouteParam() whateverRoute: string): object {
         return {
             name: (whateverRoute) ? whateverRoute : "undefined"
         };
+    }
+
+}
+
+@Controller()
+class ControllerGetAllParameters {
+
+    @GET('/parameters/:name/:lastname')
+    public helloWorld2(@Parameters() allParameters) {
+        return allParameters;
     }
 
 }
