@@ -1,6 +1,7 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
 import { v4 } from "https://deno.land/std@0.62.0/uuid/mod.ts";
+import { MandarineException } from "../exceptions/mandarineException.ts";
 
 export class CommonUtils {
     public static generateUUID(): string {
@@ -37,7 +38,11 @@ export class CommonUtils {
     }
 
     public static setEnvironmentVariablesFromObject(object: object) {
-        Object.keys(object).forEach((key) => Deno.env.set(key, object[key].toString()));
+        Object.keys(object).forEach((key) => {
+            const value = object[key];
+            if(typeof value === 'object' && !Array.isArray(value)) throw new MandarineException(MandarineException.ENV_VARIABLE_ISNT_STRING.replace('%s', key), true);
+            Deno.env.set(key, value.toString());
+        });
     }
 
     public static sleep(seconds: number) 

@@ -225,7 +225,7 @@ export namespace Mandarine {
                     }
 
                 } catch (error) {
-                    // DO NOTHING
+                    MandarineUtils.reThrowError(error);
                 }
             }
 
