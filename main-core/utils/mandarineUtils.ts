@@ -1,6 +1,7 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
 import { Mandarine } from "../Mandarine.ns.ts";
+import { MandarineException } from "../exceptions/mandarineException.ts";
 
 export class MandarineUtils {
 
@@ -33,5 +34,13 @@ export class MandarineUtils {
         })
       
         return obj;
+    }
+
+    public static reThrowError(error: Error) {
+        if(error instanceof MandarineException) {
+            if(error.superAlert) {
+                throw error;
+            }
+        }
     }
 }
