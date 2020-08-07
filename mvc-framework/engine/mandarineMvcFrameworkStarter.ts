@@ -150,13 +150,13 @@ export class MandarineMvcFrameworkStarter {
     private static assignContentType(context: any) {
         let contentType: string = Mandarine.Global.getMandarineConfiguration().mandarine.server.responseType;
 
-        if(context.response.body != (null || undefined)) {
-           if(CommonUtils.isObject(context.response.body)) {
+        const responseBody = context.response.body;
+        if(responseBody != (null || undefined)) {
+           if(CommonUtils.isObject(responseBody) || Array.isArray(responseBody)) {
                 contentType = Mandarine.MandarineMVC.MediaTypes.APPLICATION_JSON;
-           } else {
-               contentType = Mandarine.Defaults.MandarineDefaultConfiguration.mandarine.server.responseType;
            }
         }
+        
         context.response.headers.set('Content-Type', contentType);
     }
 }
