@@ -25,3 +25,8 @@ This is probably because your project does not have a proper `tsconfig.json` fil
 
 ## When does Mandarine Compile Time (MCT) start?
 Mandarine Compiling process starts at the time your application includes any component from Mandarine's repository. Decorators, Mandarine's native classes & any other mandarine reference invokes Mandarine's compiler.
+
+&nbsp;
+
+## Nest.land throws error when importing, what should I do?
+Even though we recognize [nest.land](https://nest.land) as our main import source. We also strongly recommend to use [Deno's X](https://deno.land/x) if nest.land _fails_. <br> The import of _deno.land/x_ is `https://deno.land/x/mandarinets@v1.4.0/mod.ts`.
