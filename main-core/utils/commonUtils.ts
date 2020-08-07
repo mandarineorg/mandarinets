@@ -64,4 +64,15 @@ export class CommonUtils {
     public static isObject(o: any): boolean {
         return o instanceof Object && o.constructor === Object;
     }
+
+    public static isNumeric(num) {
+        return !isNaN(num);
+    }
+
+    public static parseToKnownType(value: any) {
+        if(value === "true") return true;
+        if(value === "false") return false;
+        if(CommonUtils.isNumeric(value)) return parseFloat(value);
+        return value;
+    }
 }

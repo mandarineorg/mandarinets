@@ -2,6 +2,7 @@
 
 import { ComponentsRegistryUtil } from "../components-registry/componentRegistry.util.ts";
 import { Mandarine } from "../Mandarine.ns.ts";
+import { CommonUtils } from "../utils/commonUtils.ts";
 
 export class MainCoreDecoratorProxy {
 
@@ -31,12 +32,12 @@ export class MainCoreDecoratorProxy {
                         propertiesStartingIndex++;
                     }
                     
-                    targetClass[propertyName] = propertyObject[last];
+                    targetClass[propertyName] = CommonUtils.parseToKnownType(propertyObject[last]);
                 } else {
                     targetClass[propertyName] = undefined;
                 }
             } else {
-                targetClass[propertyName] = propertyObject[configKey];
+                targetClass[propertyName] = CommonUtils.parseToKnownType(propertyObject[configKey]);
             }
         } catch(error) {
             targetClass[propertyName] = undefined;
