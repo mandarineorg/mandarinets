@@ -20,6 +20,8 @@ Don't know where to start? [Click here](https://www.mandarinets.org/docs/master/
 ## Basic usage
 
 ```typescript
+import { MandarineCore, Controller, GET } from "https://deno.land/x/mandarinets@v1.4.0/mod.ts"; 
+
 @Controller('/api')
 export class Boo {
      
@@ -39,7 +41,7 @@ new MandarineCore.MVC().run();
 For questions & community support, please visit our [Discord Channel](https://discord.gg/qs72byB) or join us on our [twitter](https://twitter.com/mandarinets).
 
 ## MandarineTS Main features
-Built-in [Dependency Injection](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-core/dependency-injection) Framework, [Components](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-core/components/component), [Automatization for routes creation](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-mvc/controllers/using-routes-and-http-handlers), [Middleware](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-mvc/custom-middleware), [Sessions](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-mvc/session-middleware), [built-in ORM](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-data/orm), [MQL](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-data/mandarine-query-language) (Mandarine Query Language), [Template Engine](https://mandarineframework.gitbook.io/mandarine-ts/mandarine-mvc/template-engine)
+Built-in [Dependency Injection](https://www.mandarinets.org/docs/master/mandarine/dependency-injection) Framework, [Components](https://www.mandarinets.org/docs/master/mandarine/components), [Routes](https://www.mandarinets.org/docs/master/mandarine/routes), [Middleware](https://www.mandarinets.org/docs/master/mandarine/custom-middleware), [Sessions](https://www.mandarinets.org/docs/master/mandarine/session-middleware), [built-in ORM](https://www.mandarinets.org/docs/master/mandarine/data-repositories), [MQL](https://www.mandarinets.org/docs/master/mandarine/mandarine-query-language) (Mandarine Query Language), [Template Engine](https://www.mandarinets.org/docs/master/mandarine/template-engine)
 
 ## Want to help?
 ### Interested in coding
