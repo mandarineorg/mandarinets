@@ -15,7 +15,7 @@ By using the `@ResponseStatus` decorator, it is possible to specify a response s
 ## API
 
 ```typescript
-import { Mandarine, Controller, ResponseStatus } from "https://x.nest.land/MandarineTS@1.2.2/mod.ts";
+import { Mandarine, Controller, ResponseStatus } from "https://x.nest.land/MandarineTS@1.4.0/mod.ts";
 
 @Controller()
 @ResponseStatus(Mandarine.MandarineMVC.HttpStatusCode.OK)

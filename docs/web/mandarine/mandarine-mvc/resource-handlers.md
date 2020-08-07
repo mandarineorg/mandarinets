@@ -11,7 +11,7 @@ It is possible to create your own resource handlers & resource resolvers. For th
 In order to override this behavior, create a component ([Configuration component](/docs/mandarine/configuration) is recommended). This component must implement Mandarine.MandarineMVC.Configurers.WebMVCConfigurer.
 
 ```typescript
-import { Mandarine, Configuration } from "https://x.nest.land/MandarineTS@1.2.2/mod.ts";
+import { Mandarine, Configuration } from "https://x.nest.land/MandarineTS@1.4.0/mod.ts";
 
 @Configuration()
 export class WebMVCConfigurer implements Mandarine.MandarineMVC.Configurers.WebMVCConfigurer {
