@@ -24,7 +24,7 @@ They are decorators that are used in the parameters of a HTTP Handler. Every dec
 ## API
 
 ```typescript
-import { Controller, GET, RouteParam, MandarineCore } from "https://x.nest.land/MandarineTS@1.2.2/mod.ts";
+import { Controller, GET, RouteParam, MandarineCore } from "https://x.nest.land/MandarineTS@1.4.0/mod.ts";
 
 @Controller('/api')
 export class Foo {

@@ -27,7 +27,7 @@ Mandarine officially _recommends_ making use of **nest.land**.
 
 **nest.land**
 ```ts
-import { ... } from "https://x.nest.land/MandarineTS@1.2.2/mod.ts";
+import { ... } from "https://x.nest.land/MandarineTS@1.4.0/mod.ts";
 ```
  
 **deno.land/x**

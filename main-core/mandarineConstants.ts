@@ -2,7 +2,7 @@
 
 export class MandarineConstants {
 
-    public static RELEASE_VERSION = "1.3.0";
+    public static RELEASE_VERSION = "1.4.0";
 
     public static readonly REFLECTION_MANDARINE_INJECTION_FIELD = "mandarine-method-di-field";
     public static readonly REFLECTION_MANDARINE_METHOD_ROUTE = "mandarine-method-route";
