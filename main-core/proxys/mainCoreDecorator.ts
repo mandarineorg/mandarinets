@@ -3,6 +3,8 @@
 import { ComponentsRegistryUtil } from "../components-registry/componentRegistry.util.ts";
 import { Mandarine } from "../Mandarine.ns.ts";
 import { CommonUtils } from "../utils/commonUtils.ts";
+import { ReflectUtils } from "../utils/reflectUtils.ts";
+import { MandarineException } from "../exceptions/mandarineException.ts";
 
 export class MainCoreDecoratorProxy {
 
@@ -41,6 +43,24 @@ export class MainCoreDecoratorProxy {
             }
         } catch(error) {
             targetClass[propertyName] = undefined;
+        }
+    }
+
+    public static overrideNativeComponent(targetClass: any, overrideType: Mandarine.MandarineCore.NativeComponents) {
+        if(!overrideType) {
+            const className = ReflectUtils.getClassName(targetClass);
+
+            switch(className) {
+                case "WebMvcConfigurer":
+                    overrideType = Mandarine.MandarineCore.NativeComponents.WebMVCConfigurer;
+                break;
+
+                default:
+                    throw new MandarineException(MandarineException.UNKNOWN_OVERRIDEN.replace("%s", className));
+                break;
+            }
+
+            Mandarine.Global.getNativeComponentsRegistry().override(overrideType, new targetClass());
         }
     }
 

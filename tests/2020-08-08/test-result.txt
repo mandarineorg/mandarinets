@@ -1,0 +1,104 @@
+DependencyInjectionTest
+┌─────────┬───────────────────┬─────────────────────────────────────────────────────────┬────────┬─────────────────────────┬─────────────┬───────────────┬──────┐
+│ Test ID │       Name        │                       Description                       │ Status │       Suite Name        │ Error Class │ Error Message │ Time │
+├─────────┼───────────────────┼─────────────────────────────────────────────────────────┼────────┼─────────────────────────┼─────────────┼───────────────┼──────┤
+│    0    │ Test Component DI │  Test Dependency Injection through component creation   │   Ok   │ DependencyInjectionTest │      -      │       -       │ 15ms │
+│    1    │ Test Component DI │        Test DI when an object is not injectable         │   Ok   │ DependencyInjectionTest │      -      │       -       │ 0ms  │
+│    2    │ Test Multiple DI  │ Test the injection of multiple components & one invalid │   Ok   │ DependencyInjectionTest │      -      │       -       │ 1ms  │
+│    3    │ Test property DI  │  Test the injection of a component through a property   │   Ok   │ DependencyInjectionTest │      -      │       -       │ 1ms  │
+└─────────┴───────────────────┴─────────────────────────────────────────────────────────┴────────┴─────────────────────────┴─────────────┴───────────────┴──────┘
+
+HttpHandlersTest
+┌─────────┬──────────────────────────┬─────────────────────────────────────────────────────────────────────┬────────┬──────────────────┬─────────────┬───────────────┬──────┐
+│ Test ID │           Name           │                             Description                             │ Status │    Suite Name    │ Error Class │ Error Message │ Time │
+├─────────┼──────────────────────────┼─────────────────────────────────────────────────────────────────────┼────────┼──────────────────┼─────────────┼───────────────┼──────┤
+│    0    │ Test HTTP Route Creation │      Test the creation for every type of route (GET, POST...)       │   Ok   │ HttpHandlersTest │      -      │       -       │ 36ms │
+│    1    │  Test HTTP @QueryParam   │              Test the creation & use of `@QueryParam`               │   Ok   │ HttpHandlersTest │      -      │       -       │ 32ms │
+│    2    │  Test HTTP @RouteParam   │              Test the creation & use of `@RouteParam`               │   Ok   │ HttpHandlersTest │      -      │       -       │ 2ms  │
+│    3    │    Test HTTP @Session    │                Test the creation & use of `@Session`                │   Ok   │ HttpHandlersTest │      -      │       -       │ 1ms  │
+│    4    │   Test HTTP @ViewModel   │               Test the creation & use of `@ViewModel`               │   Ok   │ HttpHandlersTest │      -      │       -       │ 1ms  │
+│    5    │     Test @Parameters     │ should get all the parameters (query, route) present in the request │   Ok   │ HttpHandlersTest │      -      │       -       │ 4ms  │
+└─────────┴──────────────────────────┴─────────────────────────────────────────────────────────────────────┴────────┴──────────────────┴─────────────┴───────────────┴──────┘
+
+ORMTests
+┌─────────┬─────────────────────────────┬───────────────────────────────────────────────────┬────────┬────────────┬─────────────┬───────────────┬──────┐
+│ Test ID │            Name             │                    Description                    │ Status │ Suite Name │ Error Class │ Error Message │ Time │
+├─────────┼─────────────────────────────┼───────────────────────────────────────────────────┼────────┼────────────┼─────────────┼───────────────┼──────┤
+│    0    │   Create entity & columns   │ Create the representation of a table with columns │   Ok   │  ORMTests  │      -      │       -       │ 1ms  │
+│    1    │ Create repository component │       Create a mandarine-powered repository       │   Ok   │  ORMTests  │      -      │       -       │ 11ms │
+│    2    │      Lexical processor      │             Should create SQL queries             │   Ok   │  ORMTests  │      -      │       -       │ 2ms  │
+└─────────┴─────────────────────────────┴───────────────────────────────────────────────────┴────────┴────────────┴─────────────┴───────────────┴──────┘
+
+ComponentCreationTests
+┌─────────┬──────────────────────┬────────────────────────────────────────────────────────────────────┬────────┬────────────────────────┬─────────────┬───────────────┬──────┐
+│ Test ID │         Name         │                            Description                             │ Status │       Suite Name       │ Error Class │ Error Message │ Time │
+├─────────┼──────────────────────┼────────────────────────────────────────────────────────────────────┼────────┼────────────────────────┼─────────────┼───────────────┼──────┤
+│    0    │  Create Controller   │ Executes the creation of a regular Controller without a base route │   Ok   │ ComponentCreationTests │      -      │       -       │ 0ms  │
+│    1    │  Create Controller   │  Executes the creation of a regular Controller with a base route   │   Ok   │ ComponentCreationTests │      -      │       -       │ 0ms  │
+│    2    │   Create component   │            Executes the creation of a Regular component            │   Ok   │ ComponentCreationTests │      -      │       -       │ 0ms  │
+│    3    │    Create service    │            Executes the creation of a Service component            │   Ok   │ ComponentCreationTests │      -      │       -       │ 0ms  │
+│    4    │  Create Middleware   │          Executes the creation of a Middleware component           │   Ok   │ ComponentCreationTests │      -      │       -       │ 2ms  │
+│    5    │ Create configuration │         Executes the creation of a Configuration component         │   Ok   │ ComponentCreationTests │      -      │       -       │ 0ms  │
+└─────────┴──────────────────────┴────────────────────────────────────────────────────────────────────┴────────┴────────────────────────┴─────────────┴───────────────┴──────┘
+
+CORSTest
+┌─────────┬────────────────────────────────────┬──────────────────────────────────────────────────────────────────────────────────┬────────┬────────────┬─────────────┬───────────────┬──────┐
+│ Test ID │                Name                │                                   Description                                    │ Status │ Suite Name │ Error Class │ Error Message │ Time │
+├─────────┼────────────────────────────────────┼──────────────────────────────────────────────────────────────────────────────────┼────────┼────────────┼─────────────┼───────────────┼──────┤
+│    0    │ Test CORS inclusion (Class level)  │        Creates a controller component with CORS config & test the request        │   Ok   │  CORSTest  │      -      │       -       │ 1ms  │
+│    1    │ Test CORS inclusion (Method level) │ Creates a controller component with a HTTP handlers with CORS & test the request │   Ok   │  CORSTest  │      -      │       -       │ 0ms  │
+│    2    │        Test CORS Middleware        │                        Simulates a request owned by CORS                         │   Ok   │  CORSTest  │      -      │       -       │ 1ms  │
+└─────────┴────────────────────────────────────┴──────────────────────────────────────────────────────────────────────────────────┴────────┴────────────┴─────────────┴───────────────┴──────┘
+
+ResourceHandlerTest
+┌─────────┬────────────────────────┬─────────────────────────────────────────────────┬────────┬─────────────────────┬────────────────┬───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┬──────┐
+│ Test ID │          Name          │                   Description                   │ Status │     Suite Name      │  Error Class   │                                                                                                                                                                                                   Error Message                                                                                                                                                                                                   │ Time │
+├─────────┼────────────────────────┼─────────────────────────────────────────────────┼────────┼─────────────────────┼────────────────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┼──────┤
+│    0    │ Test Resource Handlers │ Test the creation of multiple resource handlers │ FAILED │ ResourceHandlerTest │ AssertionError │ Values are not equal:    [Diff] Actual / Expected    [-     ResourceHandler {-       resourceHandlerIndex: [-         undefined,-       ],+     {        resourceHandlerLocations: [-         "./src/main/resources/static",+         "./docs",        ],        resourceHandlerPath: [-         /\/(.*)/,+         /\/docs\/(.*)/,        ],        resourceResolver: MandarineResourceResolver {},      },    ] │ 4ms  │
+└─────────┴────────────────────────┴─────────────────────────────────────────────────┴────────┴─────────────────────┴────────────────┴───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┴──────┘
+
+RouteParamTest
+┌─────────┬───────────────────────────────────────────┬────────────────────────────────────────────────────────────┬────────┬────────────────┬─────────────┬───────────────┬─────────┐
+│ Test ID │                   Name                    │                        Description                         │ Status │   Suite Name   │ Error Class │ Error Message │  Time   │
+├─────────┼───────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────┼────────────────┼─────────────┼───────────────┼─────────┤
+│    0    │ Test Endpoints from `files/routeParam.ts` │ Test all endpoints in file, and verifies its return values │   Ok   │ RouteParamTest │      -      │       -       │ 50767ms │
+└─────────┴───────────────────────────────────────────┴────────────────────────────────────────────────────────────┴────────┴────────────────┴─────────────┴───────────────┴─────────┘
+
+TemplatesTest
+┌─────────┬──────────────────────────────────────────┬────────────────────────────────────────────────┬────────┬───────────────┬─────────────┬───────────────┬─────────┐
+│ Test ID │                   Name                   │                  Description                   │ Status │  Suite Name   │ Error Class │ Error Message │  Time   │
+├─────────┼──────────────────────────────────────────┼────────────────────────────────────────────────┼────────┼───────────────┼─────────────┼───────────────┼─────────┤
+│    0    │ Test Endpoints from `files/templates.ts` │ Verifies manual templates are working properly │   Ok   │ TemplatesTest │      -      │       -       │ 50135ms │
+└─────────┴──────────────────────────────────────────┴────────────────────────────────────────────────┴────────┴───────────────┴─────────────┴───────────────┴─────────┘
+
+ManualInjectionTest
+┌─────────┬────────────────────────────────────────────────┬────────────────────────────────────────────────────────────┬────────┬─────────────────────┬─────────────┬───────────────┬─────────┐
+│ Test ID │                      Name                      │                        Description                         │ Status │     Suite Name      │ Error Class │ Error Message │  Time   │
+├─────────┼────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────┼─────────────────────┼─────────────┼───────────────┼─────────┤
+│    0    │ Test Endpoints from `files/manualInjection.ts` │ Test all endpoints in file, and verifies its return values │   Ok   │ ManualInjectionTest │      -      │       -       │ 50017ms │
+└─────────┴────────────────────────────────────────────────┴────────────────────────────────────────────────────────────┴────────┴─────────────────────┴─────────────┴───────────────┴─────────┘
+
+SessionCounterTest
+┌─────────┬───────────────────────────────────────────────┬──────────────────────────────────────────────────────────────┬────────┬────────────────────┬─────────────┬───────────────┬─────────┐
+│ Test ID │                     Name                      │                         Description                          │ Status │     Suite Name     │ Error Class │ Error Message │  Time   │
+├─────────┼───────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┼────────┼────────────────────┼─────────────┼───────────────┼─────────┤
+│    0    │ Test Endpoints from `files/sessionCounter.ts` │ Verifies Mandarine native session system is working properly │   Ok   │ SessionCounterTest │      -      │       -       │ 50064ms │
+└─────────┴───────────────────────────────────────────────┴──────────────────────────────────────────────────────────────┴────────┴────────────────────┴─────────────┴───────────────┴─────────┘
+
+NestedInjectionTest
+┌─────────┬────────────────────────────────────────────────┬────────────────────────────────────────────────────────────┬────────┬─────────────────────┬─────────────┬───────────────┬─────────┐
+│ Test ID │                      Name                      │                        Description                         │ Status │     Suite Name      │ Error Class │ Error Message │  Time   │
+├─────────┼────────────────────────────────────────────────┼────────────────────────────────────────────────────────────┼────────┼─────────────────────┼─────────────┼───────────────┼─────────┤
+│    0    │ Test Endpoints from `files/nestedInjection.ts` │ Test all endpoints in file, and verifies its return values │   Ok   │ NestedInjectionTest │      -      │       -       │ 50017ms │
+└─────────┴────────────────────────────────────────────────┴────────────────────────────────────────────────────────────┴────────┴─────────────────────┴─────────────┴───────────────┴─────────┘
+
+ResourceHandlerStaticContentTest
+┌─────────┬─────────────────────────────────────────────────────────────┬──────────────────────────────────────────────┬────────┬──────────────────────────────────┬────────────────┬────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┬─────────┐
+│ Test ID │                            Name                             │                 Description                  │ Status │            Suite Name            │  Error Class   │                                                     Error Message                                                      │  Time   │
+├─────────┼─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────┼────────┼──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┼─────────┤
+│    0    │ Test Endpoints from `files/resourceHandlerStaticContent.ts` │ Verifies Mandarine is serving static content │ FAILED │ ResourceHandlerStaticContentTest │ AssertionError │ Values are not equal:    [Diff] Actual / Expected-   ""+   "Hello there, if you have got here, you'd better go back!." │ 50013ms │
+└─────────┴─────────────────────────────────────────────────────────────┴──────────────────────────────────────────────┴────────┴──────────────────────────────────┴────────────────┴────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┴─────────┘
+
+
+
+| Total Tests: 29 |  Ran: 29 | Ignored: 0 | Passed: 27 | Failed: 2 |

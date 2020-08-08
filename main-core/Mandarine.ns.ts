@@ -10,6 +10,7 @@ import { MandarineSecurity } from "../security-core/mandarine-security.ns.ts";
 import { ComponentsRegistry } from "./components-registry/componentRegistry.ts";
 import { MiddlewareComponent } from "./components/middleware-component/middlewareComponent.ts";
 import { DI } from "./dependency-injection/di.ns.ts";
+import { NativeComponentsRegistry } from "./mandarine-native/nativeComponentsRegistry.ts";
 import { MandarineStorageHandler } from "./mandarine-native/sessions/mandarineDefaultSessionStore.ts";
 import { MandarineEnvironmentalConstants } from "./MandarineEnvConstants.ts";
 import { MandarineLoading } from "./mandarineLoading.ts";
@@ -97,6 +98,7 @@ export namespace Mandarine {
             mandarineProperties: Properties;
             mandarineInitialProperties: MandarineInitialProperties;
             mandarineMiddleware: Array<MiddlewareComponent>;
+            mandarineNativeComponentsRegistry: NativeComponentsRegistry;
         };
 
         /**
@@ -112,7 +114,8 @@ export namespace Mandarine {
                     mandarineMiddleware: undefined,
                     mandarineResourceHandlerRegistry: undefined,
                     mandarineTemplatesManager: undefined,
-                    mandarineInitialProperties: undefined
+                    mandarineInitialProperties: undefined,
+                    mandarineNativeComponentsRegistry: undefined
                 }
             }
         };
@@ -286,24 +289,35 @@ export namespace Mandarine {
         };
 
         /**
+        * Get the instance of the Session Container
+        */
+        export function getSessionContainer(): MandarineSecurity.Sessions.SessionContainer {
+            const mandarineGlobal: MandarineGlobalInterface = getMandarineGlobal();
+            return mandarineGlobal.mandarineSessionContainer;
+        };
+
+        export function getNativeComponentsRegistry(): NativeComponentsRegistry {
+            const mandarineGlobal: MandarineGlobalInterface = getMandarineGlobal();
+
+            if(mandarineGlobal.mandarineNativeComponentsRegistry == (undefined || null)) {
+                mandarineGlobal.mandarineNativeComponentsRegistry = new NativeComponentsRegistry();
+            }
+
+            return mandarineGlobal.mandarineNativeComponentsRegistry;
+        }
+
+        /**
         * Initializes the Session Container.
         * The session container is used to determine the configuration of Mandarine's sessions
         */
         export function initializeDefaultSessionContainer(): void {
             let mandarineGlobal: MandarineGlobalInterface = getMandarineGlobal();
             if(mandarineGlobal.mandarineSessionContainer == (undefined || null)) {
-                mandarineGlobal.mandarineSessionContainer = Defaults.MandarineDefaultSessionContainer;
+                mandarineGlobal.mandarineSessionContainer = Defaults.MandarineDefaultSessionContainer();
+            }
+            if(!mandarineGlobal.mandarineSessionContainer.store) {
                 mandarineGlobal.mandarineSessionContainer.store = new MandarineStorageHandler();
             }
-        };
-
-        /**
-        * Get the instance of the Session Container
-        */
-        export function getSessionContainer(): MandarineSecurity.Sessions.SessionContainer {
-            let mandarineGlobal: MandarineGlobalInterface = getMandarineGlobal();
-            return mandarineGlobal.mandarineSessionContainer;
-
         };
 
         /**
@@ -316,6 +330,39 @@ export namespace Mandarine {
                 mandarineGlobal.mandarineMiddleware = new Array<MiddlewareComponent>();
             }
         };
+
+        /**
+        * Initializes the middleware list in the global environment.
+        */
+        export function initializeNativeComponents() {
+            const componentRegistry = getNativeComponentsRegistry();
+
+            // Initialize resource handlers
+            componentRegistry.get(MandarineCore.NativeComponents.WebMVCConfigurer).addResourceHandlers();
+        };
+
+        /**
+        * Overrides the current session container
+        */
+        export function changeSessionContainer(newSessionContainer: MandarineSecurity.Sessions.SessionContainer): void {
+            let defaultContainer = Defaults.MandarineDefaultSessionContainer();
+            let mandarineGlobal: Mandarine.Global.MandarineGlobalInterface  = Mandarine.Global.getMandarineGlobal();
+            
+            mandarineGlobal.mandarineSessionContainer = <MandarineSecurity.Sessions.SessionContainer>{
+                cookie: {
+                    path: (newSessionContainer.cookie && newSessionContainer.cookie.path) ? newSessionContainer.cookie.path : defaultContainer.cookie.path,
+                    maxAge: (newSessionContainer.cookie && newSessionContainer.cookie.maxAge) ? newSessionContainer.cookie.maxAge : defaultContainer.cookie.maxAge,
+                    httpOnly: (newSessionContainer.cookie && newSessionContainer.cookie.httpOnly) ? newSessionContainer.cookie.httpOnly : defaultContainer.cookie.httpOnly,
+                    secure: (newSessionContainer.cookie && newSessionContainer.cookie.secure) ? newSessionContainer.cookie.secure : defaultContainer.cookie.secure
+                },
+                sessionPrefix: (newSessionContainer.sessionPrefix) ? newSessionContainer.sessionPrefix : defaultContainer.sessionPrefix,
+                genId: (newSessionContainer.genId) ? newSessionContainer.genId : defaultContainer.genId,
+                resave: (newSessionContainer.resave) ? newSessionContainer.resave : defaultContainer.resave,
+                rolling: (newSessionContainer.rolling) ? newSessionContainer.rolling : defaultContainer.rolling,
+                saveUninitialized: (newSessionContainer.saveUninitialized) ? newSessionContainer.saveUninitialized : defaultContainer.saveUninitialized,
+                store: (newSessionContainer.store) ? newSessionContainer.store : defaultContainer.store,
+            };
+        }
     };
 
     /**
@@ -345,12 +392,9 @@ export namespace Mandarine {
             getEntityManager(): Mandarine.ORM.Entity.EntityManager;
             getTemplateManager(): Mandarine.MandarineCore.ITemplatesManager;
             initializeMetadata(): void;
-            initializeDefaultSessionContainer(): void;
-            changeSessionContainer(newSessionContainer: MandarineSecurity.Sessions.SessionContainer): void;
             getInstance?: () => ApplicationContext.IApplicationContext;
             getDIFactory(): DI.FactoryClass;
             getResourceHandlerRegistry(): Mandarine.MandarineCore.IResourceHandlerRegistry;
-            changeResourceHandlers(newResourceHandlerRegistry: Mandarine.MandarineCore.IResourceHandlerRegistry): void;
         }
     };
 
@@ -382,6 +426,15 @@ export namespace Mandarine {
             REPOSITORY,
             MANUAL_COMPONENT
         };
+
+        /**
+        * List of all native components by Mandarine
+        * 
+        * Native components are classes that Mandarine uses in order to fully work properly. They can be then overriden by the developer.
+        */
+        export enum NativeComponents {
+            WebMVCConfigurer
+        }
 
         /**
         * Contains the metadata information of the component.
@@ -479,6 +532,18 @@ export namespace Mandarine {
             addResourceHandlerIndex(...resourceHandlerIndex: Array<string>): ResourceHandler;
             addResourceResolver(resolver: Mandarine.MandarineMVC.HTTPResolvers.ResourceResolver): ResourceHandler;
             addResourceCors(cors: Mandarine.MandarineMVC.CorsMiddlewareOption): ResourceHandler;
+        };
+
+        export interface NativeComponentsProperties {
+            key: NativeComponents;
+            type: any;
+            onOverride?: (output: any) => void;
+            children: Array<{
+                methodName: string;
+                type: any;
+                isReadonly?: boolean;
+                onOverride?: (output: any) => void;
+            }>
         }
 
         export class MandarineResourceHandlerRegistry extends ResourceHandlerRegistry {}
@@ -529,20 +594,8 @@ export namespace Mandarine {
             denoEnv: {}
         }
 
-        export const MandarineDefaultSessionContainer: MandarineSecurity.Sessions.SessionContainer & any = {
-            cookie: {
-                path: '/', 
-                httpOnly: false, 
-                secure: false, 
-                maxAge: null 
-            },
-            keys: ["mandarine", "orange", "apple", "beer"],
-            sessionPrefix: "mandarine-session",
-            genId: CommonUtils.generateUUID,
-            resave: false,
-            rolling: false,
-            saveUninitialized: false,
-            store: undefined
+        export const MandarineDefaultSessionContainer = (): MandarineSecurity.Sessions.SessionContainer & any => {
+            return Mandarine.Global.getNativeComponentsRegistry().get(MandarineCore.NativeComponents.WebMVCConfigurer).getSessionContainer();
         };
 
         export const MandarineDefaultCorsOptions: Mandarine.MandarineMVC.CorsMiddlewareOption = {
@@ -560,6 +613,7 @@ export namespace Mandarine {
     MandarineLoading();
     
     Mandarine.Global.getMandarineDotEnv();
+    Mandarine.Global.initializeNativeComponents();
     Mandarine.Global.initializeMandarineGlobal();
     Mandarine.Global.getMandarineInitialProps();
     Mandarine.Global.getMandarineConfiguration();

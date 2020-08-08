@@ -2,12 +2,13 @@
 
 import { ResourceHandler } from "../../../mvc-framework/core/internal/components/resource-handler-registry/resourceHandler.ts";
 import { Mandarine } from "../../Mandarine.ns.ts";
+import { MandarineSessionContainer } from "../sessions/mandarineSessionContainer.ts";
 import { MandarineResourceResolver } from "./mandarineResourceResolver.ts";
 
 export class WebMVCConfigurer implements Mandarine.MandarineMVC.Configurers.WebMVCConfigurer {
 
-    constructor() {
-        this.addResourceHandlers();
+    public getSessionContainer(): MandarineSessionContainer {
+        return new MandarineSessionContainer();
     }
 
     public addResourceHandlers(): Mandarine.MandarineCore.IResourceHandlerRegistry {

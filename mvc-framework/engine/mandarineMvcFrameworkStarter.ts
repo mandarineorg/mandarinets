@@ -25,10 +25,8 @@ export class MandarineMvcFrameworkStarter {
 
     private essentials: {
         sessionMiddleware: SessionMiddleware,
-        webMvcConfigurer: WebMVCConfigurer
     } = {
         sessionMiddleware: undefined,
-        webMvcConfigurer: undefined
     }
 
     constructor(callback?: Function) {
@@ -41,7 +39,6 @@ export class MandarineMvcFrameworkStarter {
 
     public initializeEssentials() {
         this.essentials.sessionMiddleware = new SessionMiddleware();
-        this.essentials.webMvcConfigurer = new WebMVCConfigurer();
     }
 
     public intializeControllersRoutes(): void {
