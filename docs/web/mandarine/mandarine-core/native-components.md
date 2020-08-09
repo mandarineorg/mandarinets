@@ -9,6 +9,7 @@ A good example of what is described above:
 ```typescript
 import { Override, MandarineNative } from "https://x.nest.land/MandarineTS@1.5.0/mod.ts";
 
+@Override()
 export class WebMvcConfigurer extends MandarineNative.WebMvcConfigurer {
     ....
 }
