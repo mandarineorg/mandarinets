@@ -4,7 +4,6 @@ import { Router } from "../../deps.ts";
 import { Log } from "../../logger/log.ts";
 import { ApplicationContext } from "../../main-core/application-context/mandarineApplicationContext.ts";
 import { MiddlewareComponent } from "../../main-core/components/middleware-component/middlewareComponent.ts";
-import { WebMVCConfigurer } from "../../main-core/mandarine-native/mvc/webMvcConfigurer.ts";
 import { Mandarine } from "../../main-core/Mandarine.ns.ts";
 import { CommonUtils } from "../../main-core/utils/commonUtils.ts";
 import { ControllerComponent } from "../core/internal/components/routing/controllerContext.ts";
@@ -25,10 +24,8 @@ export class MandarineMvcFrameworkStarter {
 
     private essentials: {
         sessionMiddleware: SessionMiddleware,
-        webMvcConfigurer: WebMVCConfigurer
     } = {
         sessionMiddleware: undefined,
-        webMvcConfigurer: undefined
     }
 
     constructor(callback?: Function) {
@@ -41,7 +38,6 @@ export class MandarineMvcFrameworkStarter {
 
     public initializeEssentials() {
         this.essentials.sessionMiddleware = new SessionMiddleware();
-        this.essentials.webMvcConfigurer = new WebMVCConfigurer();
     }
 
     public intializeControllersRoutes(): void {

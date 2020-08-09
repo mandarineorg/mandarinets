@@ -9,6 +9,9 @@ export class MandarineException extends Error {
     public static INVALID_STATIC_FOLDER: string = "Found static folder (%staticFolder%) but the path is either invalid or does not exist.";
     public static ROUTE_ALREADY_EXIST: string = "Mandarine cannot be initialized because a route ($s) already exists. Routes must be different.";
     public static ENV_VARIABLE_ISNT_STRING: string = "The value for environmental variable '%s' cannot be read. Only arrays or strings are allowed.";
+    public static INVALID_OVERRIDEN: string = "Invalid native component overriding";
+    public static INVALID_OVERRIDEN_ON_METHOD: string = "Return value from %s is not a compatible value for overriding";
+    public static UNKNOWN_OVERRIDEN: string = "Mandarine could not execute internal override because %s is not of a known native component.";
   
     constructor(public message: string, public superAlert: boolean = false) {
       super(message);

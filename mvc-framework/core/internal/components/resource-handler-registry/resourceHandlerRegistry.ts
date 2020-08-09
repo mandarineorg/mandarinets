@@ -1,6 +1,7 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
 import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
+import { CommonUtils } from "../../../../../main-core/utils/commonUtils.ts";
 import { ResourceHandler } from "./resourceHandler.ts";
 
 /**
@@ -13,7 +14,7 @@ export class ResourceHandlerRegistry implements Mandarine.MandarineCore.IResourc
     private resourceHandlers: Array<ResourceHandler> = new Array<ResourceHandler>();
 
     public addResourceHandler(input: ResourceHandler): ResourceHandlerRegistry {
-        if(!this.resourceHandlers.some(item => item.resourceHandlerPath == input.resourceHandlerPath)) {
+        if(!this.resourceHandlers.some(item => CommonUtils.arrayIdentical(item.resourceHandlerPath, input.resourceHandlerPath))) {
             this.resourceHandlers.push(input);
         }
         return this;

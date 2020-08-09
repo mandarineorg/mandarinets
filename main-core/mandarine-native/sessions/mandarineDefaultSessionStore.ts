@@ -2,7 +2,7 @@
 
 import { Mandarine } from "../../Mandarine.ns.ts";
 
-export class MandarineStorageHandler implements Mandarine.Security.Sessions.SessionStore {
+export class MandarineSessionHandler implements Mandarine.Security.Sessions.SessionStore {
 
     public options = {
         expiration: (1000 * 60 * 60 * 24),
@@ -11,7 +11,7 @@ export class MandarineStorageHandler implements Mandarine.Security.Sessions.Sess
         autoclearExpiredSessions: true
     }
 
-    constructor() {
+    public launch() {
         this.initializeSessionsContainer();
         this.startExpiringSessions();
     }
