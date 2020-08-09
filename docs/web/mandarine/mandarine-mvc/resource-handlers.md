@@ -1,32 +1,31 @@
 # Resource Handlers
 Resource handlers are a way to intercept and resolve a specific resources requested by a client. They work as a form of middleware interceptor.  
 
-A good example of a resource handler is the way mandarine handles static content. Internally, Mandarine has a Resource Handler that will get the requested file based on the URL of the request.
+A good example of a resource handler is the way mandarine handles static content. Internally, Mandarine has a resource handler that will get the requested file based on the URL of the request.
 
 ----
 
 ## Overriding Behavior
 It is possible to create your own resource handlers & resource resolvers. For this, Mandarine allows you to implement Mandarine.MandarineMVC.Configurers.WebMVCConfigurer which will override the default behavior established by Mandarine.
 
-In order to override this behavior, create a component ([Configuration component](/docs/mandarine/configuration) is recommended). This component must implement Mandarine.MandarineMVC.Configurers.WebMVCConfigurer.
+In order to override this behavior, create a class which will receive the decorator [`@Override`](/docs/mandarine/native-components). This class must implement Mandarine.MandarineMVC.Configurers.WebMVCConfigurer & **extend MandarineNative.WebMVCConfigurer** (available in mod.ts).
 
 ```typescript
-import { Mandarine, Configuration } from "https://x.nest.land/MandarineTS@1.4.0/mod.ts";
+import { MandarineNative, Override } from "https://x.nest.land/MandarineTS@1.5.0/mod.ts";
 
-@Configuration()
-export class WebMVCConfigurer implements Mandarine.MandarineMVC.Configurers.WebMVCConfigurer {
+@Override()
+export class WebMvcConfigurer extends MandarineNative.WebMvcConfigurer {
 
 }
 ```
 
-Then, we need to override the method addResourceHandlers , which we will also need to decorate with `@Injectable()`
+Then, method addResourceHandlers will need to be overridden
 
 ```typescript
 
-@Configuration()
-export class WebMVCConfigurer implements Mandarine.MandarineMVC.Configurers.WebMVCConfigurer {
+@Override()
+export class WebMvcConfigurer extends MandarineNative.WebMvcConfigurer {
 
-    @Injectable()
     public addResourceHandlers(): Mandarine.MandarineCore.IResourceHandlerRegistry {
     }
     
@@ -37,12 +36,11 @@ Our method addResourceHandlers will return an instance of the Resource Handler R
 
 ```typescript
 
-import { Mandarine, Configuration, ResourceHandler, MandarineResourceResolver } from "https://deno.land/x/mandarinets/mod.ts";
+import { Mandarine, MandarineNative, Override, ResourceHandler, MandarineResourceResolver } from "https://x.nest.land/MandarineTS@1.5.0/mod.ts";
 
-@Configuration()
-export class WebMVCConfigurer implements Mandarine.MandarineMVC.Configurers.WebMVCConfigurer {
+@Override()
+export class WebMvcConfigurer extends MandarineNative.WebMvcConfigurer {
 
-    @Injectable()
     public addResourceHandlers(): Mandarine.MandarineCore.IResourceHandlerRegistry {
         /**
          * Using `getNew()` : Mandarine.Global.getResourceHandlerRegistry().getNew()

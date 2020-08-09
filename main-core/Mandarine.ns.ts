@@ -517,6 +517,7 @@ export namespace Mandarine {
         };
 
         export interface MandarineNativeComponent<T> {
+            overriden?: boolean;
             onInitialization(): T;
         }
 

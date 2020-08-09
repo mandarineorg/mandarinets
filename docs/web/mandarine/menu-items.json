@@ -119,6 +119,16 @@
         {
           "title": "Introduction",
           "url": "mandarine-core"
+        },
+        {
+          "title": "Native Components",
+          "url": "native-components",
+          "children": [
+            {
+              "title": "List",
+              "url": "native-components-list"
+            }
+          ]
         }
       ]
     },
@@ -185,7 +195,7 @@
               "url": "cors-middleware"
             },
             {
-              "title": "Adding OAK Middleware",
+              "title": "Oak Middleware",
               "url": "adding-oak-middleware"
             }
           ]

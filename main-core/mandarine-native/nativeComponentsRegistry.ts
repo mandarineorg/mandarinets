@@ -3,8 +3,8 @@ import { MandarineException } from "../exceptions/mandarineException.ts";
 import { Mandarine } from "../Mandarine.ns.ts";
 import { NativeComponentsOverrideProxy } from "../proxys/nativeComponentsOverrideProxy.ts";
 import { ReflectUtils } from "../utils/reflectUtils.ts";
-import { WebMVCConfigurer } from "./mvc/webMvcConfigurer.ts";
 import { MandarineSessionContainer } from "./sessions/mandarineSessionContainer.ts";
+import { MandarineNative } from "../Mandarine.native.ns.ts";
 
 export class NativeComponentsRegistry {
 
@@ -23,7 +23,7 @@ export class NativeComponentsRegistry {
         // WebMVCConfigurer
         this.nativeComponentsProperties.set(Mandarine.MandarineCore.NativeComponents.WebMVCConfigurer, {
             key: Mandarine.MandarineCore.NativeComponents.WebMVCConfigurer,
-            type: WebMVCConfigurer,
+            type: MandarineNative.WebMvcConfigurer,
             children: [
                 {
                     methodName: "getSessionContainer",
@@ -44,7 +44,7 @@ export class NativeComponentsRegistry {
     }
 
     private loadNativeComponents() {
-        this.nativeComponents.set(Mandarine.MandarineCore.NativeComponents.WebMVCConfigurer, new WebMVCConfigurer().onInitialization());
+        this.nativeComponents.set(Mandarine.MandarineCore.NativeComponents.WebMVCConfigurer, new MandarineNative.WebMvcConfigurer().onInitialization());
     }
 
     public override(nativeComponentType: Mandarine.MandarineCore.NativeComponents, nativeComponent: any): void {
@@ -62,6 +62,7 @@ export class NativeComponentsRegistry {
             }
         });
 
+        nativeComponent.overriden = true;
         this.nativeComponents.set(nativeComponentType, nativeComponent);
 
     }
