@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { Configuration } from "../../../main-core/decorators/stereotypes/configuration/configuration.ts";
 import { Injectable } from "../../../main-core/dependency-injection/decorators/injectable.ts";
 import { Mandarine } from "../../../main-core/Mandarine.ns.ts";
