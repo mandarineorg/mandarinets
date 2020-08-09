@@ -11,7 +11,6 @@ import { ComponentsRegistry } from "./components-registry/componentRegistry.ts";
 import { MiddlewareComponent } from "./components/middleware-component/middlewareComponent.ts";
 import { DI } from "./dependency-injection/di.ns.ts";
 import { NativeComponentsRegistry } from "./mandarine-native/nativeComponentsRegistry.ts";
-import { MandarineStorageHandler } from "./mandarine-native/sessions/mandarineDefaultSessionStore.ts";
 import { MandarineEnvironmentalConstants } from "./MandarineEnvConstants.ts";
 import { MandarineLoading } from "./mandarineLoading.ts";
 import { TemplatesManager } from "./templates-registry/templatesRegistry.ts";
@@ -315,9 +314,6 @@ export namespace Mandarine {
             if(mandarineGlobal.mandarineSessionContainer == (undefined || null)) {
                 mandarineGlobal.mandarineSessionContainer = Defaults.MandarineDefaultSessionContainer();
             }
-            if(!mandarineGlobal.mandarineSessionContainer.store) {
-                mandarineGlobal.mandarineSessionContainer.store = new MandarineStorageHandler();
-            }
         };
 
         /**
@@ -336,9 +332,6 @@ export namespace Mandarine {
         */
         export function initializeNativeComponents() {
             const componentRegistry = getNativeComponentsRegistry();
-
-            // Initialize resource handlers
-            componentRegistry.get(MandarineCore.NativeComponents.WebMVCConfigurer).addResourceHandlers();
         };
     };
 
@@ -521,6 +514,10 @@ export namespace Mandarine {
                 isReadonly?: boolean;
                 onOverride?: (output: any) => void;
             }>
+        };
+
+        export interface MandarineNativeComponent<T> {
+            onInitialization(): T;
         }
 
         export class MandarineResourceHandlerRegistry extends ResourceHandlerRegistry {}
@@ -598,6 +595,7 @@ export namespace Mandarine {
     Mandarine.Global.getEntityManager();
     Mandarine.Global.getTemplateManager();
     Mandarine.Global.getResourceHandlerRegistry();
+    Mandarine.Global.initializeDefaultSessionContainer();
     Mandarine.Global.getSessionContainer();
     Mandarine.Global.initializeMiddleware();
 })();

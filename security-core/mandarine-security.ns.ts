@@ -41,7 +41,7 @@ export namespace MandarineSecurity {
                 autoclearExpiredSessions: boolean;
                 expiration: number; 
             };
-
+            launch(): void;
             get(sessionID: string, callback: (error, result) => void): void;
             getAll(callback: (error, result) => void): void;
             set(sessionID: string, sessionData: any, callback: (error, result) => void): void;

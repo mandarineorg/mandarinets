@@ -1,5 +1,6 @@
 import { MandarineSecurity } from "../../../security-core/mandarine-security.ns.ts";
 import { CommonUtils } from "../../utils/commonUtils.ts";
+import { MandarineSessionHandler } from "./mandarineDefaultSessionStore.ts";
 
 export class MandarineSessionContainer implements MandarineSecurity.Sessions.SessionContainer {
     public cookie: MandarineSecurity.Sessions.SessionCookie;
@@ -31,7 +32,7 @@ export class MandarineSessionContainer implements MandarineSecurity.Sessions.Ses
 
         this.saveUninitialized = false;
 
-        this.store = undefined;
+        this.store = new MandarineSessionHandler();
     }
 
     public set(setData: any): MandarineSessionContainer {

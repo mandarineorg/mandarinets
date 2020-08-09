@@ -3,9 +3,11 @@ import { Injectable } from "../../../main-core/dependency-injection/decorators/i
 import { Mandarine } from "../../../main-core/Mandarine.ns.ts";
 import { MandarineCore, MandarineResourceResolver } from "../../../mod.ts";
 import { ResourceHandler } from "../../../mvc-framework/core/internal/components/resource-handler-registry/resourceHandler.ts";
+import { WebMVCConfigurer } from "../../../main-core/mandarine-native/mvc/webMvcConfigurer.ts";
+import { Override } from "../../../main-core/decorators/native-components/override.ts";
 
-@Configuration()
-export class WebMVCConfigurer implements Mandarine.MandarineMVC.Configurers.WebMVCConfigurer {
+@Override()
+export class WebMvcConfigurer extends WebMVCConfigurer {
 
     @Injectable()
     public addResourceHandlers(): Mandarine.MandarineCore.IResourceHandlerRegistry {

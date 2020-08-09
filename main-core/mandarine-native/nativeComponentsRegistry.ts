@@ -12,7 +12,7 @@ export class NativeComponentsRegistry {
 
     private nativeComponentsProperties: Map<Mandarine.MandarineCore.NativeComponents, Mandarine.MandarineCore.NativeComponentsProperties> = new Map<Mandarine.MandarineCore.NativeComponents, Mandarine.MandarineCore.NativeComponentsProperties>();
 
-    private nativeComponents: Map<Mandarine.MandarineCore.NativeComponents, any> = new Map<Mandarine.MandarineCore.NativeComponents, any>();
+    private nativeComponents: Map<Mandarine.MandarineCore.NativeComponents, Mandarine.MandarineCore.MandarineNativeComponent<any>> = new Map<Mandarine.MandarineCore.NativeComponents, Mandarine.MandarineCore.MandarineNativeComponent<any>>();
 
     constructor() {
         this.loadNativeComponentsProperties();
@@ -44,7 +44,7 @@ export class NativeComponentsRegistry {
     }
 
     private loadNativeComponents() {
-        this.nativeComponents.set(Mandarine.MandarineCore.NativeComponents.WebMVCConfigurer, new WebMVCConfigurer());
+        this.nativeComponents.set(Mandarine.MandarineCore.NativeComponents.WebMVCConfigurer, new WebMVCConfigurer().onInitialization());
     }
 
     public override(nativeComponentType: Mandarine.MandarineCore.NativeComponents, nativeComponent: any): void {
@@ -66,7 +66,7 @@ export class NativeComponentsRegistry {
 
     }
 
-    public get(nativeComponentType: Mandarine.MandarineCore.NativeComponents) {
+    public get(nativeComponentType: Mandarine.MandarineCore.NativeComponents): any {
         return this.nativeComponents.get(nativeComponentType);
     }
 
