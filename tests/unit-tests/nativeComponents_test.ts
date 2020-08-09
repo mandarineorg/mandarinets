@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { Mandarine } from "../../main-core/Mandarine.ns.ts";
 import { MainCoreDecoratorProxy } from "../../main-core/proxys/mainCoreDecorator.ts";
 import { ResourceHandler } from "../../mvc-framework/core/internal/components/resource-handler-registry/resourceHandler.ts";

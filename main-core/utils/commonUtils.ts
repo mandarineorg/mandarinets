@@ -79,4 +79,12 @@ export class CommonUtils {
         if(CommonUtils.isNumeric(value)) return parseFloat(value);
         return value;
     }
+
+    public static async asyncIteratorToArray(iterator) {
+        const arr = [];
+        for await (const entry of iterator) {
+          arr.push(entry);
+        }
+        return arr;
+    }
 }

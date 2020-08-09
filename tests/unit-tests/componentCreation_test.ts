@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { Test, DenoAsserts, Orange } from "../mod.ts";
 import { MainCoreDecoratorProxy } from "../../main-core/proxys/mainCoreDecorator.ts";
 import { Mandarine } from "../../main-core/Mandarine.ns.ts";

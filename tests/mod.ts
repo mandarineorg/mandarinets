@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 export * as DenoAsserts from "https://deno.land/std@0.62.0/testing/asserts.ts";
 export { Orange, Test } from "https://x.nest.land/Orange@0.2.6/mod.ts";
 

@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { ApplicationContext } from "../../main-core/application-context/mandarineApplicationContext.ts";
 import { Mandarine } from "../../main-core/Mandarine.ns.ts";
 import { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
