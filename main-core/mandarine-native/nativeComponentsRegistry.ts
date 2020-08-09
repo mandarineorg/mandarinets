@@ -1,9 +1,10 @@
 import { ResourceHandlerRegistry } from "../../mvc-framework/core/internal/components/resource-handler-registry/resourceHandlerRegistry.ts";
 import { MandarineException } from "../exceptions/mandarineException.ts";
 import { Mandarine } from "../Mandarine.ns.ts";
+import { NativeComponentsOverrideProxy } from "../proxys/nativeComponentsOverrideProxy.ts";
+import { ReflectUtils } from "../utils/reflectUtils.ts";
 import { WebMVCConfigurer } from "./mvc/webMvcConfigurer.ts";
 import { MandarineSessionContainer } from "./sessions/mandarineSessionContainer.ts";
-import { ReflectUtils } from "../utils/reflectUtils.ts";
 
 export class NativeComponentsRegistry {
 
@@ -28,12 +29,15 @@ export class NativeComponentsRegistry {
                     methodName: "getSessionContainer",
                     type: MandarineSessionContainer,
                     onOverride: (output: MandarineSessionContainer) => {
-                        Mandarine.Global.changeSessionContainer(output);
+                        NativeComponentsOverrideProxy.changeSessionContainer(output);
                     }
                 },
                 {
                     methodName: "addResourceHandlers",
-                    type: ResourceHandlerRegistry
+                    type: ResourceHandlerRegistry,
+                    onOverride: (output: ResourceHandlerRegistry) => {
+                        NativeComponentsOverrideProxy.changeResourceHandlers(output);
+                    }
                 }
             ]
         });
@@ -54,6 +58,7 @@ export class NativeComponentsRegistry {
             if(methodsPresentInOverriding.includes(child.methodName)) {
                 const methodCall = nativeComponent[child.methodName]();
                 if(!(methodCall instanceof child.type)) throw new MandarineException(MandarineException.INVALID_OVERRIDEN_ON_METHOD.replace("%s", child.methodName));
+                if(child.onOverride) child.onOverride(methodCall);
             }
         });
 

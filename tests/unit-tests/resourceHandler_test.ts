@@ -6,6 +6,7 @@ import { DependencyInjectionDecoratorsProxy } from "../../main-core/proxys/depen
 import { MainCoreDecoratorProxy } from "../../main-core/proxys/mainCoreDecorator.ts";
 import { ResourceHandler } from "../../mvc-framework/core/internal/components/resource-handler-registry/resourceHandler.ts";
 import { DenoAsserts, mockDecorator, Orange, Test } from "../mod.ts";
+import { WebMVCConfigurer } from "../../main-core/mandarine-native/mvc/webMvcConfigurer.ts";
 
 export class ResourceHandlerTest {
 
@@ -24,8 +25,9 @@ export class ResourceHandlerTest {
     public createResourceHandlers() {
         let mandarineResolver = new MandarineResourceResolver();
 
-        class FakeConfigurationClass {
-            @mockDecorator()
+        @mockDecorator()
+        class FakeConfigurationClass extends WebMVCConfigurer {
+
             public addResourceHandlers() {
                 let resourceHandlerRegistry = Mandarine.Global.getResourceHandlerRegistry().getNew();
                 resourceHandlerRegistry.addResourceHandler(
@@ -37,11 +39,9 @@ export class ResourceHandlerTest {
                 return resourceHandlerRegistry;
             }
         }
-        DependencyInjectionDecoratorsProxy.registerInjectableDecorator(FakeConfigurationClass.prototype, "addResourceHandlers");
-        MainCoreDecoratorProxy.registerMandarinePoweredComponent(FakeConfigurationClass, Mandarine.MandarineCore.ComponentTypes.CONFIGURATION, {}, null);
-        ApplicationContext.getInstance().getComponentsRegistry().resolveDependencies();
-        MandarineTSFrameworkEngineMethods.initializeEngineMethods();
+        MainCoreDecoratorProxy.overrideNativeComponent(FakeConfigurationClass, Mandarine.MandarineCore.NativeComponents.WebMVCConfigurer);
         const resourceHandlers = Mandarine.Global.getResourceHandlerRegistry().getResourceHandlers();
+
         DenoAsserts.assertEquals(resourceHandlers, [
             {
                 resourceHandlerPath: [new RegExp("/docs/(.*)")],

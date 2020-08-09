@@ -47,9 +47,9 @@ export class MainCoreDecoratorProxy {
     }
 
     public static overrideNativeComponent(targetClass: any, overrideType: Mandarine.MandarineCore.NativeComponents) {
-        if(!overrideType) {
-            const className = ReflectUtils.getClassName(targetClass);
+        const className = ReflectUtils.getClassName(targetClass);
 
+        if(overrideType === undefined) {
             switch(className) {
                 case "WebMvcConfigurer":
                     overrideType = Mandarine.MandarineCore.NativeComponents.WebMVCConfigurer;
@@ -59,9 +59,9 @@ export class MainCoreDecoratorProxy {
                     throw new MandarineException(MandarineException.UNKNOWN_OVERRIDEN.replace("%s", className));
                 break;
             }
-
-            Mandarine.Global.getNativeComponentsRegistry().override(overrideType, new targetClass());
         }
+
+        Mandarine.Global.getNativeComponentsRegistry().override(overrideType, new targetClass());
     }
 
 }
