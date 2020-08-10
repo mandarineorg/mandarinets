@@ -6,6 +6,7 @@ import { Mandarine } from "../mod.ts";
 import { Cookie as MandarineCookie } from "./core/interfaces/http/cookie.ts";
 import { MandarineMVCContext } from "./core/mandarineMvcContext.ts";
 import { RenderEngineClass } from "./core/modules/view-engine/renderEngine.ts";
+import { MandarineSessionContainer } from "../main-core/mandarine-native/sessions/mandarineSessionContainer.ts";
 
 /**
 * This namespace contains all the essentials for Mandarine MVC to work
@@ -636,7 +637,8 @@ export namespace MandarineMvc {
 
     export namespace Configurers {
         export interface WebMVCConfigurer {
-            addResourceHandlers(): Mandarine.MandarineCore.IResourceHandlerRegistry;
+            getSessionContainer?(): MandarineSessionContainer;
+            addResourceHandlers?(): Mandarine.MandarineCore.IResourceHandlerRegistry;
         }
     }
 

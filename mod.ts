@@ -21,6 +21,7 @@ export { Controller } from "./mvc-framework/core/decorators/stereotypes/controll
 export { Param, RouteParam, QueryParam, RequestParam, Session, ServerRequestParam, ResponseParam, CookieParam, Model, RequestBody, Parameters } from "./mvc-framework/core/decorators/stereotypes/controller/parameterDecorator.ts";
 export { ResponseStatus } from "./mvc-framework/core/decorators/stereotypes/controller/responseStatus.ts";
 export { GET, POST, DELETE, PATCH, PUT, HEAD, OPTIONS } from "./mvc-framework/core/decorators/stereotypes/controller/routingDecorator.ts";
+export { Override } from "./main-core/decorators/native-components/override.ts";
 export { Cors } from "./mvc-framework/core/decorators/stereotypes/controller/corsMiddlewareDecorator.ts";
 export { Render } from "./mvc-framework/core/decorators/stereotypes/view-engine/viewEngineDecorators.ts";
 export { ViewModel } from "./mvc-framework/core/modules/view-engine/viewModel.ts";
@@ -36,3 +37,6 @@ export { MandarineResourceResolver } from "./main-core/mandarine-native/mvc/mand
 
 export { Optional } from "./pluggins/optional.ts";
 export { PromiseRepeater } from "./pluggins/promiseRepeater.ts";
+
+export { MandarineNative } from "./main-core/Mandarine.native.ns.ts";
+export { MandarineSessionHandler } from "./main-core/mandarine-native/sessions/mandarineDefaultSessionStore.ts";

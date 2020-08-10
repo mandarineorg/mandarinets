@@ -41,7 +41,7 @@ export namespace MandarineSecurity {
                 autoclearExpiredSessions: boolean;
                 expiration: number; 
             };
-
+            launch(): void;
             get(sessionID: string, callback: (error, result) => void): void;
             getAll(callback: (error, result) => void): void;
             set(sessionID: string, sessionData: any, callback: (error, result) => void): void;
@@ -54,17 +54,19 @@ export namespace MandarineSecurity {
             stopExpiringSessions(): void;
         }
 
+        export interface SessionCookie {
+            path?: string,
+            httpOnly?: boolean
+            secure?: boolean,
+            maxAge?: number
+        }
+
         /**
          * Represents the object of the configuration for the Session Container
          *
          */
         export interface SessionContainer {
-            cookie?: {
-                path?: string,
-                httpOnly?: boolean
-                secure?: boolean,
-                maxAge?: number
-            },
+            cookie?: SessionCookie,
             keys: string[],
             sessionPrefix?: string;
             genId?: Function,

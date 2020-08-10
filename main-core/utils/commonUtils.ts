@@ -54,7 +54,11 @@ export class CommonUtils {
     public static arrayIdentical(arr1, arr2){
         if (arr1.length !== arr2.length) return false;
         for (var i = 0, len = arr1.length; i < len; i++){
-            if (arr1[i] !== arr2[i]){
+            let val1 = arr1[i];
+            let val2 = arr2[i];
+            if(val1 instanceof RegExp) val1 = val1.toString();
+            if(val2 instanceof RegExp) val2 = val2.toString();
+            if (val1 !== val2){
                 return false;
             }
         }
@@ -74,5 +78,13 @@ export class CommonUtils {
         if(value === "false") return false;
         if(CommonUtils.isNumeric(value)) return parseFloat(value);
         return value;
+    }
+
+    public static async asyncIteratorToArray(iterator) {
+        const arr = [];
+        for await (const entry of iterator) {
+          arr.push(entry);
+        }
+        return arr;
     }
 }

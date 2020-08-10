@@ -2,7 +2,7 @@
 
 export class MandarineConstants {
 
-    public static RELEASE_VERSION = "1.4.0";
+    public static RELEASE_VERSION = "1.5.0";
 
     public static readonly REFLECTION_MANDARINE_INJECTION_FIELD = "mandarine-method-di-field";
     public static readonly REFLECTION_MANDARINE_METHOD_ROUTE = "mandarine-method-route";
@@ -17,5 +17,21 @@ export class MandarineConstants {
     public static readonly REFLECTION_MANDARINE_REPOSITORY_METHOD_MANUAL_QUERY = "mandarine-repository-manual-query";
     public static readonly REFLECTION_MANDARINE_METHOD_ROUTE_RENDER = "mandarine-method-route-render";
     public static readonly REFLECTION_HTTP_ACTION_KEY = "httpAction";
+
+    public static MANDARINE_COPYRIGHT_HEADER = "Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.";
+
+    public static MANDARINE_FILE_GLOBS: Array<string> = [
+        "./cli/**/*.ts",
+        "./logger/**/*.ts",
+        "./main-core/**/*.ts",
+        "./mvc-framework/**/*.ts",
+        "./orm-core/**/*.ts",
+        "./pluggins/**/*.ts",
+        "./security-core/**/*.ts",
+        "./tests/**/*.ts",
+        "./cli.ts",
+        "./deps.ts",
+        "./mod.ts"
+    ]
 
 }

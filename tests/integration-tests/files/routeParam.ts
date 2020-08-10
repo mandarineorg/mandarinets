@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { MandarineCore } from "../../../main-core/mandarineCore.ts";
 import { Controller } from "../../../mvc-framework/core/decorators/stereotypes/controller/controller.ts";
 import { Parameters, RouteParam } from "../../../mvc-framework/core/decorators/stereotypes/controller/parameterDecorator.ts";

@@ -13,28 +13,7 @@ export class MandarineTSFrameworkEngineMethods {
     public static logger: Log = Log.getLogger(MandarineTSFrameworkEngineMethods);
 
     public static initializeEngineMethods() {
-        this.initializeInternalManualComponents();
         this.initializeMiddlewares();
-    }
-
-    private static initializeInternalManualComponents(): void {
-        let appContext: Mandarine.ApplicationContext.IApplicationContext = ApplicationContext.getInstance();
-        let componentsRegistry: Mandarine.MandarineCore.IComponentsRegistry = appContext.getComponentsRegistry();
-        let manualComponentKeys: Array<string> = componentsRegistry.getAllComponentNamesByType(Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT);
-        if(manualComponentKeys != (null || undefined)) {
-            manualComponentKeys.forEach((componentName) => {
-                let instance = componentsRegistry.get(componentName).componentInstance;
-
-                switch(componentName) {
-                    case "getSessionContainer":
-                        appContext.changeSessionContainer(instance);
-                        break;
-                    case "addResourceHandlers":
-                        appContext.changeResourceHandlers(instance);
-                        break;
-                }
-            });
-        }
     }
 
     private static initializeMiddlewares(): void {

@@ -9,7 +9,7 @@ Legacy documentation can be found [here](https://mandarineframework.gitbook.io/m
 &nbsp;
 
 ## How can I contribute?
-See our [contributing guidelines](https://github.com/mandarineorg/mandarinets/blob/master/docs/contributing.md) && our [style guide](https://github.com/mandarineorg/mandarinets/blob/master/docs/style_guide.md)
+See our [contributing guidelines](https://github.com/mandarineorg/mandarinets/blob/master/docs/contributing.md) & our [style guide](https://github.com/mandarineorg/mandarinets/blob/master/docs/style_guide.md)
 
 &nbsp;
 
@@ -29,4 +29,4 @@ Mandarine Compiling process starts at the time your application includes any com
 &nbsp;
 
 ## Nest.land throws error when importing, what should I do?
-Even though we recognize [nest.land](https://nest.land) as our main import source. We also strongly recommend to use [Deno's X](https://deno.land/x) if nest.land _fails_. <br> The import of _deno.land/x_ is `https://deno.land/x/mandarinets@v1.4.0/mod.ts`.
+Even though we recognize [nest.land](https://nest.land) as our main import source. We also strongly recommend to use [Deno X](https://deno.land/x) if nest.land _fails_. <br> The import of _deno.land/x_ is `https://deno.land/x/mandarinets@v1.4.0/mod.ts`.

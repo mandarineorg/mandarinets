@@ -230,5 +230,13 @@
     {
       "url": "accessing-mvc-handler",
       "document": "mandarine-mvc/accessing-mvc-handler.md"
+    },
+    {
+      "url": "native-components",
+      "document": "mandarine-core/native-components.md"
+    },
+    {
+      "url": "native-components-list",
+      "document": "mandarine-core/native-components-list.md"
     }
 ]

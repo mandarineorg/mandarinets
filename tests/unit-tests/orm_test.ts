@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { ApplicationContext } from "../../main-core/application-context/mandarineApplicationContext.ts";
 import { ORMCoreDecoratorProxy } from "../../orm-core/core/proxys/ormCoreDecoratorProxy.ts";
 import { mockDecorator, Orange, Test, DenoAsserts } from "../mod.ts";

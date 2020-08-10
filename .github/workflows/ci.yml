@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
-        deno: ["v1.2.2", "v1.2.1"]
+        deno: ["v1.2.3", "v1.2.2"]
       fail-fast: true
     steps:
       - uses: actions/checkout@v2
@@ -18,4 +18,4 @@ jobs:
         with:
           deno-version: ${{ matrix.deno }}
       - name: run tests
-        run: deno test -c tsconfig.json --reload --allow-all
+        run: deno test -c tsconfig.json --reload --allow-all --unstable
