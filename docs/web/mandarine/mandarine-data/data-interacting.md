@@ -20,7 +20,7 @@ The `@CustomQuery` decorator allows you to write SQL queries in your repositorie
 ## API
 
 ```typescript
-import { Repository, MandarineRepository, CustomQuery, Controller, GET } from "https://x.nest.land/MandarineTS@1.4.0/mod.ts";
+import { Repository, MandarineRepository, CustomQuery, Controller, GET } from "https://x.nest.land/MandarineTS@1.5.0/mod.ts";
 import { Users } from "./usersModel.ts"; // A model
 
 @Repository()

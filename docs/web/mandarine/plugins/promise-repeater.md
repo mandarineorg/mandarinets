@@ -16,7 +16,7 @@ The promise repeater plugin allows you to "try" and repeat promises until they a
 ## API
 
 ```typescript
-import { PromiseRepeater } from "https://x.nest.land/MandarineTS@1.4.0/mod.ts";
+import { PromiseRepeater } from "https://x.nest.land/MandarineTS@1.5.0/mod.ts";
 
 let i = 0;
 const promiseFunction = async () => {
