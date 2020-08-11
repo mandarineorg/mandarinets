@@ -16,6 +16,8 @@ import { MandarineLoading } from "./mandarineLoading.ts";
 import { TemplatesManager } from "./templates-registry/templatesRegistry.ts";
 import { CommonUtils } from "./utils/commonUtils.ts";
 import { MandarineUtils } from "./utils/mandarineUtils.ts";
+import { MandarineNative } from "./Mandarine.native.ns.ts";
+
 /**
 * This namespace contains all the essentials for mandarine to work
 * Gnerally, global functionings are added to this namespace in order to be easily accesible across Mandarine
@@ -538,6 +540,8 @@ export namespace Mandarine {
    export import Security = MandarineSecurity; 
 
    export import ORM = MandarineORM; 
+
+   export import Native = MandarineNative;
 
     /**
     * Contains the default information Mandarine needs to work.
