@@ -1,0 +1,21 @@
+name: ci
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: Copyright header (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macOS-latest]
+        deno: ["v1.2.3"]
+      fail-fast: true
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup deno
+        uses: denolib/setup-deno@master
+        with:
+          deno-version: ${{ matrix.deno }}
+      - name: Verifying copyright header in files
+        run: deno test -c tsconfig.json --reload --allow-all --unstable tests/copyright.ts
