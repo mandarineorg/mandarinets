@@ -1,4 +1,4 @@
-// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.s
 
 export { ApplicationContext } from "./main-core/application-context/mandarineApplicationContext.ts";
 
