@@ -28,8 +28,14 @@ export class CopyrightTest {
             let fileLines = (await CommonUtils.asyncIteratorToArray(readLines(fileReader)));
             fileReader.close();
 
-            if(!fileLines[0].includes(MandarineConstants.MANDARINE_COPYRIGHT_HEADER)) {
-                throw new Error(`File ${filePath} does not have Mandarine copyright headers. You must include ${MandarineConstants.MANDARINE_COPYRIGHT_HEADER} in the first line of your file.`);
+            let copyrightHeaderExpected = `// ${MandarineConstants.MANDARINE_COPYRIGHT_HEADER}`;
+            if(!(fileLines[0] === copyrightHeaderExpected)) {
+                throw new Error(`File ${filePath} does not have Mandarine copyright headers. 
+                You must **strictly include** 
+
+                ${copyrightHeaderExpected}
+
+                in the first line of your file.`);
             }
 
         }
