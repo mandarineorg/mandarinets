@@ -8,6 +8,7 @@ import { WebMVCConfigurer } from "../../main-core/mandarine-native/mvc/webMvcCon
 import { MandarineResourceResolver } from "../../main-core/mandarine-native/mvc/mandarineResourceResolver.ts"
 import { MandarineSessionContainer } from "../../main-core/mandarine-native/sessions/mandarineSessionContainer.ts";
 import { MandarineNative } from "../../main-core/Mandarine.native.ns.ts";
+import { MandarineException } from "../../main-core/exceptions/mandarineException.ts";
 
 export class NativeComponentTest {
 
@@ -38,7 +39,7 @@ export class NativeComponentTest {
         let mandarineResolver = new MandarineResourceResolver();
 
         @mockDecorator()
-        class FakeOverrideClass extends MandarineNative.WebMvcConfigurer {
+        class FakeOverrideClass extends Mandarine.Native.WebMvcConfigurer{
 
             public addResourceHandlers() {
                 let resourceHandlerRegistry = Mandarine.Global.getResourceHandlerRegistry().getNew();
@@ -81,7 +82,7 @@ export class NativeComponentTest {
         DenoAsserts.assertEquals(Mandarine.Global.getSessionContainer().sessionPrefix, "mandarine-session");
         
         @mockDecorator()
-        class FakeOverrideClass extends MandarineNative.WebMvcConfigurer {
+        class FakeOverrideClass extends Mandarine.Native.WebMvcConfigurer {
 
             public getSessionContainer() {
                 return new MandarineSessionContainer().set({ sessionPrefix: "override-session-container" });
@@ -94,6 +95,26 @@ export class NativeComponentTest {
         MainCoreDecoratorProxy.overrideNativeComponent(FakeOverrideClass, Mandarine.MandarineCore.NativeComponents.WebMVCConfigurer);
         
         DenoAsserts.assertEquals(Mandarine.Global.getSessionContainer().sessionPrefix, "override-session-container");
+    }
+
+    @Test({
+        name: "Do not override WebMvcConfigurer",
+        description: "Should not override if its not being called from `Mandarine.Native`"
+    })
+    public dontOverrideIfItsnotPartOfNative() {
+        Mandarine.Global.initializeNativeComponents();
+
+        @mockDecorator()
+        class FakeOverrideClass extends WebMVCConfigurer {
+
+        }
+
+        Mandarine.Global.initializeNativeComponents();
+
+        DenoAsserts.assertThrows(() => {
+            MainCoreDecoratorProxy.overrideNativeComponent(FakeOverrideClass, Mandarine.MandarineCore.NativeComponents.WebMVCConfigurer);
+        }, MandarineException);
+        
     }
 
 

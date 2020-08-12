@@ -8,13 +8,13 @@ A good example of a resource handler is the way mandarine handles static content
 ## Overriding Behavior
 It is possible to create your own resource handlers & resource resolvers. For this, Mandarine allows you to implement Mandarine.MandarineMVC.Configurers.WebMVCConfigurer which will override the default behavior established by Mandarine.
 
-In order to override this behavior, create a class which will receive the decorator [`@Override`](/docs/mandarine/native-components). This class must implement Mandarine.MandarineMVC.Configurers.WebMVCConfigurer & **extend MandarineNative.WebMVCConfigurer** (available in mod.ts).
+In order to override this behavior, create a class which will receive the decorator [`@Override`](/docs/mandarine/native-components). This class must implement Mandarine.MandarineMVC.Configurers.WebMVCConfigurer & **extend Mandarine.Native.WebMvcConfigurer** (available in mod.ts).
 
 ```typescript
-import { MandarineNative, Override } from "https://x.nest.land/MandarineTS@1.5.0/mod.ts";
+import { Mandarine, Override } from "https://x.nest.land/MandarineTS@1.5.0/mod.ts";
 
 @Override()
-export class WebMvcConfigurer extends MandarineNative.WebMvcConfigurer {
+export class WebMvcConfigurer extends Mandarine.Native.WebMvcConfigurer {
 
 }
 ```
@@ -24,7 +24,7 @@ Then, method addResourceHandlers will need to be overridden
 ```typescript
 
 @Override()
-export class WebMvcConfigurer extends MandarineNative.WebMvcConfigurer {
+export class WebMvcConfigurer extends Mandarine.Native.WebMvcConfigurer {
 
     public addResourceHandlers(): Mandarine.MandarineCore.IResourceHandlerRegistry {
     }
@@ -36,10 +36,10 @@ Our method addResourceHandlers will return an instance of the Resource Handler R
 
 ```typescript
 
-import { Mandarine, MandarineNative, Override, ResourceHandler, MandarineResourceResolver } from "https://x.nest.land/MandarineTS@1.5.0/mod.ts";
+import { Mandarine, Override, ResourceHandler, MandarineResourceResolver } from "https://x.nest.land/MandarineTS@1.5.0/mod.ts";
 
 @Override()
-export class WebMvcConfigurer extends MandarineNative.WebMvcConfigurer {
+export class WebMvcConfigurer extends Mandarine.Native.WebMvcConfigurer {
 
     public addResourceHandlers(): Mandarine.MandarineCore.IResourceHandlerRegistry {
         /**
