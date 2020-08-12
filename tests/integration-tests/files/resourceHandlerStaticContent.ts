@@ -9,7 +9,7 @@ import { Override } from "../../../main-core/decorators/native-components/overri
 import { MandarineNative } from "../../../main-core/Mandarine.native.ns.ts";
 
 @Override()
-export class WebMvcConfigurer extends MandarineNative.WebMvcConfigurer {
+export class WebMvcConfigurer extends Mandarine.Native.WebMvcConfigurer {
 
     public addResourceHandlers(): Mandarine.MandarineCore.IResourceHandlerRegistry {
         let resourceHandlerRegistry = Mandarine.Global.getResourceHandlerRegistry().getNew();

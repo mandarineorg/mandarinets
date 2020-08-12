@@ -4,13 +4,13 @@ Native components are instances that Mandarine uses natively, meaning, during & 
 ------
 
 ## Overriding behavior
-Mandarine allows overriding whole or specific sections of a native class. The purpose behind this is to modify those internal behaviors Mandarine establishes as default. In order to override a native component all you need to do is to use the decorator `@Override` on top of your class and the use of `extends` to the native component you want to override (inside `MandarineNative`).  
+Mandarine allows overriding whole or specific sections of a native class. The purpose behind this is to modify those internal behaviors Mandarine establishes as default. In order to override a native component all you need to do is to use the decorator `@Override` on top of your class and the use of `extends` to the native component you want to override (inside `Mandarine.Native`).  
 A good example of what is described above:
 ```typescript
-import { Override, MandarineNative } from "https://x.nest.land/MandarineTS@1.5.0/mod.ts";
+import { Override, Mandarine } from "https://x.nest.land/MandarineTS@1.5.0/mod.ts";
 
 @Override()
-export class WebMvcConfigurer extends MandarineNative.WebMvcConfigurer {
+export class WebMvcConfigurer extends Mandarine.Native.WebMvcConfigurer {
     ....
 }
 ```
@@ -32,4 +32,4 @@ export class WebMvcConfigurer extends MandarineNative.WebMvcConfigurer {
 
 | Class Name | Override Target |
 | ---------- | --------------- |
-| WebMvcConfigurer | MandarineNative.WebMvcConfigurer |
+| WebMvcConfigurer | Mandarine.Native.WebMvcConfigurer |

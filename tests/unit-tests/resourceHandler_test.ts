@@ -28,7 +28,7 @@ export class ResourceHandlerTest {
         let mandarineResolver = new MandarineResourceResolver();
 
         @mockDecorator()
-        class FakeConfigurationClass extends MandarineNative.WebMvcConfigurer {
+        class FakeConfigurationClass extends Mandarine.Native.WebMvcConfigurer {
 
             public addResourceHandlers() {
                 let resourceHandlerRegistry = Mandarine.Global.getResourceHandlerRegistry().getNew();
