@@ -38,5 +38,4 @@ export { MandarineResourceResolver } from "./main-core/mandarine-native/mvc/mand
 export { Optional } from "./pluggins/optional.ts";
 export { PromiseRepeater } from "./pluggins/promiseRepeater.ts";
 
-export { MandarineNative } from "./main-core/Mandarine.native.ns.ts";
 export { MandarineSessionHandler } from "./main-core/mandarine-native/sessions/mandarineDefaultSessionStore.ts";
