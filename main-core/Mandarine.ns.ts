@@ -17,6 +17,8 @@ import { TemplatesManager } from "./templates-registry/templatesRegistry.ts";
 import { CommonUtils } from "./utils/commonUtils.ts";
 import { MandarineUtils } from "./utils/mandarineUtils.ts";
 import { MandarineNative } from "./Mandarine.native.ns.ts";
+import { MandarineMiscellaneous } from "./Mandarine.miscellaneous.ns.ts";
+import { JsonUtils } from "./utils/jsonUtils.ts";
 
 /**
 * This namespace contains all the essentials for mandarine to work
@@ -79,6 +81,24 @@ export namespace Mandarine {
         denoEnv: {
             [prop: string]: string
         }
+    }
+
+    /**
+     * ${MY_VAR} will be considered an environmental reference.
+     * The environmental reference will be parsed by CommonUtils.getEnvironmentalReferences
+     * and CommonUtils.getEnvironmentalReferences will return an array of EnvironmentalReference
+     * 
+     * ```
+     *  ${MY_VAR}
+     *  fullReference: ${MY_VAR}
+     *  variable: MY_VAR
+     *  environmentalValue: Deno.env.get("MY_VAR")
+     * ```
+     */
+    export interface EnvironmentalReference {
+        fullReference: string;
+        variable: string;
+        environmentalValue: string;
     }
 
     /**
@@ -194,7 +214,7 @@ export namespace Mandarine {
                     const initialProperties: MandarineInitialProperties = getMandarineInitialProps();
                     let mandarinePropertiesFile = Deno.env.get(MandarineEnvironmentalConstants.MANDARINE_PROPERTY_FILE) || Defaults.mandarinePropertiesFile;
                     if(initialProperties && initialProperties.propertiesFilePath) mandarinePropertiesFile = initialProperties.propertiesFilePath;
-                    const propertiesData = JSON.parse(CommonUtils.readFile(mandarinePropertiesFile));
+                    const propertiesData = JsonUtils.toJson(mandarinePropertiesFile, { isFile: true, allowEnvironmentalReferences: true });
                     setConfiguration(propertiesData);
                 } catch(error) {
                     mandarineGlobal.mandarineProperties = Defaults.MandarineDefaultConfiguration;
@@ -218,7 +238,7 @@ export namespace Mandarine {
                 try {
                     const propertiesEnvVariable = Deno.env.get(MandarineEnvironmentalConstants.MANDARINE_JSON_FILE);
                     const mandarineJsonFile = propertiesEnvVariable || "./mandarine.json";
-                    const propertiesData: MandarineInitialProperties = JSON.parse(CommonUtils.readFile(mandarineJsonFile));
+                    const propertiesData: MandarineInitialProperties = JsonUtils.toJson(mandarineJsonFile, { isFile: true, allowEnvironmentalReferences: false });
                     if(propertiesData) {
                         if(propertiesData.propertiesFilePath) defaultMandarineInitialProps.propertiesFilePath = propertiesData.propertiesFilePath;
                         if(propertiesData.denoEnv) {
@@ -542,6 +562,8 @@ export namespace Mandarine {
    export import ORM = MandarineORM; 
 
    export import Native = MandarineNative;
+
+   export import Miscellaneous = MandarineMiscellaneous;
 
     /**
     * Contains the default information Mandarine needs to work.
