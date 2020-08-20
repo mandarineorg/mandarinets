@@ -70,6 +70,21 @@ export const RequestParam = (): Function => {
 /**
  * **Decorator**
  * 
+ * Injects the whole context of the request
+ * 
+ * `@RequestContext()
+ *  Target: Method parameter`
+ */
+export const RequestContext = (): Function => {
+    return (target: Object, propertyName: string, index: number) => {
+        MVCDecoratorsProxy.registerRoutingParam(target, DI.InjectionTypes.REQUEST_CONTEXT_PARAM, propertyName, index);
+    };
+};
+
+
+/**
+ * **Decorator**
+ * 
  * Injects the session object from a request.
  * Modifications to the session will be automatically saved when the request finishes.
  * 

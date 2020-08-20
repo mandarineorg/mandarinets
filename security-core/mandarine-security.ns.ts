@@ -1,11 +1,20 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
 import { Cookie } from "../mvc-framework/core/interfaces/http/cookie.ts";
+import { Mandarine } from "../main-core/Mandarine.ns.ts";
+import { Request, Response } from "../deps.ts"
 
 /**
  * Contains all the essentials for Mandarine's security core to work
  */
 export namespace MandarineSecurity {
+
+    export namespace Crypto {
+        export interface PasswordEncoder {
+            encode: (rawPassword: string) => string;
+            matches: (rawPassword: string, encodedPassword: string) => boolean;
+        }
+    }
 
     export namespace Sessions {
 
@@ -21,12 +30,13 @@ export namespace MandarineSecurity {
          * Represents the object of a mandarine session. **This is not customizable**.
          *
          */
-        export interface IMandarineSession {
+        export interface MandarineSession {
             sessionID: string;
             sessionCookie: Cookie;
-            sessionData: any;
+            sessionData?: object;
             expiresAt?: Date;
             createdAt?: Date;
+            isSessionNew?: boolean;
         }
 
         /**
@@ -44,7 +54,7 @@ export namespace MandarineSecurity {
             launch(): void;
             get(sessionID: string, callback: (error, result) => void): void;
             getAll(callback: (error, result) => void): void;
-            set(sessionID: string, sessionData: any, callback: (error, result) => void): void;
+            set(sessionID: string, session: MandarineSession, callback: (error, result) => void): void;
             destroy(sessionID: string, callback: (error, result) => void): void;
             touch(sessionId: string, callback: (error, result) => void): void;
             exist?(sessionID: string): boolean;
@@ -75,33 +85,127 @@ export namespace MandarineSecurity {
             saveUninitialized?: boolean,
             store?: SessionStore
         }
+  
+    }
 
-        /**
-        * This is the class a session will have.
-        * When a session is created, a MandarineSession object is being created and it will contain all the available & requested information of this.
-        */
-        export class MandarineSession implements IMandarineSession {
+    export namespace Auth {
+        export type GrantedAuthority = string;
+        
+        export interface UserDetails {
+            /**
+             * Returns an array with the roles the current user has. Cannot return null nor undefined inside the array.
+             * Ex: ["ADMIN", "MODERATOR", "USER"]
+             */
+            roles: Array<GrantedAuthority> | Array<string>;
 
-            public sessionID: string;
-            public sessionCookie: Cookie;
-            public sessionData: any;
-            public isSessionNew?: boolean;
-            public expiresAt?: Date;
-            public createdAt?: Date;
-        
-            constructor(sessionId: string, defaultExpiration: number, sessionCookie: Cookie){
-                this.sessionID = sessionId;
-                this.sessionCookie = sessionCookie;
-                this.sessionData = {};
-                this.isSessionNew = true;
-                this.createdAt = new Date();
-        
-                if(this.sessionCookie && this.sessionCookie.expires) {
-                    this.expiresAt = new Date(this.sessionCookie.expires);
-                } else {
-                    this.expiresAt = new Date(new Date().getTime() + defaultExpiration);
-                }
+            /**
+             * Returns the password (encrypted) of the current user.
+             */
+            password: string;
+
+            /**
+             * Returns the username of the current user
+             */
+            username: string;
+
+            /**
+             * Returns the id of the current user
+             */
+            uid: number | string;
+
+            /**
+             * Indicates whether the user's account has expired. 
+             * An expired account cannot be authenticated.
+             */
+            accountExpired: boolean;
+
+            /**
+             *  Indicates whether the user is locked or unlocked.
+             *  A locked user cannot be authenticated.
+             */
+            accountLocked: boolean;
+            /**
+             * Indicates whether the user's credentials (password) has expired. 
+             * An account with expired credentials cannot be authenticated.
+             */
+            credentialsExpired: boolean;
+
+            /**
+             * Indicates whether the user is enabled or disabled. 
+             * A disabled user cannot be authenticated.
+             */
+            enabled: boolean;
+        }
+
+        export interface UserDetailsService {
+            /**
+             * Locates the user based on the username.
+             * 
+             * @param username the username identifying the user whose data is required.
+             * 
+             * @returns A user record with an implementation of UserDetails
+             * 
+             * @throws MandarineSecurityException if no user was found.
+             */
+            loadUserByUsername: (username: string) => UserDetails;
+        }
+
+        export interface AuthenticationResult {
+            status: "FAILED" | "PASSED" | "ALREADY-LOGGED-IN" | "UNKNOWN";
+            message?: string;
+        }
+
+        export interface AuthenticationManagerBuilder {
+            userDetailsService: (implementation: any) => AuthenticationManagerBuilder;
+            getUserDetailsService: () => UserDetailsService;
+            passwordEncoder: (implementation: Crypto.PasswordEncoder) => AuthenticationManagerBuilder;
+            getPasswordEncoder(): Crypto.PasswordEncoder;
+        }
+
+        export interface Authenticator {
+            verifyAuthenticationSatisfaction: () => boolean;
+            isAuthenticated: (requestContext: any) => boolean;
+            performAuthentication: (username: string, password: string, requestContext: any) => AuthenticationResult;
+            stopAuthentication: (requestContext: any) => void;
+        }
+
+        export interface Handler {
+            onSuccess: (request: Request, response: Response, result: AuthenticationResult) => void;
+            onFailure: (request: Request, response: Response, result: AuthenticationResult) => void;
+        }
+    }
+
+    export namespace Core {
+
+        export interface LoginConfigurer {
+            loginProcessingUrl: string;
+            loginSucessUrl: string;
+            loginPage: string;
+            usernameParameter: string;
+            passwordParameter: string;
+            logoutUrl: string;
+            logoutSuccessUrl: string;
+            handler: Auth.Handler;
+        }
+
+        export namespace Modules {
+            export interface LoginBuilder {
+                login: LoginConfigurer;
+                loginProcessingUrl: (url: string) => LoginBuilder;
+                loginSuccessUrl: (url: string) => LoginBuilder;
+                loginPage: (url: string) => LoginBuilder;
+                loginUsernameParameter: (parameter: string) => LoginBuilder;
+                loginPasswordParameter: (parameter: string) => LoginBuilder;
+                logoutUrl: (url: string) => LoginBuilder;
+                logoutSuccessUrl: (url: string) => LoginBuilder;
+                handler?: (handler: Auth.Handler) => LoginBuilder;
             }
-        }        
+        }
+
+    }
+
+    export function getAuthManagerBuilder(): Auth.AuthenticationManagerBuilder {
+        let mandarineGlobal: Mandarine.Global.MandarineGlobalInterface = Mandarine.Global.getMandarineGlobal();
+        return mandarineGlobal.__SECURITY__.auth.authManagerBuilder;
     }
 }

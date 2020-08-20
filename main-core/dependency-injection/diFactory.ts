@@ -168,6 +168,9 @@ export class DependencyInjectionFactory {
                         };
                         args.push(allParameters);
                         break;
+                    case DI.InjectionTypes.REQUEST_CONTEXT_PARAM:
+                        args.push(extraData.fullContext);
+                        break;
                 }
             }
         }
@@ -179,22 +182,22 @@ export class DependencyInjectionFactory {
     /** 
      * Get a Dependency from the DI Container programatically
      */
-    public getDependency(instance: any) {
-        let component = ApplicationContext.getInstance().getComponentsRegistry().getComponentByHandlerType(instance);
+    public getDependency(type: any) {
+        let component = ApplicationContext.getInstance().getComponentsRegistry().getComponentByHandlerType(type);
         if(component != (null || undefined)) return (component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT) ? component.componentInstance : component.componentInstance.getClassHandler();
     }
 
     /** 
      * Get a Dependency from the DI Container programatically
      */
-    public getSeed(instance: any) {
-        return this.getDependency(instance);
+    public getSeed(type: any) {
+        return this.getDependency(type);
     }
 
     /** 
      * Get a Dependency from the DI Container programatically
      */
-    public getInjectable(instance: any) {
-        return this.getDependency(instance);
+    public getInjectable(type: any) {
+        return this.getDependency(type);
     }
 }

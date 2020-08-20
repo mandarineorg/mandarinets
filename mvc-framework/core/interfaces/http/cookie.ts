@@ -1,10 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-export interface Cookie {
-    /** Name of the cookie. */
-    name: string;
-    /** Value of the cookie. */
-    value: string;
+export interface CookieConfig {
     /** Expiration date of the cookie. */
     expires?: Date;
     /** Max-Age of the Cookie. Must be integer superior to 0. */
@@ -22,4 +18,11 @@ export interface Cookie {
     sameSite?: "Strict" | "Lax" | "None";
     /** Additional key value pairs with the form "key=value" */
     unparsed?: string[];
+}
+
+export interface Cookie extends CookieConfig {
+    /** Name of the cookie. */
+    name: string;
+    /** Value of the cookie. */
+    value: string;
 }

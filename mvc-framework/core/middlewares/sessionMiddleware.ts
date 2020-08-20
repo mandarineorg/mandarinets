@@ -39,7 +39,13 @@ export class SessionMiddleware {
             signed: false
         });
         
-        (<any>context.request).sessionContext = new Mandarine.Security.Sessions.MandarineSession(sesId, sessionContainerConfig.store.options.expiration, sessionCookie);
+        (<any>context.request).sessionContext = SessionsUtils.sessionBuilder({
+            sessionID: sesId,
+            sessionCookie: sessionCookie
+        }, {
+            expiration: sessionContainerConfig.store.options.expiration
+        });
+        
         (<any>context.request).sessionID = sesId;
         (<any>context.request).session = {};
         return sesId;
@@ -77,7 +83,13 @@ export class SessionMiddleware {
             sessionContainerConfig.store.get(sesId, (error, result: Mandarine.Security.Sessions.MandarineSession) => {
 
                 if(result == undefined) {
-                    (<any>context.request).sessionContext = new Mandarine.Security.Sessions.MandarineSession(sesId, sessionContainerConfig.store.options.expiration, sessionCookie);
+                    (<any>context.request).sessionContext = SessionsUtils.sessionBuilder({
+                        sessionID: sesId,
+                        sessionCookie: sessionCookie
+                    }, {
+                        expiration: sessionContainerConfig.store.options.expiration
+                    });
+                    
                 } else {
                     (<any>context.request).sessionContext = result;
                 }

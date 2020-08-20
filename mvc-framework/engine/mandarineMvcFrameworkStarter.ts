@@ -10,6 +10,7 @@ import { ControllerComponent } from "../core/internal/components/routing/control
 import { middlewareResolver, requestResolver } from "../core/internal/components/routing/routingResolver.ts";
 import { handleCors } from "../core/middlewares/cors/corsMiddleware.ts";
 import { SessionMiddleware } from "../core/middlewares/sessionMiddleware.ts";
+import { AuthenticationRouting } from "../core/internal/auth/authenticationRouting.ts";
 
 /**
  * This class works as the MVC engine and it is responsible for the initialization & behavior of HTTP requests.
@@ -44,6 +45,9 @@ export class MandarineMvcFrameworkStarter {
         let mvcControllers: Mandarine.MandarineCore.ComponentRegistryContext[] = ApplicationContext.getInstance().getComponentsRegistry().getControllers();
 
         ApplicationContext.CONTEXT_METADATA.engineMetadata.mvc.controllersAmount = mvcControllers.length;
+
+        const authenticationRoute = new AuthenticationRouting();
+        this.router = authenticationRoute.initialize(this.router);
 
         try {
             mvcControllers.forEach((component: Mandarine.MandarineCore.ComponentRegistryContext, index) => {

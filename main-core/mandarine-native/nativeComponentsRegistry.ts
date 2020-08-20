@@ -7,6 +7,8 @@ import { NativeComponentsOverrideProxy } from "../proxys/nativeComponentsOverrid
 import { ReflectUtils } from "../utils/reflectUtils.ts";
 import { MandarineSessionContainer } from "./sessions/mandarineSessionContainer.ts";
 import { MandarineNative } from "../Mandarine.native.ns.ts";
+import { AuthenticationManagerBuilder } from "./security/authenticationManagerBuilderDefault.ts";
+import { HTTPLoginBuilder } from "../../security-core/core/modules/LoginBuilder.ts";
 
 export class NativeComponentsRegistry {
 
@@ -31,14 +33,30 @@ export class NativeComponentsRegistry {
                     methodName: "getSessionContainer",
                     type: MandarineSessionContainer,
                     onOverride: (output: MandarineSessionContainer) => {
-                        NativeComponentsOverrideProxy.changeSessionContainer(output);
+                        NativeComponentsOverrideProxy.MVC.changeSessionContainer(output);
                     }
                 },
                 {
                     methodName: "addResourceHandlers",
                     type: ResourceHandlerRegistry,
                     onOverride: (output: ResourceHandlerRegistry) => {
-                        NativeComponentsOverrideProxy.changeResourceHandlers(output);
+                        NativeComponentsOverrideProxy.MVC.changeResourceHandlers(output);
+                    }
+                },
+                {
+                    methodName: "authManagerBuilder",
+                    type: AuthenticationManagerBuilder,
+                    providers: [Mandarine.Global.getMandarineGlobal().__SECURITY__.auth.authManagerBuilder],
+                    onOverride: (output: Mandarine.Security.Auth.AuthenticationManagerBuilder) => {
+                        NativeComponentsOverrideProxy.Security.changeAuthenticationManager(output);
+                    }
+                },
+                {
+                    methodName: "httpLoginBuilder",
+                    type: HTTPLoginBuilder,
+                    providers: [Mandarine.Global.getMandarineGlobal().__SECURITY__.auth.httpLoginBuilder],
+                    onOverride: (output: Mandarine.Security.Core.Modules.LoginBuilder) => {
+                        NativeComponentsOverrideProxy.Security.changeHTTPLogingBuilder(output);
                     }
                 }
             ]
@@ -58,9 +76,10 @@ export class NativeComponentsRegistry {
 
         nativeComponentProps.children.forEach((child) => {
             if(methodsPresentInOverriding.includes(child.methodName)) {
-                const methodCall = nativeComponent[child.methodName]();
+                if(child.methodName === "onInitialization") throw new MandarineException(MandarineException.ON_INITIALIZATION_OVERRIDEN);
+                const methodCall = (child.providers) ? nativeComponent[child.methodName](...child.providers) : nativeComponent[child.methodName]();
                 if(!(methodCall instanceof child.type)) throw new MandarineException(MandarineException.INVALID_OVERRIDEN_ON_METHOD.replace("%s", child.methodName));
-                if(child.onOverride) child.onOverride(methodCall);
+                if(child.onOverride || (child.isReadonly === false || child.isReadonly === undefined)) child.onOverride(methodCall);
             }
         });
 
