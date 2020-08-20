@@ -69,6 +69,7 @@ export class AuthenticationRouting {
 
         const processor = async (context: Context, next) => {
             AuthenticationRouting.authenticator.stopAuthentication(context);
+            context.response.status = 200;
             context.response.redirect(httpLogingConfigurer.login.logoutSuccessUrl);
             await next();
         }
