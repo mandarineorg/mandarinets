@@ -8,7 +8,7 @@ import { ReflectUtils } from "../utils/reflectUtils.ts";
 import { MandarineSessionContainer } from "./sessions/mandarineSessionContainer.ts";
 import { MandarineNative } from "../Mandarine.native.ns.ts";
 import { AuthenticationManagerBuilder } from "./security/authenticationManagerBuilderDefault.ts";
-import { HTTPLoginBuilder } from "../../security-core/core/modules/LoginBuilder.ts";
+import { HTTPLoginBuilder } from "../../security-core/core/modules/loginBuilder.ts";
 
 export class NativeComponentsRegistry {
 

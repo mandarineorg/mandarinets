@@ -21,7 +21,7 @@ import { CommonUtils } from "./utils/commonUtils.ts";
 import { JsonUtils } from "./utils/jsonUtils.ts";
 import { MandarineUtils } from "./utils/mandarineUtils.ts";
 import { CookieConfig } from "../mvc-framework/core/interfaces/http/cookie.ts";
-import { HTTPLoginBuilder } from "../security-core/core/modules/LoginBuilder.ts";
+import { HTTPLoginBuilder } from "../security-core/core/modules/loginBuilder.ts";
 
 /**
 * This namespace contains all the essentials for mandarine to work
