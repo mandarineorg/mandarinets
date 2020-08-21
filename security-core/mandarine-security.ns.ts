@@ -52,7 +52,7 @@ export namespace MandarineSecurity {
                 expiration: number; 
             };
             launch(): void;
-            get(sessionID: string, callback: (error, result) => void): void;
+            get(sessionID: string, callback: (error, result) => void, config?: { touch: boolean }): void;
             getAll(callback: (error, result) => void): void;
             set(sessionID: string, session: MandarineSession, callback: (error, result) => void): void;
             destroy(sessionID: string, callback: (error, result) => void): void;

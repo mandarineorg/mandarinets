@@ -94,13 +94,9 @@ export class SessionMiddleware {
                     (<any>context.request).sessionContext = result;
                 }
 
-                if(sessionContainerConfig.rolling) {
-                    (<Mandarine.Security.Sessions.MandarineSession>(<any>context.request).sessionContext).sessionCookie.expires = new Date(new Date().getTime() + sessionContainerConfig.store.options.expiration);
-                }
-
                 (<any>context.request).sessionID = sesId;
                 (<any>context.request).session = Object.assign({}, (<Mandarine.Security.Sessions.MandarineSession>(<any>context.request).sessionContext).sessionData);
-            });
+            }, { touch: true });
         }
     }
 

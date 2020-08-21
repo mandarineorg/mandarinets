@@ -17,9 +17,10 @@ export const handleBuiltinAuth = () => {
             
             (context.request as any).authentication = {
                 AUTH_SES_ID: result.sessionID,
+                AUTH_EXPIRES: result.expiresAt,
                 AUTH_PRINCIPAL: result.sessionData
             }
-        });
+        }, { touch: true });
 
         await next();
     }
