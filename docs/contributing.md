@@ -6,10 +6,11 @@
     - Make sure no one else is working on it already
     - Assign it to you
     - Investigate everything you have to investigate
-    
 ### Self-dependency
 We want to be as self-dependent as we can, this means, the less external modules or third-party codes we have, the better.
-
+# How to run
+1) Start by cloning this repository into your local machine.
+2) To run the tests, use the command `deno test -c tsconfig.json --allow-all`
 # Branch
   - When starting to work on an issue, you **must always** branch off of `develop`
 # Submitting a pull request
