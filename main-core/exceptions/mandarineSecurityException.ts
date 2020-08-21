@@ -5,6 +5,7 @@ export class MandarineSecurityException extends Error {
   public static readonly INVALID_USER_DETAILS_SERVICE: string = "A UserDetailsService was introduced but it could not be started because it is either undefined or an invalid service. UserDetailsService must be a Mandarine-powered component";
   public static readonly UNSATISFIED_AUTHENTICATOR: string = "The current authenticator is unsatisfied. Password encoder or current `UserDetailsService` may be null or undefined";
   public static readonly INVALID_LOGIN_DATA: string = "Authentication could not be performed because the request contains either invalid or null data.";
+  public static readonly USER_DETAILS_SERVICE_INCOMPLETE: string = "A UserDetailsService was found but it is invalid in the current context. Make sure you are implementing the method `loadUserByUsername`";
 
     constructor(public message: string, public superAlert: boolean = false) {
       super(message);

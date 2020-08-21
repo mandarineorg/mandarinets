@@ -8,6 +8,7 @@ import { Mandarine } from "../../Mandarine.ns.ts";
 import { MandarineConstants } from "../../mandarineConstants.ts";
 import { CommonUtils } from "../../utils/commonUtils.ts";
 import { HttpUtils } from "../../utils/httpUtils.ts";
+import { MandarineAuthenticationException } from "../../exceptions/mandarineAuthException.ts";
 
 export class Authenticator implements Mandarine.Security.Auth.Authenticator {
 
@@ -32,38 +33,43 @@ export class Authenticator implements Mandarine.Security.Auth.Authenticator {
 
         if(this.isAuthenticated(requestContext)) {
             result.status = "ALREADY-LOGGED-IN";
+            result.authSesId = AuthUtils.findAuthCookie(requestContext);
             return result;
         }
+        
+        const throwUserError = () => { throw new MandarineAuthenticationException("User does not exist", Mandarine.Security.Auth.AuthExceptions.INVALID_USER); }
+        const throwPasswordError = () => { throw new MandarineAuthenticationException("Password is invalid", Mandarine.Security.Auth.AuthExceptions.INVALID_PASSWORD); }
 
         if(!username) {
-            result.message = "Username is undefined"
-            return result;
+            throwUserError();
         }
 
         try {
             if(!this.verifyAuthenticationSatisfaction()) throw new MandarineSecurityException(MandarineSecurityException.UNSATISFIED_AUTHENTICATOR);
             const getAuthManagerBuilder = Mandarine.Security.getAuthManagerBuilder();
             const userDetailsLookUp = getAuthManagerBuilder.getUserDetailsService().loadUserByUsername(username);
+            if(!userDetailsLookUp) throwUserError();
             const userRoles = userDetailsLookUp.roles;
 
-            if(!getAuthManagerBuilder.getPasswordEncoder().matches(password, userDetailsLookUp.password)) {
-                result.message = "Password is invalid";
-                return result;
+            let passwordMatch;
+            try {
+                passwordMatch = getAuthManagerBuilder.getPasswordEncoder().matches(password, userDetailsLookUp.password);
+            } catch {
+                throwPasswordError();
+            }
+
+            if(!passwordMatch) {
+                throwPasswordError();
             } else if(!userRoles || !Array.isArray(userRoles) || Array.isArray(userRoles) && userRoles.length === 0) {
-                result.message = "Roles in user are not valid inside Mandarine's context";
-                return result;
+                throw new MandarineAuthenticationException("Roles in user are not valid inside Mandarine's context", Mandarine.Security.Auth.AuthExceptions.INVALID_ROLES);
             } else if(userDetailsLookUp.accountExpired) {
-                result.message = "Account has expired";
-                return result;
+                throw new MandarineAuthenticationException("Account has expired", Mandarine.Security.Auth.AuthExceptions.ACCOUNT_EXPIRED);
             } else if(userDetailsLookUp.accountLocked) {
-                result.message = "Account is locked";
-                return result;
+                throw new MandarineAuthenticationException("Account is locked", Mandarine.Security.Auth.AuthExceptions.ACCOUNT_LOCKED);
             } else if(userDetailsLookUp.credentialsExpired) {
-                result.message = "Credentials are expired or are not valid";
-                return result;
+                throw new MandarineAuthenticationException("Credentials are expired or are not valid", Mandarine.Security.Auth.AuthExceptions.CREDENTIALS_EXPIRED);
             }else if(!userDetailsLookUp.enabled) {
-                result.message = "Account is currently disabled";
-                return result;
+                throw new MandarineAuthenticationException("Account is currently disabled", Mandarine.Security.Auth.AuthExceptions.ACCOUNT_DISABLED);
             }
 
             result.status = "PASSED";
@@ -75,9 +81,7 @@ export class Authenticator implements Mandarine.Security.Auth.Authenticator {
             });
 
             if(!sessionAuthCookie) {
-                result.status = "FAILED";
-                result.message = "Error creating auth cookie"
-                return result;
+                throw new Error("Error creating auth cookie");
             }
 
             let mandarineSession = SessionsUtils.sessionBuilder({
@@ -87,14 +91,19 @@ export class Authenticator implements Mandarine.Security.Auth.Authenticator {
             mandarineSession.sessionData = userDetailsLookUp;
 
             Mandarine.Global.getSessionContainer().store.set(sessionAuthCookie, mandarineSession, (error, result) => {});
-
+            
+            result.authSesId = sessionAuthCookie;
             result.message = "Success";
             return result;
 
         } catch(error) {
             result.status = "FAILED";
-            result.message = error.toString();
 
+            if(error instanceof MandarineAuthenticationException) {
+                result.exception = error.authException;
+            }
+
+            result.message = error.toString();
             return result;
         }
     }

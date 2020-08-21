@@ -107,4 +107,8 @@ export class MandarineSessionHandler implements Mandarine.Security.Sessions.Sess
             this.options.expirationIntervalHandler = undefined;
         }
     }
+
+    public stopIntervals(): void {
+        clearInterval(this.options.expirationIntervalHandler);
+    }
 }

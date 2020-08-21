@@ -62,6 +62,7 @@ export namespace MandarineSecurity {
             clearExpiredSessions(): void;
             startExpiringSessions(): void;
             stopExpiringSessions(): void;
+            stopIntervals(): void;
         }
 
         export interface SessionCookie {
@@ -90,6 +91,17 @@ export namespace MandarineSecurity {
 
     export namespace Auth {
         export type GrantedAuthority = string;
+
+        export enum AuthExceptions {
+            INVALID_USER = "INVALID_USER",
+            INVALID_PASSWORD = "INVALID_PASSWORD",
+            INVALID_ROLES = "INVALID_ROLES",
+            ACCOUNT_EXPIRED = "ACCOUNT_EXPIRED",
+            ACCOUNT_LOCKED = "ACCOUNT_LOCKED",
+            CREDENTIALS_EXPIRED = "CREDENTIALS_EXPIRED",
+            ACCOUNT_DISABLED = "ACCOUNT_DISABLED",
+            INVALID_COOKIE = "INVALID_COOKIE",
+        }
         
         export interface UserDetails {
             /**
@@ -152,6 +164,8 @@ export namespace MandarineSecurity {
 
         export interface AuthenticationResult {
             status: "FAILED" | "PASSED" | "ALREADY-LOGGED-IN" | "UNKNOWN";
+            exception?: AuthExceptions; 
+            authSesId?: string;
             message?: string;
         }
 

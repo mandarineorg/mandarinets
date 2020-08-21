@@ -8,6 +8,7 @@ export const handleBuiltinAuth = () => {
     return async (context: Context, next) => {
         const authCookieId = AuthUtils.findAuthCookie(context);
         if(!authCookieId) {
+            (context.request as any).authentication = undefined;
             await next();
             return;
         }

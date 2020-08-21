@@ -11,6 +11,7 @@ export class AuthenticationManagerBuilder implements Mandarine.Security.Auth.Aut
 
     public userDetailsService(userdetailsServiceType: any): AuthenticationManagerBuilder {
         if(!userdetailsServiceType) throw new MandarineSecurityException(MandarineSecurityException.INVALID_USER_DETAILS_SERVICE);
+        if(!userdetailsServiceType.prototype.loadUserByUsername) throw new MandarineSecurityException(MandarineSecurityException.USER_DETAILS_SERVICE_INCOMPLETE);
 
         this._userDetailsServiceType = userdetailsServiceType;
         return this;
