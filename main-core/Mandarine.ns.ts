@@ -75,6 +75,9 @@ export namespace Mandarine {
             authentication?: {
                 expiration?: number,
                 cookie?: CookieConfig
+            },
+            security?: {
+                cookiesSignKeys: Array<string>
             }
         } & any
     };
@@ -314,6 +317,8 @@ export namespace Mandarine {
             if(properties.mandarine.resources.staticRegExpPattern == (null || undefined)) properties.mandarine.resources.staticRegExpPattern = defaultConfiguration.mandarine.resources.staticRegExpPattern;
             if(properties.mandarine.authentication == (null || undefined)) properties.mandarine.authentication = defaultConfiguration.mandarine.authentication;
             if(properties.mandarine.authentication.expiration == (null || undefined)) properties.mandarine.authentication.expiration = defaultConfiguration.mandarine.authentication.expiration;
+            if(properties.mandarine.security == (null || undefined)) properties.mandarine.security = defaultConfiguration.mandarine.security;
+            if(properties.mandarine.security.cookiesSignKeys == (null || undefined) || properties.mandarine.security.cookiesSignKeys && properties.mandarine.security.cookiesSignKeys.length == 0) properties.mandarine.security.cookiesSignKeys = defaultConfiguration.mandarine.security.cookiesSignKeys;
 
             if(!Object.values(Mandarine.MandarineMVC.TemplateEngine.Engines).includes(properties.mandarine.templateEngine.engine)) throw new TemplateEngineException(TemplateEngineException.INVALID_ENGINE);
 
@@ -623,6 +628,9 @@ export namespace Mandarine {
                     cookie: {
                         httpOnly: false
                     }
+                },
+                security: {
+                    cookiesSignKeys: ["HORSE", "MANDARINE", "CAT", "NORWAY", "ORANGE", "TIGER"]
                 }
             }
         };

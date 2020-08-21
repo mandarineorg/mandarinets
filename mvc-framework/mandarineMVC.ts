@@ -60,6 +60,8 @@ export class MandarineMVC {
 
     private initializeMVCApplication(): Application {
 
+        let mandarineConfiguration: Mandarine.Properties = Mandarine.Global.getMandarineConfiguration();
+
         let starter:MandarineMvcFrameworkStarter = new MandarineMvcFrameworkStarter((engine: MandarineMvcFrameworkStarter) => {
             engine.intializeControllersRoutes();
             engine.initializeEssentials();
@@ -73,7 +75,7 @@ export class MandarineMVC {
         .use(async (ctx, next) => {
             await next();
         });
-        app.keys = ["MANDARINE"];
+        app.keys = [mandarineConfiguration.mandarine.security.cookiesSignKeys];
 
         this.oakMiddleware.forEach((middleware) => {
             app = app.use(middleware);
