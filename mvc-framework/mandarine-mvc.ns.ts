@@ -2,11 +2,11 @@
 
 import { Context } from "../deps.ts";
 import { DI } from "../main-core/dependency-injection/di.ns.ts";
+import { MandarineSessionContainer } from "../main-core/mandarine-native/sessions/mandarineSessionContainer.ts";
 import { Mandarine } from "../mod.ts";
 import { Cookie as MandarineCookie } from "./core/interfaces/http/cookie.ts";
 import { MandarineMVCContext } from "./core/mandarineMvcContext.ts";
 import { RenderEngineClass } from "./core/modules/view-engine/renderEngine.ts";
-import { MandarineSessionContainer } from "../main-core/mandarine-native/sessions/mandarineSessionContainer.ts";
 
 /**
 * This namespace contains all the essentials for Mandarine MVC to work
@@ -639,6 +639,8 @@ export namespace MandarineMvc {
         export interface WebMVCConfigurer {
             getSessionContainer?(): MandarineSessionContainer;
             addResourceHandlers?(): Mandarine.MandarineCore.IResourceHandlerRegistry;
+            authManagerBuilder?(provider?: Mandarine.Security.Auth.AuthenticationManagerBuilder): Mandarine.Security.Auth.AuthenticationManagerBuilder;
+            httpLoginBuilder?(provider?: Mandarine.Security.Core.Modules.LoginBuilder): Mandarine.Security.Core.Modules.LoginBuilder;
         }
     }
 

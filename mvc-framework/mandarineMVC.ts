@@ -5,6 +5,7 @@ import { Log } from "../logger/log.ts";
 import { Mandarine } from "../main-core/Mandarine.ns.ts";
 import { ResourceHandlerMiddleware } from "./core/middlewares/resourceHandlerMiddleware.ts";
 import { MandarineMvcFrameworkStarter } from "./engine/mandarineMvcFrameworkStarter.ts";
+import { handleBuiltinAuth } from "./core/middlewares/authMiddleware.ts";
 
 /**
 * This class is the bridge between the HTTP server & the Mandarine Compiler.
@@ -18,8 +19,6 @@ export class MandarineMVC {
     get handle() {
         let app: Application = this.initializeMVCApplication();
         
-        let mandarineConfiguration: Mandarine.Properties = Mandarine.Global.getMandarineConfiguration();
-
         if(this.onRun) {
             this.onRun(this);
         }
@@ -45,10 +44,9 @@ export class MandarineMVC {
 
         try {
             setTimeout(async () => {
-                app.listen({
+                app.listen({ 
                     hostname: (options && options.hostname) ? options.hostname : mandarineConfiguration.mandarine.server.host,
-                    port: (options && options.port) ? options.port : mandarineConfiguration.mandarine.server.port,
-                    signal: Mandarine.MandarineMVC.MVC_ABORT_CONTROLLER.signal
+                    port: (options && options.port) ? options.port : mandarineConfiguration.mandarine.server.port 
                 });
             }, 1000);
         } catch(error) {
@@ -62,18 +60,22 @@ export class MandarineMVC {
 
     private initializeMVCApplication(): Application {
 
+        let mandarineConfiguration: Mandarine.Properties = Mandarine.Global.getMandarineConfiguration();
+
         let starter:MandarineMvcFrameworkStarter = new MandarineMvcFrameworkStarter((engine: MandarineMvcFrameworkStarter) => {
             engine.intializeControllersRoutes();
             engine.initializeEssentials();
         });
         
         let app: Application = new Application()
+        .use(handleBuiltinAuth())
         .use(ResourceHandlerMiddleware())
         .use(starter.getRouter().routes())
         .use(starter.getRouter().allowedMethods())
         .use(async (ctx, next) => {
             await next();
         });
+        app.keys = [mandarineConfiguration.mandarine.security.cookiesSignKeys];
 
         this.oakMiddleware.forEach((middleware) => {
             app = app.use(middleware);

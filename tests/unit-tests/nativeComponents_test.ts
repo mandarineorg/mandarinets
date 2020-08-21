@@ -9,6 +9,10 @@ import { MandarineResourceResolver } from "../../main-core/mandarine-native/mvc/
 import { MandarineSessionContainer } from "../../main-core/mandarine-native/sessions/mandarineSessionContainer.ts";
 import { MandarineNative } from "../../main-core/Mandarine.native.ns.ts";
 import { MandarineException } from "../../main-core/exceptions/mandarineException.ts";
+import { ApplicationContext } from "../../main-core/application-context/mandarineApplicationContext.ts";
+import { BcryptEncoder } from "../../security-core/encoders/bcryptEncoder.ts";
+import { LoginHandler } from "../../security-core/core/modules/loginHandler.ts";
+import { MandarineSecurityException } from "../../main-core/exceptions/mandarineSecurityException.ts";
 
 export class NativeComponentTest {
 
@@ -115,6 +119,89 @@ export class NativeComponentTest {
             MainCoreDecoratorProxy.overrideNativeComponent(FakeOverrideClass, Mandarine.MandarineCore.NativeComponents.WebMVCConfigurer);
         }, MandarineException);
         
+    }
+
+
+    @Test({
+        name: "Override auth manager & login builder",
+        description: "Should override authManagerBuilder & httpLoginBuilder"
+    })
+    public overrideAuthManagerBuilderAndHttpLoginBuilder() {
+
+        @mockDecorator()
+        class UserAuthService {
+            public loadUserByUsername() {}
+        }
+        ApplicationContext.getInstance().getComponentsRegistry().clearComponentRegistry()
+        MainCoreDecoratorProxy.registerMandarinePoweredComponent(UserAuthService, Mandarine.MandarineCore.ComponentTypes.COMPONENT, {}, null);
+        ApplicationContext.getInstance().getComponentsRegistry().resolveDependencies();
+
+        @mockDecorator()
+        class FakeOverrideClass extends Mandarine.Native.WebMvcConfigurer{
+
+            public authManagerBuilder(provider: Mandarine.Security.Auth.AuthenticationManagerBuilder) {
+                provider = provider.userDetailsService(UserAuthService);
+                return provider;
+            }
+
+            public httpLoginBuilder(provider: Mandarine.Security.Core.Modules.LoginBuilder) {
+                provider.loginPage("/pages/login")
+                .loginProcessingUrl("/login-post")
+                .loginSuccessUrl("/any-endpoint")
+                .loginUsernameParameter("username")
+                .loginPasswordParameter("password")
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/any-endpoint")
+                return provider;
+            }
+
+        }
+
+        Mandarine.Global.initializeNativeComponents();
+        MainCoreDecoratorProxy.overrideNativeComponent(FakeOverrideClass, Mandarine.MandarineCore.NativeComponents.WebMVCConfigurer);
+
+        const getAuthManagerBuilder = Mandarine.Global.getMandarineGlobal().__SECURITY__.auth.authManagerBuilder;
+        const getHttpLoginBuilder = Mandarine.Global.getMandarineGlobal().__SECURITY__.auth.httpLoginBuilder;
+
+        DenoAsserts.assert(getAuthManagerBuilder.getUserDetailsService() instanceof UserAuthService);
+        DenoAsserts.assert(getAuthManagerBuilder.getPasswordEncoder() instanceof BcryptEncoder);
+        DenoAsserts.assertEquals(getHttpLoginBuilder.login, {
+            loginProcessingUrl: "/login-post",
+            loginSucessUrl: "/any-endpoint",
+            loginPage: "/pages/login",
+            usernameParameter: "username",
+            passwordParameter: "password",
+            logoutUrl: "/logout",
+            logoutSuccessUrl: "/any-endpoint",
+            handler: new LoginHandler()
+        });
+    }
+
+    @Test({
+        name: "Try to override authManagerBuilder->userDetailsService",
+        description: "Should throw an error when passing a invalid implementation"
+    })
+    public invalidUserDetailsImpl() {
+
+        @mockDecorator()
+        class UserAuthServiceSecond {
+        }
+        ApplicationContext.getInstance().getComponentsRegistry().clearComponentRegistry();
+        MainCoreDecoratorProxy.registerMandarinePoweredComponent(UserAuthServiceSecond, Mandarine.MandarineCore.ComponentTypes.COMPONENT, {}, null);
+        ApplicationContext.getInstance().getComponentsRegistry().resolveDependencies();
+
+        @mockDecorator()
+        class FakeOverrideClass extends Mandarine.Native.WebMvcConfigurer{
+
+            public authManagerBuilder(provider: Mandarine.Security.Auth.AuthenticationManagerBuilder) {
+                provider = provider.userDetailsService(UserAuthServiceSecond);
+                return provider;
+            }
+
+        }
+
+        Mandarine.Global.initializeNativeComponents();
+        DenoAsserts.assertThrows(() => MainCoreDecoratorProxy.overrideNativeComponent(FakeOverrideClass, Mandarine.MandarineCore.NativeComponents.WebMVCConfigurer), MandarineSecurityException);
     }
 
 

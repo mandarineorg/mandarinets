@@ -18,6 +18,9 @@ export class MandarineConstants {
     public static readonly REFLECTION_MANDARINE_METHOD_ROUTE_RENDER = "mandarine-method-route-render";
     public static readonly REFLECTION_HTTP_ACTION_KEY = "httpAction";
 
+    // SECURITY
+    public static readonly SECURITY_AUTH_COOKIE_NAME = "MDAUTHID";
+
     public static MANDARINE_COPYRIGHT_HEADER = "Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.";
 
     public static MANDARINE_FILE_GLOBS: Array<string> = [

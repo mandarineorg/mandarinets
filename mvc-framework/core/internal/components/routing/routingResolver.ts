@@ -19,6 +19,7 @@ export const requestResolver = async (routingAction: Mandarine.MandarineMVC.Rout
     let handler: any = component.getClassHandler();
 
     let methodArgs: DI.ArgumentValue[] = await DI.Factory.methodArgumentResolver(handler, routingAction.actionMethodName, {
+        fullContext: context,
         request: context.request,
         response: context.response,
         params: context.params,
@@ -64,6 +65,7 @@ export const middlewareResolver = async (preRequest: boolean, middlewareComponen
     let methodName: string = (preRequest) ? "onPreRequest" : "onPostRequest";
 
     let methodArgs: DI.ArgumentValue[] = await DI.Factory.methodArgumentResolver(handler, methodName, {
+        fullContext: context,
         request: context.request,
         response: context.response,
         params: context.params,

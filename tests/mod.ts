@@ -8,4 +8,22 @@ export function mockDecorator() {
     return (target: any, propertyName?: string) => {}
 }
 
+export class MockCookies {
+
+    private cookies = {};
+
+    public set(cookieName: string, cookieValue: string) {
+        this.cookies[cookieName] = cookieValue;
+    }
+
+    public get(cookieName) {
+        return this.cookies[cookieName];
+    }
+
+    public delete(cookieName) {
+        delete this.cookies[cookieName];
+    }
+
+}
+
 export const INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY = "./tests/integration-tests/files";

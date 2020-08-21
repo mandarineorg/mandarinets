@@ -23,6 +23,7 @@ export namespace DI {
      *
      */
     export interface ArgumentsResolverExtraData {
+        fullContext: any;
         request: Request;
         response: any;
         params: any;
@@ -58,6 +59,7 @@ export namespace DI {
         ROUTE_PARAM,
         SERVER_REQUEST_PARAM,
         REQUEST_PARAM,
+        REQUEST_CONTEXT_PARAM,
         SESSION_PARAM,
         REQUEST_BODY_PARAM,
         RESPONSE_PARAM,

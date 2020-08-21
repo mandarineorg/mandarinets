@@ -24,11 +24,16 @@ export class MandarineSessionHandler implements Mandarine.Security.Sessions.Sess
         return (window as any).mandarineSessionsContainer;
     }
 
-    public get(sessionId: string, callback: (error, result) => void): void {
+    public get(sessionId: string, callback: (error, result) => void, config?: { touch: boolean }): void {
         if(!this.exist(sessionId)) {
             callback(Mandarine.Security.Sessions.MandarineSessionExceptions.SESSION_NOT_FOUND, undefined);
             return;
         } else {
+            
+            if(config && config.touch === true) {
+                this.touch(sessionId, () => {});
+            }
+
             let sessionContainer: Array<Mandarine.Security.Sessions.MandarineSession>;
             this.getAll((error, result) => sessionContainer = result);
             
@@ -78,13 +83,7 @@ export class MandarineSessionHandler implements Mandarine.Security.Sessions.Sess
             return;
         } else {
             this.get(sessionId, (error, session: Mandarine.Security.Sessions.MandarineSession) => {
-
-                if(session && session.sessionCookie && session.sessionCookie.expires) {
-                    session.expiresAt = new Date(session.sessionCookie.expires);
-                } else {
-                    session.expiresAt = new Date(now.getTime() + this.options.expiration);
-                }
-
+                session.expiresAt = new Date(now.getTime() + this.options.expiration);
                 this.set(sessionId, session, (error, callback) => {});
             });
         }
@@ -107,5 +106,9 @@ export class MandarineSessionHandler implements Mandarine.Security.Sessions.Sess
         if(this.options.expirationIntervalHandler != undefined) {
             this.options.expirationIntervalHandler = undefined;
         }
+    }
+
+    public stopIntervals(): void {
+        clearInterval(this.options.expirationIntervalHandler);
     }
 }
