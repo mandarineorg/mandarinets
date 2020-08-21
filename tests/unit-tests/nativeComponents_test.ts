@@ -132,7 +132,7 @@ export class NativeComponentTest {
         class UserAuthService {
             public loadUserByUsername() {}
         }
-
+        ApplicationContext.getInstance().getComponentsRegistry().clearComponentRegistry()
         MainCoreDecoratorProxy.registerMandarinePoweredComponent(UserAuthService, Mandarine.MandarineCore.ComponentTypes.COMPONENT, {}, null);
         ApplicationContext.getInstance().getComponentsRegistry().resolveDependencies();
 
@@ -186,9 +186,8 @@ export class NativeComponentTest {
         @mockDecorator()
         class UserAuthServiceSecond {
         }
-
-        MainCoreDecoratorProxy.registerMandarinePoweredComponent(UserAuthServiceSecond, Mandarine.MandarineCore.ComponentTypes.COMPONENT, {}, null);
         ApplicationContext.getInstance().getComponentsRegistry().clearComponentRegistry();
+        MainCoreDecoratorProxy.registerMandarinePoweredComponent(UserAuthServiceSecond, Mandarine.MandarineCore.ComponentTypes.COMPONENT, {}, null);
         ApplicationContext.getInstance().getComponentsRegistry().resolveDependencies();
 
         @mockDecorator()
