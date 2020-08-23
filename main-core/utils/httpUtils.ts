@@ -3,8 +3,8 @@
 import { decoder } from "https://deno.land/std@0.62.0/encoding/utf8.ts";
 import { Cookies as OakCookies, Request } from "../../deps.ts";
 import { Log } from "../../logger/log.ts";
-import { KeyStack } from "../../security-core/keyStack.ts";
 import { Mandarine } from "../Mandarine.ns.ts";
+import { CommonUtils } from "./commonUtils.ts";
 
 export class HttpUtils {
 
@@ -185,6 +185,19 @@ export class HttpUtils {
         if(cookieExists && cookieName) {
             return cookiesFromRequest[cookieName];
         }
+    }
+
+    public static assignContentType(context: any) {
+        let contentType: string = Mandarine.Global.getMandarineConfiguration().mandarine.server.responseType;
+
+        const responseBody = context.response.body;
+        if(responseBody != (null || undefined)) {
+           if(CommonUtils.isObject(responseBody) || Array.isArray(responseBody)) {
+                contentType = Mandarine.MandarineMVC.MediaTypes.APPLICATION_JSON;
+           }
+        }
+        
+        context.response.headers.set('Content-Type', contentType);
     }
     
 }

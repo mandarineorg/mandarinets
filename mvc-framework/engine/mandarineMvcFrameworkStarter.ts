@@ -11,6 +11,7 @@ import { middlewareResolver, requestResolver } from "../core/internal/components
 import { handleCors } from "../core/middlewares/cors/corsMiddleware.ts";
 import { SessionMiddleware } from "../core/middlewares/sessionMiddleware.ts";
 import { AuthenticationRouting } from "../core/internal/auth/authenticationRouting.ts";
+import { VerifyPermissions } from "../../security-core/core/internals/permissions/verifyPermissions.ts";
 
 /**
  * This class works as the MVC engine and it is responsible for the initialization & behavior of HTTP requests.
@@ -105,13 +106,27 @@ export class MandarineMvcFrameworkStarter {
                 return;
             }
 
+            const controllerPermissions = controllerComponent.options.withPermissions;
+            const routePermissions = routingAction.routingOptions.withPermissions;
+            let allowed = true;
+
+            if(controllerPermissions) {
+                allowed = VerifyPermissions(controllerPermissions, context.request);
+            }
+            if(routePermissions && allowed) {
+                allowed = VerifyPermissions(routePermissions, context.request);
+            }
+
+            if(!allowed) {
+                context.response.status = 401;
+                return;
+            }
+
             this.preRequestInternalMiddlewares(context, routingAction, controllerComponent); // Execute internal middleware like sessions
             let continueRequest: boolean = await this.executeUserMiddlewares(true, availableMiddlewares, context, routingAction); // If the user has any middleware, execute it
 
             if(continueRequest) {
                 await requestResolver(routingAction, context);
-
-                MandarineMvcFrameworkStarter.assignContentType(context);
 
                 this.executeUserMiddlewares(false, availableMiddlewares, context, routingAction);
                 this.postRequestInternalMiddlewares(context);
@@ -147,16 +162,4 @@ export class MandarineMvcFrameworkStarter {
         return this.router;
     }
 
-    private static assignContentType(context: any) {
-        let contentType: string = Mandarine.Global.getMandarineConfiguration().mandarine.server.responseType;
-
-        const responseBody = context.response.body;
-        if(responseBody != (null || undefined)) {
-           if(CommonUtils.isObject(responseBody) || Array.isArray(responseBody)) {
-                contentType = Mandarine.MandarineMVC.MediaTypes.APPLICATION_JSON;
-           }
-        }
-        
-        context.response.headers.set('Content-Type', contentType);
-    }
 }

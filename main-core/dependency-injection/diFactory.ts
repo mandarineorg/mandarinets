@@ -171,6 +171,9 @@ export class DependencyInjectionFactory {
                     case DI.InjectionTypes.REQUEST_CONTEXT_PARAM:
                         args.push(extraData.fullContext);
                         break;
+                    case DI.InjectionTypes.AUTH_PRINCIPAL_PARAM:
+                        args.push((extraData.request as any).authentication?.AUTH_PRINCIPAL);
+                        break;
                 }
             }
         }

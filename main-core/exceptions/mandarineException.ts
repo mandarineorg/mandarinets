@@ -12,7 +12,8 @@ export class MandarineException extends Error {
     public static INVALID_OVERRIDEN: string = "Invalid native component overriding";
     public static INVALID_OVERRIDEN_ON_METHOD: string = "Return value from %s is not a compatible value for overriding";
     public static UNKNOWN_OVERRIDEN: string = "Mandarine could not execute internal override because %s is not of a known native component.";
-    public static ON_INITIALIZATION_OVERRIDEN: string = "The method `onInitialization` cannot be overriden because it is a Mandarine reserved method."
+    public static ON_INITIALIZATION_OVERRIDEN: string = "The method `onInitialization` cannot be overriden because it is a Mandarine reserved method.";
+    public static INVALID_ALLOWONLY_DECORATOR_PERMISSIONS: string = "Decorator `@AllowOnly` only receives an array or a security expression (string).";
   
     constructor(public message: string, public superAlert: boolean = false) {
       super(message);

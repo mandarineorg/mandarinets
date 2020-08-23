@@ -35,7 +35,7 @@ export class ControllerComponent {
     public initializeControllerFunctionality() {
         this.initializeRoutes();
         this.initializeDefaultResponseStatus();
-        this.initializeCorsMiddlewareOptions();
+        this.initializeControllerOptions();
     }
 
     public registerAction(routeAction: Mandarine.MandarineMVC.Routing.RoutingAction): void {
@@ -73,15 +73,21 @@ export class ControllerComponent {
         this.options.responseStatus = defaultStatusAnnotationContext.responseStatus;
     }
 
-    private initializeCorsMiddlewareOptions(): void {
+    private initializeControllerOptions(): void {
+        const REFLECTION_OPTIONS = {
+            cors: MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_CORS_MIDDLEWARE, 
+            withPermissions: MandarineConstants.REFLECTION_MANDARINE_SECURITY_ALLOWONLY_DECORATOR
+        };
         let metadataKeysFromClass: Array<any> = Reflect.getMetadataKeys(this.getClassHandlerType());
-        if(metadataKeysFromClass == (null || undefined)) return;
 
-        let defaultCorsMiddlewareMetadataKey: Array<any> = metadataKeysFromClass.find((metadataKey: string) => metadataKey === `${MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_CORS_MIDDLEWARE}`);
-        if(defaultCorsMiddlewareMetadataKey) {
-            let defaultStatusAnnotationContext: Mandarine.MandarineMVC.CorsMiddlewareOption = <Mandarine.MandarineMVC.CorsMiddlewareOption> Reflect.getMetadata(defaultCorsMiddlewareMetadataKey, this.getClassHandlerType());
-            this.options.cors = defaultStatusAnnotationContext;
-        }
+        Object.keys(REFLECTION_OPTIONS).forEach((interfaceKey) => {
+            const optionLookup = REFLECTION_OPTIONS[interfaceKey];
+            const metadata: Array<any> = metadataKeysFromClass?.find((metadataKey: string) => metadataKey === optionLookup);
+            if(metadata) {
+                const metadataValue = Reflect.getMetadata(metadata, this.getClassHandlerType());
+                this.options[interfaceKey] = metadataValue;
+            }
+        });
     }
 
     private initializeRoutes(): void {
@@ -96,10 +102,7 @@ export class ControllerComponent {
             let annotationContext: AnnotationMetadataContext = <AnnotationMetadataContext> Reflect.getMetadata(value, classHandler);
             if(annotationContext.type == "ROUTE") {
                 let routeContext: Mandarine.MandarineMVC.Routing.RoutingAnnotationContext = <Mandarine.MandarineMVC.Routing.RoutingAnnotationContext> annotationContext.context;
-                if(!routeContext.options) routeContext.options = {};
-
-                let routeCors: Mandarine.MandarineMVC.CorsMiddlewareOption = this.getRouteCors(classHandler, routeContext.methodName);
-                if(routeCors) routeContext.options.cors = routeCors;
+                this.initializeRouteContextOptions(routeContext, classHandler);
                 const fullRoute = this.getFullRoute(routeContext.route);
                 const routingAction = {
                     actionParent: routeContext.className,
@@ -116,8 +119,18 @@ export class ControllerComponent {
         });
     }
 
-    private getRouteCors(classHandler, methodName): Mandarine.MandarineMVC.CorsMiddlewareOption {
-        return Reflect.getMetadata(`${MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_CORS_MIDDLEWARE}:${methodName}`, classHandler, methodName);
+    private getRouteMetadata(metadataKey, classHandler, methodName): any {
+        return Reflect.getMetadata(metadataKey, classHandler, methodName);
+    }
+
+    private initializeRouteContextOptions(routeContext: Mandarine.MandarineMVC.Routing.RoutingAnnotationContext, classHandler: any) {
+        if(!routeContext.options) routeContext.options = {};
+
+        const routeCors: Mandarine.MandarineMVC.CorsMiddlewareOption = this.getRouteMetadata(`${MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_CORS_MIDDLEWARE}:${routeContext.methodName}`, classHandler, routeContext.methodName);
+        if(routeCors) routeContext.options.cors = routeCors;
+
+        const routePermissions: Mandarine.Security.Auth.Permissions = this.getRouteMetadata(`${MandarineConstants.REFLECTION_MANDARINE_SECURITY_ALLOWONLY_DECORATOR}:${routeContext.methodName}`, classHandler, routeContext.methodName);
+        if(routePermissions) routeContext.options.withPermissions = routePermissions;
     }
 
     private initializeRoutingActionContext(routeAction: Mandarine.MandarineMVC.Routing.RoutingAction) {
