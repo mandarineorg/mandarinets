@@ -335,5 +335,36 @@ export class HttpHandlersTest {
 
     }
 
+    @Test({
+        name: "Set responsestatus by decorator",
+        description: "Should set a responsestatus by decorator on the controller and method level"
+    })
+    public setResponseStatusByDecorator() {
+        @mockDecorator()
+        @mockDecorator()
+        class MyController {
+            
+            @mockDecorator()
+            @mockDecorator()
+            public getRoute(invalidParam, myAllParameters) {
+            }
+
+        }
+
+        MVCDecoratorsProxy.registerResponseStatusDecorator(MyController, 400, undefined);
+        MVCDecoratorsProxy.registerHttpAction("/response-status-decorator", MandarineMvc.HttpMethods.GET, MyController.prototype, "getRoute", undefined);
+        MVCDecoratorsProxy.registerRoutingParam(MyController.prototype, DI.InjectionTypes.PARAMETERS_PARAM, "getRoute", 1, undefined);
+        MVCDecoratorsProxy.registerResponseStatusDecorator(MyController.prototype, 301, "getRoute");
+        MVCDecoratorsProxy.registerControllerComponent(MyController, undefined);
+        ApplicationContext.getInstance().getComponentsRegistry().resolveDependencies();
+        ApplicationContext.getInstance().getComponentsRegistry().initializeControllers();
+        let controller: ControllerComponent = ApplicationContext.getInstance().getComponentsRegistry().get("MyController").componentInstance;
+        let actions: Map<String, Mandarine.MandarineMVC.Routing.RoutingAction> = controller.getActions();
+        let action = actions.get(controller.getActionName("getRoute"));
+        console.log(action);
+        DenoAsserts.assertEquals(action.routingOptions.responseStatus, 301);
+        DenoAsserts.assertEquals(controller.options.responseStatus, 400);
+    }
+
 
 }

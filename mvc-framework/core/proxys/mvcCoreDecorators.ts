@@ -12,17 +12,14 @@ import { AnnotationMetadataContext } from "../interfaces/mandarine/mandarineAnno
 export class MVCDecoratorsProxy {
 
     public static registerResponseStatusDecorator(targetClass: any, httpCode: Mandarine.MandarineMVC.HttpStatusCode, methodName: string) {
-        let className: string = ReflectUtils.getClassName(targetClass);
-
-        let defaultHttpResponseAnnotationMetadataName: string = `${MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_DEFAULT_HTTP_RESPONSE_CODE}`;
-
-        let metadataContext: Mandarine.MandarineMVC.ResponseStatusMetadataContext = {
-            classParentName: className,
-            responseStatus: httpCode,
-            methodName: methodName
-        };
-        
-        Reflect.defineMetadata(defaultHttpResponseAnnotationMetadataName, metadataContext, targetClass);
+        let isMethod: boolean = methodName != null;
+        if(!isMethod) {
+            let httpResponseStatusAnnotation: string = `${MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_DEFAULT_HTTP_RESPONSE_CODE}`;
+            Reflect.defineMetadata(httpResponseStatusAnnotation, httpCode, targetClass);
+        } else {
+            let httpResponseStatusAnnotation: string = `${MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_DEFAULT_HTTP_RESPONSE_CODE}:${methodName}`;
+            Reflect.defineMetadata(httpResponseStatusAnnotation, httpCode, targetClass, methodName);
+        }
     }
 
     public static registerCORSMiddlewareDecorator(targetClass: any, corsOptions: Mandarine.MandarineMVC.CorsMiddlewareOption, methodName: string) {
