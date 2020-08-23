@@ -189,3 +189,19 @@ export const Parameters = (): Function => {
         MVCDecoratorsProxy.registerRoutingParam(target, DI.InjectionTypes.PARAMETERS_PARAM, propertyName, index);
     }
 }
+
+ /**
+ * **Decorator**
+ * 
+ * Injects the principal (user data) of the current authorized user in the request
+ * 
+ * `@AuthPrincipal()
+ *  Target: Method parameter`
+ * 
+ * @returns an object (which contains Mandarine.Security.Auth.UserDetails) with the user data.
+ */
+export const AuthPrincipal = (): Function => {
+    return (target: any, propertyName: string, index: number) => {
+        MVCDecoratorsProxy.registerRoutingParam(target, DI.InjectionTypes.AUTH_PRINCIPAL_PARAM, propertyName, index);
+    }
+}

@@ -90,7 +90,12 @@ export namespace MandarineSecurity {
     }
 
     export namespace Auth {
+
+        export type PermissionValidator = (request: any, authentication: any) => (...parameters: Array<any>) => boolean;
+
         export type GrantedAuthority = string;
+        export type PredefinedExpressions = "isauthenticated()";
+        export type Permissions = Array<string | Mandarine.Security.Auth.GrantedAuthority | Mandarine.Security.Auth.PredefinedExpressions> | string;
 
         export enum AuthExceptions {
             INVALID_USER = "INVALID_USER",

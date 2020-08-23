@@ -6,6 +6,7 @@ import { Mandarine } from "../main-core/Mandarine.ns.ts";
 import { ResourceHandlerMiddleware } from "./core/middlewares/resourceHandlerMiddleware.ts";
 import { MandarineMvcFrameworkStarter } from "./engine/mandarineMvcFrameworkStarter.ts";
 import { handleBuiltinAuth } from "./core/middlewares/authMiddleware.ts";
+import { HttpUtils } from "../main-core/utils/httpUtils.ts";
 
 /**
 * This class is the bridge between the HTTP server & the Mandarine Compiler.
@@ -73,6 +74,7 @@ export class MandarineMVC {
         .use(starter.getRouter().routes())
         .use(starter.getRouter().allowedMethods())
         .use(async (ctx, next) => {
+            HttpUtils.assignContentType(ctx);
             await next();
         });
         app.keys = [mandarineConfiguration.mandarine.security.cookiesSignKeys];

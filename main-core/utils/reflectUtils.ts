@@ -42,4 +42,12 @@ export class ReflectUtils {
     public static constructorHasParameters(objClass): boolean {
         return Reflect.getMetadata("design:paramtypes", objClass) != undefined;
     }
+
+    public static makeEvalContext(...declarations: Array<any>)
+    {
+        declarations?.forEach((declaration) => {
+            eval(declaration);
+        });
+        return (expression: string) => { return eval(expression); }
+    }
 }

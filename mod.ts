@@ -18,7 +18,7 @@ export { Inject } from "./main-core/dependency-injection/decorators/Inject.ts";
 export { Injectable } from "./main-core/dependency-injection/decorators/injectable.ts";
 export { MandarineCore } from "./main-core/mandarineCore.ts";
 export { Controller } from "./mvc-framework/core/decorators/stereotypes/controller/controller.ts";
-export { Param, RouteParam, QueryParam, RequestParam, Session, ServerRequestParam, ResponseParam, CookieParam, Model, RequestBody, Parameters } from "./mvc-framework/core/decorators/stereotypes/controller/parameterDecorator.ts";
+export { Param, RouteParam, QueryParam, RequestParam, Session, ServerRequestParam, ResponseParam, CookieParam, Model, RequestBody, Parameters, AuthPrincipal } from "./mvc-framework/core/decorators/stereotypes/controller/parameterDecorator.ts";
 export { ResponseStatus } from "./mvc-framework/core/decorators/stereotypes/controller/responseStatus.ts";
 export { GET, POST, DELETE, PATCH, PUT, HEAD, OPTIONS } from "./mvc-framework/core/decorators/stereotypes/controller/routingDecorator.ts";
 export { Override } from "./main-core/decorators/native-components/override.ts";
@@ -39,3 +39,5 @@ export { Optional } from "./pluggins/optional.ts";
 export { PromiseRepeater } from "./pluggins/promiseRepeater.ts";
 
 export { MandarineSessionHandler } from "./main-core/mandarine-native/sessions/mandarineDefaultSessionStore.ts";
+
+export { AllowOnly } from "./security-core/core/decorators/allowOnly.ts";
