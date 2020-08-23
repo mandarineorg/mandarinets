@@ -53,7 +53,7 @@ export class AuthAllowOnly {
         }
 
         SecurityCoreDecoratorsProxy.registerAllowOnlyDecorator(MyControllerWithRoutes.prototype, ["MODERATOR", "ADMIN"], "getRoute");
-        MVCDecoratorsProxy.registerHttpAction("/api-get", MandarineMvc.HttpMethods.GET, MyControllerWithRoutes.prototype, "getRoute", undefined);
+        MVCDecoratorsProxy.registerHttpAction("/api-get-allow-only", MandarineMvc.HttpMethods.GET, MyControllerWithRoutes.prototype, "getRoute", undefined);
         MVCDecoratorsProxy.registerControllerComponent(MyControllerWithRoutes, undefined);
         ApplicationContext.getInstance().getComponentsRegistry().initializeControllers();
         let actions: Map<String, Mandarine.MandarineMVC.Routing.RoutingAction> = ApplicationContext.getInstance().getComponentsRegistry().get("MyControllerWithRoutes").componentInstance.getActions();
