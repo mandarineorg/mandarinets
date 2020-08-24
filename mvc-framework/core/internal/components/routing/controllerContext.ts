@@ -11,6 +11,10 @@ import { ReflectUtils } from "../../../../../main-core/utils/reflectUtils.ts";
 import { AnnotationMetadataContext } from "../../../interfaces/mandarine/mandarineAnnotationMetadataContext.ts";
 import { MandarineMVCContext } from "../../../mandarineMvcContext.ts";
 import { RoutingUtils } from "../../../utils/mandarine/routingUtils.ts";
+import { NonComponentMiddlewareTarget } from "../../../../../main-core/components/middleware-component/middlewareTarget.ts";
+import { ApplicationContext } from "../../../../../main-core/application-context/mandarineApplicationContext.ts";
+import { MiddlewareUtil } from "../../../../../main-core/utils/components/middlewareUtil.ts";
+import { MiddlewareComponent } from "../../../../../main-core/components/middleware-component/middlewareComponent.ts";
 /**
  * This class is used in the DI Container for Mandarine to store components annotated as @Controller
  * It contains all the behavior of a controller, like its routes and the methods of the routes.
@@ -37,6 +41,7 @@ export class ControllerComponent {
     public initializeControllerFunctionality() {
         this.initializeRoutes();
         this.initializeControllerOptions();
+        this.initializeTopLevelMiddleware();
     }
 
     public registerAction(routeAction: Mandarine.MandarineMVC.Routing.RoutingAction): void {
@@ -64,7 +69,8 @@ export class ControllerComponent {
         const REFLECTION_OPTIONS = {
             cors: MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_CORS_MIDDLEWARE, 
             withPermissions: MandarineConstants.REFLECTION_MANDARINE_SECURITY_ALLOWONLY_DECORATOR,
-            responseStatus: MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_DEFAULT_HTTP_RESPONSE_CODE
+            responseStatus: MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_DEFAULT_HTTP_RESPONSE_CODE,
+            middleware: MandarineConstants.REFLECTION_MANDARINE_USE_MIDDLEWARE_DECORATOR
         };
         let metadataKeysFromClass: Array<any> = Reflect.getMetadataKeys(this.getClassHandlerType());
 
@@ -82,7 +88,8 @@ export class ControllerComponent {
         const ROUTE_REFLECTION_OPTIONS = {
             cors: MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_CORS_MIDDLEWARE,
             withPermissions: MandarineConstants.REFLECTION_MANDARINE_SECURITY_ALLOWONLY_DECORATOR,
-            responseStatus: MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_DEFAULT_HTTP_RESPONSE_CODE
+            responseStatus: MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_DEFAULT_HTTP_RESPONSE_CODE,
+            middleware: MandarineConstants.REFLECTION_MANDARINE_USE_MIDDLEWARE_DECORATOR
         }
         if(!routeContext.options) routeContext.options = {};
 
@@ -92,6 +99,36 @@ export class ControllerComponent {
                 routeContext.options[interfaceKey] = metadataValue;
             }
         })
+    }
+
+    public initializeMiddleware(middlewareList: Array<NonComponentMiddlewareTarget | MiddlewareComponent>): Array<NonComponentMiddlewareTarget | MiddlewareComponent> {
+        if(!middlewareList) return;
+        const newMiddlewareList = [...middlewareList];
+        newMiddlewareList.forEach((item, index) => {
+            let middlewareHandler: NonComponentMiddlewareTarget | MiddlewareComponent;
+
+            if(CommonUtils.isObject(item)) {
+                middlewareHandler = item;
+            } else {
+                middlewareHandler = ApplicationContext.getInstance().getDIFactory().getComponentByType(item);
+            }
+
+            if(!middlewareHandler) throw new MandarineException(MandarineException.INVALID_MIDDLEWARE_UNDEFINED);
+            
+            if(middlewareHandler instanceof MiddlewareComponent) {
+                MiddlewareUtil.verifyImplementation(middlewareHandler.getClassHandler());
+            } else {
+                MiddlewareUtil.verifyImplementation(middlewareHandler);
+            }
+
+            newMiddlewareList[index] = middlewareHandler;
+        });
+
+        return newMiddlewareList;
+    }
+
+    public initializeTopLevelMiddleware() {
+        this.options.middleware = this.initializeMiddleware(this.options.middleware) || [];
     }
 
     private initializeRoutes(): void {
@@ -107,6 +144,8 @@ export class ControllerComponent {
             if(annotationContext.type == "ROUTE") {
                 let routeContext: Mandarine.MandarineMVC.Routing.RoutingAnnotationContext = <Mandarine.MandarineMVC.Routing.RoutingAnnotationContext> annotationContext.context;
                 this.initializeRouteContextOptions(routeContext, classHandler);
+
+                routeContext.options.middleware = this.initializeMiddleware(routeContext.options.middleware) || [];
 
                 const fullRoute = this.getFullRoute(routeContext.route);
                 const routingAction = {

@@ -3,6 +3,7 @@
 import { MandarineException } from "../../exceptions/mandarineException.ts";
 import { Mandarine } from "../../Mandarine.ns.ts";
 import { MiddlewareTarget } from "./middlewareTarget.ts";
+import { MiddlewareUtil } from "../../utils/components/middlewareUtil.ts";
 
 /**
 * This class is used in the DI Container for Mandarine to store components annotated as @Middleware
@@ -21,9 +22,7 @@ export class MiddlewareComponent implements Mandarine.MandarineCore.ComponentCom
 
     public verifyHandlerImplementation() {
         let middlewareTarget: MiddlewareTarget = <MiddlewareTarget> this.classHandler;
-        let isImplementationValid = (middlewareTarget.onPostRequest && typeof middlewareTarget.onPostRequest === 'function') && (middlewareTarget.onPreRequest && typeof middlewareTarget.onPreRequest === 'function');
-        
-        if(isImplementationValid == undefined) throw new MandarineException(MandarineException.MIDDLEWARE_NON_VALID_IMPL);
+        MiddlewareUtil.verifyImplementation(middlewareTarget);
     }
 
     public getName() {

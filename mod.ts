@@ -13,7 +13,7 @@ export { Component } from "./main-core/decorators/stereotypes/component/componen
 export { Configuration } from "./main-core/decorators/stereotypes/configuration/configuration.ts";
 export { Service } from "./main-core/decorators/stereotypes/service/service.ts";
 export { Middleware } from "./main-core/decorators/stereotypes/middleware/Middleware.ts";
-export { MiddlewareTarget } from "./main-core/components/middleware-component/middlewareTarget.ts";
+export { MiddlewareTarget, NonComponentMiddlewareTarget } from "./main-core/components/middleware-component/middlewareTarget.ts";
 export { Inject } from "./main-core/dependency-injection/decorators/Inject.ts";
 export { Injectable } from "./main-core/dependency-injection/decorators/injectable.ts";
 export { MandarineCore } from "./main-core/mandarineCore.ts";
@@ -41,3 +41,4 @@ export { PromiseRepeater } from "./pluggins/promiseRepeater.ts";
 export { MandarineSessionHandler } from "./main-core/mandarine-native/sessions/mandarineDefaultSessionStore.ts";
 
 export { AllowOnly } from "./security-core/core/decorators/allowOnly.ts";
+export { UseMiddleware } from "./mvc-framework/core/decorators/stereotypes/controller/useMiddleware.ts";

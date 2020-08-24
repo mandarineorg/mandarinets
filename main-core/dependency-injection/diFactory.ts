@@ -203,4 +203,14 @@ export class DependencyInjectionFactory {
     public getInjectable(type: any) {
         return this.getDependency(type);
     }
+
+    /**
+     * Get component of dependency by Type
+     */
+    public getComponentByType(type: any) {
+        let component = ApplicationContext.getInstance().getComponentsRegistry().getComponentByHandlerType(type);
+        if(component != (null || undefined) && component.componentType !== Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT) {
+            return component.componentInstance;
+        }
+    }
 }

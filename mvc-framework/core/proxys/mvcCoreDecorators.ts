@@ -8,6 +8,7 @@ import { Reflect } from "../../../main-core/reflectMetadata.ts";
 import { ComponentUtils } from "../../../main-core/utils/componentUtils.ts";
 import { ReflectUtils } from "../../../main-core/utils/reflectUtils.ts";
 import { AnnotationMetadataContext } from "../interfaces/mandarine/mandarineAnnotationMetadataContext.ts";
+import { NonComponentMiddlewareTarget } from "../../../main-core/components/middleware-component/middlewareTarget.ts";
 
 export class MVCDecoratorsProxy {
 
@@ -31,6 +32,17 @@ export class MVCDecoratorsProxy {
         } else {
             let corsAnnotationMetadataName: string = `${MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_CORS_MIDDLEWARE}:${methodName}`;
             Reflect.defineMetadata(corsAnnotationMetadataName, newCors, targetClass, methodName);
+        }
+    }
+
+    public static registerUseMiddlewareDecorator(targetClass: any, middlewareList: Array<NonComponentMiddlewareTarget | any>, methodName: string) {
+        let isMethod: boolean = methodName != null;
+        if(!isMethod) {
+            let useMiddlewareAnnotationName: string = `${MandarineConstants.REFLECTION_MANDARINE_USE_MIDDLEWARE_DECORATOR}`;
+            Reflect.defineMetadata(useMiddlewareAnnotationName, [...middlewareList], targetClass);
+        } else {
+            let useMiddlewareAnnotationName: string = `${MandarineConstants.REFLECTION_MANDARINE_USE_MIDDLEWARE_DECORATOR}:${methodName}`;
+            Reflect.defineMetadata(useMiddlewareAnnotationName, [...middlewareList], targetClass, methodName);
         }
     }
 

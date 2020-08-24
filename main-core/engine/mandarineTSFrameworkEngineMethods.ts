@@ -31,7 +31,8 @@ export class MandarineTSFrameworkEngineMethods {
                 let componentInstance: MiddlewareComponent = component.componentInstance;
 
                 componentInstance.verifyHandlerImplementation();
-
+                
+                if(!componentInstance.regexRoute) return;
                 middleware.push(componentInstance);
             });
 
