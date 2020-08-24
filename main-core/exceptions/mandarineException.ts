@@ -2,7 +2,7 @@
 
 export class MandarineException extends Error {
 
-    public static MIDDLEWARE_NON_VALID_IMPL: string = "Middleware cannot be initialized because it is not an implemention of 'MiddlewareTarget'";
+    public static MIDDLEWARE_NON_VALID_IMPL: string = "Middleware cannot be initialized because it is not a valid implemention of 'MiddlewareTarget'";
     public static INVALID_TEMPLATE: string = "The template %templatePath% could not be initialized. This may be caused because the path is incorrect.";
     public static UNDEFINED_TEMPLATE: string = "The template could not be initialized because its path is undefined";
     public static INVALID_PROPERTY_FILE: string = "The property file (%propertyFile%) you are trying to use is either invalid or could not be parsed";
@@ -14,6 +14,8 @@ export class MandarineException extends Error {
     public static UNKNOWN_OVERRIDEN: string = "Mandarine could not execute internal override because %s is not of a known native component.";
     public static ON_INITIALIZATION_OVERRIDEN: string = "The method `onInitialization` cannot be overriden because it is a Mandarine reserved method.";
     public static INVALID_ALLOWONLY_DECORATOR_PERMISSIONS: string = "Decorator `@AllowOnly` only receives an array or a security expression (string).";
+    public static INVALID_MIDDLEWARE_LIST_ANNOTATION: string = "Decorator `@UseMiddleware` is being used but a list of undefined values was passed.";
+    public static INVALID_MIDDLEWARE_UNDEFINED: string = "Middleware cannot be initialized because it is undefined.";
   
     constructor(public message: string, public superAlert: boolean = false) {
       super(message);

@@ -26,3 +26,8 @@ export interface MiddlewareTarget {
     onPreRequest(...args): boolean;
     onPostRequest(...args): void;
 }
+
+export interface NonComponentMiddlewareTarget {
+    onPreRequest(request: any, response: any): boolean;
+    onPostRequest(request: any, response: any): void;
+}

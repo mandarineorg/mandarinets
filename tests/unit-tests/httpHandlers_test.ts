@@ -75,7 +75,9 @@ export class HttpHandlersTest {
                 actionType: 0,
                 actionMethodName: "getRoute",
                 route: "/api-get",
-                routingOptions: {},
+                routingOptions: {
+                    middleware: []
+                },
                 initializationStatus: 1,
                 routeParams: [],
                 routeSignature: ["0", "api-get"]
@@ -85,7 +87,9 @@ export class HttpHandlersTest {
                 actionType: 1,
                 actionMethodName: "postRoute",
                 route: "/api-post",
-                routingOptions: {},
+                routingOptions: {
+                    middleware: []
+                },
                 initializationStatus: 1,
                 routeParams: [],
                 routeSignature: ["1", "api-post"]
@@ -95,7 +99,9 @@ export class HttpHandlersTest {
                 actionType: 2,
                 actionMethodName: "putRoute",
                 route: "/api-put",
-                routingOptions: {},
+                routingOptions: {
+                    middleware: []
+                },
                 initializationStatus: 1,
                 routeParams: [],
                 routeSignature: ["2", "api-put"]
@@ -105,7 +111,9 @@ export class HttpHandlersTest {
                 actionType: 4,
                 actionMethodName: "deleteRoute",
                 route: "/api-delete",
-                routingOptions: {},
+                routingOptions: {
+                    middleware: []
+                },
                 initializationStatus: 1,
                 routeParams: [],
                 routeSignature: ["4", "api-delete"]
@@ -115,7 +123,9 @@ export class HttpHandlersTest {
                 actionType: 3,
                 actionMethodName: "headRoute",
                 route: "/api-head",
-                routingOptions: {},
+                routingOptions: {
+                    middleware: []
+                },
                 initializationStatus: 1,
                 routeParams: [],
                 routeSignature: ["3", "api-head"]
@@ -125,7 +135,9 @@ export class HttpHandlersTest {
                 actionType: 6,
                 actionMethodName: "optionsRoute",
                 route: "/api-options",
-                routingOptions: {},
+                routingOptions: {
+                    middleware: []
+                },
                 initializationStatus: 1,
                 routeParams: [],
                 routeSignature: ["6", "api-options"]
@@ -135,7 +147,9 @@ export class HttpHandlersTest {
                 actionType: 5,
                 actionMethodName: "patchRoute",
                 route: "/api-patch",
-                routingOptions: {},
+                routingOptions: {
+                    middleware: []
+                },
                 initializationStatus: 1,
                 routeParams: [],
                 routeSignature: ["5", "api-patch"]
@@ -361,7 +375,6 @@ export class HttpHandlersTest {
         let controller: ControllerComponent = ApplicationContext.getInstance().getComponentsRegistry().get("MyController").componentInstance;
         let actions: Map<String, Mandarine.MandarineMVC.Routing.RoutingAction> = controller.getActions();
         let action = actions.get(controller.getActionName("getRoute"));
-        console.log(action);
         DenoAsserts.assertEquals(action.routingOptions.responseStatus, 301);
         DenoAsserts.assertEquals(controller.options.responseStatus, 400);
     }
