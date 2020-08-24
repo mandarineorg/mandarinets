@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { Service } from "../../../main-core/decorators/stereotypes/service/service.ts";
 import { MiddlewareTarget } from "../../../main-core/components/middleware-component/middlewareTarget.ts";
 import { Middleware } from "../../../main-core/decorators/stereotypes/middleware/Middleware.ts";
