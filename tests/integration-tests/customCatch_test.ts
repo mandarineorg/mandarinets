@@ -3,7 +3,7 @@
 import { CommonUtils } from "../../main-core/utils/commonUtils.ts";
 import { DenoAsserts, INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY, Orange, Test } from "../mod.ts";
 
-export class ManualInjectionTest {
+export class CustomCatchTest {
 
     public MAX_COMPILATION_TIMEOUT_SECONDS = 50;
 
@@ -16,10 +16,10 @@ export class ManualInjectionTest {
     }
 
     @Test({
-        name: "Test Endpoints from `files/manualInjection.ts`",
-        description: "Test all endpoints in file, and verifies its return values"
+        name: "Test Endpoints from `files/customCatch.ts`",
+        description: "Test all endpoints in file, and verifies that a custom exception catcher is working."
     })
-    public async testManualInjectionEndpoint() {
+    public async testCustomCatch() {
         let cmd = Deno.run({
             cmd: ["deno", "run", "-c", "tsconfig.json", "--allow-all", `${INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY}/customCatch.ts`],
             stdout: "null",
