@@ -16,6 +16,7 @@ import { MandarineConstants } from "../mandarineConstants.ts";
 import { Reflect } from "../reflectMetadata.ts";
 import { CommonUtils } from "../utils/commonUtils.ts";
 import { ReflectUtils } from "../utils/reflectUtils.ts";
+import { CatchComponent } from "../components/catch-component/catchComponent.ts";
 
 /**
 * This class is also known as the DI container.
@@ -59,6 +60,9 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
                 break;
                 case Mandarine.MandarineCore.ComponentTypes.REPOSITORY:
                     componentInstanceInitialized = new RepositoryComponent(componentName, componentHandler, configuration);
+                break;
+                case Mandarine.MandarineCore.ComponentTypes.CATCH:
+                    componentInstanceInitialized = new CatchComponent(componentName, configuration.exception, componentHandler);
                 break;
             }
 

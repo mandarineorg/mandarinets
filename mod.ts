@@ -21,6 +21,7 @@ export { Controller } from "./mvc-framework/core/decorators/stereotypes/controll
 export { Param, RouteParam, QueryParam, RequestParam, Session, ServerRequestParam, ResponseParam, CookieParam, Model, RequestBody, Parameters, AuthPrincipal } from "./mvc-framework/core/decorators/stereotypes/controller/parameterDecorator.ts";
 export { ResponseStatus } from "./mvc-framework/core/decorators/stereotypes/controller/responseStatus.ts";
 export { GET, POST, DELETE, PATCH, PUT, HEAD, OPTIONS } from "./mvc-framework/core/decorators/stereotypes/controller/routingDecorator.ts";
+export { Catch } from "./main-core/decorators/stereotypes/catch/catch.ts";
 export { Override } from "./main-core/decorators/native-components/override.ts";
 export { Cors } from "./mvc-framework/core/decorators/stereotypes/controller/corsMiddlewareDecorator.ts";
 export { Render } from "./mvc-framework/core/decorators/stereotypes/view-engine/viewEngineDecorators.ts";
@@ -42,3 +43,5 @@ export { MandarineSessionHandler } from "./main-core/mandarine-native/sessions/m
 
 export { AllowOnly } from "./security-core/core/decorators/allowOnly.ts";
 export { UseMiddleware } from "./mvc-framework/core/decorators/stereotypes/controller/useMiddleware.ts";
+
+export { ExceptionContext, ExceptionFilter } from "./main-core/components/catch-component/exceptionFilter.ts";

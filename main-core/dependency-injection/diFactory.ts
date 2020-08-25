@@ -213,4 +213,11 @@ export class DependencyInjectionFactory {
             return component.componentInstance;
         }
     }
+
+    /**
+     * Get component of dependency by component type
+     */
+    public getComponentsByComponentType<T>(type: Mandarine.MandarineCore.ComponentTypes): Array<T> {
+        return ApplicationContext.getInstance().getComponentsRegistry().getComponentsByComponentType(type).map((item) => item.componentInstance);
+    }
 }

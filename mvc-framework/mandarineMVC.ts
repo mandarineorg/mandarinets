@@ -7,6 +7,7 @@ import { ResourceHandlerMiddleware } from "./core/middlewares/resourceHandlerMid
 import { MandarineMvcFrameworkStarter } from "./engine/mandarineMvcFrameworkStarter.ts";
 import { handleBuiltinAuth } from "./core/middlewares/authMiddleware.ts";
 import { HttpUtils } from "../main-core/utils/httpUtils.ts";
+import { ExceptionHandler } from "./core/middlewares/exceptionHandler.ts";
 
 /**
 * This class is the bridge between the HTTP server & the Mandarine Compiler.
@@ -69,6 +70,7 @@ export class MandarineMVC {
         });
         
         let app: Application = new Application()
+        .use(ExceptionHandler())
         .use(handleBuiltinAuth())
         .use(ResourceHandlerMiddleware())
         .use(starter.getRouter().routes())

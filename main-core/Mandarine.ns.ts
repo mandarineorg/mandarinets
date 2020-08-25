@@ -447,6 +447,7 @@ export namespace Mandarine {
         export enum ComponentTypes {
             CONTROLLER,
             COMPONENT,
+            CATCH,
             SERVICE,
             CONFIGURATION,
             MIDDLEWARE,
