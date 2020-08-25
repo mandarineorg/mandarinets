@@ -12,6 +12,7 @@ import { ConfigurationComponent } from "../../main-core/components/configuration
 import { MVCDecoratorsProxy } from "../../mvc-framework/core/proxys/mvcCoreDecorators.ts";
 import { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
 import { ApplicationContext } from "../../main-core/application-context/mandarineApplicationContext.ts";
+import { CatchComponent } from "../../main-core/components/catch-component/catchComponent.ts";
 
 export class ComponentCreationTests {
 
@@ -187,6 +188,36 @@ export class ComponentCreationTests {
             classParentName: "MyConfiguration"
         });
         DenoAsserts.assert(Mandarine.Global.getComponentsRegistry().get("MyConfiguration").componentInstance instanceof ConfigurationComponent);
+    }
+
+    @Test({
+        name: "Create catch",
+        description: "Executes the creation of a Catch component"
+    })
+    public createCatchComponent() {
+
+        class createCatchComponent {
+
+        }
+
+        MainCoreDecoratorProxy.registerMandarinePoweredComponent(createCatchComponent, Mandarine.MandarineCore.ComponentTypes.CATCH, {
+            exception: Error
+        }, null);
+        const originalMetadataKey = `${MandarineConstants.REFLECTION_MANDARINE_COMPONENT}:catch:createCatchComponent`;
+        const reflectMetadataKeys = Reflect.getMetadataKeys(createCatchComponent);
+        const componentMetadata = Reflect.getMetadata(originalMetadataKey, createCatchComponent);
+        DenoAsserts.assertArrayContains(reflectMetadataKeys, [originalMetadataKey]);
+        DenoAsserts.assert(componentMetadata != (undefined || null));
+        DenoAsserts.assertEquals(componentMetadata, {
+            componentName: "createCatchComponent",
+            componentConfiguration: {
+                exception: Error
+            },
+            componentType: Mandarine.MandarineCore.ComponentTypes.CATCH,
+            componentInstance: createCatchComponent,
+            classParentName: "createCatchComponent"
+        });
+        DenoAsserts.assert(Mandarine.Global.getComponentsRegistry().get("createCatchComponent").componentInstance instanceof CatchComponent);
     }
 
 
