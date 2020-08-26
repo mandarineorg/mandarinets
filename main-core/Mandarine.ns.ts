@@ -22,6 +22,7 @@ import { JsonUtils } from "./utils/jsonUtils.ts";
 import { MandarineUtils } from "./utils/mandarineUtils.ts";
 import { CookieConfig } from "../mvc-framework/core/interfaces/http/cookie.ts";
 import { HTTPLoginBuilder } from "../security-core/core/modules/loginBuilder.ts";
+import { MandarineCommonInterfaces } from "./Mandarine.commonInterfaces.ns.ts";
 
 /**
 * This namespace contains all the essentials for mandarine to work
@@ -601,6 +602,8 @@ export namespace Mandarine {
    export import Native = MandarineNative;
 
    export import Miscellaneous = MandarineMiscellaneous;
+   
+   export import Types = MandarineCommonInterfaces;
 
     /**
     * Contains the default information Mandarine needs to work.

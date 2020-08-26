@@ -16,6 +16,8 @@ export class MandarineException extends Error {
     public static INVALID_ALLOWONLY_DECORATOR_PERMISSIONS: string = "Decorator `@AllowOnly` only receives an array or a security expression (string).";
     public static INVALID_MIDDLEWARE_LIST_ANNOTATION: string = "Decorator `@UseMiddleware` is being used but a list of undefined values was passed.";
     public static INVALID_MIDDLEWARE_UNDEFINED: string = "Middleware cannot be initialized because it is undefined.";
+    public static INVALID_PIPE_LOCATION: string = "Pipes can only target parameters of a HTTP Handler";
+    public static INVALID_PIPE_EXECUTION: string = "Pipe execution failed because it's either an invalid pipe or an exception was thrown during transformation";
   
     constructor(public message: string, public superAlert: boolean = false) {
       super(message);

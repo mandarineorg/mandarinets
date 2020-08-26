@@ -4,6 +4,7 @@ import { MandarineConstants } from "../mandarineConstants.ts";
 import { Reflect } from "../reflectMetadata.ts";
 import { ReflectUtils } from "../utils/reflectUtils.ts";
 import { DI } from "./di.ns.ts";
+import { MandarineException } from "../exceptions/mandarineException.ts";
 
 /**
  * Contains all the util methods that are related to the DI built-in framework.
@@ -60,4 +61,20 @@ export class DependencyInjectionUtil {
             }, target);
         }
     }
+
+    /**
+     * Defines metadata for a pipe
+     */
+
+     public static definePipeMetadata(target: any, pipes: Array<any> | any, propertyName: string, parameterIndex: number) {
+        if(parameterIndex === undefined) {
+            throw new MandarineException(MandarineException.INVALID_PIPE_LOCATION);
+        } else {
+            let methodParams: Array<string> = ReflectUtils.getParamNames(target[propertyName]);
+            let parameterName: string = methodParams[parameterIndex];
+
+            const parameterPipeName = `${MandarineConstants.REFLECTION_MANDARINE_PIPE_FIELD}:${parameterIndex}:${propertyName}`;
+            Reflect.defineMetadata(parameterPipeName, pipes, target, propertyName);
+        }
+     }
 }
