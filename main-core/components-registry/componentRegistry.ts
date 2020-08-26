@@ -117,20 +117,24 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
     }
 
     public getComponentByHandlerType(classType: any): Mandarine.MandarineCore.ComponentRegistryContext {
-        return this.getComponents().find(component => {
-            let instance = undefined;
-            if(component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT) {
-                instance = component.componentInstance;
-            }else {
-                instance = component.componentInstance.getClassHandler();
-            }
+        try {
+            return this.getComponents().find(component => {
+                let instance = undefined;
+                if(component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT) {
+                    instance = component.componentInstance;
+                }else {
+                    instance = component.componentInstance.getClassHandler();
+                }
 
-            // This verification should never be called as instance may have parameters in its constructor. 
-            // When this method is used, it should be used after initialization of dependencies
-            if(!ReflectUtils.checkClassInitialized(instance)) instance = new instance();
+                // This verification should never be called as instance may have parameters in its constructor. 
+                // When this method is used, it should be used after initialization of dependencies
+                if(!ReflectUtils.checkClassInitialized(instance)) instance = new instance();
 
-            return instance instanceof classType;
-        });
+                return instance instanceof classType;
+            });
+        } catch {
+            return undefined;
+        }
     }
 
     public resolveDependencies(): void {

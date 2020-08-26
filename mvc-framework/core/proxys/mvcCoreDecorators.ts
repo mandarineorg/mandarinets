@@ -54,6 +54,10 @@ export class MVCDecoratorsProxy {
         DependencyInjectionUtil.defineInjectionMetadata(parameterType, targetClass, methodName, parameterIndex, specificParameterName);
     }
 
+    public static registerPipeInParam(targetClass: any, pipes: Array<any> | any, methodName: string, parameterIndex: number) {
+        DependencyInjectionUtil.definePipeMetadata(targetClass, pipes, methodName, parameterIndex);
+    }
+
     public static registerHttpAction(route: string, methodType: Mandarine.MandarineMVC.HttpMethods, target: any, methodName: string, options: Mandarine.MandarineMVC.Routing.RoutingOptions) {
         let className: string = ReflectUtils.getClassName(target);
 

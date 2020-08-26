@@ -9,6 +9,8 @@ import { Reflect } from "../reflectMetadata.ts";
 import { HttpUtils } from "../utils/httpUtils.ts";
 import { ReflectUtils } from "../utils/reflectUtils.ts";
 import { DI } from "./di.ns.ts";
+import { getPipes } from "./internals/getPipes.ts";
+import { MandarineException } from "../exceptions/mandarineException.ts";
 
 export class DependencyInjectionFactory {
 
@@ -118,63 +120,92 @@ export class DependencyInjectionFactory {
         const requestCookies: Cookies = extraData.cookies;
     
         for(let i = 0; i < componentMethodParams.length; i++) {
+            const pipes: Array<any> | any = getPipes(object, i, methodName);
             if(!metadataValues.some((injectionMetadata: DI.InjectionMetadataContext) => injectionMetadata.parameterIndex === i)) {
                 args.push(undefined);
             } else {
                 const param = metadataValues.find(injectionMetadata => injectionMetadata.parameterIndex === i);
+                
+                let valueToInject: any = undefined;
                 switch(param.injectionType) {
                     case DI.InjectionTypes.QUERY_PARAM:
-                        if(queryParams) args.push(queryParams.get(param.parameterName));
-                        else args.push(undefined);
+                        if(queryParams) {
+                            valueToInject = queryParams.get(param.parameterName);
+                        }
                         break;
                     case DI.InjectionTypes.ROUTE_PARAM:
-                        if(extraData.params) args.push(extraData.params[param.parameterName]);
-                        else args.push(undefined);
+                        if(extraData.params) {
+                            valueToInject = extraData.params[param.parameterName];
+                        }
                         break;
                     case DI.InjectionTypes.REQUEST_PARAM:
-                        args.push(extraData.request);
+                        valueToInject = extraData.request;
                         break;
                     case DI.InjectionTypes.SESSION_PARAM:
-                        args.push((<any> extraData.request).session)
+                        valueToInject = (<any> extraData.request).session;
                         break;
                     case DI.InjectionTypes.SERVER_REQUEST_PARAM:
-                        args.push(extraData.request.serverRequest);
+                        valueToInject = extraData.request.serverRequest;
                     break;
                     case DI.InjectionTypes.REQUEST_BODY_PARAM:
-                        args.push(await HttpUtils.parseBody(extraData.request));
+                        valueToInject = await HttpUtils.parseBody(extraData.request);
                     break;
                     case DI.InjectionTypes.RESPONSE_PARAM:
-                        args.push(extraData.response);
+                        valueToInject = extraData.response;
                         break;
                     case DI.InjectionTypes.COOKIE_PARAM:
-                        if(requestCookies.get(param.parameterName)) args.push(requestCookies.get(param.parameterName));
-                        else args.push(undefined);
+                        if(requestCookies.get(param.parameterName)) {
+                            valueToInject = requestCookies.get(param.parameterName);
+                        }
                         break;
                     case DI.InjectionTypes.INJECTABLE_OBJECT:
                         let injectableComponent = ApplicationContext.getInstance().getComponentsRegistry().getComponentByHandlerType(param.parameterObjectToInject);
 
                         if(injectableComponent != (null || undefined)) {
-                            args.push((injectableComponent.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT) ? injectableComponent.componentInstance : injectableComponent.componentInstance.getClassHandler());
-                        } else args.push(undefined);
+                            valueToInject = (injectableComponent.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT) ? injectableComponent.componentInstance : injectableComponent.componentInstance.getClassHandler();
+                        }
                         
                         break;
                     case DI.InjectionTypes.TEMPLATE_MODEL_PARAM:
-                        args.push(new ViewModel());
+                        valueToInject = new ViewModel();
                         break;
                     case DI.InjectionTypes.PARAMETERS_PARAM:
                         const allParameters: Mandarine.MandarineMVC.AllParameters = { 
                             query: Object.fromEntries(queryParams), 
                             route: extraData.params 
                         };
-                        args.push(allParameters);
+                        valueToInject = allParameters;
                         break;
                     case DI.InjectionTypes.REQUEST_CONTEXT_PARAM:
-                        args.push(extraData.fullContext);
+                        valueToInject = extraData.fullContext;
                         break;
                     case DI.InjectionTypes.AUTH_PRINCIPAL_PARAM:
-                        args.push((extraData.request as any).authentication?.AUTH_PRINCIPAL);
+                        valueToInject = (extraData.request as any).authentication?.AUTH_PRINCIPAL;
                         break;
                 }
+
+                const executePipe = (pipe: any) => {
+                    const pipeFromDI: Mandarine.Types.PipeTransform = this.getDependency(pipe);
+                    if(pipeFromDI) {
+                        valueToInject = pipeFromDI.transform(valueToInject);
+                    } else if(!pipeFromDI && typeof pipe === 'function') {
+                        valueToInject = pipe(valueToInject);
+                    } else {
+                        throw new MandarineException(MandarineException.INVALID_PIPE_EXECUTION);
+                    }
+                }
+
+                if(pipes) {
+                    if(Array.isArray(pipes)) {
+                        pipes.forEach((pipe) => {
+                            executePipe(pipe);
+                        })
+                    } else {
+                        executePipe(pipes);
+                    }
+                }
+
+                args.push(valueToInject);
             }
         }
     
