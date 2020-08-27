@@ -30,8 +30,7 @@ export class ComponentsRegistryUtil {
                 componentName: componentName,
                 componentConfiguration: configuration,
                 componentType: componentType,
-                componentInstance: componentTarget,
-                classParentName: parentClassName
+                componentInstance: componentTarget
             }, componentTarget);
 
             componentsRegistry.register(componentName, componentTarget, componentType, configuration);

@@ -1,8 +1,8 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { NonComponentMiddlewareTarget } from "../../../../../main-core/components/middleware-component/middlewareTarget.ts";
 import { MandarineException } from "../../../../../main-core/exceptions/mandarineException.ts";
 import { MVCDecoratorsProxy } from "../../../proxys/mvcCoreDecorators.ts";
+import { NonComponentMiddlewareTarget } from "../../../../../main-core/internals/interfaces/middlewareTarget.ts";
 
 export const UseMiddleware = (middlewareList: Array<NonComponentMiddlewareTarget | any>) => {
     return (target: any, methodName?: string) => {

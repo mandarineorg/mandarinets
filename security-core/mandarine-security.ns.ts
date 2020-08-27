@@ -86,6 +86,12 @@ export namespace MandarineSecurity {
             saveUninitialized?: boolean,
             store?: SessionStore
         }
+
+        export interface SessionContextObj {
+            sessionID: string;
+            sessionCookie: any;
+            sessionData: any;
+        }
   
     }
 
@@ -183,14 +189,20 @@ export namespace MandarineSecurity {
 
         export interface Authenticator {
             verifyAuthenticationSatisfaction: () => boolean;
-            isAuthenticated: (requestContext: any) => boolean;
-            performAuthentication: (username: string, password: string, requestContext: any) => AuthenticationResult;
-            stopAuthentication: (requestContext: any) => void;
+            isAuthenticated: (requestContext: Mandarine.Types.RequestContext) => boolean;
+            performAuthentication: (username: string, password: string, requestContext: Mandarine.Types.RequestContext) => AuthenticationResult;
+            stopAuthentication: (requestContext: Mandarine.Types.RequestContext) => void;
         }
 
         export interface Handler {
             onSuccess: (request: Request, response: Response, result: AuthenticationResult) => void;
             onFailure: (request: Request, response: Response, result: AuthenticationResult) => void;
+        }
+
+        export interface RequestAuthObj {
+            AUTH_SES_ID: string;
+            AUTH_EXPIRES: Date;
+            AUTH_PRINCIPAL: any;
         }
     }
 

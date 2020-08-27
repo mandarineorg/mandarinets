@@ -12,7 +12,7 @@ import { CommonUtils } from "../../utils/commonUtils.ts";
  */
 export class MandarineResourceResolver implements Mandarine.MandarineMVC.HTTPResolvers.ResourceResolver {
 
-    public resolve(httpContext: Context, resourcePath: string): Uint8Array {
+    public resolve(httpContext: Mandarine.Types.RequestContext, resourcePath: string): Uint8Array {
 
         let resourceExt = null;
 

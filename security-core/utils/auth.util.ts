@@ -5,7 +5,7 @@ import { Mandarine } from "../../main-core/Mandarine.ns.ts";
 import { MandarineConstants } from "../../main-core/mandarineConstants.ts";
 
 export class AuthUtils {
-    public static findAuthCookie(context: Context) {
+    public static findAuthCookie(context: Mandarine.Types.RequestContext) {
         return context.cookies.get(MandarineConstants.SECURITY_AUTH_COOKIE_NAME, { signed: true });
     }
 

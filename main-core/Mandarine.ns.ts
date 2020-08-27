@@ -8,7 +8,6 @@ import { MandarineMvc } from "../mvc-framework/mandarine-mvc.ns.ts";
 import { MandarineORM } from "../orm-core/mandarine-orm.ns.ts";
 import { MandarineSecurity } from "../security-core/mandarine-security.ns.ts";
 import { ComponentsRegistry } from "./components-registry/componentRegistry.ts";
-import { MiddlewareComponent } from "./components/middleware-component/middlewareComponent.ts";
 import { DI } from "./dependency-injection/di.ns.ts";
 import { NativeComponentsRegistry } from "./mandarine-native/nativeComponentsRegistry.ts";
 import { AuthenticationManagerBuilder } from "./mandarine-native/security/authenticationManagerBuilderDefault.ts";
@@ -23,6 +22,7 @@ import { MandarineUtils } from "./utils/mandarineUtils.ts";
 import { CookieConfig } from "../mvc-framework/core/interfaces/http/cookie.ts";
 import { HTTPLoginBuilder } from "../security-core/core/modules/loginBuilder.ts";
 import { MandarineCommonInterfaces } from "./Mandarine.commonInterfaces.ns.ts";
+import { ComponentComponent } from "./components/component-component/componentComponent.ts";
 
 /**
 * This namespace contains all the essentials for mandarine to work
@@ -38,6 +38,19 @@ export namespace Mandarine {
     export const AsyncFunction = (async () => {}).constructor;
 
     export type IniFile = { [prop: string]: string; };
+
+    export namespace Components {
+        export interface MiddlewareComponent {
+            configuration: {
+                regexRoute: RegExp;
+            }
+        }
+        export interface CatchComponent {
+            configuration: {
+                exceptionType: any;
+            }
+        }
+    }
 
    /**
    * Structure of Mandarine Properties.
@@ -129,7 +142,7 @@ export namespace Mandarine {
             mandarineResourceHandlerRegistry: MandarineCore.IResourceHandlerRegistry
             mandarineProperties: Properties;
             mandarineInitialProperties: MandarineInitialProperties;
-            mandarineMiddleware: Array<MiddlewareComponent>;
+            mandarineMiddleware: Array<ComponentComponent & Components.MiddlewareComponent>;
             mandarineNativeComponentsRegistry: NativeComponentsRegistry;
             __SECURITY__: {
                 auth: {
@@ -330,7 +343,7 @@ export namespace Mandarine {
         * Get the list of registered middlewares
         * Middleware are added to the global environment in order to not request the DI container every time there is an HTTP Request
         */
-        export function getMiddleware(): Array<MiddlewareComponent> {
+        export function getMiddleware(): Array<ComponentComponent & Components.MiddlewareComponent> {
             initializeMiddleware();
             return getMandarineGlobal().mandarineMiddleware;
         };
@@ -371,7 +384,7 @@ export namespace Mandarine {
             let mandarineGlobal: MandarineGlobalInterface = getMandarineGlobal();
 
             if(mandarineGlobal.mandarineMiddleware == (undefined || null)) {
-                mandarineGlobal.mandarineMiddleware = new Array<MiddlewareComponent>();
+                mandarineGlobal.mandarineMiddleware = new Array<ComponentComponent & Components.MiddlewareComponent>();
             }
         };
 
@@ -474,7 +487,6 @@ export namespace Mandarine {
             componentType: ComponentTypes;
             componentInstance: any;
             componentConfiguration?: any;
-            classParentName: string;
         };
 
         /**
@@ -482,7 +494,6 @@ export namespace Mandarine {
         * When a request is made to the DI container, this is what the request returns.
         */
         export interface ComponentRegistryContext {
-            classParentName: string;
             componentName?: string;
             componentInstance: any;
             componentType: ComponentTypes;
@@ -494,6 +505,8 @@ export namespace Mandarine {
         export interface ComponentCommonInterface {
             name?: string;
             classHandler?: any;
+            type?: ComponentTypes;
+            configuration?: any;
             getName: () => string;
             getClassHandler: () => any;
             setClassHandler: (classHandler: any) => void;

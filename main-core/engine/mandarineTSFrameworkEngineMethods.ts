@@ -2,7 +2,6 @@
 
 import { Log } from "../../logger/log.ts";
 import { ApplicationContext } from "../../main-core/application-context/mandarineApplicationContext.ts";
-import { MiddlewareComponent } from "../../main-core/components/middleware-component/middlewareComponent.ts";
 import { Mandarine } from "../../main-core/Mandarine.ns.ts";
 
 /**
@@ -17,7 +16,7 @@ export class MandarineTSFrameworkEngineMethods {
     }
 
     private static initializeMiddlewares(): void {
-        let middleware: Array<MiddlewareComponent> = Mandarine.Global.getMiddleware();
+        let middleware: Array<Mandarine.Types.MiddlewareComponent> = Mandarine.Global.getMiddleware();
 
         // In this process we will store the middleware component in a global array
         // This is because it would be extremely expensive to request the components registry everytime for every request.
@@ -28,11 +27,9 @@ export class MandarineTSFrameworkEngineMethods {
         if(middlewareComponentKeys != (null || undefined)) {
             middlewareComponentKeys.forEach((componentName) => {
                 let component: Mandarine.MandarineCore.ComponentRegistryContext = componentsRegistry.get(componentName);
-                let componentInstance: MiddlewareComponent = component.componentInstance;
-
-                componentInstance.verifyHandlerImplementation();
+                let componentInstance: Mandarine.Types.MiddlewareComponent = component.componentInstance;
                 
-                if(!componentInstance.regexRoute) return;
+                if(!componentInstance.configuration.regexRoute) return;
                 middleware.push(componentInstance);
             });
 

@@ -2,7 +2,7 @@
 
 import { Catch } from "../../../main-core/decorators/stereotypes/catch/catch.ts";
 import { MandarineException } from "../../../main-core/exceptions/mandarineException.ts";
-import { ExceptionFilter, ExceptionContext } from "../../../main-core/components/catch-component/exceptionFilter.ts";
+import { ExceptionFilter, ExceptionContext } from "../../../main-core/internals/interfaces/exceptionFilter.ts";
 import { Controller } from "../../../mvc-framework/core/decorators/stereotypes/controller/controller.ts";
 import { GET } from "../../../mvc-framework/core/decorators/stereotypes/controller/routingDecorator.ts";
 import { MandarineCore } from "../../../main-core/mandarineCore.ts";

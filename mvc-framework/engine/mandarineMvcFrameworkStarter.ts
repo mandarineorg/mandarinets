@@ -3,7 +3,6 @@
 import { Router } from "../../deps.ts";
 import { Log } from "../../logger/log.ts";
 import { ApplicationContext } from "../../main-core/application-context/mandarineApplicationContext.ts";
-import { MiddlewareComponent } from "../../main-core/components/middleware-component/middlewareComponent.ts";
 import { Mandarine } from "../../main-core/Mandarine.ns.ts";
 import { CommonUtils } from "../../main-core/utils/commonUtils.ts";
 import { ControllerComponent } from "../core/internal/components/routing/controllerContext.ts";
@@ -12,7 +11,8 @@ import { handleCors } from "../core/middlewares/cors/corsMiddleware.ts";
 import { SessionMiddleware } from "../core/middlewares/sessionMiddleware.ts";
 import { AuthenticationRouting } from "../core/internal/auth/authenticationRouting.ts";
 import { VerifyPermissions } from "../../security-core/core/internals/permissions/verifyPermissions.ts";
-import { NonComponentMiddlewareTarget } from "../../main-core/components/middleware-component/middlewareTarget.ts";
+import { ComponentComponent } from "../../main-core/components/component-component/componentComponent.ts";
+import { NonComponentMiddlewareTarget } from "../../main-core/internals/interfaces/middlewareTarget.ts";
 
 /**
  * This class works as the MVC engine and it is responsible for the initialization & behavior of HTTP requests.
@@ -64,28 +64,28 @@ export class MandarineMvcFrameworkStarter {
 
     }
 
-    private handleCorsMiddleware(context: any, routingAction: Mandarine.MandarineMVC.Routing.RoutingAction, controllerComponent: ControllerComponent) {
+    private handleCorsMiddleware(context: Mandarine.Types.RequestContext, routingAction: Mandarine.MandarineMVC.Routing.RoutingAction, controllerComponent: ControllerComponent) {
         let classLevelCors = controllerComponent.options.cors;
         let methodLevelCors = routingAction.routingOptions.cors;
         handleCors(context, (classLevelCors) ? classLevelCors : methodLevelCors, true);
     }
 
-    private preRequestInternalMiddlewares(context: any, routingAction: Mandarine.MandarineMVC.Routing.RoutingAction, controllerComponent: ControllerComponent): void {
+    private preRequestInternalMiddlewares(context: Mandarine.Types.RequestContext, routingAction: Mandarine.MandarineMVC.Routing.RoutingAction, controllerComponent: ControllerComponent): void {
         this.essentials.sessionMiddleware.createSessionCookie(context);
         this.handleCorsMiddleware(context, routingAction, controllerComponent);
     }
 
-    private postRequestInternalMiddlewares(context: any): void {
+    private postRequestInternalMiddlewares(context: Mandarine.Types.RequestContext): void {
         this.essentials.sessionMiddleware.storeSession(context);
     }
 
-    private async executeUserMiddlewares(preRequestMiddleware: boolean, middlewares: Array<MiddlewareComponent | NonComponentMiddlewareTarget>, context: any, routingAction: Mandarine.MandarineMVC.Routing.RoutingAction): Promise<boolean> {
+    private async executeUserMiddlewares(preRequestMiddleware: boolean, middlewares: Array<Mandarine.Types.MiddlewareComponent | NonComponentMiddlewareTarget>, context: Mandarine.Types.RequestContext): Promise<boolean> {
         for(const middlewareComponent of middlewares) {
-            if(middlewareComponent instanceof MiddlewareComponent) {
+            if(middlewareComponent instanceof ComponentComponent) {
                 let middlewareResolved: boolean;
-                const resolveMiddleware = async () => await middlewareResolver(preRequestMiddleware, middlewareComponent, routingAction, context);
-                if(middlewareComponent.regexRoute) {
-                    let finalRegex = new RegExp(context.request.url.host + middlewareComponent.regexRoute.source);
+                const resolveMiddleware = async () => await middlewareResolver(preRequestMiddleware, <Mandarine.Types.MiddlewareComponent> middlewareComponent, context);
+                if(middlewareComponent.configuration.regexRoute) {
+                    let finalRegex = new RegExp(context.request.url.host + middlewareComponent.configuration.regexRoute.source);
                     if(finalRegex.test(context.request.url.host + context.request.url.pathname)) {
                         middlewareResolved = await resolveMiddleware();
                     }
@@ -111,7 +111,7 @@ export class MandarineMvcFrameworkStarter {
     private addPathToRouter(router: Router, routingAction: Mandarine.MandarineMVC.Routing.RoutingAction, controllerComponent: ControllerComponent): Router {
         let route: string = routingAction.route;
 
-        let availableMiddlewares: Array<MiddlewareComponent | NonComponentMiddlewareTarget> = [...Mandarine.Global.getMiddleware()];
+        let availableMiddlewares: Array<Mandarine.Types.MiddlewareComponent | NonComponentMiddlewareTarget> = [...Mandarine.Global.getMiddleware()];
         availableMiddlewares = availableMiddlewares.concat((routingAction.routingOptions.middleware || [])).concat((controllerComponent.options.middleware || []));
 
 
@@ -139,12 +139,12 @@ export class MandarineMvcFrameworkStarter {
             }
 
             this.preRequestInternalMiddlewares(context, routingAction, controllerComponent); // Execute internal middleware like sessions
-            let continueRequest: boolean = await this.executeUserMiddlewares(true, availableMiddlewares, context, routingAction); // If the user has any middleware, execute it
+            let continueRequest: boolean = await this.executeUserMiddlewares(true, availableMiddlewares, context); // If the user has any middleware, execute it
 
             if(continueRequest) {
                 await requestResolver(routingAction, context);
 
-                this.executeUserMiddlewares(false, availableMiddlewares, context, routingAction);
+                this.executeUserMiddlewares(false, availableMiddlewares, context);
                 this.postRequestInternalMiddlewares(context);
 
                 if(context.request.url.pathname === routingAction.route) {

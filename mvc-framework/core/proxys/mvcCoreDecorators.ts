@@ -8,7 +8,7 @@ import { Reflect } from "../../../main-core/reflectMetadata.ts";
 import { ComponentUtils } from "../../../main-core/utils/componentUtils.ts";
 import { ReflectUtils } from "../../../main-core/utils/reflectUtils.ts";
 import { AnnotationMetadataContext } from "../interfaces/mandarine/mandarineAnnotationMetadataContext.ts";
-import { NonComponentMiddlewareTarget } from "../../../main-core/components/middleware-component/middlewareTarget.ts";
+import { NonComponentMiddlewareTarget } from "../../../main-core/internals/interfaces/middlewareTarget.ts";
 
 export class MVCDecoratorsProxy {
 

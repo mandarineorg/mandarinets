@@ -10,7 +10,8 @@ import { HttpUtils } from "../utils/httpUtils.ts";
 import { ReflectUtils } from "../utils/reflectUtils.ts";
 import { DI } from "./di.ns.ts";
 import { getPipes } from "./internals/getPipes.ts";
-import { MandarineException } from "../exceptions/mandarineException.ts";
+import { executePipe } from "../internals/methods/executePipe.ts";
+import { DependencyInjectionUtil } from "./di.util.ts";
 
 export class DependencyInjectionFactory {
 
@@ -99,25 +100,9 @@ export class DependencyInjectionFactory {
      * This function is used when requests are received
      *
      */
-    public async methodArgumentResolver(object: any, methodName: string, extraData: DI.ArgumentsResolverExtraData) {
+    public async methodArgumentResolver(object: any, methodName: string, context: Mandarine.Types.RequestContext) {
         const args: Array<DI.ArgumentValue> = [];
-        let componentMethodParams: Array<string> = ReflectUtils.getParamNames(object[methodName]);
-    
-        let methodAnnotationMetadata: Array<any> = Reflect.getMetadataKeys(object, methodName);
-        let methodInjectableDependencies: Array<any> = methodAnnotationMetadata.filter((metadataKey: string) => metadataKey.startsWith(`${MandarineConstants.REFLECTION_MANDARINE_INJECTION_FIELD}:PARAMETER`));
-        if(methodInjectableDependencies == null) return args;
-    
-        let metadataValues: Array<DI.InjectionMetadataContext> = new Array<DI.InjectionMetadataContext>();
-    
-        methodInjectableDependencies.forEach((dependencyMetadataKey: string) => {
-            let metadataValue: DI.InjectionMetadataContext = <DI.InjectionMetadataContext> Reflect.getMetadata(dependencyMetadataKey, object, methodName);
-            metadataValues.push(metadataValue);
-        });
-    
-        metadataValues = metadataValues.sort((a, b) => a.parameterIndex - b.parameterIndex);
-    
-        const queryParams = RoutingUtils.findQueryParams(extraData.request.url.toString());
-        const requestCookies: Cookies = extraData.cookies;
+        const { componentMethodParams, metadataValues, queryParams, routeParams, requestCookies } = DependencyInjectionUtil.getDIHandlerContext(object, methodName, context);
     
         for(let i = 0; i < componentMethodParams.length; i++) {
             const pipes: Array<any> | any = getPipes(object, i, methodName);
@@ -134,24 +119,24 @@ export class DependencyInjectionFactory {
                         }
                         break;
                     case DI.InjectionTypes.ROUTE_PARAM:
-                        if(extraData.params) {
-                            valueToInject = extraData.params[param.parameterName];
+                        if(routeParams) {
+                            valueToInject = routeParams[param.parameterName];
                         }
                         break;
                     case DI.InjectionTypes.REQUEST_PARAM:
-                        valueToInject = extraData.request;
+                        valueToInject = context.request;
                         break;
                     case DI.InjectionTypes.SESSION_PARAM:
-                        valueToInject = (<any> extraData.request).session;
+                        valueToInject = context.request.session;
                         break;
                     case DI.InjectionTypes.SERVER_REQUEST_PARAM:
-                        valueToInject = extraData.request.serverRequest;
+                        valueToInject = context.request.serverRequest;
                     break;
                     case DI.InjectionTypes.REQUEST_BODY_PARAM:
-                        valueToInject = await HttpUtils.parseBody(extraData.request);
+                        valueToInject = await HttpUtils.parseBody(context.request);
                     break;
                     case DI.InjectionTypes.RESPONSE_PARAM:
-                        valueToInject = extraData.response;
+                        valueToInject = context.response;
                         break;
                     case DI.InjectionTypes.COOKIE_PARAM:
                         if(requestCookies.get(param.parameterName)) {
@@ -172,36 +157,25 @@ export class DependencyInjectionFactory {
                     case DI.InjectionTypes.PARAMETERS_PARAM:
                         const allParameters: Mandarine.MandarineMVC.AllParameters = { 
                             query: Object.fromEntries(queryParams), 
-                            route: extraData.params 
+                            route: routeParams
                         };
                         valueToInject = allParameters;
                         break;
                     case DI.InjectionTypes.REQUEST_CONTEXT_PARAM:
-                        valueToInject = extraData.fullContext;
+                        valueToInject = context;
                         break;
                     case DI.InjectionTypes.AUTH_PRINCIPAL_PARAM:
-                        valueToInject = (extraData.request as any).authentication?.AUTH_PRINCIPAL;
+                        valueToInject = context.request.authentication?.AUTH_PRINCIPAL;
                         break;
-                }
-
-                const executePipe = (pipe: any) => {
-                    const pipeFromDI: Mandarine.Types.PipeTransform = this.getDependency(pipe);
-                    if(pipeFromDI) {
-                        valueToInject = pipeFromDI.transform(valueToInject);
-                    } else if(!pipeFromDI && typeof pipe === 'function') {
-                        valueToInject = pipe(valueToInject);
-                    } else {
-                        throw new MandarineException(MandarineException.INVALID_PIPE_EXECUTION);
-                    }
                 }
 
                 if(pipes) {
                     if(Array.isArray(pipes)) {
                         pipes.forEach((pipe) => {
-                            executePipe(pipe);
+                            valueToInject = executePipe(pipe, valueToInject);
                         })
                     } else {
-                        executePipe(pipes);
+                        valueToInject = executePipe(pipes, valueToInject);
                     }
                 }
 

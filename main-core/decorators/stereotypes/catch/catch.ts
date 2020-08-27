@@ -14,7 +14,7 @@ import { MainCoreDecoratorProxy } from "../../../proxys/mainCoreDecorator.ts";
 export const Catch = (exception: any): Function => {
     return (target: any) => {
         MainCoreDecoratorProxy.registerMandarinePoweredComponent(target, Mandarine.MandarineCore.ComponentTypes.CATCH, {
-            exception: exception
+            exceptionType: exception
         }, undefined);
     };
 };

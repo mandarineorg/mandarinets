@@ -11,10 +11,10 @@ import { ReflectUtils } from "../../../../../main-core/utils/reflectUtils.ts";
 import { AnnotationMetadataContext } from "../../../interfaces/mandarine/mandarineAnnotationMetadataContext.ts";
 import { MandarineMVCContext } from "../../../mandarineMvcContext.ts";
 import { RoutingUtils } from "../../../utils/mandarine/routingUtils.ts";
-import { NonComponentMiddlewareTarget } from "../../../../../main-core/components/middleware-component/middlewareTarget.ts";
 import { ApplicationContext } from "../../../../../main-core/application-context/mandarineApplicationContext.ts";
 import { MiddlewareUtil } from "../../../../../main-core/utils/components/middlewareUtil.ts";
-import { MiddlewareComponent } from "../../../../../main-core/components/middleware-component/middlewareComponent.ts";
+import { NonComponentMiddlewareTarget } from "../../../../../main-core/internals/interfaces/middlewareTarget.ts";
+import { ComponentComponent } from "../../../../../main-core/components/component-component/componentComponent.ts";
 /**
  * This class is used in the DI Container for Mandarine to store components annotated as @Controller
  * It contains all the behavior of a controller, like its routes and the methods of the routes.
@@ -101,11 +101,11 @@ export class ControllerComponent {
         })
     }
 
-    public initializeMiddleware(middlewareList: Array<NonComponentMiddlewareTarget | MiddlewareComponent>): Array<NonComponentMiddlewareTarget | MiddlewareComponent> {
+    public initializeMiddleware(middlewareList: Array<NonComponentMiddlewareTarget | Mandarine.Types.MiddlewareComponent>): Array<NonComponentMiddlewareTarget | Mandarine.Types.MiddlewareComponent> {
         if(!middlewareList) return;
         const newMiddlewareList = [...middlewareList];
         newMiddlewareList.forEach((item, index) => {
-            let middlewareHandler: NonComponentMiddlewareTarget | MiddlewareComponent;
+            let middlewareHandler: NonComponentMiddlewareTarget | Mandarine.Types.MiddlewareComponent;
 
             if(CommonUtils.isObject(item)) {
                 middlewareHandler = item;
@@ -115,7 +115,7 @@ export class ControllerComponent {
 
             if(!middlewareHandler) throw new MandarineException(MandarineException.INVALID_MIDDLEWARE_UNDEFINED);
             
-            if(middlewareHandler instanceof MiddlewareComponent) {
+            if(middlewareHandler instanceof ComponentComponent) {
                 MiddlewareUtil.verifyImplementation(middlewareHandler.getClassHandler());
             } else {
                 MiddlewareUtil.verifyImplementation(middlewareHandler);

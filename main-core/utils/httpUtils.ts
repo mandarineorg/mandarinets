@@ -155,7 +155,7 @@ export class HttpUtils {
         return partsByName;
     }
 
-    public static createCookie(requestContext: any, cookieData: Mandarine.MandarineMVC.Cookie): string {
+    public static createCookie(requestContext: Mandarine.Types.RequestContext, cookieData: Mandarine.MandarineMVC.Cookie): string {
         const cookiesFromRequest: Mandarine.MandarineCore.Cookies = HttpUtils.getCookies(requestContext.request);
         let cookiesNames: Array<string> = Object.keys(cookiesFromRequest);
         let cookieExists: boolean = cookiesNames.some((cookieName) => cookieName === cookieData.name);
@@ -164,7 +164,7 @@ export class HttpUtils {
 
         if(cookieExists && cookieName) { 
             const currentCookie = cookiesFromRequest[cookieName];
-            isCookieValid = (<OakCookies>requestContext.cookies).get(cookieName, { signed: true }) != undefined;
+            isCookieValid = requestContext.cookies.get(cookieName, { signed: true }) != undefined;
         }
 
         if(!isCookieValid || isCookieValid && !cookieExists) {
@@ -178,7 +178,7 @@ export class HttpUtils {
             cookieConfig.signed = true;
             cookieConfig.httpOnly = (cookieData.httpOnly) ? cookieData.httpOnly : false;
 
-            const cookies = (<OakCookies>requestContext.cookies).set(cookieData.name, cookieData.value, cookieConfig);
+            const cookies = requestContext.cookies.set(cookieData.name, cookieData.value, cookieConfig);
             return cookieData.value;
         }
 
@@ -187,7 +187,7 @@ export class HttpUtils {
         }
     }
 
-    public static assignContentType(context: any) {
+    public static assignContentType(context: Mandarine.Types.RequestContext) {
         let contentType: string = Mandarine.Global.getMandarineConfiguration().mandarine.server.responseType;
 
         const responseBody = context.response.body;
