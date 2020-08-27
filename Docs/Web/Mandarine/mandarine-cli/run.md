@@ -23,4 +23,4 @@ $ mandarine run [OPTIONS]
 | --allow-env | Specifies deno should use the flag --allow-env | No
 | --allow-all | Specifies deno should use the flag --allow-all | No
 | --reload | Specifies deno should use the flag --reload | No
-| --watch | Specifies that mandarine-cli reloads the project when files change --watch | No
+| --watch | Specifies that mandarine cli reloads the project when files change --watch | No
