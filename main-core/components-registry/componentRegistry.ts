@@ -6,17 +6,13 @@ import { MandarineRepository } from "../../orm-core/repository/mandarineReposito
 import { PostgresRepositoryProxy } from "../../orm-core/repository/repositoryPostgresProxy.ts";
 import { ApplicationContext } from "../application-context/mandarineApplicationContext.ts";
 import { ComponentComponent } from "../components/component-component/componentComponent.ts";
-import { ConfigurationComponent } from "../components/configuration-component/configurationComponent.ts";
-import { MiddlewareComponent } from "../components/middleware-component/middlewareComponent.ts";
 import { RepositoryComponent } from "../components/repository-component/repositoryComponent.ts";
-import { ServiceComponent } from "../components/service-component/serviceComponent.ts";
 import { DI } from "../dependency-injection/di.ns.ts";
 import { Mandarine } from "../Mandarine.ns.ts";
 import { MandarineConstants } from "../mandarineConstants.ts";
 import { Reflect } from "../reflectMetadata.ts";
 import { CommonUtils } from "../utils/commonUtils.ts";
 import { ReflectUtils } from "../utils/reflectUtils.ts";
-import { CatchComponent } from "../components/catch-component/catchComponent.ts";
 
 /**
 * This class is also known as the DI container.
@@ -44,16 +40,16 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
                     componentInstanceInitialized = new ControllerComponent(componentName, configuration.pathRoute, componentInstance, componentHandler);
                     break;
                 case Mandarine.MandarineCore.ComponentTypes.SERVICE:
-                    componentInstanceInitialized = new ServiceComponent(componentName, componentHandler);
+                    componentInstanceInitialized = new ComponentComponent(componentName, componentHandler, Mandarine.MandarineCore.ComponentTypes.SERVICE);
                 break;
                 case Mandarine.MandarineCore.ComponentTypes.CONFIGURATION:
-                    componentInstanceInitialized = new ConfigurationComponent(componentName, componentHandler);
+                    componentInstanceInitialized = new ComponentComponent(componentName, componentHandler, Mandarine.MandarineCore.ComponentTypes.CONFIGURATION);
                 break;
                 case Mandarine.MandarineCore.ComponentTypes.COMPONENT:
-                    componentInstanceInitialized = new ComponentComponent(componentName, componentHandler);
+                    componentInstanceInitialized = new ComponentComponent(componentName, componentHandler, Mandarine.MandarineCore.ComponentTypes.COMPONENT);
                 break;
                 case Mandarine.MandarineCore.ComponentTypes.MIDDLEWARE:
-                    componentInstanceInitialized = new MiddlewareComponent(componentName, configuration.regexRoute, componentHandler);
+                    componentInstanceInitialized = new ComponentComponent(componentName, componentHandler, Mandarine.MandarineCore.ComponentTypes.MIDDLEWARE, configuration);
                 break;
                 case Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT:
                     componentInstanceInitialized = componentInstance;
@@ -62,12 +58,11 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
                     componentInstanceInitialized = new RepositoryComponent(componentName, componentHandler, configuration);
                 break;
                 case Mandarine.MandarineCore.ComponentTypes.CATCH:
-                    componentInstanceInitialized = new CatchComponent(componentName, configuration.exception, componentHandler);
+                    componentInstanceInitialized = new ComponentComponent(componentName, componentHandler, Mandarine.MandarineCore.ComponentTypes.CATCH, configuration);
                 break;
             }
 
             this.components.set(componentName, {
-                classParentName: componentName,
                 componentName: componentName,
                 componentInstance: componentInstanceInitialized,
                 componentType: componentType

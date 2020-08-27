@@ -35,25 +35,26 @@ export class AuthenticationRouting {
     public createAuthLoginRoute(router: Router): Router {
         const httpLogingConfigurer = Mandarine.Global.getMandarineGlobal().__SECURITY__.auth.httpLoginBuilder;
 
-        const processor = async (context: Context, next) => {
-            const contentType = context.request.serverRequest.headers.get("content-type");
+        const processor = async (context: any, next) => {
+            const typedContext: Mandarine.Types.RequestContext = context;
+            const contentType = typedContext.request.serverRequest.headers.get("content-type");
             let body = undefined;
-            if(contentType === "application/json" || contentType === "application/x-www-form-urlencoded") body = await HttpUtils.parseBody(context.request);
+            if(contentType === "application/json" || contentType === "application/x-www-form-urlencoded") body = await HttpUtils.parseBody(typedContext.request);
             if(!body) throw new MandarineSecurityException(MandarineSecurityException.INVALID_LOGIN_DATA);
 
             const authentication = AuthenticationRouting.authenticator.performAuthentication(body[httpLogingConfigurer.login.usernameParameter], 
                                                                                             body[httpLogingConfigurer.login.passwordParameter],
-                                                                                            context);
+                                                                                            typedContext);
             if (authentication.status === "FAILED") {
-                context.response.status = 401;
-                httpLogingConfigurer.login.handler.onFailure(context.request, context.response, authentication);
+                typedContext.response.status = 401;
+                httpLogingConfigurer.login.handler.onFailure(typedContext.request, typedContext.response, authentication);
             } else if(authentication.status === "PASSED") {
-                context.response.status = 200;
-                httpLogingConfigurer.login.handler.onSuccess(context.request, context.response, authentication);
-                context.response.redirect(httpLogingConfigurer.login.loginSucessUrl);
+                typedContext.response.status = 200;
+                httpLogingConfigurer.login.handler.onSuccess(typedContext.request, typedContext.response, authentication);
+                typedContext.response.redirect(httpLogingConfigurer.login.loginSucessUrl);
             } else if(authentication.status === "ALREADY-LOGGED-IN") {
-                context.response.status = 200;
-                context.response.redirect(httpLogingConfigurer.login.loginSucessUrl);
+                typedContext.response.status = 200;
+                typedContext.response.redirect(httpLogingConfigurer.login.loginSucessUrl);
             }
 
             await next();
@@ -67,10 +68,11 @@ export class AuthenticationRouting {
     public createAuthLogoutRoute(router: Router): Router {
         const httpLogingConfigurer = Mandarine.Global.getMandarineGlobal().__SECURITY__.auth.httpLoginBuilder;
 
-        const processor = async (context: Context, next) => {
-            AuthenticationRouting.authenticator.stopAuthentication(context);
-            context.response.status = 200;
-            context.response.redirect(httpLogingConfigurer.login.logoutSuccessUrl);
+        const processor = async (context: any, next) => {
+            const typedContext: Mandarine.Types.RequestContext = context;
+            AuthenticationRouting.authenticator.stopAuthentication(typedContext);
+            typedContext.response.status = 200;
+            typedContext.response.redirect(httpLogingConfigurer.login.logoutSuccessUrl);
             await next();
         }
 

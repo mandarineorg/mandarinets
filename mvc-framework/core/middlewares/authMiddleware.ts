@@ -5,10 +5,11 @@ import { AuthUtils } from "../../../security-core/utils/auth.util.ts";
 import { Mandarine } from "../../../main-core/Mandarine.ns.ts";
 
 export const handleBuiltinAuth = () => {
-    return async (context: Context, next) => {
-        const authCookieId = AuthUtils.findAuthCookie(context);
+    return async (context: any, next) => {
+        const typedContext: Mandarine.Types.RequestContext = context;
+        const authCookieId = AuthUtils.findAuthCookie(typedContext);
         if(!authCookieId) {
-            (context.request as any).authentication = undefined;
+            context.request.authentication = undefined;
             await next();
             return;
         }
@@ -16,7 +17,7 @@ export const handleBuiltinAuth = () => {
         Mandarine.Global.getSessionContainer().store.get(authCookieId, (error, result: Mandarine.Security.Sessions.MandarineSession) => {
             if(error || !result) return;
             
-            (context.request as any).authentication = {
+            typedContext.request.authentication = {
                 AUTH_SES_ID: result.sessionID,
                 AUTH_EXPIRES: result.expiresAt,
                 AUTH_PRINCIPAL: result.sessionData

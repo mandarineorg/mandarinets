@@ -1,7 +1,7 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { MiddlewareTarget } from "../../components/middleware-component/middlewareTarget.ts";
 import { MandarineException } from "../../exceptions/mandarineException.ts";
+import { MiddlewareTarget } from "../../internals/interfaces/middlewareTarget.ts";
 
 export class MiddlewareUtil {
     public static verifyImplementation(middleware: MiddlewareTarget) {

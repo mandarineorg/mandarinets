@@ -36,6 +36,8 @@ export class MiddlewareTest {
         let test5 = (await (await fetch("http://localhost:2024/api/get-5")).json());
         let test6 = (await (await fetch("http://localhost:2024/api/get-6")).json());
         let test7 = (await (await fetch("http://localhost:2024/api/get-7")).json());
+        let test8 = (await (await fetch("http://localhost:2024/docs/my-doc")).json());
+        let test9 = (await (await fetch("http://localhost:2024/docs-my-doc")).json());
 
         let errorThrown = undefined;
         try {
@@ -48,7 +50,8 @@ export class MiddlewareTest {
             DenoAsserts.assertEquals(test6["TEST_MIDDLEWARE"], undefined);
             DenoAsserts.assertEquals(test6["TEST_MIDDLEWARE_NONCOMPONENT"], undefined);
             DenoAsserts.assertEquals(test7["TEST_MIDDLEWARE_NONCOMPONENT"], "Batman");
-
+            DenoAsserts.assertEquals(test8["TEST_MIDDLEWARE"], "DOCS INTERCEPTION 10");
+            DenoAsserts.assertEquals(test9["TEST_MIDDLEWARE"], undefined);
         } catch(error) {
             errorThrown = error;
         }

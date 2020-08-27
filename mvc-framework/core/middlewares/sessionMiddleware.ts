@@ -24,7 +24,7 @@ export class SessionMiddleware {
         return Mandarine.Global.getSessionContainer();
     }
 
-    private createSessionContext(sessionContainerConfig: Mandarine.Security.Sessions.SessionContainer, context: any) {
+    private createSessionContext(sessionContainerConfig: Mandarine.Security.Sessions.SessionContainer, context: Mandarine.Types.RequestContext) {
         let sesId = sessionContainerConfig.genId();
         let sessionCookie: Mandarine.MandarineMVC.Cookie = SessionsUtils.getCookieForSession(sessionContainerConfig, sesId);
 
@@ -39,19 +39,19 @@ export class SessionMiddleware {
             signed: false
         });
         
-        (<any>context.request).sessionContext = SessionsUtils.sessionBuilder({
+        context.request.sessionContext = SessionsUtils.sessionBuilder({
             sessionID: sesId,
             sessionCookie: sessionCookie
         }, {
             expiration: sessionContainerConfig.store.options.expiration
         });
         
-        (<any>context.request).sessionID = sesId;
-        (<any>context.request).session = {};
+        context.request.sessionID = sesId;
+        context.request.session = {};
         return sesId;
     }
 
-    public createSessionCookie(context: any) {
+    public createSessionCookie(context: Mandarine.Types.RequestContext) {
         const sessionContainerConfig: Mandarine.Security.Sessions.SessionContainer = this.getSessionContainer();
 
         const cookiesFromRequest: Mandarine.MandarineCore.Cookies = HttpUtils.getCookies(context.request);
@@ -74,7 +74,7 @@ export class SessionMiddleware {
 
             if(!isCookieValid) {
                 // If the signature is invalid then we delete the current cookie since it's a malicious cookie, but we WILL create another cookie for a new session.
-                (<Cookies>context.cookies).delete(sessionCookieName);
+                context.cookies.delete(sessionCookieName);
                 // Create context for new session
                 this.createSessionContext(sessionContainerConfig, context);
                 return;
@@ -83,7 +83,7 @@ export class SessionMiddleware {
             sessionContainerConfig.store.get(sesId, (error, result: Mandarine.Security.Sessions.MandarineSession) => {
 
                 if(result == undefined) {
-                    (<any>context.request).sessionContext = SessionsUtils.sessionBuilder({
+                    context.request.sessionContext = SessionsUtils.sessionBuilder({
                         sessionID: sesId,
                         sessionCookie: sessionCookie
                     }, {
@@ -91,32 +91,32 @@ export class SessionMiddleware {
                     });
                     
                 } else {
-                    (<any>context.request).sessionContext = result;
+                    context.request.sessionContext = result;
                 }
 
-                (<any>context.request).sessionID = sesId;
-                (<any>context.request).session = Object.assign({}, (<Mandarine.Security.Sessions.MandarineSession>(<any>context.request).sessionContext).sessionData);
+                context.request.sessionID = sesId;
+                context.request.session = Object.assign({}, context.request.sessionContext.sessionData);
             }, { touch: true });
         }
     }
 
-    public storeSession(context: any) {
+    public storeSession(context: Mandarine.Types.RequestContext) {
         const sessionContainerConfig: Mandarine.Security.Sessions.SessionContainer = this.getSessionContainer();
-        const mandarineSession: Mandarine.Security.Sessions.MandarineSession = (<Mandarine.Security.Sessions.MandarineSession>(<any> context.request).sessionContext);
+        const mandarineSession: Mandarine.Security.Sessions.MandarineSession = context.request.sessionContext;
 
-        const compareSessionData = CommonUtils.compareObjectKeys(mandarineSession.sessionData, (<any> context.request).session);
-        mandarineSession.sessionData = (<any> context.request).session;
+        const compareSessionData = CommonUtils.compareObjectKeys(mandarineSession.sessionData, context.request.session);
+        mandarineSession.sessionData = context.request.session;
 
         if(compareSessionData) {
             if((mandarineSession.isSessionNew && sessionContainerConfig.saveUninitialized != undefined && sessionContainerConfig.saveUninitialized) || (!mandarineSession.isSessionNew && sessionContainerConfig.resave != undefined && sessionContainerConfig.resave)) {
-                sessionContainerConfig.store.set((<any> context.request).sessionID, mandarineSession, (error, result) => {
+                sessionContainerConfig.store.set(context.request.sessionID, mandarineSession, (error, result) => {
                     // DO NOTHING
                 });
             }
         } else{
             if(mandarineSession.isSessionNew) { mandarineSession.isSessionNew = false; }
 
-            sessionContainerConfig.store.set((<any> context.request).sessionID, mandarineSession, (error, result) => {
+            sessionContainerConfig.store.set(context.request.sessionID, mandarineSession, (error, result) => {
                 // DO NOTHING
             });
         }

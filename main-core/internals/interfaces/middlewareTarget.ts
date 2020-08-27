@@ -22,7 +22,7 @@
    *        }
    *
    */
-export interface MiddlewareTarget {
+  export interface MiddlewareTarget {
     onPreRequest(...args): boolean;
     onPostRequest(...args): void;
 }

@@ -9,10 +9,14 @@ export class ComponentComponent implements Mandarine.MandarineCore.ComponentComm
 
     public name?: string;
     public classHandler: any;
+    public type?: Mandarine.MandarineCore.ComponentTypes;
+    public configuration?: any;
 
-    constructor(name?: string, classHandler?: any) {
+    constructor(name?: string, classHandler?: any, type?: Mandarine.MandarineCore.ComponentTypes, configuration?: any) {
         this.name = name;
         this.classHandler = classHandler;
+        this.type = type;
+        this.configuration = configuration;
     }
 
     public getName() {

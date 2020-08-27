@@ -75,7 +75,7 @@ export class MandarineMVC {
         .use(ResourceHandlerMiddleware())
         .use(starter.getRouter().routes())
         .use(starter.getRouter().allowedMethods())
-        .use(async (ctx, next) => {
+        .use(async (ctx: any, next) => {
             HttpUtils.assignContentType(ctx);
             await next();
         });
