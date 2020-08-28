@@ -16,7 +16,7 @@ import { MVCDecoratorsProxy } from "../../../proxys/mvcCoreDecorators.ts";
  *  Target: Class`
  */
 export const Controller = (baseRoute?: string): Function => {
-    return (target: any, methodName: string, index: number) => {
+    return (target: any) => {
         let className: string = ReflectUtils.getClassName(target);
         let getComponentsRegistry = ApplicationContext.getInstance().getComponentsRegistry();
             if(getComponentsRegistry.exist(className)) {
