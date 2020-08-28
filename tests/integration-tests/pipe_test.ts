@@ -5,7 +5,7 @@ import { DenoAsserts, INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY, Orange, Test } fr
 
 export class PipeTest {
 
-    public MAX_COMPILATION_TIMEOUT_SECONDS = 25;
+    public MAX_COMPILATION_TIMEOUT_SECONDS = 55;
 
     constructor() {
         Orange.setOptions(this, {

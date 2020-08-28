@@ -9,6 +9,7 @@ import { ComponentUtils } from "../../../main-core/utils/componentUtils.ts";
 import { ReflectUtils } from "../../../main-core/utils/reflectUtils.ts";
 import { AnnotationMetadataContext } from "../interfaces/mandarine/mandarineAnnotationMetadataContext.ts";
 import { NonComponentMiddlewareTarget } from "../../../main-core/internals/interfaces/middlewareTarget.ts";
+import { GuardTarget } from "../../../main-core/internals/interfaces/guardTarget.ts";
 
 export class MVCDecoratorsProxy {
 
@@ -43,6 +44,17 @@ export class MVCDecoratorsProxy {
         } else {
             let useMiddlewareAnnotationName: string = `${MandarineConstants.REFLECTION_MANDARINE_USE_MIDDLEWARE_DECORATOR}:${methodName}`;
             Reflect.defineMetadata(useMiddlewareAnnotationName, [...middlewareList], targetClass, methodName);
+        }
+    }
+
+    public static registerUseGuardsDecorator(targetClass: any, guardsList: Array<GuardTarget | any>, methodName: string) {
+        let isMethod: boolean = methodName != null;
+        if(!isMethod) {
+            let useMiddlewareAnnotationName: string = `${MandarineConstants.REFLECTION_MANDARINE_USE_GUARDS_DECORATOR}`;
+            Reflect.defineMetadata(useMiddlewareAnnotationName, [...guardsList], targetClass);
+        } else {
+            let useMiddlewareAnnotationName: string = `${MandarineConstants.REFLECTION_MANDARINE_USE_GUARDS_DECORATOR}:${methodName}`;
+            Reflect.defineMetadata(useMiddlewareAnnotationName, [...guardsList], targetClass, methodName);
         }
     }
 

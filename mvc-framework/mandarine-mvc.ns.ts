@@ -8,6 +8,7 @@ import { Cookie as MandarineCookie } from "./core/interfaces/http/cookie.ts";
 import { MandarineMVCContext } from "./core/mandarineMvcContext.ts";
 import { RenderEngineClass } from "./core/modules/view-engine/renderEngine.ts";
 import { NonComponentMiddlewareTarget } from "../main-core/internals/interfaces/middlewareTarget.ts";
+import { GuardTarget } from "../main-core/internals/interfaces/guardTarget.ts";
 
 /**
 * This namespace contains all the essentials for Mandarine MVC to work
@@ -495,7 +496,8 @@ export namespace MandarineMvc {
             responseStatus?: HttpStatusCode,
             cors?: CorsMiddlewareOption,
             withPermissions?: Mandarine.Security.Auth.Permissions,
-            middleware?: Array<NonComponentMiddlewareTarget | Mandarine.Types.MiddlewareComponent>
+            middleware?: Array<NonComponentMiddlewareTarget | Mandarine.Types.MiddlewareComponent>;
+            guards?: Array<Function | GuardTarget>
         }
 
         /**

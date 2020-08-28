@@ -60,6 +60,9 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
                 case Mandarine.MandarineCore.ComponentTypes.CATCH:
                     componentInstanceInitialized = new ComponentComponent(componentName, componentHandler, Mandarine.MandarineCore.ComponentTypes.CATCH, configuration);
                 break;
+                case Mandarine.MandarineCore.ComponentTypes.GUARDS:
+                    componentInstanceInitialized = new ComponentComponent(componentName, componentHandler, Mandarine.MandarineCore.ComponentTypes.GUARDS, configuration);
+                break;
             }
 
             this.components.set(componentName, {
