@@ -93,23 +93,4 @@ export class MandarineCore {
         });
     }
 
-    /**
-     * Sets a new configuration for mandarine.
-     * @param configFilePath receives the path for the new configuration.json file
-     * Configuration.json file should follow Mandarine properties structure.
-     * https://mandarineframework.gitbook.io/mandarine-ts/mandarine-core/properties
-     * If structure is ignored, some properties may be set to their default values
-     */
-    public static setConfiguration(configFilePath: string) {
-        this.logger.warn("`MandarineCore.setConfiguration` has been permantently deprecated & its effect on the code has been removed. More: https://mandarineframework.gitbook.io/mandarine-ts/mandarine-core/properties");
-        try {
-            // const decoder = new TextDecoder("utf-8");
-            // let readConfig = Deno.readFileSync(configFilePath);
-            // let properties: Mandarine.Properties = JSON.parse(decoder.decode(readConfig));
-            // Mandarine.Global.setConfiguration(properties);
-        } catch {
-            //this.logger.warn("Configuration could not be parsed, default values will be used.");
-        }
-    }
-
 }

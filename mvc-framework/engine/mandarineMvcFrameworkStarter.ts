@@ -10,7 +10,7 @@ import { middlewareResolver, requestResolver } from "../core/internal/components
 import { handleCors } from "../core/middlewares/cors/corsMiddleware.ts";
 import { SessionMiddleware } from "../core/middlewares/sessionMiddleware.ts";
 import { AuthenticationRouting } from "../core/internal/auth/authenticationRouting.ts";
-import { VerifyPermissions } from "../../security-core/core/internals/permissions/verifyPermissions.ts";
+import { verifyPermissions } from "../../security-core/core/internals/permissions/verifyPermissions.ts";
 import { ComponentComponent } from "../../main-core/components/component-component/componentComponent.ts";
 import { NonComponentMiddlewareTarget } from "../../main-core/internals/interfaces/middlewareTarget.ts";
 
@@ -127,10 +127,10 @@ export class MandarineMvcFrameworkStarter {
             let allowed = true;
 
             if(controllerPermissions) {
-                allowed = VerifyPermissions(controllerPermissions, context.request);
+                allowed = verifyPermissions(context.request)(controllerPermissions);
             }
             if(routePermissions && allowed) {
-                allowed = VerifyPermissions(routePermissions, context.request);
+                allowed = verifyPermissions(context.request)(routePermissions);
             }
 
             if(!allowed) {
