@@ -7,7 +7,7 @@ import { SecurityCoreDecoratorsProxy } from "../../security-core/core/proxys/sec
 import { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
 import { MandarineMvc } from "../../mvc-framework/mandarine-mvc.ns.ts";
 import { Mandarine } from "../../main-core/Mandarine.ns.ts";
-import { VerifyPermissions } from "../../security-core/core/internals/permissions/verifyPermissions.ts";
+import { verifyPermissions } from "../../security-core/core/internals/permissions/verifyPermissions.ts";
 
 export class AuthAllowOnly {
 
@@ -75,68 +75,68 @@ export class AuthAllowOnly {
             }
         };
 
-        const verifyPermissionTest1 = VerifyPermissions(permisions, {...mockRequest});
+        const verifyPermissionTest1 = verifyPermissions( {...mockRequest})(permisions);
         DenoAsserts.assertEquals(verifyPermissionTest1, true);
 
-        const verifyPermissionTest2 = VerifyPermissions(permisions, {...mockRequest, authentication: {
+        const verifyPermissionTest2 = verifyPermissions({...mockRequest, authentication: {
             AUTH_PRINCIPAL: {
                 roles: ["MOD"]
             }
-        }});
+        }})(permisions);
         DenoAsserts.assertEquals(verifyPermissionTest2, true);
 
-        const verifyPermissionTest3 = VerifyPermissions(permisions, {...mockRequest, authentication: {
+        const verifyPermissionTest3 = verifyPermissions({...mockRequest, authentication: {
             AUTH_PRINCIPAL: {
                 roles: ["ADMIN"]
             }
-        }});
+        }})(permisions);
         DenoAsserts.assertEquals(verifyPermissionTest3, true);
 
-        const verifyPermissionTest4 = VerifyPermissions(permisions, {...mockRequest, authentication: {
+        const verifyPermissionTest4 = verifyPermissions({...mockRequest, authentication: {
             AUTH_PRINCIPAL: {
                 roles: ["USER"]
             }
-        }});
+        }})(permisions);
         DenoAsserts.assertEquals(verifyPermissionTest4, false);
 
-        const verifyPermissionTest5 = VerifyPermissions(permisions, {...mockRequest, authentication: {
+        const verifyPermissionTest5 = verifyPermissions({...mockRequest, authentication: {
             AUTH_PRINCIPAL: {
                 roles: ["USER", "MOD"]
             }
-        }});
+        }})(permisions);
         DenoAsserts.assertEquals(verifyPermissionTest5, true);
 
         const isAuthenticated = ["isAuthenticated()"];
-        const verifyPermissionTest6 = VerifyPermissions(isAuthenticated, {...mockRequest, authentication: {
+        const verifyPermissionTest6 = verifyPermissions({...mockRequest, authentication: {
             AUTH_PRINCIPAL: {
                 roles: ["USER"]
             }
-        }});
+        }})(isAuthenticated);
         DenoAsserts.assertEquals(verifyPermissionTest6, true);
 
-        const verifyPermissionTest7 = VerifyPermissions(isAuthenticated, {authentication: undefined});
+        const verifyPermissionTest7 = verifyPermissions({authentication: undefined})(isAuthenticated);
         DenoAsserts.assertEquals(verifyPermissionTest7, false);
 
-        const verifyPermissionTest8 = VerifyPermissions([...permisions, "isAuthenticated()"], {...mockRequest, authentication: {
+        const verifyPermissionTest8 = verifyPermissions({...mockRequest, authentication: {
             AUTH_PRINCIPAL: {
                 roles: ["MOD"]
             }
-        }});
+        }})([...permisions, "isAuthenticated()"]);
         DenoAsserts.assertEquals(verifyPermissionTest8, true);
 
-        const verifyPermissionTest9 = VerifyPermissions([...permisions, "isAuthenticated()"], {authentication: undefined});
+        const verifyPermissionTest9 = verifyPermissions({authentication: undefined})([...permisions, "isAuthenticated()"]);
         DenoAsserts.assertEquals(verifyPermissionTest9, false);
 
-        const verifyPermissionTest10 = VerifyPermissions(["hasRole('ADMIN')"], {...mockRequest});
+        const verifyPermissionTest10 = verifyPermissions({...mockRequest})(["hasRole('ADMIN')"]);
         DenoAsserts.assertEquals(verifyPermissionTest10, true);
 
-        const verifyPermissionTest11 = VerifyPermissions(["hasRole('ADMIN') && isAuthenticated()"], {...mockRequest});
+        const verifyPermissionTest11 = verifyPermissions({...mockRequest})(["hasRole('ADMIN') && isAuthenticated()"]);
         DenoAsserts.assertEquals(verifyPermissionTest11, true);
 
-        const verifyPermissionTest12 = VerifyPermissions(["hasRole('LOL') || isAuthenticated()"], {...mockRequest});
+        const verifyPermissionTest12 = verifyPermissions({...mockRequest})(["hasRole('LOL') || isAuthenticated()"]);
         DenoAsserts.assertEquals(verifyPermissionTest12, true);
 
-        const verifyPermissionTest13 = VerifyPermissions(["hasRole('LOL') || isAuthenticated()"], {authentication: undefined});
+        const verifyPermissionTest13 = verifyPermissions({authentication: undefined})(["hasRole('LOL') || isAuthenticated()"]);
         DenoAsserts.assertEquals(verifyPermissionTest13, false);
     }
 
@@ -153,25 +153,25 @@ export class AuthAllowOnly {
             }
         };
 
-        const expr1 = VerifyPermissions("true AND hasRole('MOD')", mockRequest);
+        const expr1 = verifyPermissions(mockRequest)("true AND hasRole('MOD')");
         DenoAsserts.assertEquals(expr1, true);
 
-        const expr2 = VerifyPermissions("hasRole('MOD')", mockRequest);
+        const expr2 = verifyPermissions(mockRequest)("hasRole('MOD')");
         DenoAsserts.assertEquals(expr2, true);
 
-        const expr3 = VerifyPermissions("hasRole(ADMIN)", mockRequest);
+        const expr3 = verifyPermissions(mockRequest)("hasRole(ADMIN)");
         DenoAsserts.assertEquals(expr3, true);
 
-        const expr4 = VerifyPermissions("hasRole(ADMIN)", {});
+        const expr4 = verifyPermissions({})("hasRole(ADMIN)");
         DenoAsserts.assertEquals(expr4, false);
 
-        const expr5 = VerifyPermissions("hasRole(ADMIN)", { authentication: undefined });
+        const expr5 = verifyPermissions({ authentication: undefined })("hasRole(ADMIN)");
         DenoAsserts.assertEquals(expr5, false);
 
-        const expr6 = VerifyPermissions("hasRole(ADMIN) && isAuthenticated()", mockRequest);
+        const expr6 = verifyPermissions(mockRequest)("hasRole(ADMIN) && isAuthenticated()");
         DenoAsserts.assertEquals(expr6, true);
 
-        const expr7 = VerifyPermissions("hasRole(ADMIN) && isAuthenticated() OR true", mockRequest);
+        const expr7 = verifyPermissions(mockRequest)("hasRole(ADMIN) && isAuthenticated() OR true");
         DenoAsserts.assertEquals(expr7, true);
     }
 }

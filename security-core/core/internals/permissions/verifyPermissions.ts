@@ -2,7 +2,6 @@
 
 import { Mandarine } from "../../../../main-core/Mandarine.ns.ts";
 import { PermissionValidatorsRegistry } from "./permissionValidatorsRegistry.ts";
-import { ReflectUtils } from "../../../../main-core/utils/reflectUtils.ts";
 
 const getExpressionParameters = (expression: string): Array<string> => {
     let str = expression;
@@ -38,69 +37,72 @@ const executeExpression = (expr: string, hasParameters: boolean, request, authen
     return executeValidator(expr.toLowerCase(), request, authentication, inputs)
 };
 
-const processExpression = (expression: string, request, authentication): boolean => {
-    const divideExpression = expression.split(/(?!\(.*)\s(?![^(]*?\))/g);
-    const evaluation = [];
-    divideExpression.forEach((expr) => {
+const processExpression = (request: any, authentication: Mandarine.Security.Auth.RequestAuthObj) => {
+        return (expression: any) => {
+            const divideExpression = expression.split(/(?!\(.*)\s(?![^(]*?\))/g);
+            const evaluation = [];
+            divideExpression.forEach((expr) => {
+                if(expr === "OR" || expr === "AND" || expr === "||" || expr === "&&") {
+                    if(expr === "OR") expr = "||";
+                    if(expr === "AND") expr = "&&";
+                    evaluation.push(expr);
+                    return;
+                }
+                const hasParameters = expressionHasParameters(expr);
+                let execution;
+                if(hasParameters) {
+                    execution = executeExpression(expr, hasParameters, request, authentication);
+                } else if(expr.endsWith("()") || expr.endsWith("();")) {
+                    execution = executeExpression(expr, false, request, authentication);
+                } else {
+                    execution = expr;
+                }
+                evaluation.push(String(execution));
+            });
 
-        if(expr === "OR" || expr === "AND" || expr === "||" || expr === "&&") {
-            if(expr === "OR") expr = "||";
-            if(expr === "AND") expr = "&&";
-            evaluation.push(expr);
-            return;
-        }
-        const hasParameters = expressionHasParameters(expr);
-        let execution;
-        if(hasParameters) {
-            execution = executeExpression(expr, hasParameters, request, authentication);
-        } else if(expr.endsWith("()") || expr.endsWith("();")) {
-            execution = executeExpression(expr, false, request, authentication);
-        } else {
-            execution = expr;
-        }
-        evaluation.push(String(execution));
-    });
+            const finalEvaluation = eval(`(${evaluation.join(" ")})`);
 
-    const finalEvaluation = eval(`(${evaluation.join(" ")})`);
-
-    return finalEvaluation;
+            return finalEvaluation;
+        };
 }
 
-export const VerifyPermissions = (permissions: Mandarine.Security.Auth.Permissions, request: any): boolean => {
-    const authentication = (request.authentication) ? Object.assign({}, request.authentication) : undefined;
-    const currentRoles = (<Array<string>>(authentication?.AUTH_PRINCIPAL?.roles))?.map((role) => role.toLowerCase());
-    let isAllowed: boolean = true;
+export const verifyPermissions = (request: any) => {
+    return (permissions: Mandarine.Security.Auth.Permissions): boolean => {
+        const authentication = (request.authentication) ? Object.assign({}, request.authentication) : undefined;
+        const currentRoles = (<Array<string>>(authentication?.AUTH_PRINCIPAL?.roles))?.map((role) => role.toLowerCase());
+        let isAllowed: boolean = true;
 
-    if(Array.isArray(permissions)) {
-        for(const permission of permissions) {
-            const permissionLower = permission.toLowerCase();
-            const expressionHasParametersStatement = expressionHasParameters(permissionLower);
-            if((permissionLower.endsWith("()") || permissionLower.endsWith("();")) || expressionHasParametersStatement) {
-                let callValidator = processExpression(permission, request, authentication);
-                if(callValidator === false) {
-                    isAllowed = false;
-                } else if(callValidator === true) {
-                    isAllowed = true;
-                    break;
-                }
-                continue;
-            } else {
-                if(currentRoles === undefined || currentRoles?.length === 0) {
-                    isAllowed = false;
-                    break;
-                } else {
-                    if(currentRoles.includes(permissionLower)) {
+        if(Array.isArray(permissions)) {
+            for(const permission of permissions) {
+                const permissionLower = permission.toLowerCase();
+                const expressionHasParametersStatement = expressionHasParameters(permissionLower);
+                if((permissionLower.endsWith("()") || permissionLower.endsWith("();")) || expressionHasParametersStatement) {
+                    let callValidator = processExpression(request, authentication)(permission);
+                    if(callValidator === false) {
+                        isAllowed = false;
+                    } else if(callValidator === true) {
                         isAllowed = true;
                         break;
-                    } else {
+                    }
+                    continue;
+                } else {
+                    if(currentRoles === undefined || currentRoles?.length === 0) {
                         isAllowed = false;
+                        break;
+                    } else {
+                        if(currentRoles.includes(permissionLower)) {
+                            isAllowed = true;
+                            break;
+                        } else {
+                            isAllowed = false;
+                        }
                     }
                 }
             }
+        } else if(typeof permissions === 'string') {
+            isAllowed = processExpression(request, authentication)(permissions);
         }
-    } else if(typeof permissions === 'string') {
-        isAllowed = processExpression(permissions, request, authentication);
-    }
 
-    return isAllowed;
+        return isAllowed;
+    }
 }
