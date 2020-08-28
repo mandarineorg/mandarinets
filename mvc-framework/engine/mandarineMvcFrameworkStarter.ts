@@ -164,11 +164,13 @@ export class MandarineMvcFrameworkStarter {
             const controllerGuards = controllerComponent.options.guards;
             const routeGuards = routingAction.routingOptions.guards;
 
-            if(controllerGuards) {
-                allowed = await this.executeUseGuards(controllerGuards, context);
-            }
-            if(routeGuards && allowed) {
-                allowed = await this.executeUseGuards(routeGuards, context);
+            if(allowed) {
+                if(controllerGuards) {
+                    allowed = await this.executeUseGuards(controllerGuards, context);
+                }
+                if(routeGuards) {
+                    allowed = await this.executeUseGuards(routeGuards, context);
+                }
             }
 
             if(!allowed) {
