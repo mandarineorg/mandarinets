@@ -15,9 +15,11 @@ export class MandarineException extends Error {
     public static ON_INITIALIZATION_OVERRIDEN: string = "The method `onInitialization` cannot be overriden because it is a Mandarine reserved method.";
     public static INVALID_ALLOWONLY_DECORATOR_PERMISSIONS: string = "Decorator `@AllowOnly` only receives an array or a security expression (string).";
     public static INVALID_MIDDLEWARE_LIST_ANNOTATION: string = "Decorator `@UseMiddleware` is being used but a list of undefined values was passed.";
+    public static INVALID_GUARDS_LIST_ANNOTATION: string = "Decorator `@UseGuards` is being used but a list of undefined values was passed.";
     public static INVALID_MIDDLEWARE_UNDEFINED: string = "Middleware cannot be initialized because it is undefined.";
     public static INVALID_PIPE_LOCATION: string = "Pipes can only target parameters of a HTTP Handler";
     public static INVALID_PIPE_EXECUTION: string = "Pipe execution failed because it's either an invalid pipe or an exception was thrown during transformation";
+    public static INVALID_GUARD_EXECUTION: string = "A guard was found but it is not a valid mandarine-powered component nor a function";
   
     constructor(public message: string, public superAlert: boolean = false) {
       super(message);

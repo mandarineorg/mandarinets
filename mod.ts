@@ -46,3 +46,6 @@ export { AllowOnly } from "./security-core/core/decorators/allowOnly.ts";
 export { UseMiddleware } from "./mvc-framework/core/decorators/stereotypes/controller/useMiddleware.ts";
 
 export { ExceptionContext, ExceptionFilter } from "./main-core/internals/interfaces/exceptionFilter.ts";
+export { GuardTarget, GuardTargetMethod } from "./main-core/internals/interfaces/guardTarget.ts";
+
+export { UseGuards } from "./mvc-framework/core/decorators/stereotypes/controller/useGuards.ts";

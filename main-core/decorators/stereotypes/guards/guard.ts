@@ -6,15 +6,13 @@ import { MainCoreDecoratorProxy } from "../../../proxys/mainCoreDecorator.ts";
 /**
  * **Decorator**
  * 
- * Register a component type Catch in the DI Container
+ * Register a Guard component for the DI Container
  *
- * `@Catch()
+ * `@Guard()
  *  Target: class`
  */
-export const Catch = (exception: any): Function => {
+export const Guard = (): Function => {
     return (target: any) => {
-        MainCoreDecoratorProxy.registerMandarinePoweredComponent(target, Mandarine.MandarineCore.ComponentTypes.CATCH, {
-            exceptionType: exception
-        }, undefined);
+        MainCoreDecoratorProxy.registerMandarinePoweredComponent(target, Mandarine.MandarineCore.ComponentTypes.GUARDS, {}, undefined);
     };
 };

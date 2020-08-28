@@ -70,7 +70,8 @@ export class ControllerComponent {
             cors: MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_CORS_MIDDLEWARE, 
             withPermissions: MandarineConstants.REFLECTION_MANDARINE_SECURITY_ALLOWONLY_DECORATOR,
             responseStatus: MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_DEFAULT_HTTP_RESPONSE_CODE,
-            middleware: MandarineConstants.REFLECTION_MANDARINE_USE_MIDDLEWARE_DECORATOR
+            middleware: MandarineConstants.REFLECTION_MANDARINE_USE_MIDDLEWARE_DECORATOR,
+            guards: MandarineConstants.REFLECTION_MANDARINE_USE_GUARDS_DECORATOR
         };
         let metadataKeysFromClass: Array<any> = Reflect.getMetadataKeys(this.getClassHandlerType());
 
@@ -89,7 +90,8 @@ export class ControllerComponent {
             cors: MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_CORS_MIDDLEWARE,
             withPermissions: MandarineConstants.REFLECTION_MANDARINE_SECURITY_ALLOWONLY_DECORATOR,
             responseStatus: MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_DEFAULT_HTTP_RESPONSE_CODE,
-            middleware: MandarineConstants.REFLECTION_MANDARINE_USE_MIDDLEWARE_DECORATOR
+            middleware: MandarineConstants.REFLECTION_MANDARINE_USE_MIDDLEWARE_DECORATOR,
+            guards: MandarineConstants.REFLECTION_MANDARINE_USE_GUARDS_DECORATOR
         }
         if(!routeContext.options) routeContext.options = {};
 

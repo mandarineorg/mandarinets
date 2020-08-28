@@ -466,7 +466,8 @@ export namespace Mandarine {
             CONFIGURATION,
             MIDDLEWARE,
             REPOSITORY,
-            MANUAL_COMPONENT
+            MANUAL_COMPONENT,
+            GUARDS
         };
 
         /**

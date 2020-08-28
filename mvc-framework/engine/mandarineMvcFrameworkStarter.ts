@@ -13,6 +13,9 @@ import { AuthenticationRouting } from "../core/internal/auth/authenticationRouti
 import { verifyPermissions } from "../../security-core/core/internals/permissions/verifyPermissions.ts";
 import { ComponentComponent } from "../../main-core/components/component-component/componentComponent.ts";
 import { NonComponentMiddlewareTarget } from "../../main-core/internals/interfaces/middlewareTarget.ts";
+import { GuardTarget } from "../../main-core/internals/interfaces/guardTarget.ts";
+import { DI } from "../../main-core/dependency-injection/di.ns.ts";
+import { MandarineException } from "../../main-core/exceptions/mandarineException.ts";
 
 /**
  * This class works as the MVC engine and it is responsible for the initialization & behavior of HTTP requests.
@@ -108,6 +111,29 @@ export class MandarineMvcFrameworkStarter {
         return true;
     }
 
+    private async executeUseGuards(guards: Array<GuardTarget | Function>, context: Mandarine.Types.RequestContext) {
+        for(const currentGuard of guards) {
+            let guardPassed: boolean = true;
+            const dependency: ComponentComponent = ApplicationContext.getInstance().getDIFactory().getComponentByType(currentGuard);
+            if(dependency) {
+                const componentHandler = dependency.getClassHandler();
+                const resolveGuardParameters = await DI.Factory.methodArgumentResolver(componentHandler, "onGuard", context);
+                guardPassed = await (componentHandler["onGuard"](context, ...resolveGuardParameters));
+            } else {
+                if(typeof currentGuard === 'function') {
+                    guardPassed = await (currentGuard(context));
+                } else {
+                    throw new MandarineException(MandarineException.INVALID_GUARD_EXECUTION);
+                }
+            }
+
+            if(guardPassed === false) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private addPathToRouter(router: Router, routingAction: Mandarine.MandarineMVC.Routing.RoutingAction, controllerComponent: ControllerComponent): Router {
         let route: string = routingAction.route;
 
@@ -122,6 +148,8 @@ export class MandarineMvcFrameworkStarter {
                 return;
             }
 
+            this.preRequestInternalMiddlewares(context, routingAction, controllerComponent); // Execute internal middleware like sessions
+
             const controllerPermissions = controllerComponent.options.withPermissions;
             const routePermissions = routingAction.routingOptions.withPermissions;
             let allowed = true;
@@ -133,12 +161,21 @@ export class MandarineMvcFrameworkStarter {
                 allowed = verifyPermissions(context.request)(routePermissions);
             }
 
+            const controllerGuards = controllerComponent.options.guards;
+            const routeGuards = routingAction.routingOptions.guards;
+
+            if(controllerGuards) {
+                allowed = await this.executeUseGuards(controllerGuards, context);
+            }
+            if(routeGuards && allowed) {
+                allowed = await this.executeUseGuards(routeGuards, context);
+            }
+
             if(!allowed) {
                 context.response.status = 401;
                 return;
             }
 
-            this.preRequestInternalMiddlewares(context, routingAction, controllerComponent); // Execute internal middleware like sessions
             let continueRequest: boolean = await this.executeUserMiddlewares(true, availableMiddlewares, context); // If the user has any middleware, execute it
 
             if(continueRequest) {
