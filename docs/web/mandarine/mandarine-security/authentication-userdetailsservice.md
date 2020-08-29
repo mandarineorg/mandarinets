@@ -9,11 +9,23 @@ The User Details Service is a Mandarine-powered component (_preferably annotated
 An User Details Service must implement `Mandarine.Types.UserDetailsService` otherwise it will result in failure at MCT (Mandarine Compile Time).
 
 ## `Mandarine.Types.UserDetailsService` interface
+```typescript
+export interface UserDetailsService {
+    /**
+    * Locates the user based on the username.
+    * 
+    * @param username the username identifying the user whose data is required.
+    * 
+    * @returns A user record with an implementation of UserDetails
+    * 
+    * @throws MandarineSecurityException if no user was found.
+    */
+    loadUserByUsername: (username: string) => Mandarine.Types.UserDetails;
+}
+```
 
-- loadUserByUsername: **Method**
-    - Method Signature: `(username: string) => UserDetails`
+- loadUserByUsername
     - Fetches an user based on an username from a collection that implements `Mandarine.Types.UserDetails`.
-    - Returns undefined if user is not found
 
 &nbsp;
 

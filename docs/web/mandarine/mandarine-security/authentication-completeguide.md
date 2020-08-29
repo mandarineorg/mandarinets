@@ -85,3 +85,4 @@ And this authentication will now be injected in every request (`request.authenti
 
 ## Protecting endpoints
 
+With the `@AllowOnly` decorator, you _may_ protect your endpoints at a controller level or a route level. [See more here](/docs/mandarine/auth-allow-only-decorator).
