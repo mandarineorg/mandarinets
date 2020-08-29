@@ -60,6 +60,14 @@
       "document": "main-concepts/component-configuration.md"
     },
     {
+      "url": "catch",
+      "document": "main-concepts/component-catch.md"
+    },
+    {
+      "url": "guards",
+      "document": "main-concepts/component-guard.md"
+    },
+    {
       "url": "manual-components",
       "document": "main-concepts/manual-components.md"
     },
@@ -238,5 +246,9 @@
     {
       "url": "native-components-list",
       "document": "mandarine-core/native-components-list.md"
+    },
+    {
+      "url": "pipes",
+      "document": "mandarine-mvc/pipes.md"
     }
 ]

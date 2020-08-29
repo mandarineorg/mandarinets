@@ -22,6 +22,7 @@ export { Param, RouteParam, QueryParam, RequestParam, Session, ServerRequestPara
 export { ResponseStatus } from "./mvc-framework/core/decorators/stereotypes/controller/responseStatus.ts";
 export { GET, POST, DELETE, PATCH, PUT, HEAD, OPTIONS } from "./mvc-framework/core/decorators/stereotypes/controller/routingDecorator.ts";
 export { Catch } from "./main-core/decorators/stereotypes/catch/catch.ts";
+export { Guard } from "./main-core/decorators/stereotypes/guards/guard.ts";
 export { Override } from "./main-core/decorators/native-components/override.ts";
 export { Cors } from "./mvc-framework/core/decorators/stereotypes/controller/corsMiddlewareDecorator.ts";
 export { Render } from "./mvc-framework/core/decorators/stereotypes/view-engine/viewEngineDecorators.ts";
