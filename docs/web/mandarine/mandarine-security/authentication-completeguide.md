@@ -14,6 +14,7 @@ The following example contains a full but simple example on how to use Mandarine
 ```typescript
 @Service()
 export class UserDetailsServiceImplementation implements Mandarine.Security.Auth.UserDetailsService {
+
     public users: Array<Mandarine.Types.UserDetails> = [{
         roles: ["ADMIN"],
         password: "$2a$10$q9ndDolU5EM0PFy1Zu2I7Ougcw/oHrkB8/mCBf01Fuae6okON.61O", // Changeme1
@@ -23,8 +24,13 @@ export class UserDetailsServiceImplementation implements Mandarine.Security.Auth
         accountLocked: false,
         credentialsExpired: false,
         enabled: true
-    }]
+    }];
+
+    public loadUserByUsername(username: string) {
+        return this.users.find((item: Mandarine.Types.UserDetails) => item.username === username);
+    }
 }
+
 @Override()
 export class WebMvcConfigurer extends Mandarine.Native.WebMvcConfigurer {
 
