@@ -87,6 +87,9 @@ export namespace MandarineSecurity {
             store?: SessionStore
         }
 
+        /**
+         * Data present in request regarding the current session
+         */
         export interface SessionContextObj {
             sessionID: string;
             sessionCookie: any;
@@ -97,12 +100,19 @@ export namespace MandarineSecurity {
 
     export namespace Auth {
 
+        /**
+         * Permission validators are functions executed during the evaluation of a security expression.
+         * PermissionValidator is how Mandarine interprets a security expression
+         */
         export type PermissionValidator = (request: any, authentication: any) => (...parameters: Array<any>) => boolean;
 
         export type GrantedAuthority = string;
-        export type PredefinedExpressions = "isauthenticated()";
+        export type PredefinedExpressions = "isauthenticated()" | "hasRole()";
         export type Permissions = Array<string | Mandarine.Security.Auth.GrantedAuthority | Mandarine.Security.Auth.PredefinedExpressions> | string;
 
+        /**
+         * List of known authentication exceptions
+         */
         export enum AuthExceptions {
             INVALID_USER = "INVALID_USER",
             INVALID_PASSWORD = "INVALID_PASSWORD",
@@ -114,6 +124,9 @@ export namespace MandarineSecurity {
             INVALID_COOKIE = "INVALID_COOKIE",
         }
         
+        /**
+         * Interface for the minimum of information a user model must have when using Mandarine's built-in authentication.
+         */
         export interface UserDetails {
             /**
              * Returns an array with the roles the current user has. Cannot return null nor undefined inside the array.
@@ -160,6 +173,9 @@ export namespace MandarineSecurity {
             enabled: boolean;
         }
 
+        /**
+         * Interface for a mandarine-powered component (type service) which will be used for built-in authentication
+         */
         export interface UserDetailsService {
             /**
              * Locates the user based on the username.
@@ -173,6 +189,14 @@ export namespace MandarineSecurity {
             loadUserByUsername: (username: string) => UserDetails;
         }
 
+        /**
+         * Contains the state of a built-in authentication process
+         * 
+         * @public status => Status of the built-in authentication process: FAILED if known error, PASSED if success, ALREADY-LOGGED-IN if success, UNKNOWN if unknown error
+         * @public exception => Exception if known
+         * authSesId => Current Session id of authentication if ALREADY-LOGGED-IN or login passed
+         * message => data of the status
+         */
         export interface AuthenticationResult {
             status: "FAILED" | "PASSED" | "ALREADY-LOGGED-IN" | "UNKNOWN";
             exception?: AuthExceptions; 
@@ -180,6 +204,9 @@ export namespace MandarineSecurity {
             message?: string;
         }
 
+        /**
+         * Principal interface for the authentication manager builder, which indicates what what service (implementing Mandarine.Security.Auth.UserDetailsService) we will call for built-in authentication
+         */
         export interface AuthenticationManagerBuilder {
             userDetailsService: (implementation: any) => AuthenticationManagerBuilder;
             getUserDetailsService: () => UserDetailsService;
@@ -187,6 +214,9 @@ export namespace MandarineSecurity {
             getPasswordEncoder(): Crypto.PasswordEncoder;
         }
 
+        /**
+         * Private API to perform authentication (Mandarine's built-in Authentication)
+         */
         export interface Authenticator {
             verifyAuthenticationSatisfaction: () => boolean;
             isAuthenticated: (requestContext: Mandarine.Types.RequestContext) => boolean;
@@ -194,11 +224,20 @@ export namespace MandarineSecurity {
             stopAuthentication: (requestContext: Mandarine.Types.RequestContext) => void;
         }
 
+        /**
+         * Handler for login/logout whether successful or not. This is executed after login/logout was called (from built-in authentication)
+         */
         export interface Handler {
             onSuccess: (request: Request, response: Response, result: AuthenticationResult) => void;
             onFailure: (request: Request, response: Response, result: AuthenticationResult) => void;
         }
 
+        /**
+         * Data present in request.authentication
+         * AUTH_SES_ID refers to the session id with the data of the user that was logged in through Mandarine's built-in authentication
+         * AUTH_EXPIRES refers to the time when the session will expire
+         * AUTH_PRINCIPAL refers to all the data that was loaded (following the UserDetails implementation)
+         */
         export interface RequestAuthObj {
             AUTH_SES_ID: string;
             AUTH_EXPIRES: Date;
@@ -208,6 +247,9 @@ export namespace MandarineSecurity {
 
     export namespace Core {
 
+        /**
+         * Data to be used for login/logout purposes from built-in authentication
+         */
         export interface LoginConfigurer {
             loginProcessingUrl: string;
             loginSucessUrl: string;
@@ -220,6 +262,9 @@ export namespace MandarineSecurity {
         }
 
         export namespace Modules {
+            /**
+             * Implementation of Login Builder, used to create the behaviors for built-in authentication
+             */
             export interface LoginBuilder {
                 login: LoginConfigurer;
                 loginProcessingUrl: (url: string) => LoginBuilder;
@@ -235,6 +280,11 @@ export namespace MandarineSecurity {
 
     }
 
+    /**
+     * Gets the current login builder which contains the information of the endpoints for built-in logins
+     * 
+     * @Returns Mandarine.Security.Auth.AuthenticationManagerBuilder
+     */
     export function getAuthManagerBuilder(): Auth.AuthenticationManagerBuilder {
         let mandarineGlobal: Mandarine.Global.MandarineGlobalInterface = Mandarine.Global.getMandarineGlobal();
         return mandarineGlobal.__SECURITY__.auth.authManagerBuilder;
