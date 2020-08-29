@@ -23,6 +23,8 @@ The `@AllowOnly` decorator protects an endpoint with Mandarine's built-in authen
 
 ## Usage
 ```typescript
+import { Controller, GET, AllowOnly } from "https://x.nest.land/MandarineTS@1.5.0/mod.ts";
+
 // Only Controller
 @Controller()
 @AllowOnly(["isAuthenticated()", "ADMIN"])

@@ -240,6 +240,10 @@
       "title": "Mandarine Security",
       "children": [
         {
+          "title": "Security Expressions",
+          "url": "security-expressions"
+        },
+        {
           "title": "Authentication",
           "url": "auth-introduction",
           "children": [

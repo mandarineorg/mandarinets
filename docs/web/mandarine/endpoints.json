@@ -278,5 +278,9 @@
     {
       "url": "auth-complete-guide",
       "document": "mandarine-security/authentication-completeguide.md"
+    },
+    {
+      "url": "security-expressions",
+      "document": "mandarine-security/security-expressions.md"
     }
 ]

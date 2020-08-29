@@ -3,7 +3,7 @@
 ------
 
 ## Overview
-The login builder is a module part of [`WebMVCConfigurer`](/docs/master/mandarine/native-components-list) which is used to create the authentication endpoints for login and logout scenearios. If you are using a login builder, the assumption is that you are using Mandarine **built-in authentication** system and you have created a service to fetch users from a collection ([UserDetailsService]() , [AuthenticationManagerBuilder]());
+The login builder is a module part of [`WebMVCConfigurer`](/docs/master/mandarine/native-components-list) which is used to create the authentication endpoints for login and logout scenearios. If you are using a login builder, the assumption is that you are using Mandarine **built-in authentication** system and you have created a service to fetch users from a collection ([UserDetailsService](/docs/mandarine/auth-user-details-service) , [AuthenticationManagerBuilder](docs/mandarine/auth-manager-builder));
 
 ## `Mandarine.Security.Core.Modules.LoginBuilder` interface
 ```typescript
