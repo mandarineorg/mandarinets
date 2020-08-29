@@ -250,5 +250,37 @@
     {
       "url": "pipes",
       "document": "mandarine-mvc/pipes.md"
+    },
+    {
+      "url": "auth-introduction",
+      "document": "mandarine-security/authentication-introduction.md"
+    },
+    {
+      "url": "auth-user-details",
+      "document": "mandarine-security/authentication-userdetails.md"
+    },
+    {
+      "url": "auth-user-details-service",
+      "document": "mandarine-security/authentication-userdetailsservice.md"
+    },
+    {
+      "url": "auth-manager-builder",
+      "document": "mandarine-security/authentication-managerbuilder.md"
+    },
+    {
+      "url": "auth-login-builder",
+      "document": "mandarine-security/authentication-loginbuilder.md"
+    },
+    {
+      "url": "auth-allow-only-decorator",
+      "document": "mandarine-security/authentication-allowonly-decorator.md"
+    },
+    {
+      "url": "auth-complete-guide",
+      "document": "mandarine-security/authentication-completeguide.md"
+    },
+    {
+      "url": "security-expressions",
+      "document": "mandarine-security/security-expressions.md"
     }
 ]
