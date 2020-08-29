@@ -49,3 +49,5 @@ export { ExceptionContext, ExceptionFilter } from "./main-core/internals/interfa
 export { GuardTarget, GuardTargetMethod } from "./main-core/internals/interfaces/guardTarget.ts";
 
 export { UseGuards } from "./mvc-framework/core/decorators/stereotypes/controller/useGuards.ts";
+
+export { parameterDecoratorFactory } from "./mvc-framework/core/decorators/custom-decorators/decoratorsFactory.ts";

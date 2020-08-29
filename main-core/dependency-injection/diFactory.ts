@@ -12,6 +12,7 @@ import { DI } from "./di.ns.ts";
 import { getPipes } from "./internals/getPipes.ts";
 import { executePipe } from "../internals/methods/executePipe.ts";
 import { DependencyInjectionUtil } from "./di.util.ts";
+import { MandarineMVCUtils } from "../../mvc-framework/core/utils/mvc.utils.ts";
 
 export class DependencyInjectionFactory {
 
@@ -166,6 +167,12 @@ export class DependencyInjectionFactory {
                         break;
                     case DI.InjectionTypes.AUTH_PRINCIPAL_PARAM:
                         valueToInject = context.request.authentication?.AUTH_PRINCIPAL;
+                        break;
+                    case DI.InjectionTypes.CUSTOM_DECORATOR_PARAM:
+                        const executerProvider = (<Mandarine.MandarineMVC.DecoratorFactoryData<any, any>>param.parameterConfiguration)?.provider;
+                        const parameterData = (<Mandarine.MandarineMVC.DecoratorFactoryData<any, any>>param.parameterConfiguration)?.paramData;
+                        const providerExecution = executerProvider(MandarineMVCUtils.buildRequestContextAccessor(context), ...parameterData);
+                        valueToInject = providerExecution;
                         break;
                 }
 

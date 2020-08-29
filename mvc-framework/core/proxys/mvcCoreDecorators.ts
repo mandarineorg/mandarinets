@@ -62,8 +62,8 @@ export class MVCDecoratorsProxy {
         ComponentUtils.createControllerComponent({ pathRoute: baseRoute }, targetClass);
     }
 
-    public static registerRoutingParam(targetClass: any, parameterType: DI.InjectionTypes, methodName: string, parameterIndex: number, specificParameterName?: string) {
-        DependencyInjectionUtil.defineInjectionMetadata(parameterType, targetClass, methodName, parameterIndex, specificParameterName);
+    public static registerRoutingParam<ParameterConfiguration = any>(targetClass: any, parameterType: DI.InjectionTypes, methodName: string, parameterIndex: number, specificParameterName?: string, parameterConfiguration?: ParameterConfiguration) {
+        DependencyInjectionUtil.defineInjectionMetadata(parameterType, targetClass, methodName, parameterIndex, specificParameterName, parameterConfiguration);
     }
 
     public static registerPipeInParam(targetClass: any, pipes: Array<any> | any, methodName: string, parameterIndex: number) {
