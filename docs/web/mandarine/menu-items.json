@@ -72,6 +72,14 @@
               "url": "configuration"
             },
             {
+              "title": "Catch",
+              "url": "catch"
+            },
+            {
+              "title": "Guards",
+              "url": "guards"
+            },
+            {
               "title": "Manual Components",
               "url": "manual-components"
             }
@@ -178,6 +186,10 @@
         {
           "title": "HTTP Handlers",
           "url": "http-handlers"
+        },
+        {
+          "title": "Pipes",
+          "url": "pipes"
         },
         {
           "title": "Middleware",

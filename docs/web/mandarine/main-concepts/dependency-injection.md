@@ -29,6 +29,8 @@ Dependencies are essentially classes that rely on other classes (also dependents
 | Service             | Yes        |  Yes             |
 | Configuration       | Yes        |  Yes             |
 | Manual Component    | Yes        |  No              |
+| Catch               | No         |  Yes             |
+| Guard               | No         |  Yes             |
 
 -----
 

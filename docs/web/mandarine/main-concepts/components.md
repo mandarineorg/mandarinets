@@ -24,6 +24,10 @@ In Mandarine, everything that is desired to be _Mandarine-powered_ must be a com
     - Stereotype for a Mandarine-powered class which will be used in the Application's service layer.
 - Configuration
     - Stereotype for a Mandarine-powered class to interact directly with Mandarine's core.
+- Catch
+    - Stereotype for a Mandarine-powered class to catch exception during requests.
+- Guard
+    - Stereotype for a Mandarine-powered class to serve as a guard for endpoints.
 - **Manual Component**
     - Serves as the bridge to bring non Mandarine-powered code into Mandarine's ecosystem.
     - Useful when wanting to adapt third-party libraries with Mandarine's infrastructure.
