@@ -30,12 +30,13 @@ const myGuard: GuardTargetMethod = (requestContext: Mandarine.Types.RequestConte
 # `@UseGuards` Decorator
 
 ## Syntax
-- Targets: Controller | HTTP Handler
+- Target: Controller | HTTP Handler
 ```typescript
 @UseGuards(guardsList: Array<GuardTarget | any>)
 ```
 
 - The `@UseGuards` decorator is a decorator that targets both a HTTP Handler or a controller. If the target is a _HTTP Handler_, it will only be applied to that specific route, on the other side, if the target is a _controller_, it will be applied to all the routes under it.
+- If `@UseGuards` targets both a controller & a HTTP Handler, then the process will start at a controller level and if it succeeds, then it will evaluate the HTTP handler.
 - The `@UseGuards` decorator takes an argument which is an array. This array will contain references to the methods or types of a Mandarine-powered component.
 - The `@UseGuards` decorator executes the list of guards previously declared in the order they were added.
     - When a guard fails, the loop is broken & the request gets unauthorized thus throwing a 401 error.

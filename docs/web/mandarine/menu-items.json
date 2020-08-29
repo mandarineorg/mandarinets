@@ -237,6 +237,41 @@
       ]
     },
     {
+      "title": "Mandarine Security",
+      "children": [
+        {
+          "title": "Authentication",
+          "url": "auth-introduction",
+          "children": [
+            {
+              "title": "User Details",
+              "url": "auth-user-details"
+            },
+            {
+              "title": "User Details Service",
+              "url": "auth-user-details-service"
+            },
+            {
+              "title": "Manager Builder",
+              "url": "auth-manager-builder"
+            },
+            {
+              "title": "Login Builder",
+              "url": "auth-login-builder"
+            },
+            {
+              "title": "@AllowOnly",
+              "url": "auth-allow-only-decorator"
+            },
+            {
+              "title": "Complete Guide",
+              "url": "auth-complete-guide"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "title": "Mandarine Data",
       "children": [
         {
