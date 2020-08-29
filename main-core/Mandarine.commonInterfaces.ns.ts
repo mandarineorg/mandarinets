@@ -11,4 +11,5 @@ export namespace MandarineCommonInterfaces {
     export type MiddlewareComponent = ComponentComponent & Mandarine.Components.MiddlewareComponent;
     export type CatchComponent = ComponentComponent & Mandarine.Components.CatchComponent;
     export type RequestContext = Mandarine.MandarineMVC.RequestContext;
+    export type RequestContextAcessor = Mandarine.MandarineMVC.RequestContextAccessor;
 }

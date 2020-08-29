@@ -41,10 +41,8 @@ export namespace DI {
         parameterIndex: number;
         parameterMethodName: string;
         parameterObjectToInject?: any;
-    
+        parameterConfiguration?: any;
         propertyName: string;
-        propertyObjectToInject?: any;
-    
         className: string;
     }
 
@@ -66,7 +64,8 @@ export namespace DI {
         COOKIE_PARAM,
         TEMPLATE_MODEL_PARAM,
         PARAMETERS_PARAM,
-        AUTH_PRINCIPAL_PARAM
+        AUTH_PRINCIPAL_PARAM,
+        CUSTOM_DECORATOR_PARAM
     }
 
     /**

@@ -1,6 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { Context, Request } from "../deps.ts";
+import { Context, Request, Response } from "../deps.ts";
 import { DI } from "../main-core/dependency-injection/di.ns.ts";
 import { MandarineSessionContainer } from "../main-core/mandarine-native/sessions/mandarineSessionContainer.ts";
 import { Mandarine } from "../mod.ts";
@@ -590,17 +590,33 @@ export namespace MandarineMvc {
         }
     }
 
+    export interface RequestDataContext extends Request {
+        authentication: Mandarine.Security.Auth.RequestAuthObj;
+        sessionContext: Mandarine.Security.Sessions.MandarineSession;
+        sessionID: string;
+        session: any;
+    }
+
     export interface RequestContext extends Context {
         params: any;
-        request: Request & {
-            authentication: Mandarine.Security.Auth.RequestAuthObj;
-            sessionContext: Mandarine.Security.Sessions.MandarineSession;
-            sessionID: string;
-            session: any;
-        };
+        request: RequestDataContext;
         isResource: boolean;
     }
 
+    export interface RequestContextAccessor {
+        getFullContext(): RequestContext;
+        getRequest(): RequestDataContext;
+        getResponse(): Response;
+    }
+
+    export type CustomDecoratorExecutor<DecoratorData = any, DecoratorReturn = any> = (context: Mandarine.Types.RequestContextAcessor, 
+                                                                                       ...data: Array<DecoratorData>) => DecoratorReturn;
+                                            
+
+    export interface DecoratorFactoryData<DecoratorData, DecoratorReturn> {
+        provider: CustomDecoratorExecutor;
+        paramData: Array<any>;
+    }                                                                                   
     /**
      * Refers to all the information that the rendering engine needs to work out.
      */

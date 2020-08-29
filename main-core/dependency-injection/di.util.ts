@@ -16,7 +16,7 @@ export class DependencyInjectionUtil {
     /**
      * Defines the context for a new injection inside the DI system
      */
-    public static defineInjectionMetadata(injectionType: DI.InjectionTypes, target: any, propertyName: string, parameterIndex: number, specificParameterName?: string) {
+    public static defineInjectionMetadata(injectionType: DI.InjectionTypes, target: any, propertyName: string, parameterIndex: number, specificParameterName?: string, parameterConfiguration?: any) {
         let isMethod: boolean = (parameterIndex != null);
         let parentClassName: string = ReflectUtils.getClassName(target);
 
@@ -39,8 +39,8 @@ export class DependencyInjectionUtil {
                 parameterMethodName: propertyName,
                 parameterObjectToInject: (injectionType == DI.InjectionTypes.INJECTABLE_OBJECT) ? methodArgumentTypes[parameterIndex] : undefined,
                 propertyName: undefined,
-                propertyObjectToInject: undefined,
-                className: parentClassName
+                className: parentClassName,
+                parameterConfiguration: parameterConfiguration
             };
 
             let metadataKeys: Array<any> = (isMethod) ? Reflect.getMetadataKeys(target, propertyName) : Reflect.getMetadataKeys(target);
