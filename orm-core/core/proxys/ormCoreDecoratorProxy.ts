@@ -42,14 +42,16 @@ export class ORMCoreDecoratorProxy {
 
         decoratorOptions.fieldName = propertyKey;
 
-        if(!propertyTypeName) {
-            decoratorOptions.type = Types.VARCHAR;
-        } else if(propertyTypeName === 'String' && decoratorOptions.type == (undefined || null)) {
-            decoratorOptions.type = Types.VARCHAR;
-        } else if(propertyTypeName === 'Boolean' && decoratorOptions.type == (undefined || null)) {
-            decoratorOptions.type = Types.BOOLEAN;
-        } else if(propertyTypeName == 'Number' && decoratorOptions.type == (undefined || null)) {
-            decoratorOptions.type = Types.BIGINT;
+        if(decoratorOptions && !decoratorOptions.type) {
+            if(!propertyTypeName) {
+                decoratorOptions.type = Types.VARCHAR;
+            } else if(propertyTypeName === 'String' && decoratorOptions.type == (undefined || null)) {
+                decoratorOptions.type = Types.VARCHAR;
+            } else if(propertyTypeName === 'Boolean' && decoratorOptions.type == (undefined || null)) {
+                decoratorOptions.type = Types.BOOLEAN;
+            } else if(propertyTypeName == 'Number' && decoratorOptions.type == (undefined || null)) {
+                decoratorOptions.type = Types.BIGINT;
+            }
         }
 
         let columnAnnotationMetadataKey: string = `${MandarineConstants.REFLECTION_MANDARINE_TABLE_COLUMN}:${decoratorOptions.name}`;
