@@ -20,7 +20,7 @@ Don't know where to start? [Click here](https://www.mandarinets.org/docs/master/
 ## Basic usage
 
 ```typescript
-import { MandarineCore, Controller, GET } from "https://deno.land/x/mandarinets@v1.5.0/mod.ts"; 
+import { MandarineCore, Controller, GET } from "https://deno.land/x/mandarinets@v2.0.0/mod.ts"; 
 
 @Controller('/api')
 export class Boo {
@@ -32,7 +32,7 @@ export class Boo {
 
 }
 
-new MandarineCore.MVC().run();
+new MandarineCore().MVC().run();
 
 # request => http://localhost:4444/api/hello-world => Hello World
 ```
@@ -41,7 +41,7 @@ new MandarineCore.MVC().run();
 For questions & community support, please visit our [Discord Channel](https://discord.gg/qs72byB) or join us on our [twitter](https://twitter.com/mandarinets).
 
 ## MandarineTS Main features
-Built-in [Dependency Injection](https://www.mandarinets.org/docs/master/mandarine/dependency-injection) Framework, [Components](https://www.mandarinets.org/docs/master/mandarine/components), [Routes](https://www.mandarinets.org/docs/master/mandarine/routes), [Middleware](https://www.mandarinets.org/docs/master/mandarine/custom-middleware), [Sessions](https://www.mandarinets.org/docs/master/mandarine/session-middleware), [built-in ORM](https://www.mandarinets.org/docs/master/mandarine/data-repositories), [MQL](https://www.mandarinets.org/docs/master/mandarine/mandarine-query-language) (Mandarine Query Language), [Template Engine](https://www.mandarinets.org/docs/master/mandarine/template-engine)
+Built-in [Dependency Injection](https://www.mandarinets.org/docs/master/mandarine/dependency-injection) Framework, [Components](https://www.mandarinets.org/docs/master/mandarine/components), [Routes](https://www.mandarinets.org/docs/master/mandarine/routes), [Middleware](https://www.mandarinets.org/docs/master/mandarine/custom-middleware), [Sessions](https://www.mandarinets.org/docs/master/mandarine/session-middleware), [built-in ORM](https://www.mandarinets.org/docs/master/mandarine/data-repositories), [MQL](https://www.mandarinets.org/docs/master/mandarine/mandarine-query-language) (Mandarine Query Language), [Template Engine](https://www.mandarinets.org/docs/master/mandarine/template-engine), [built-in authentication](https://www.mandarinets.org/docs/mandarine/auth-introduction)
 
 ## Want to help?
 ### Interested in coding

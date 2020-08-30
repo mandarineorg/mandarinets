@@ -12,7 +12,7 @@ In order to update existent data in your tables by using Mandarine-powered repos
 ## API
 
 ```typescript
-import { Component } from "https://x.nest.land/MandarineTS@1.5.0/mod.ts";
+import { Component } from "https://deno.land/x/mandarinets@v2.0.0/mod.ts";
 import { Users } from "./usersModel.ts";
 import { UsersRepository } from "./usersRepository.ts";
 
