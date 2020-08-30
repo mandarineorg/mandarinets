@@ -284,6 +284,10 @@
               "url": "auth-complete-guide"
             }
           ]
+        },
+        {
+          "title": "Session Container",
+          "url": "session-container"
         }
       ]
     },

@@ -294,5 +294,9 @@
     {
       "url": "use-middleware-decorator",
       "document": "mandarine-mvc/use-middleware-decorator.md"
+    },
+    {
+      "url": "session-container",
+      "document": "mandarine-security/session-container.md"
     }
 ]
