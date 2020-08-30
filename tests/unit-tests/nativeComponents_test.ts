@@ -145,7 +145,7 @@ export class NativeComponentTest {
             }
 
             public httpLoginBuilder(provider: Mandarine.Security.Core.Modules.LoginBuilder) {
-                provider.loginPage("/pages/login")
+                provider
                 .loginProcessingUrl("/login-post")
                 .loginSuccessUrl("/any-endpoint")
                 .loginUsernameParameter("username")
@@ -168,7 +168,6 @@ export class NativeComponentTest {
         DenoAsserts.assertEquals(getHttpLoginBuilder.login, {
             loginProcessingUrl: "/login-post",
             loginSucessUrl: "/any-endpoint",
-            loginPage: "/pages/login",
             usernameParameter: "username",
             passwordParameter: "password",
             logoutUrl: "/logout",

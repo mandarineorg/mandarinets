@@ -188,6 +188,10 @@
           "url": "http-handlers"
         },
         {
+          "title": "Custom Param Decorators",
+          "url": "custom-decorators"
+        },
+        {
           "title": "Pipes",
           "url": "pipes"
         },

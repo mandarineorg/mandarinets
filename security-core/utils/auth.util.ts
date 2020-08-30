@@ -17,8 +17,7 @@ export class AuthUtils {
     }
 
     public static verifyHTTPLogingConfigurerSatisfaction(loginConfigurer: Mandarine.Security.Core.LoginConfigurer): boolean {
-        return (loginConfigurer.loginPage != undefined
-                && loginConfigurer.loginSucessUrl != undefined
+        return (loginConfigurer.loginSucessUrl != undefined
                     && loginConfigurer.loginProcessingUrl != undefined
                         && loginConfigurer.logoutSuccessUrl != undefined
                             && loginConfigurer.logoutUrl != undefined
