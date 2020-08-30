@@ -1,24 +1,34 @@
 # `@ResponseStatus` Decorator
-By using the `@ResponseStatus` decorator, it is possible to specify a response status at a controller level, this means, it will be applied to all your endpoints inside your controller.
+By using the `@ResponseStatus` decorator, it is possible to specify a response status at a controller level and HTTP handler, this means, it will be applied to all your endpoints inside your controller or an specific route if desired.
 
 ----
 
 ## Syntax
+Targets: Controller | HTTP Handler
 ```typescript
 @ResponseStatus(httpCode: Mandarine.MandarineMVC.HttpStatusCode)
 ```
-> The `@ResponseStatus` decorator must always be located at a class level, otherwise it will have no effect
-
 
 &nbsp;
 
-## API
+## Usage
 
 ```typescript
-import { Mandarine, Controller, ResponseStatus } from "https://deno.land/x/mandarinets@v2.0.0/mod.ts";
+import { Mandarine, Controller, ResponseStatus, GET } from "https://deno.land/x/mandarinets@v2.0.0/mod.ts";
 
 @Controller()
 @ResponseStatus(Mandarine.MandarineMVC.HttpStatusCode.OK)
 export class MyController {
+}
+
+@Controller()
+export class MyController2 {
+
+    @GET('/endpoint')
+    @ResponseStatus(Mandarine.MandarineMVC.HttpStatusCode.OK)
+    public httpHandler() {
+        return "Hello World"
+    }
+
 }
 ```
