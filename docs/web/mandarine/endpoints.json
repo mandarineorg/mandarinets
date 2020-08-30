@@ -286,5 +286,13 @@
     {
       "url": "custom-decorators",
       "document": "mandarine-mvc/http-param-custom-decorators.md"
+    },
+    {
+      "url": "non-component-middleware",
+      "document": "mandarine-mvc/non-component-middleware.md"
+    },
+    {
+      "url": "use-middleware-decorator",
+      "document": "mandarine-mvc/use-middleware-decorator.md"
     }
 ]

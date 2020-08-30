@@ -188,7 +188,7 @@
           "url": "http-handlers"
         },
         {
-          "title": "Custom Param Decorators",
+          "title": "Custom Decorators",
           "url": "custom-decorators"
         },
         {
@@ -199,8 +199,16 @@
           "title": "Middleware",
           "children": [
             {
+              "title": "@UseMiddleware",
+              "url": "use-middleware-decorator"
+            },
+            {
               "title": "Custom Middleware",
               "url": "custom-middleware"
+            },
+            {
+              "title": "Short Middleware",
+              "url": "non-component-middleware"
             },
             {
               "title": "Session Middleware",

@@ -19,4 +19,6 @@ export namespace MandarineCommonInterfaces {
     export type RequestContextAcessor = Mandarine.MandarineMVC.RequestContextAccessor;
     export type UserDetails = Mandarine.Security.Auth.UserDetails;
     export type UserDetailsService = Mandarine.Security.Auth.UserDetailsService;
+    export type CurrentRequest = Mandarine.MandarineMVC.RequestDataContext;
+    export type CurrentResponse = Mandarine.MandarineMVC.ResponseContext;
 }

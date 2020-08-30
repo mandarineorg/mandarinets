@@ -590,6 +590,8 @@ export namespace MandarineMvc {
         }
     }
 
+    export interface ResponseContext extends Response {}
+
     export interface RequestDataContext extends Request {
         authentication: Mandarine.Security.Auth.RequestAuthObj;
         sessionContext: Mandarine.Security.Sessions.MandarineSession;
@@ -606,7 +608,7 @@ export namespace MandarineMvc {
     export interface RequestContextAccessor {
         getFullContext(): RequestContext;
         getRequest(): RequestDataContext;
-        getResponse(): Response;
+        getResponse(): ResponseContext;
     }
 
     export type CustomDecoratorExecutor<DecoratorData = any, DecoratorReturn = any> = (context: Mandarine.Types.RequestContextAcessor, 
