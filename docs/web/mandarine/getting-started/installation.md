@@ -23,14 +23,12 @@ For more information and installation options, please [click here](https://deno.
 # Importing Mandarine
 Mandarine is available through [deno.land/x](https://deno.land/x/mandarinets) & [nest.land](https://nest.land/package/MandarineTS). We do not recommend importing Mandarine from anywhere else for security concerns.
 
-Mandarine officially _recommends_ making use of **nest.land**. 
+**deno.land/x**
+```ts
+import { ... } from "https://deno.land/x/mandarinets@v2.0.0/mod.ts";
+```
 
 **nest.land**
 ```ts
-import { ... } from "https://x.nest.land/MandarineTS@1.5.0/mod.ts";
-```
- 
-**deno.land/x**
-```ts
-import { ... } from "https://deno.land/x/mandarinets@v1.5.0/mod.ts";
+import { ... } from "https://x.nest.land/MandarineTS@2.0.0/mod.ts";
 ```

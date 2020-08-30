@@ -1,7 +1,7 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { expandGlobSync } from "https://deno.land/std@0.62.0/fs/mod.ts";
-import { readLines } from "https://deno.land/std@0.62.0/io/mod.ts";
+import { expandGlobSync } from "https://deno.land/std@0.67.0/fs/mod.ts";
+import { readLines } from "https://deno.land/std@0.67.0/io/mod.ts";
 import { MandarineConstants } from "../main-core/mandarineConstants.ts";
 import { CommonUtils } from "../main-core/utils/commonUtils.ts";
 import { Test } from "./mod.ts";

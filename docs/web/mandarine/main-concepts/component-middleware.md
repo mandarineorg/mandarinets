@@ -22,7 +22,7 @@ Middleware are responsible for adding interceptors to controllers. They are exec
 ## Usage
 
 ```typescript
-import { Middleware, MiddlewareTarget, ResponseParam } from "https://x.nest.land/MandarineTS@1.5.0/mod.ts";
+import { Middleware, MiddlewareTarget, ResponseParam } from "https://deno.land/x/mandarinets@v2.0.0/mod.ts";
 
 @Middleware(new RegExp('/api/*'))
 export class Middleware1 implements MiddlewareTarget {

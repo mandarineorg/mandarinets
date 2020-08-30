@@ -32,7 +32,7 @@ export interface UserDetailsService {
 ## Basic Usage
 
 ```typescript
-import { Service, Mandarine } from "https://x.nest.land/MandarineTS@1.5.0/mod.ts";
+import { Service, Mandarine } from "https://deno.land/x/mandarinets@v2.0.0/mod.ts";
 
 @Service()
 export class UserDetailsServiceImplementation implements Mandarine.Security.Auth.UserDetailsService {

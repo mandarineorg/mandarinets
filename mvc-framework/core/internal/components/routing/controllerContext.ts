@@ -1,6 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { blue, red } from "https://deno.land/std@0.62.0/fmt/colors.ts";
+import { blue, red } from "https://deno.land/std@0.67.0/fmt/colors.ts";
 import { MandarineException } from "../../../../../main-core/exceptions/mandarineException.ts";
 import { RoutingException } from "../../../../../main-core/exceptions/routingException.ts";
 import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
