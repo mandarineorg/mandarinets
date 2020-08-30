@@ -56,3 +56,8 @@ new MandarineCore().MVC().run();
 Hello world
 [Console] post-request()
 ```
+
+------------
+
+## Specifying a Target
+You may specify a target which can be a controller or a HTTP handler by using the `@UseMiddleware` decorator. Refer to [this link for more information & examples](/docs/mandarine/use-middleware-decorator)
