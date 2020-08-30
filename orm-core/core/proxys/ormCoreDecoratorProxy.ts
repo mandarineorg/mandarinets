@@ -27,7 +27,7 @@ export class ORMCoreDecoratorProxy {
 
     public static registerColumnDecorator(targetClass: any, decoratorOptions: Mandarine.ORM.Entity.Decorators.Column, propertyKey: string) {
         var propertyType = Reflect.getMetadata("design:type", targetClass, propertyKey);
-        var propertyTypeName = propertyType.name;
+        var propertyTypeName = propertyType?.name;
 
         let currentTargetAnnotations: Array<any> = Reflect.getMetadataKeys(targetClass);
 
@@ -42,7 +42,9 @@ export class ORMCoreDecoratorProxy {
 
         decoratorOptions.fieldName = propertyKey;
 
-        if(propertyTypeName === 'String' && decoratorOptions.type == (undefined || null)) {
+        if(!propertyTypeName) {
+            decoratorOptions.type = Types.VARCHAR;
+        } else if(propertyTypeName === 'String' && decoratorOptions.type == (undefined || null)) {
             decoratorOptions.type = Types.VARCHAR;
         } else if(propertyTypeName === 'Boolean' && decoratorOptions.type == (undefined || null)) {
             decoratorOptions.type = Types.BOOLEAN;
