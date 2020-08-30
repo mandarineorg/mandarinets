@@ -253,7 +253,6 @@ export namespace MandarineSecurity {
         export interface LoginConfigurer {
             loginProcessingUrl: string;
             loginSucessUrl: string;
-            loginPage: string;
             usernameParameter: string;
             passwordParameter: string;
             logoutUrl: string;
@@ -269,7 +268,6 @@ export namespace MandarineSecurity {
                 login: LoginConfigurer;
                 loginProcessingUrl: (url: string) => LoginBuilder;
                 loginSuccessUrl: (url: string) => LoginBuilder;
-                loginPage: (url: string) => LoginBuilder;
                 loginUsernameParameter: (parameter: string) => LoginBuilder;
                 loginPasswordParameter: (parameter: string) => LoginBuilder;
                 logoutUrl: (url: string) => LoginBuilder;

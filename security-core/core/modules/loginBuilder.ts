@@ -7,7 +7,6 @@ export class HTTPLoginBuilder implements Mandarine.Security.Core.Modules.LoginBu
     public login: Mandarine.Security.Core.LoginConfigurer = {
         loginProcessingUrl: undefined,
         loginSucessUrl: undefined,
-        loginPage: undefined,
         usernameParameter: undefined,
         passwordParameter: undefined,
         logoutUrl: undefined,
@@ -22,11 +21,6 @@ export class HTTPLoginBuilder implements Mandarine.Security.Core.Modules.LoginBu
 
     public loginSuccessUrl(url: string): Mandarine.Security.Core.Modules.LoginBuilder {
         this.login.loginSucessUrl = url;
-        return this;
-    }
-
-    public loginPage(url: string): Mandarine.Security.Core.Modules.LoginBuilder {
-        this.login.loginPage = url;
         return this;
     }
 

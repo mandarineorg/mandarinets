@@ -282,5 +282,9 @@
     {
       "url": "security-expressions",
       "document": "mandarine-security/security-expressions.md"
+    },
+    {
+      "url": "custom-decorators",
+      "document": "mandarine-mvc/http-param-custom-decorators.md"
     }
 ]
