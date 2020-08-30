@@ -23,6 +23,7 @@ export namespace DI {
      *
      */
     export interface ArgumentsResolverExtraData {
+        fullContext: any;
         request: Request;
         response: any;
         params: any;
@@ -40,10 +41,8 @@ export namespace DI {
         parameterIndex: number;
         parameterMethodName: string;
         parameterObjectToInject?: any;
-    
+        parameterConfiguration?: any;
         propertyName: string;
-        propertyObjectToInject?: any;
-    
         className: string;
     }
 
@@ -58,12 +57,15 @@ export namespace DI {
         ROUTE_PARAM,
         SERVER_REQUEST_PARAM,
         REQUEST_PARAM,
+        REQUEST_CONTEXT_PARAM,
         SESSION_PARAM,
         REQUEST_BODY_PARAM,
         RESPONSE_PARAM,
         COOKIE_PARAM,
         TEMPLATE_MODEL_PARAM,
-        PARAMETERS_PARAM
+        PARAMETERS_PARAM,
+        AUTH_PRINCIPAL_PARAM,
+        CUSTOM_DECORATOR_PARAM
     }
 
     /**

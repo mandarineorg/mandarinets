@@ -8,21 +8,20 @@ import { Reflect } from "../../../main-core/reflectMetadata.ts";
 import { ComponentUtils } from "../../../main-core/utils/componentUtils.ts";
 import { ReflectUtils } from "../../../main-core/utils/reflectUtils.ts";
 import { AnnotationMetadataContext } from "../interfaces/mandarine/mandarineAnnotationMetadataContext.ts";
+import { NonComponentMiddlewareTarget } from "../../../main-core/internals/interfaces/middlewareTarget.ts";
+import { GuardTarget } from "../../../main-core/internals/interfaces/guardTarget.ts";
 
 export class MVCDecoratorsProxy {
 
     public static registerResponseStatusDecorator(targetClass: any, httpCode: Mandarine.MandarineMVC.HttpStatusCode, methodName: string) {
-        let className: string = ReflectUtils.getClassName(targetClass);
-
-        let defaultHttpResponseAnnotationMetadataName: string = `${MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_DEFAULT_HTTP_RESPONSE_CODE}`;
-
-        let metadataContext: Mandarine.MandarineMVC.ResponseStatusMetadataContext = {
-            classParentName: className,
-            responseStatus: httpCode,
-            methodName: methodName
-        };
-        
-        Reflect.defineMetadata(defaultHttpResponseAnnotationMetadataName, metadataContext, targetClass);
+        let isMethod: boolean = methodName != null;
+        if(!isMethod) {
+            let httpResponseStatusAnnotation: string = `${MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_DEFAULT_HTTP_RESPONSE_CODE}`;
+            Reflect.defineMetadata(httpResponseStatusAnnotation, httpCode, targetClass);
+        } else {
+            let httpResponseStatusAnnotation: string = `${MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_DEFAULT_HTTP_RESPONSE_CODE}:${methodName}`;
+            Reflect.defineMetadata(httpResponseStatusAnnotation, httpCode, targetClass, methodName);
+        }
     }
 
     public static registerCORSMiddlewareDecorator(targetClass: any, corsOptions: Mandarine.MandarineMVC.CorsMiddlewareOption, methodName: string) {
@@ -37,12 +36,38 @@ export class MVCDecoratorsProxy {
         }
     }
 
+    public static registerUseMiddlewareDecorator(targetClass: any, middlewareList: Array<NonComponentMiddlewareTarget | any>, methodName: string) {
+        let isMethod: boolean = methodName != null;
+        if(!isMethod) {
+            let useMiddlewareAnnotationName: string = `${MandarineConstants.REFLECTION_MANDARINE_USE_MIDDLEWARE_DECORATOR}`;
+            Reflect.defineMetadata(useMiddlewareAnnotationName, [...middlewareList], targetClass);
+        } else {
+            let useMiddlewareAnnotationName: string = `${MandarineConstants.REFLECTION_MANDARINE_USE_MIDDLEWARE_DECORATOR}:${methodName}`;
+            Reflect.defineMetadata(useMiddlewareAnnotationName, [...middlewareList], targetClass, methodName);
+        }
+    }
+
+    public static registerUseGuardsDecorator(targetClass: any, guardsList: Array<GuardTarget | any>, methodName: string) {
+        let isMethod: boolean = methodName != null;
+        if(!isMethod) {
+            let useMiddlewareAnnotationName: string = `${MandarineConstants.REFLECTION_MANDARINE_USE_GUARDS_DECORATOR}`;
+            Reflect.defineMetadata(useMiddlewareAnnotationName, [...guardsList], targetClass);
+        } else {
+            let useMiddlewareAnnotationName: string = `${MandarineConstants.REFLECTION_MANDARINE_USE_GUARDS_DECORATOR}:${methodName}`;
+            Reflect.defineMetadata(useMiddlewareAnnotationName, [...guardsList], targetClass, methodName);
+        }
+    }
+
     public static registerControllerComponent(targetClass: any, baseRoute: string) {
         ComponentUtils.createControllerComponent({ pathRoute: baseRoute }, targetClass);
     }
 
-    public static registerRoutingParam(targetClass: any, parameterType: DI.InjectionTypes, methodName: string, parameterIndex: number, specificParameterName?: string) {
-        DependencyInjectionUtil.defineInjectionMetadata(parameterType, targetClass, methodName, parameterIndex, specificParameterName);
+    public static registerRoutingParam<ParameterConfiguration = any>(targetClass: any, parameterType: DI.InjectionTypes, methodName: string, parameterIndex: number, specificParameterName?: string, parameterConfiguration?: ParameterConfiguration) {
+        DependencyInjectionUtil.defineInjectionMetadata(parameterType, targetClass, methodName, parameterIndex, specificParameterName, parameterConfiguration);
+    }
+
+    public static registerPipeInParam(targetClass: any, pipes: Array<any> | any, methodName: string, parameterIndex: number) {
+        DependencyInjectionUtil.definePipeMetadata(targetClass, pipes, methodName, parameterIndex);
     }
 
     public static registerHttpAction(route: string, methodType: Mandarine.MandarineMVC.HttpMethods, target: any, methodName: string, options: Mandarine.MandarineMVC.Routing.RoutingOptions) {

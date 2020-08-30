@@ -3,6 +3,7 @@
 import { KeyStack } from "../keyStack.ts";
 import { MandarineSecurity } from "../mandarine-security.ns.ts";
 import { Cookie } from "../../mvc-framework/core/interfaces/http/cookie.ts";
+import { Mandarine } from "../../main-core/Mandarine.ns.ts";
 
 /**
  * Contains all the util methods used by the session middleware
@@ -32,5 +33,25 @@ export class SessionsUtils {
         sessionCookie.value = new KeyStack(sessionContainerConfig.keys).sign(`${sessionCookie.name}=${sessionCookie.value}`);
 
         return sessionCookie;
+    }
+
+    public static sessionBuilder(session: Mandarine.Security.Sessions.MandarineSession, 
+        config: {
+            expiration: number
+        }): Mandarine.Security.Sessions.MandarineSession {
+        let newSession: Mandarine.Security.Sessions.MandarineSession =  {
+            sessionID: session.sessionID,
+            sessionCookie: session.sessionCookie,
+            sessionData: (session.sessionData) ? session.sessionData : {},
+            isSessionNew: (session.isSessionNew) ? session.isSessionNew : true,
+            createdAt: (session.createdAt) ? session.createdAt : new Date(),
+        };
+        if(session.sessionCookie && session.sessionCookie.expires) {
+            newSession.expiresAt = new Date(session.sessionCookie.expires);
+        } else {
+            newSession.expiresAt = new Date(new Date().getTime() + config.expiration);
+        }
+
+        return newSession;
     }
 }

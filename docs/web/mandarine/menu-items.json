@@ -72,6 +72,14 @@
               "url": "configuration"
             },
             {
+              "title": "Catch",
+              "url": "catch"
+            },
+            {
+              "title": "Guards",
+              "url": "guards"
+            },
+            {
               "title": "Manual Components",
               "url": "manual-components"
             }
@@ -180,11 +188,27 @@
           "url": "http-handlers"
         },
         {
+          "title": "Custom Decorators",
+          "url": "custom-decorators"
+        },
+        {
+          "title": "Pipes",
+          "url": "pipes"
+        },
+        {
           "title": "Middleware",
           "children": [
             {
+              "title": "@UseMiddleware",
+              "url": "use-middleware-decorator"
+            },
+            {
               "title": "Custom Middleware",
               "url": "custom-middleware"
+            },
+            {
+              "title": "Short Middleware",
+              "url": "non-component-middleware"
             },
             {
               "title": "Session Middleware",
@@ -221,6 +245,49 @@
         {
           "title": "Multipart Form Data",
           "url": "multipart-formdata"
+        }
+      ]
+    },
+    {
+      "title": "Mandarine Security",
+      "children": [
+        {
+          "title": "Security Expressions",
+          "url": "security-expressions"
+        },
+        {
+          "title": "Authentication",
+          "url": "auth-introduction",
+          "children": [
+            {
+              "title": "User Details",
+              "url": "auth-user-details"
+            },
+            {
+              "title": "User Details Service",
+              "url": "auth-user-details-service"
+            },
+            {
+              "title": "Manager Builder",
+              "url": "auth-manager-builder"
+            },
+            {
+              "title": "Login Builder",
+              "url": "auth-login-builder"
+            },
+            {
+              "title": "@AllowOnly",
+              "url": "auth-allow-only-decorator"
+            },
+            {
+              "title": "Complete Guide",
+              "url": "auth-complete-guide"
+            }
+          ]
+        },
+        {
+          "title": "Session Container",
+          "url": "session-container"
         }
       ]
     },

@@ -20,7 +20,7 @@ _`MiddlewareTarget`_ contains two key methods which you will need to provide fun
 
 // middleware.ts
 
-import { Middleware, MiddlewareTarget, ResponseParam, Controller, GET, MandarineCore } from "https://x.nest.land/MandarineTS@1.5.0/mod.ts";
+import { Middleware, MiddlewareTarget, ResponseParam, Controller, GET, MandarineCore } from "https://deno.land/x/mandarinets@v2.0.0/mod.ts";
 
 @Middleware(new RegExp('/api/*'))
 export class Middleware1 implements MiddlewareTarget {
@@ -56,3 +56,8 @@ new MandarineCore().MVC().run();
 Hello world
 [Console] post-request()
 ```
+
+------------
+
+## Specifying a Target
+You may specify a target which can be a controller or a HTTP handler by using the `@UseMiddleware` decorator. Refer to [this link for more information & examples](/docs/mandarine/use-middleware-decorator)

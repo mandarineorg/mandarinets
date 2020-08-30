@@ -1,7 +1,8 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { v4 } from "https://deno.land/std@0.62.0/uuid/mod.ts";
+import { v4 } from "https://deno.land/std@0.67.0/uuid/mod.ts";
 import { MandarineException } from "../exceptions/mandarineException.ts";
+import { Mandarine } from "../Mandarine.ns.ts";
 
 export class CommonUtils {
     public static generateUUID(): string {
@@ -87,4 +88,38 @@ export class CommonUtils {
         }
         return arr;
     }
+
+    public static getVariableReference(str: string, useEnvironmental: boolean = true): Array<Mandarine.EnvironmentalReference> {
+        const regex = /\$\{(.*?)}/gm;
+        let m;
+        const returnValue: Array<Mandarine.EnvironmentalReference> = new Array<Mandarine.EnvironmentalReference>();
+
+        while ((m = regex.exec(str)) !== null) {
+            if (m.index === regex.lastIndex) {
+                regex.lastIndex++;
+            }
+                
+            const variable = m[1];
+            const fullVariable = m[0];
+            const environmentalValue = useEnvironmental ? Deno.env.get(variable) : undefined;
+            let environmentalReference: Mandarine.EnvironmentalReference = {
+                variable: variable,
+                fullReference: fullVariable,
+                environmentalValue: environmentalValue
+            };
+            returnValue.push(environmentalReference);
+        }
+
+        return returnValue;
+    }
+
+    public static processVariableReferencesForEnvironmental(str: string): string {
+        let currentStr = str;
+        const references = CommonUtils.getVariableReference(str);
+        references.forEach((currentReference) => {
+            currentStr = currentStr.replace(currentReference.fullReference, currentReference.environmentalValue);
+        });
+        return currentStr;
+    }
+
 }

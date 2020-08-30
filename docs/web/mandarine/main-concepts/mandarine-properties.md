@@ -34,7 +34,14 @@ Mandarine.TS contains a property structure that allows the developer to modify s
                     database: string,
                     poolSize?: number
                 } & any
-            } & any
+            } & any,
+            authentication?: {
+                expiration?: number,
+                cookie?: CookieConfig
+            } & any,
+            security?: {
+                cookiesSignKeys: Array<string>
+            } & any,
         } & any
 }
 ```
@@ -57,6 +64,28 @@ Mandarine.TS contains a property structure that allows the developer to modify s
         templateEngine: {
             path: "./src/main/resources/templates",
             engine: "ejs"
+        },
+        authentication: {
+            expiration: (1 * 3600 * 1000), // ONE HOUR
+                cookie: {
+                    httpOnly: false
+                }
+            },
+            security: {
+                cookiesSignKeys: ["HORSE", "MANDARINE", "CAT", "NORWAY", "ORANGE", "TIGER"]
+            }        
+        }
+}
+```
+
+## Environmental Variables
+In order to use values from environmental variables, you may reference them using the following pattern: `${VAR}`.  
+Example:
+```
+{
+    "mandarine": {
+        "server": {
+            "host": "${ENV_PORT}"
         }
     }
 }

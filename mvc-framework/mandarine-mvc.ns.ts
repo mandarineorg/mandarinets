@@ -1,12 +1,14 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { Context } from "../deps.ts";
+import { Context, Request, Response } from "../deps.ts";
 import { DI } from "../main-core/dependency-injection/di.ns.ts";
+import { MandarineSessionContainer } from "../main-core/mandarine-native/sessions/mandarineSessionContainer.ts";
 import { Mandarine } from "../mod.ts";
 import { Cookie as MandarineCookie } from "./core/interfaces/http/cookie.ts";
 import { MandarineMVCContext } from "./core/mandarineMvcContext.ts";
 import { RenderEngineClass } from "./core/modules/view-engine/renderEngine.ts";
-import { MandarineSessionContainer } from "../main-core/mandarine-native/sessions/mandarineSessionContainer.ts";
+import { NonComponentMiddlewareTarget } from "../main-core/internals/interfaces/middlewareTarget.ts";
+import { GuardTarget } from "../main-core/internals/interfaces/guardTarget.ts";
 
 /**
 * This namespace contains all the essentials for Mandarine MVC to work
@@ -492,7 +494,10 @@ export namespace MandarineMvc {
         */
         export interface RoutingOptions {
             responseStatus?: HttpStatusCode,
-            cors?: CorsMiddlewareOption
+            cors?: CorsMiddlewareOption,
+            withPermissions?: Mandarine.Security.Auth.Permissions,
+            middleware?: Array<NonComponentMiddlewareTarget | Mandarine.Types.MiddlewareComponent>;
+            guards?: Array<Function | GuardTarget>
         }
 
         /**
@@ -517,10 +522,7 @@ export namespace MandarineMvc {
             actionType: HttpMethods,
             actionMethodName: string; 
             route: string;
-            routingOptions?: {
-                responseStatus?: HttpStatusCode,
-                cors?: CorsMiddlewareOption
-            };
+            routingOptions?: RoutingOptions;
             routeParams?: RoutingParams[];
             routeSignature: Array<string>;
             initializationStatus: RouteInitializationStatus;
@@ -534,16 +536,12 @@ export namespace MandarineMvc {
             route: string;
             methodType: HttpMethods;
             methodName: string;
-            options: {
-                responseStatus?: HttpStatusCode,
-                cors?: CorsMiddlewareOption
-            };
+            options: RoutingOptions;
             className?: string;
         }
     }
 
     export interface ResponseStatusMetadataContext {
-        classParentName: string;
         responseStatus: Mandarine.MandarineMVC.HttpStatusCode;
         methodName?: string;
     }
@@ -592,6 +590,35 @@ export namespace MandarineMvc {
         }
     }
 
+    export interface ResponseContext extends Response {}
+
+    export interface RequestDataContext extends Request {
+        authentication: Mandarine.Security.Auth.RequestAuthObj;
+        sessionContext: Mandarine.Security.Sessions.MandarineSession;
+        sessionID: string;
+        session: any;
+    }
+
+    export interface RequestContext extends Context {
+        params: any;
+        request: RequestDataContext;
+        isResource: boolean;
+    }
+
+    export interface RequestContextAccessor {
+        getFullContext(): RequestContext;
+        getRequest(): RequestDataContext;
+        getResponse(): ResponseContext;
+    }
+
+    export type CustomDecoratorExecutor<DecoratorData = any, DecoratorReturn = any> = (context: Mandarine.Types.RequestContextAcessor, 
+                                                                                       ...data: Array<DecoratorData>) => DecoratorReturn;
+                                            
+
+    export interface DecoratorFactoryData<DecoratorData, DecoratorReturn> {
+        provider: CustomDecoratorExecutor;
+        paramData: Array<any>;
+    }                                                                                   
     /**
      * Refers to all the information that the rendering engine needs to work out.
      */
@@ -639,6 +666,8 @@ export namespace MandarineMvc {
         export interface WebMVCConfigurer {
             getSessionContainer?(): MandarineSessionContainer;
             addResourceHandlers?(): Mandarine.MandarineCore.IResourceHandlerRegistry;
+            authManagerBuilder?(provider?: Mandarine.Security.Auth.AuthenticationManagerBuilder): Mandarine.Security.Auth.AuthenticationManagerBuilder;
+            httpLoginBuilder?(provider?: Mandarine.Security.Core.Modules.LoginBuilder): Mandarine.Security.Core.Modules.LoginBuilder;
         }
     }
 
@@ -650,7 +679,7 @@ export namespace MandarineMvc {
          * @param resourcePath is injected
          */
         export interface ResourceResolver {
-            resolve(httpContext: Context, resourcePath: string): Uint8Array;
+            resolve(httpContext: Mandarine.Types.RequestContext, resourcePath: string): Uint8Array;
         }
 
     }

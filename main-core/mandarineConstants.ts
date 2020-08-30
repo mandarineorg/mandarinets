@@ -2,9 +2,10 @@
 
 export class MandarineConstants {
 
-    public static RELEASE_VERSION = "1.5.0";
+    public static RELEASE_VERSION = "2.0.0";
 
     public static readonly REFLECTION_MANDARINE_INJECTION_FIELD = "mandarine-method-di-field";
+    public static readonly REFLECTION_MANDARINE_PIPE_FIELD = "mandarine-method-parameter-pipe";
     public static readonly REFLECTION_MANDARINE_METHOD_ROUTE = "mandarine-method-route";
     public static readonly REFLECTION_MANDARINE_COMPONENT = "mandarine-component";
     public static readonly REFLECTION_MANDARINE_CONTROLLER_DEFAULT_HTTP_RESPONSE_CODE = "mandarine-default-http-response-code";
@@ -17,6 +18,12 @@ export class MandarineConstants {
     public static readonly REFLECTION_MANDARINE_REPOSITORY_METHOD_MANUAL_QUERY = "mandarine-repository-manual-query";
     public static readonly REFLECTION_MANDARINE_METHOD_ROUTE_RENDER = "mandarine-method-route-render";
     public static readonly REFLECTION_HTTP_ACTION_KEY = "httpAction";
+    public static readonly REFLECTION_MANDARINE_SECURITY_ALLOWONLY_DECORATOR = "mandarine-security-allow-only";
+    public static readonly REFLECTION_MANDARINE_USE_MIDDLEWARE_DECORATOR = "mandarine-use-middleware";
+    public static readonly REFLECTION_MANDARINE_USE_GUARDS_DECORATOR = "mandarine-use-guards";
+
+    // SECURITY
+    public static readonly SECURITY_AUTH_COOKIE_NAME = "MDAUTHID";
 
     public static MANDARINE_COPYRIGHT_HEADER = "Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.";
 

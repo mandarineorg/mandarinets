@@ -1,9 +1,10 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { decoder } from "https://deno.land/std@0.62.0/encoding/utf8.ts";
-import { Request } from "../../deps.ts";
+import { decoder } from "https://deno.land/std@0.67.0/encoding/utf8.ts";
+import { Cookies as OakCookies, Request } from "../../deps.ts";
 import { Log } from "../../logger/log.ts";
 import { Mandarine } from "../Mandarine.ns.ts";
+import { CommonUtils } from "./commonUtils.ts";
 
 export class HttpUtils {
 
@@ -152,6 +153,51 @@ export class HttpUtils {
           }
         }
         return partsByName;
+    }
+
+    public static createCookie(requestContext: Mandarine.Types.RequestContext, cookieData: Mandarine.MandarineMVC.Cookie): string {
+        const cookiesFromRequest: Mandarine.MandarineCore.Cookies = HttpUtils.getCookies(requestContext.request);
+        let cookiesNames: Array<string> = Object.keys(cookiesFromRequest);
+        let cookieExists: boolean = cookiesNames.some((cookieName) => cookieName === cookieData.name);
+        const cookieName = cookiesNames.find((cookieName) => cookieName === cookieData.name);
+        let isCookieValid = true;
+
+        if(cookieExists && cookieName) { 
+            const currentCookie = cookiesFromRequest[cookieName];
+            isCookieValid = requestContext.cookies.get(cookieName, { signed: true }) != undefined;
+        }
+
+        if(!isCookieValid || isCookieValid && !cookieExists) {
+            let cookieConfig: any = {};
+            if(cookieData.domain) cookieConfig.domain = cookieData.domain;
+            if(cookieData.expires) cookieConfig.expires = cookieData.expires;
+            if(cookieData.maxAge) cookieConfig.maxAge = cookieData.maxAge;
+            if(cookieData.path) cookieConfig.path = cookieData.path;
+            if(cookieData.secure) cookieConfig.secure = cookieData.secure;
+            if(cookieData.sameSite) cookieConfig.sameSite = cookieData.sameSite;
+            cookieConfig.signed = true;
+            cookieConfig.httpOnly = (cookieData.httpOnly) ? cookieData.httpOnly : false;
+
+            const cookies = requestContext.cookies.set(cookieData.name, cookieData.value, cookieConfig);
+            return cookieData.value;
+        }
+
+        if(cookieExists && cookieName) {
+            return cookiesFromRequest[cookieName];
+        }
+    }
+
+    public static assignContentType(context: Mandarine.Types.RequestContext) {
+        let contentType: string = Mandarine.Global.getMandarineConfiguration().mandarine.server.responseType;
+
+        const responseBody = context.response.body;
+        if(responseBody != (null || undefined)) {
+           if(CommonUtils.isObject(responseBody) || Array.isArray(responseBody)) {
+                contentType = Mandarine.MandarineMVC.MediaTypes.APPLICATION_JSON;
+           }
+        }
+        
+        context.response.headers.set('Content-Type', contentType);
     }
     
 }

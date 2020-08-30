@@ -8,7 +8,7 @@ The Resource Resolver interface ([See interface here](https://doc.deno.land/http
 
 | Name | Description | Arguments |
 | ---- | ----------- | --------- |
-| resolve | Resolves the resolve handler | httpContext: Context of the incoming HTTP request (This parameter is injected by Mandarine's Resource Handler Middleware). <br> resourcePath: It is the path of the requested resource (This parameter is injected by Mandarine's Resource Handler Middleware) |
+| resolve | Resolves the resolve handler | httpContext (_Mandarine.Types.RequestContext_): Context of the incoming HTTP request (This parameter is injected by Mandarine's Resource Handler Middleware). <br> resourcePath: It is the path of the requested resource (This parameter is injected by Mandarine's Resource Handler Middleware) |
 
 ## Mandarine Default Resource Resolver
 Mandarine has a default resource resolves which is used to handle static content.

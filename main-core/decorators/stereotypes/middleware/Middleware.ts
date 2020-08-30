@@ -11,7 +11,7 @@ import { MainCoreDecoratorProxy } from "../../../proxys/mainCoreDecorator.ts";
  * `@Middleware(regexRoute: RegExp)
  *  Target: class`
  */
-export const Middleware = (regexRoute: RegExp): Function => {
+export const Middleware = (regexRoute?: RegExp): Function => {
     return (target: any, methodName: string, index: number) => {
         MainCoreDecoratorProxy.registerMandarinePoweredComponent(target, Mandarine.MandarineCore.ComponentTypes.MIDDLEWARE, {
             regexRoute: regexRoute

@@ -8,14 +8,22 @@ import { MandarineMvc } from "../mvc-framework/mandarine-mvc.ns.ts";
 import { MandarineORM } from "../orm-core/mandarine-orm.ns.ts";
 import { MandarineSecurity } from "../security-core/mandarine-security.ns.ts";
 import { ComponentsRegistry } from "./components-registry/componentRegistry.ts";
-import { MiddlewareComponent } from "./components/middleware-component/middlewareComponent.ts";
 import { DI } from "./dependency-injection/di.ns.ts";
 import { NativeComponentsRegistry } from "./mandarine-native/nativeComponentsRegistry.ts";
+import { AuthenticationManagerBuilder } from "./mandarine-native/security/authenticationManagerBuilderDefault.ts";
+import { MandarineMiscellaneous } from "./Mandarine.miscellaneous.ns.ts";
+import { MandarineNative } from "./Mandarine.native.ns.ts";
 import { MandarineEnvironmentalConstants } from "./MandarineEnvConstants.ts";
 import { MandarineLoading } from "./mandarineLoading.ts";
 import { TemplatesManager } from "./templates-registry/templatesRegistry.ts";
 import { CommonUtils } from "./utils/commonUtils.ts";
+import { JsonUtils } from "./utils/jsonUtils.ts";
 import { MandarineUtils } from "./utils/mandarineUtils.ts";
+import { CookieConfig } from "../mvc-framework/core/interfaces/http/cookie.ts";
+import { HTTPLoginBuilder } from "../security-core/core/modules/loginBuilder.ts";
+import { MandarineCommonInterfaces } from "./Mandarine.commonInterfaces.ns.ts";
+import { ComponentComponent } from "./components/component-component/componentComponent.ts";
+
 /**
 * This namespace contains all the essentials for mandarine to work
 * Gnerally, global functionings are added to this namespace in order to be easily accesible across Mandarine
@@ -30,6 +38,19 @@ export namespace Mandarine {
     export const AsyncFunction = (async () => {}).constructor;
 
     export type IniFile = { [prop: string]: string; };
+
+    export namespace Components {
+        export interface MiddlewareComponent {
+            configuration: {
+                regexRoute: RegExp;
+            }
+        }
+        export interface CatchComponent {
+            configuration: {
+                exceptionType: any;
+            }
+        }
+    }
 
    /**
    * Structure of Mandarine Properties.
@@ -64,7 +85,14 @@ export namespace Mandarine {
                     database: string,
                     poolSize?: number
                 } & any
-            } & any
+            } & any,
+            authentication?: {
+                expiration?: number,
+                cookie?: CookieConfig
+            },
+            security?: {
+                cookiesSignKeys: Array<string>
+            }
         } & any
     };
 
@@ -77,6 +105,24 @@ export namespace Mandarine {
         denoEnv: {
             [prop: string]: string
         }
+    }
+
+    /**
+     * ${MY_VAR} will be considered an environmental reference.
+     * The environmental reference will be parsed by CommonUtils.getEnvironmentalReferences
+     * and CommonUtils.getEnvironmentalReferences will return an array of EnvironmentalReference
+     * 
+     * ```
+     *  ${MY_VAR}
+     *  fullReference: ${MY_VAR}
+     *  variable: MY_VAR
+     *  environmentalValue: Deno.env.get("MY_VAR")
+     * ```
+     */
+    export interface EnvironmentalReference {
+        fullReference: string;
+        variable: string;
+        environmentalValue: string;
     }
 
     /**
@@ -96,8 +142,14 @@ export namespace Mandarine {
             mandarineResourceHandlerRegistry: MandarineCore.IResourceHandlerRegistry
             mandarineProperties: Properties;
             mandarineInitialProperties: MandarineInitialProperties;
-            mandarineMiddleware: Array<MiddlewareComponent>;
+            mandarineMiddleware: Array<ComponentComponent & Components.MiddlewareComponent>;
             mandarineNativeComponentsRegistry: NativeComponentsRegistry;
+            __SECURITY__: {
+                auth: {
+                    authManagerBuilder: MandarineSecurity.Auth.AuthenticationManagerBuilder,
+                    httpLoginBuilder: MandarineSecurity.Core.Modules.LoginBuilder
+                }
+            }
         };
 
         /**
@@ -114,7 +166,12 @@ export namespace Mandarine {
                     mandarineResourceHandlerRegistry: undefined,
                     mandarineTemplatesManager: undefined,
                     mandarineInitialProperties: undefined,
-                    mandarineNativeComponentsRegistry: undefined
+                    mandarineNativeComponentsRegistry: undefined,
+                    __SECURITY__: {
+                        auth: {
+                            authManagerBuilder: undefined
+                        }
+                    }
                 }
             }
         };
@@ -192,7 +249,7 @@ export namespace Mandarine {
                     const initialProperties: MandarineInitialProperties = getMandarineInitialProps();
                     let mandarinePropertiesFile = Deno.env.get(MandarineEnvironmentalConstants.MANDARINE_PROPERTY_FILE) || Defaults.mandarinePropertiesFile;
                     if(initialProperties && initialProperties.propertiesFilePath) mandarinePropertiesFile = initialProperties.propertiesFilePath;
-                    const propertiesData = JSON.parse(CommonUtils.readFile(mandarinePropertiesFile));
+                    const propertiesData = JsonUtils.toJson(mandarinePropertiesFile, { isFile: true, allowEnvironmentalReferences: true });
                     setConfiguration(propertiesData);
                 } catch(error) {
                     mandarineGlobal.mandarineProperties = Defaults.MandarineDefaultConfiguration;
@@ -216,7 +273,7 @@ export namespace Mandarine {
                 try {
                     const propertiesEnvVariable = Deno.env.get(MandarineEnvironmentalConstants.MANDARINE_JSON_FILE);
                     const mandarineJsonFile = propertiesEnvVariable || "./mandarine.json";
-                    const propertiesData: MandarineInitialProperties = JSON.parse(CommonUtils.readFile(mandarineJsonFile));
+                    const propertiesData: MandarineInitialProperties = JsonUtils.toJson(mandarineJsonFile, { isFile: true, allowEnvironmentalReferences: false });
                     if(propertiesData) {
                         if(propertiesData.propertiesFilePath) defaultMandarineInitialProps.propertiesFilePath = propertiesData.propertiesFilePath;
                         if(propertiesData.denoEnv) {
@@ -272,7 +329,12 @@ export namespace Mandarine {
             if(properties.mandarine.resources == (null || undefined)) properties.mandarine.resources = defaultConfiguration.mandarine.resources;
             if(properties.mandarine.resources.staticFolder == (null || undefined)) properties.mandarine.resources.staticFolder = defaultConfiguration.mandarine.resources.staticFolder;
             if(properties.mandarine.resources.staticRegExpPattern == (null || undefined)) properties.mandarine.resources.staticRegExpPattern = defaultConfiguration.mandarine.resources.staticRegExpPattern;
-            
+            if(properties.mandarine.authentication == (null || undefined)) properties.mandarine.authentication = defaultConfiguration.mandarine.authentication;
+            if(properties.mandarine.authentication.expiration == (null || undefined)) properties.mandarine.authentication.expiration = defaultConfiguration.mandarine.authentication.expiration;
+            if(properties.mandarine.authentication.cookie == (null || undefined)) properties.mandarine.authentication.cookie = defaultConfiguration.mandarine.authentication.cookie;
+            if(properties.mandarine.security == (null || undefined)) properties.mandarine.security = defaultConfiguration.mandarine.security;
+            if(properties.mandarine.security.cookiesSignKeys == (null || undefined) || properties.mandarine.security.cookiesSignKeys && properties.mandarine.security.cookiesSignKeys.length == 0) properties.mandarine.security.cookiesSignKeys = defaultConfiguration.mandarine.security.cookiesSignKeys;
+
             if(!Object.values(Mandarine.MandarineMVC.TemplateEngine.Engines).includes(properties.mandarine.templateEngine.engine)) throw new TemplateEngineException(TemplateEngineException.INVALID_ENGINE);
 
             mandarineGlobal.mandarineProperties = properties;
@@ -282,7 +344,7 @@ export namespace Mandarine {
         * Get the list of registered middlewares
         * Middleware are added to the global environment in order to not request the DI container every time there is an HTTP Request
         */
-        export function getMiddleware(): Array<MiddlewareComponent> {
+        export function getMiddleware(): Array<ComponentComponent & Components.MiddlewareComponent> {
             initializeMiddleware();
             return getMandarineGlobal().mandarineMiddleware;
         };
@@ -323,7 +385,7 @@ export namespace Mandarine {
             let mandarineGlobal: MandarineGlobalInterface = getMandarineGlobal();
 
             if(mandarineGlobal.mandarineMiddleware == (undefined || null)) {
-                mandarineGlobal.mandarineMiddleware = new Array<MiddlewareComponent>();
+                mandarineGlobal.mandarineMiddleware = new Array<ComponentComponent & Components.MiddlewareComponent>();
             }
         };
 
@@ -333,6 +395,16 @@ export namespace Mandarine {
         export function initializeNativeComponents() {
             const componentRegistry = getNativeComponentsRegistry();
         };
+
+        export function initializeSecurityInternals() {
+            let mandarineGlobal: Mandarine.Global.MandarineGlobalInterface = Mandarine.Global.getMandarineGlobal();
+            if(!mandarineGlobal.__SECURITY__.auth.authManagerBuilder) {
+                mandarineGlobal.__SECURITY__.auth.authManagerBuilder = new AuthenticationManagerBuilder()
+            }
+            if(!mandarineGlobal.__SECURITY__.auth.httpLoginBuilder) {
+                mandarineGlobal.__SECURITY__.auth.httpLoginBuilder = new HTTPLoginBuilder()
+            }
+        }
     };
 
     /**
@@ -390,11 +462,13 @@ export namespace Mandarine {
         export enum ComponentTypes {
             CONTROLLER,
             COMPONENT,
+            CATCH,
             SERVICE,
             CONFIGURATION,
             MIDDLEWARE,
             REPOSITORY,
-            MANUAL_COMPONENT
+            MANUAL_COMPONENT,
+            GUARDS
         };
 
         /**
@@ -415,7 +489,6 @@ export namespace Mandarine {
             componentType: ComponentTypes;
             componentInstance: any;
             componentConfiguration?: any;
-            classParentName: string;
         };
 
         /**
@@ -423,7 +496,6 @@ export namespace Mandarine {
         * When a request is made to the DI container, this is what the request returns.
         */
         export interface ComponentRegistryContext {
-            classParentName: string;
             componentName?: string;
             componentInstance: any;
             componentType: ComponentTypes;
@@ -435,6 +507,8 @@ export namespace Mandarine {
         export interface ComponentCommonInterface {
             name?: string;
             classHandler?: any;
+            type?: ComponentTypes;
+            configuration?: any;
             getName: () => string;
             getClassHandler: () => any;
             setClassHandler: (classHandler: any) => void;
@@ -512,6 +586,7 @@ export namespace Mandarine {
                 methodName: string;
                 type: any;
                 isReadonly?: boolean;
+                providers?: Array<any>;
                 onOverride?: (output: any) => void;
             }>
         };
@@ -539,6 +614,12 @@ export namespace Mandarine {
 
    export import ORM = MandarineORM; 
 
+   export import Native = MandarineNative;
+
+   export import Miscellaneous = MandarineMiscellaneous;
+   
+   export import Types = MandarineCommonInterfaces;
+
     /**
     * Contains the default information Mandarine needs to work.
     */
@@ -560,6 +641,15 @@ export namespace Mandarine {
                 templateEngine: {
                     path: "./src/main/resources/templates",
                     engine: "ejs"
+                },
+                authentication: {
+                    expiration: (1 * 3600 * 1000), // ONE HOUR
+                    cookie: {
+                        httpOnly: false
+                    }
+                },
+                security: {
+                    cookiesSignKeys: ["HORSE", "MANDARINE", "CAT", "NORWAY", "ORANGE", "TIGER"]
                 }
             }
         };
@@ -588,6 +678,7 @@ export namespace Mandarine {
     MandarineLoading();
     
     Mandarine.Global.getMandarineDotEnv();
+    Mandarine.Global.initializeSecurityInternals();
     Mandarine.Global.initializeNativeComponents();
     Mandarine.Global.initializeMandarineGlobal();
     Mandarine.Global.getMandarineInitialProps();

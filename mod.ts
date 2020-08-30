@@ -13,17 +13,20 @@ export { Component } from "./main-core/decorators/stereotypes/component/componen
 export { Configuration } from "./main-core/decorators/stereotypes/configuration/configuration.ts";
 export { Service } from "./main-core/decorators/stereotypes/service/service.ts";
 export { Middleware } from "./main-core/decorators/stereotypes/middleware/Middleware.ts";
-export { MiddlewareTarget } from "./main-core/components/middleware-component/middlewareTarget.ts";
+export { MiddlewareTarget, NonComponentMiddlewareTarget } from "./main-core/internals/interfaces/middlewareTarget.ts";
 export { Inject } from "./main-core/dependency-injection/decorators/Inject.ts";
 export { Injectable } from "./main-core/dependency-injection/decorators/injectable.ts";
 export { MandarineCore } from "./main-core/mandarineCore.ts";
 export { Controller } from "./mvc-framework/core/decorators/stereotypes/controller/controller.ts";
-export { Param, RouteParam, QueryParam, RequestParam, Session, ServerRequestParam, ResponseParam, CookieParam, Model, RequestBody, Parameters } from "./mvc-framework/core/decorators/stereotypes/controller/parameterDecorator.ts";
+export { Param, RouteParam, QueryParam, RequestParam, Session, ServerRequestParam, ResponseParam, CookieParam, Model, RequestBody, Parameters, AuthPrincipal } from "./mvc-framework/core/decorators/stereotypes/controller/parameterDecorator.ts";
 export { ResponseStatus } from "./mvc-framework/core/decorators/stereotypes/controller/responseStatus.ts";
 export { GET, POST, DELETE, PATCH, PUT, HEAD, OPTIONS } from "./mvc-framework/core/decorators/stereotypes/controller/routingDecorator.ts";
+export { Catch } from "./main-core/decorators/stereotypes/catch/catch.ts";
+export { Guard } from "./main-core/decorators/stereotypes/guards/guard.ts";
 export { Override } from "./main-core/decorators/native-components/override.ts";
 export { Cors } from "./mvc-framework/core/decorators/stereotypes/controller/corsMiddlewareDecorator.ts";
 export { Render } from "./mvc-framework/core/decorators/stereotypes/view-engine/viewEngineDecorators.ts";
+export { Pipe } from "./mvc-framework/core/decorators/stereotypes/controller/pipeDecorator.ts";
 export { ViewModel } from "./mvc-framework/core/modules/view-engine/viewModel.ts";
 export { MandarineMVC } from "./mvc-framework/mandarineMVC.ts"
 
@@ -35,8 +38,17 @@ export { Types as SQLTypes } from "./orm-core/sql/types.ts";
 export { ResourceHandler } from "./mvc-framework/core/internal/components/resource-handler-registry/resourceHandler.ts";
 export { MandarineResourceResolver } from "./main-core/mandarine-native/mvc/mandarineResourceResolver.ts";
 
-export { Optional } from "./pluggins/optional.ts";
-export { PromiseRepeater } from "./pluggins/promiseRepeater.ts";
+export { Optional } from "./plugins/optional.ts";
+export { PromiseRepeater } from "./plugins/promiseRepeater.ts";
 
-export { MandarineNative } from "./main-core/Mandarine.native.ns.ts";
 export { MandarineSessionHandler } from "./main-core/mandarine-native/sessions/mandarineDefaultSessionStore.ts";
+
+export { AllowOnly } from "./security-core/core/decorators/allowOnly.ts";
+export { UseMiddleware } from "./mvc-framework/core/decorators/stereotypes/controller/useMiddleware.ts";
+
+export { ExceptionContext, ExceptionFilter } from "./main-core/internals/interfaces/exceptionFilter.ts";
+export { GuardTarget, GuardTargetMethod } from "./main-core/internals/interfaces/guardTarget.ts";
+
+export { UseGuards } from "./mvc-framework/core/decorators/stereotypes/controller/useGuards.ts";
+
+export { parameterDecoratorFactory } from "./mvc-framework/core/decorators/custom-decorators/decoratorsFactory.ts";

@@ -4,8 +4,10 @@ import { Service } from "../../../main-core/decorators/stereotypes/service/servi
 import { Controller } from "../../../mvc-framework/core/decorators/stereotypes/controller/controller.ts";
 import { GET } from "../../../mvc-framework/core/decorators/stereotypes/controller/routingDecorator.ts";
 import { MandarineCore } from "../../../mod.ts";
+import { Component } from "../../../main-core/decorators/stereotypes/component/component.ts";
+import { Configuration } from "../../../main-core/decorators/stereotypes/configuration/configuration.ts";
 
-@Service()
+@Configuration()
 export class Service3 {
 
     public pi() {
@@ -13,7 +15,7 @@ export class Service3 {
     }
 
 }
-@Service()
+@Component()
 export class Service2 {
 
     constructor(public readonly service3: Service3) {}

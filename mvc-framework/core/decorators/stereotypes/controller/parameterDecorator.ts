@@ -70,6 +70,21 @@ export const RequestParam = (): Function => {
 /**
  * **Decorator**
  * 
+ * Injects the whole context of the request
+ * 
+ * `@RequestContext()
+ *  Target: Method parameter`
+ */
+export const RequestContext = (): Function => {
+    return (target: Object, propertyName: string, index: number) => {
+        MVCDecoratorsProxy.registerRoutingParam(target, DI.InjectionTypes.REQUEST_CONTEXT_PARAM, propertyName, index);
+    };
+};
+
+
+/**
+ * **Decorator**
+ * 
  * Injects the session object from a request.
  * Modifications to the session will be automatically saved when the request finishes.
  * 
@@ -172,5 +187,21 @@ export const RequestBody = (): Function => {
 export const Parameters = (): Function => {
     return (target: any, propertyName: string, index: number) => {
         MVCDecoratorsProxy.registerRoutingParam(target, DI.InjectionTypes.PARAMETERS_PARAM, propertyName, index);
+    }
+}
+
+ /**
+ * **Decorator**
+ * 
+ * Injects the principal (user data) of the current authorized user in the request
+ * 
+ * `@AuthPrincipal()
+ *  Target: Method parameter`
+ * 
+ * @returns an object (which contains Mandarine.Security.Auth.UserDetails) with the user data.
+ */
+export const AuthPrincipal = (): Function => {
+    return (target: any, propertyName: string, index: number) => {
+        MVCDecoratorsProxy.registerRoutingParam(target, DI.InjectionTypes.AUTH_PRINCIPAL_PARAM, propertyName, index);
     }
 }
