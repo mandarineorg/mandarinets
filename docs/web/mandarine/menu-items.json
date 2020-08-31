@@ -148,6 +148,10 @@
           "url": "mandarine-mvc-introduction"
         },
         {
+          "title": "Entry Point",
+          "url": "entry-point"
+        },
+        {
           "title": "Resource Handlers",
           "url": "resource-handlers",
           "children": [
