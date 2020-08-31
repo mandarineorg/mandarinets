@@ -298,5 +298,9 @@
     {
       "url": "session-container",
       "document": "mandarine-security/session-container.md"
+    },
+    {
+      "url": "entry-point",
+      "document": "mandarine-mvc/entry-point.md"
     }
 ]
