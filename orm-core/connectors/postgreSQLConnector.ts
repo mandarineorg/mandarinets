@@ -64,9 +64,11 @@ export class PostgresConnector implements PostgresConnectorInterface {
 
     public async query(query: string | QueryConfig): Promise<QueryResult> {
       try {
-        let connection = await this.makeConnection();
-        let result: Promise<QueryResult> = connection.query(query);
-        return result;
+        const connection = await this.makeConnection();
+        if(!connection) throw new Error(`Connection could not be made under query ${query}`);
+        const result: QueryResult = await connection.query(query);
+        await connection.release();
+        return Object.assign({}, result);
       }catch(error) {
         this.logger.compiler("Query statement could not be executed", "error", error);
       }
