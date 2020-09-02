@@ -23,10 +23,9 @@ export class PostgresRepositoryProxy<T> implements Mandarine.ORM.RepositoryProxy
 
     public async executeQuery(query: any) {
         let dbClient: PostgresConnector = this.getEntityManager().getDatabaseClient();
-        let connection = await (dbClient).makeConnection();
             try{
-                let queryExecution = await dbClient.queryWithConnection(connection, query);
-                let rowsOfObjects = await queryExecution.rowsOfObjects();
+                let queryExecution = await dbClient.query(query);
+                let rowsOfObjects = queryExecution.query.result.rowsOfObjects();
                 if(rowsOfObjects.length == 0) {
                     return null;
                 } else if(rowsOfObjects.length >= 1) {
