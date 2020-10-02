@@ -6,13 +6,6 @@ If a `tsconfig.json` is not provided, Deno will fail to interpret Mandarine.
 ```javascript
 {
     "compilerOptions": {
-        "strict": false,
-        "noImplicitAny": false,
-        "noImplicitThis": false,
-        "alwaysStrict": false,
-        "strictNullChecks": false,
-        "strictFunctionTypes": true,
-        "strictPropertyInitialization": false,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true
     }
