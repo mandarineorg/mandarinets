@@ -1,7 +1,7 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { Mandarine } from "./Mandarine.ns.ts";
-import { ComponentComponent } from "./components/component-component/componentComponent.ts";
+import type { Mandarine } from "./Mandarine.ns.ts";
+import type { ComponentComponent } from "./components/component-component/componentComponent.ts";
 
 export namespace MandarineCommonInterfaces {
 

@@ -2,6 +2,7 @@
 
 import { Cookies } from "../../../deps.ts";
 import { Log } from "../../../logger/log.ts";
+import { MandarineException } from "../../../main-core/exceptions/mandarineException.ts";
 import { Mandarine } from "../../../main-core/Mandarine.ns.ts";
 import { CommonUtils } from "../../../main-core/utils/commonUtils.ts";
 import { HttpUtils } from "../../../main-core/utils/httpUtils.ts";
@@ -25,6 +26,11 @@ export class SessionMiddleware {
     }
 
     private createSessionContext(sessionContainerConfig: Mandarine.Security.Sessions.SessionContainer, context: Mandarine.Types.RequestContext) {
+        
+        if(!sessionContainerConfig.genId) {
+            throw new MandarineException(MandarineException.INVALID_SESSION_GENID);
+        }
+
         let sesId = sessionContainerConfig.genId();
         let sessionCookie: Mandarine.MandarineMVC.Cookie = SessionsUtils.getCookieForSession(sessionContainerConfig, sesId);
 
@@ -43,7 +49,7 @@ export class SessionMiddleware {
             sessionID: sesId,
             sessionCookie: sessionCookie
         }, {
-            expiration: sessionContainerConfig.store.options.expiration
+            expiration: sessionContainerConfig?.store?.options?.expiration || 0
         });
         
         context.request.sessionID = sesId;
@@ -54,15 +60,23 @@ export class SessionMiddleware {
     public createSessionCookie(context: Mandarine.Types.RequestContext) {
         const sessionContainerConfig: Mandarine.Security.Sessions.SessionContainer = this.getSessionContainer();
 
+        if(!sessionContainerConfig) {
+            this.logger.debug("A session cookie was tried to be created but the session container is not initialized");
+            return;
+        } 
+
+        if(!sessionContainerConfig.store) {
+            throw new MandarineException(MandarineException.INVALID_SESSION_GENID);
+        }
+
         const cookiesFromRequest: Mandarine.MandarineCore.Cookies = HttpUtils.getCookies(context.request);
         let cookiesNames: Array<string> = Object.keys(cookiesFromRequest);
-        let sesId: string = undefined;
+        let sesId: string | undefined = undefined;
 
-        let sessionCookieExists: boolean = cookiesNames.some((cookieName) => cookieName.startsWith(`${sessionContainerConfig.sessionPrefix}`));
-        if(!sessionCookieExists) {
+        let sessionCookieName: string | undefined = cookiesNames.find((cookieName) => cookieName.startsWith(`${sessionContainerConfig.sessionPrefix}`));
+        if(!sessionCookieName) {
             sesId = this.createSessionContext(sessionContainerConfig, context);
         } else {
-            let sessionCookieName: string = cookiesNames.find(cookieName => cookieName.startsWith(`${sessionContainerConfig.sessionPrefix}`));
             sesId = sessionCookieName.split(':')[1];
             let digestData = cookiesFromRequest[sessionCookieName]; // Necessary to verify the signature of the cookie.
             
@@ -80,21 +94,21 @@ export class SessionMiddleware {
                 return;
             }
 
-            sessionContainerConfig.store.get(sesId, (error, result: Mandarine.Security.Sessions.MandarineSession) => {
+            sessionContainerConfig.store.get(sesId, (error, result: Mandarine.Security.Sessions.MandarineSession | undefined) => {
 
                 if(result == undefined) {
                     context.request.sessionContext = SessionsUtils.sessionBuilder({
-                        sessionID: sesId,
+                        sessionID: <string> sesId,
                         sessionCookie: sessionCookie
                     }, {
-                        expiration: sessionContainerConfig.store.options.expiration
+                        expiration: sessionContainerConfig?.store?.options?.expiration || 0
                     });
                     
                 } else {
                     context.request.sessionContext = result;
                 }
 
-                context.request.sessionID = sesId;
+                context.request.sessionID = <string> sesId;
                 context.request.session = Object.assign({}, context.request.sessionContext.sessionData);
             }, { touch: true });
         }
@@ -102,9 +116,14 @@ export class SessionMiddleware {
 
     public storeSession(context: Mandarine.Types.RequestContext) {
         const sessionContainerConfig: Mandarine.Security.Sessions.SessionContainer = this.getSessionContainer();
+
+        if(!sessionContainerConfig.store) {
+            throw new MandarineException(MandarineException.INVALID_SESSION_GENID);
+        }
+        
         const mandarineSession: Mandarine.Security.Sessions.MandarineSession = context.request.sessionContext;
 
-        const compareSessionData = CommonUtils.compareObjectKeys(mandarineSession.sessionData, context.request.session);
+        const compareSessionData = CommonUtils.compareObjectKeys(<Mandarine.Security.Sessions.MandarineSession> mandarineSession.sessionData, context.request.session);
         mandarineSession.sessionData = context.request.session;
 
         if(compareSessionData) {

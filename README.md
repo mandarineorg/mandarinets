@@ -20,7 +20,7 @@ Don't know where to start? [Click here](https://www.mandarinets.org/docs/master/
 ## Basic usage
 
 ```typescript
-import { MandarineCore, Controller, GET } from "https://deno.land/x/mandarinets@v2.0.0/mod.ts"; 
+import { MandarineCore, Controller, GET } from "https://deno.land/x/mandarinets@v2.1.0/mod.ts"; 
 
 @Controller('/api')
 export class Boo {

@@ -20,15 +20,17 @@ export const ExceptionHandler = () => {
                 if(findRightHandler) {
                     const componentHandler = findRightHandler.getClassHandler();
                     
-                    let methodArgs: DI.ArgumentValue[] = await DI.Factory.methodArgumentResolver(componentHandler, "catch", typedContext);
-
-                    await (componentHandler["catch"]({
-                        getException: () => error,
-                        getResponse: () => typedContext.response,
-                        getRequest: () => typedContext.request,
-                        getTimestamp: () => new Date().toISOString()
-                    }, ...methodArgs));
-                    
+                    let methodArgs: DI.ArgumentValue[] | null = await DI.Factory.methodArgumentResolver(componentHandler, "catch", typedContext);
+                    if(methodArgs) {
+                        await (componentHandler["catch"]({
+                            getException: () => error,
+                            getResponse: () => typedContext.response,
+                            getRequest: () => typedContext.request,
+                            getTimestamp: () => new Date().toISOString()
+                        }, ...methodArgs));
+                    } else {
+                        throw error;
+                    }
                 } else {
                     throw error;
                 }

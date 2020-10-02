@@ -3,7 +3,7 @@
 import { MandarineConstants } from "../../main-core/mandarineConstants.ts";
 import { Reflect } from "../../main-core/reflectMetadata.ts";
 import { ReflectUtils } from "../../main-core/utils/reflectUtils.ts";
-import { Mandarine } from "../../mod.ts";
+import type { Mandarine } from "../../mod.ts";
 
 /**
  * This class represents the registry where all the entities are added in order for mandarine to work with them at and after mandarine compile time.
@@ -26,7 +26,7 @@ export class EntityRegistry {
                 schema: schemaName,
                 columns: columns,
                 uniqueConstraints: columns.filter((item) => item.unique == true),
-                primaryKey: columns.find(item => item.options.primaryKey != undefined && item.options.primaryKey == true),
+                primaryKey: <Mandarine.ORM.Entity.Column> columns.find(item => item.options.primaryKey != undefined && item.options.primaryKey == true),
                 instance: instance,
                 className: ReflectUtils.getClassName(instance)
             });
@@ -51,7 +51,7 @@ export class EntityRegistry {
                 let columnData: Mandarine.ORM.Entity.Decorators.Column = Reflect.getMetadata(metadataKey, initializedInstance);
                 if(columnData.options == undefined) columnData.options = {};
 
-                var columnProperties = Reflect.getMetadataKeys(initializedInstance, columnData.fieldName);
+                var columnProperties = Reflect.getMetadataKeys(initializedInstance, <string> columnData.fieldName);
 
                 let primaryKeyMetadataKey = `${MandarineConstants.REFLECTION_MANDARINE_TABLE_COLUMN_PROPERTY}:${columnData.fieldName}:primaryKey`;
                 let generatedValueMetadataKey = `${MandarineConstants.REFLECTION_MANDARINE_TABLE_COLUMN_PROPERTY}:${columnData.fieldName}:generatedValue`;
@@ -63,7 +63,7 @@ export class EntityRegistry {
                 }
 
                 if(columnProperties.some(item => item == generatedValueMetadataKey)) {
-                    columnData.options.generatedValue = Reflect.getMetadata(generatedValueMetadataKey, initializedInstance, columnData.fieldName);
+                    columnData.options.generatedValue = Reflect.getMetadata(generatedValueMetadataKey, initializedInstance, <string> columnData.fieldName);
                     columnData.incrementStrategy = true;
                 }
 
@@ -78,7 +78,7 @@ export class EntityRegistry {
         return Array.from(this.entities.values());
     }
 
-    public findEntityByInstanceType(initializedInstance): Mandarine.ORM.Entity.Table {
+    public findEntityByInstanceType(initializedInstance: any): Mandarine.ORM.Entity.Table | undefined {
         return this.getAllEntities().find(item => (ReflectUtils.checkClassInitialized(initializedInstance) ? initializedInstance : new initializedInstance()) instanceof item.instance);
     }
 

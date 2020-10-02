@@ -23,8 +23,8 @@
    *
    */
 export interface MiddlewareTarget {
-    onPreRequest(...args): boolean;
-    onPostRequest(...args): void;
+    onPreRequest(...args: Array<any>): boolean;
+    onPostRequest(...args: Array<any>): void;
 }
 
 export interface NonComponentMiddlewareTarget {

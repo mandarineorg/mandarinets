@@ -13,6 +13,6 @@ import { MainCoreDecoratorProxy } from "../../../proxys/mainCoreDecorator.ts";
  */
 export const Guard = (): Function => {
     return (target: any) => {
-        MainCoreDecoratorProxy.registerMandarinePoweredComponent(target, Mandarine.MandarineCore.ComponentTypes.GUARDS, {}, undefined);
+        MainCoreDecoratorProxy.registerMandarinePoweredComponent(target, Mandarine.MandarineCore.ComponentTypes.GUARDS, {}, null);
     };
 };

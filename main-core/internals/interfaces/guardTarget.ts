@@ -1,6 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { Mandarine } from "../../Mandarine.ns.ts";
+import type { Mandarine } from "../../Mandarine.ns.ts";
 
 /**
    * Define the behavior of a user-side guard
@@ -19,7 +19,7 @@ import { Mandarine } from "../../Mandarine.ns.ts";
    *
    */
 export interface GuardTarget {
-  onGuard(requestContext: Mandarine.Types.RequestContext, ...args): boolean;
+  onGuard(requestContext: Mandarine.Types.RequestContext, ...args: Array<any>): boolean;
 }
 
 export type GuardTargetMethod = (requestContext: Mandarine.Types.RequestContext) => boolean;

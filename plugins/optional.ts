@@ -16,7 +16,7 @@ export class Optional<T> {
     /**
      * "Optionable" object.
      */
-    private value: T;
+    private value: T | null;
 
     constructor() {
         this.value = null;

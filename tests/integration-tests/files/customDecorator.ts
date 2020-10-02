@@ -5,7 +5,7 @@ import { GET } from "../../../mvc-framework/core/decorators/stereotypes/controll
 import { MandarineCore } from "../../../main-core/mandarineCore.ts";
 import { parameterDecoratorFactory } from "../../../mvc-framework/core/decorators/custom-decorators/decoratorsFactory.ts";
 
-const myCustomDecorator = parameterDecoratorFactory((context, parameter) => {
+const myCustomDecorator = parameterDecoratorFactory((context: any, parameter: any) => {
     return parameter;
 })
 

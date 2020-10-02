@@ -20,7 +20,7 @@ export class ViewModel {
         let returnObj = {};
 
         Array.from(this.attributes.keys()).forEach((attributeKey) => {
-            returnObj[attributeKey] = this.attributes.get(attributeKey);
+           (<any>returnObj)[attributeKey] = this.attributes.get(attributeKey);
         });
         return returnObj;
     }

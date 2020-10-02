@@ -1,7 +1,7 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { Cookies, Request } from "../../deps.ts";
-import { Mandarine } from "../Mandarine.ns.ts";
+import type { Cookies, Request } from "../../deps.ts";
+import type { Mandarine } from "../Mandarine.ns.ts";
 import { DependencyInjectionFactory } from "./diFactory.ts";
 
 export namespace DI {

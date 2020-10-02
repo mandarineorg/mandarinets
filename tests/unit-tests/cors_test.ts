@@ -2,7 +2,7 @@
 
 import { ApplicationContext } from "../../main-core/application-context/mandarineApplicationContext.ts";
 import { Mandarine } from "../../main-core/Mandarine.ns.ts";
-import { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
+import type { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
 import { handleCors } from "../../mvc-framework/core/middlewares/cors/corsMiddleware.ts";
 import { MVCDecoratorsProxy } from "../../mvc-framework/core/proxys/mvcCoreDecorators.ts";
 import { MandarineMvc } from "../../mvc-framework/mandarine-mvc.ns.ts";
@@ -37,11 +37,11 @@ export class CORSTest {
         };
 
         MVCDecoratorsProxy.registerControllerComponent(MyController, undefined);
-        MVCDecoratorsProxy.registerCORSMiddlewareDecorator(MyController, cors, null);
+        MVCDecoratorsProxy.registerCORSMiddlewareDecorator(MyController, cors, <string><unknown>null);
         ApplicationContext.getInstance().getComponentsRegistry().initializeControllers();
-        DenoAsserts.assertEquals(Mandarine.Global.getComponentsRegistry().get("MyController").componentInstance.options.cors, cors);
+        DenoAsserts.assertEquals(Mandarine.Global.getComponentsRegistry().get("MyController")?.componentInstance.options.cors, cors);
         cors.optionsSuccessStatus = 204;
-        DenoAsserts.assertNotEquals(Mandarine.Global.getComponentsRegistry().get("MyController").componentInstance.options.cors, cors);
+        DenoAsserts.assertNotEquals(Mandarine.Global.getComponentsRegistry().get("MyController")?.componentInstance.options.cors, cors);
     }
 
     @Test({
@@ -64,17 +64,17 @@ export class CORSTest {
             optionsSuccessStatus: 200
         };
 
-        MVCDecoratorsProxy.registerHttpAction("/api-get-6", MandarineMvc.HttpMethods.GET, MyController.prototype, "getRoute", undefined);
+        MVCDecoratorsProxy.registerHttpAction("/api-get-6", MandarineMvc.HttpMethods.GET, MyController.prototype, "getRoute", <any><unknown>undefined);
         MVCDecoratorsProxy.registerCORSMiddlewareDecorator(MyController.prototype, cors, "getRoute");
         MVCDecoratorsProxy.registerControllerComponent(MyController, undefined);
         ApplicationContext.getInstance().getComponentsRegistry().resolveDependencies();
         ApplicationContext.getInstance().getComponentsRegistry().initializeControllers();
-        let controller: ControllerComponent = ApplicationContext.getInstance().getComponentsRegistry().get("MyController").componentInstance;
+        let controller: ControllerComponent = ApplicationContext.getInstance().getComponentsRegistry().get("MyController")?.componentInstance;
         let actions: Map<String, Mandarine.MandarineMVC.Routing.RoutingAction> = controller.getActions();
         let action = actions.get(controller.getActionName("getRoute"));
-        DenoAsserts.assertEquals(action.routingOptions.cors, cors);
+        DenoAsserts.assertEquals(action?.routingOptions?.cors, cors);
         cors.optionsSuccessStatus = 204;
-        DenoAsserts.assertNotEquals(action.routingOptions.cors, cors);
+        DenoAsserts.assertNotEquals(action?.routingOptions?.cors, cors);
 
 
     }
@@ -139,7 +139,7 @@ export class CORSTest {
         // RESET
         requestMock = this.getMockObject("OPTIONS");
 
-        cors.maxAge = undefined;
+        cors.maxAge = <number> <unknown> undefined;
         requestMock.request.headers.set("origin", "http://localhost");
         handleCors(<any> requestMock, cors, false);
         DenoAsserts.assertEquals(requestMock.response.headers.get("access-control-max-age"), "0");

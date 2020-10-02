@@ -1,15 +1,15 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { bold, green, magenta, red, yellow } from "https://deno.land/std@0.67.0/fmt/colors.ts";
+import { bold, green, magenta, red, yellow } from "https://deno.land/std@0.71.0/fmt/colors.ts";
 
 export interface LogOptions {
-    logDuringTesting: string;
+    logDuringTesting: string | undefined;
 }
 type MsgType = "debug" | "info" | "warn" | "error";
 
 export class Log {
 
-    private className: string = null;
+    private className: string | null = null;
     public logOptions: LogOptions;
 
     constructor(source: any | string) {
@@ -30,7 +30,9 @@ export class Log {
     }
 
     public debug(msg: string, ...supportingDetails: any[]): void {
-        this.emitLogMessage("debug", msg, supportingDetails);
+        if(Deno.env.get("DEBUG")) {
+            this.emitLogMessage("debug", msg, supportingDetails);
+        }
     }
 
     public info(msg: string, ...supportingDetails: any[]): void {
@@ -53,7 +55,7 @@ export class Log {
 
     private emitLogMessage(msgType: MsgType, msg: string, supportingDetails: any[]) {
 
-        let finalMessage: string = null;
+        let finalMessage: string | null = null;
 
         switch(msgType) {
             case "debug":

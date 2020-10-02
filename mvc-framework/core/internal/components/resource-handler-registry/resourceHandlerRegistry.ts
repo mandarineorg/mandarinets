@@ -1,8 +1,8 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
+import type { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
 import { CommonUtils } from "../../../../../main-core/utils/commonUtils.ts";
-import { ResourceHandler } from "./resourceHandler.ts";
+import type { ResourceHandler } from "./resourceHandler.ts";
 
 /**
  * This class serves as a registry for all the resources that have been added by the user (overriding behavior https://mandarineframework.gitbook.io/mandarine-ts/mandarine-core/resource-handlers/resource-handler)
@@ -14,7 +14,7 @@ export class ResourceHandlerRegistry implements Mandarine.MandarineCore.IResourc
     private resourceHandlers: Array<ResourceHandler> = new Array<ResourceHandler>();
 
     public addResourceHandler(input: ResourceHandler): ResourceHandlerRegistry {
-        if(!this.resourceHandlers.some(item => CommonUtils.arrayIdentical(item.resourceHandlerPath, input.resourceHandlerPath))) {
+        if(!this.resourceHandlers.some(item => CommonUtils.arrayIdentical((<Array<RegExp>>item.resourceHandlerPath), (<Array<RegExp>>input.resourceHandlerPath)))) {
             this.resourceHandlers.push(input);
         }
         return this;

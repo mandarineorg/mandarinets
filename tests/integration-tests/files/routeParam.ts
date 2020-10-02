@@ -45,7 +45,7 @@ class RouteParamControllerTestWithUnknownRoute {
 class ControllerGetAllParameters {
 
     @GET('/parameters/:name/:lastname')
-    public helloWorld2(@Parameters() allParameters) {
+    public helloWorld2(@Parameters() allParameters: any) {
         return allParameters;
     }
 

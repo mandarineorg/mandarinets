@@ -1,6 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { Mandarine } from "../../mod.ts";
+import type { Mandarine } from "../../mod.ts";
 import { MandarineORMException } from "../core/exceptions/mandarineORMException.ts";
 import { Types } from "../sql/types.ts";
 
@@ -21,7 +21,7 @@ export class PostgreSQLDialect implements Mandarine.ORM.Dialect.Dialect {
         return tableMetadata;
     }
 
-    public getColumnTypeSyntax(column: Mandarine.ORM.Entity.Column): string {
+    public getColumnTypeSyntax(column: Mandarine.ORM.Entity.Column): string | undefined {
 
         if(column.incrementStrategy != undefined && column.incrementStrategy == true) {
             if(column.options.generatedValue.strategy == "SEQUENCE") {
@@ -163,7 +163,7 @@ export class PostgreSQLDialect implements Mandarine.ORM.Dialect.Dialect {
         let syntax: string = `INSERT INTO ${this.getTableName(tableMetadata)} (%columns%) VALUES (%values%)`;
         let primaryKey = entity.primaryKey;
 
-        let insertionValues: object = {};
+        let insertionValues: any = {};
         entity.columns.forEach((column, index) => {
             if(primaryKey != undefined) {
                 if(column.name == primaryKey.name) {
@@ -172,26 +172,26 @@ export class PostgreSQLDialect implements Mandarine.ORM.Dialect.Dialect {
                             if(primaryKey.options.generatedValue.manualHandler == undefined) {
                                 throw new MandarineORMException(MandarineORMException.GENERATION_HANDLER_REQUIRED, "PostgreSQLDialect");
                             } else {
-                                insertionValues[primaryKey.name] = primaryKey.options.generatedValue.manualHandler();
+                                insertionValues[<string>primaryKey.name] = primaryKey.options.generatedValue.manualHandler();
                                 return;
                             }
                         } else if(primaryKey.options.generatedValue.strategy == "SEQUENCE") {
                             return;
                         }
                     } else {
-                        insertionValues[primaryKey.name] = values[primaryKey.name];
+                        insertionValues[<string>primaryKey.name] = (<any>values)[<string>primaryKey.name];
                         return;
                     }
                 }
             }
 
-            let value = values[column.name];
+            let value = (<any>values)[<string>column.name];
 
             if(value == undefined) {
                 value = null;
             }
 
-            insertionValues[column.name] = value;
+            insertionValues[<string>column.name] = value;
         });
 
         let columnsForInsertion = Object.keys(insertionValues);
@@ -208,10 +208,10 @@ export class PostgreSQLDialect implements Mandarine.ORM.Dialect.Dialect {
 
         let updateValues = {};
         entity.columns.forEach((column) => {
-            let value = values[column.name];
+            let value = (<any>values)[<string>column.name];
             if(value == undefined) value = null;
 
-            updateValues[column.name] = value;
+            (<any>updateValues)[<string>column.name] = value;
         });
 
         let setters: Array<any> = new Array<any>();

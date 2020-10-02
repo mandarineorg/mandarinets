@@ -1,6 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { Mandarine } from "../../../main-core/Mandarine.ns.ts";
+import type { Mandarine } from "../../../main-core/Mandarine.ns.ts";
 import { Sha256 } from "../../../security-core/hash/sha256.ts";
 
 export class TemplateUtils {

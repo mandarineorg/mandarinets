@@ -2,22 +2,29 @@
 
 import { ApplicationContext } from "../../../../../main-core/application-context/mandarineApplicationContext.ts";
 import { DI } from "../../../../../main-core/dependency-injection/di.ns.ts";
+import { MandarineException } from "../../../../../main-core/exceptions/mandarineException.ts";
 import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
 import { MandarineConstants } from "../../../../../main-core/mandarineConstants.ts";
 import { Reflect } from "../../../../../main-core/reflectMetadata.ts";
 import { Optional } from "../../../../../plugins/optional.ts";
-import { ControllerComponent } from "./controllerContext.ts";
+import type { ControllerComponent } from "./controllerContext.ts";
 
 /**
  * Resolves the request made to an endpoint. 
  * This method works along with the DI container.
  */
 export const requestResolver = async (routingAction: Mandarine.MandarineMVC.Routing.RoutingAction, context: Mandarine.Types.RequestContext) => {
-    let objectContext: Mandarine.MandarineCore.ComponentRegistryContext = ApplicationContext.getInstance().getComponentsRegistry().get(routingAction.actionParent);
+    if(routingAction.actionParent == undefined) return;
+    let objectContext: Mandarine.MandarineCore.ComponentRegistryContext | undefined = ApplicationContext.getInstance().getComponentsRegistry().get(routingAction.actionParent);
+    
+    if(!objectContext) {
+        throw new MandarineException(MandarineException.INVALID_COMPONENT_CONTEXT);
+    }
+    
     let component: ControllerComponent = <ControllerComponent> objectContext.componentInstance;
     let handler: any = component.getClassHandler();
 
-    let methodArgs: DI.ArgumentValue[] = await DI.Factory.methodArgumentResolver(handler, routingAction.actionMethodName, context);
+    let methodArgs: DI.ArgumentValue[] | null = await DI.Factory.methodArgumentResolver(handler, routingAction.actionMethodName, context);
 
     // Modify Response Status
     if(routingAction.routingOptions != undefined && routingAction.routingOptions.responseStatus != (undefined || null)) {
@@ -51,12 +58,12 @@ export const requestResolver = async (routingAction: Mandarine.MandarineMVC.Rout
 /**
  * Resolves the middleware request made to an endpoint. 
  */
-export const middlewareResolver = async (preRequest: boolean, middlewareComponent: Mandarine.Types.MiddlewareComponent, context: Mandarine.Types.RequestContext): Promise<boolean> => {
+export const middlewareResolver = async (preRequest: boolean, middlewareComponent: Mandarine.Types.MiddlewareComponent, context: Mandarine.Types.RequestContext): Promise<boolean | undefined> => {
 
     let handler = middlewareComponent.getClassHandler();
     let methodName: string = (preRequest) ? "onPreRequest" : "onPostRequest";
 
-    let methodArgs: DI.ArgumentValue[] = await DI.Factory.methodArgumentResolver(handler, methodName, context);
+    let methodArgs: DI.ArgumentValue[] | null = await DI.Factory.methodArgumentResolver(handler, methodName, context);
 
     if(preRequest) {
         if(methodArgs == null) {

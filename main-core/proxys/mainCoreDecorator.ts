@@ -8,14 +8,14 @@ import { MandarineException } from "../exceptions/mandarineException.ts";
 
 export class MainCoreDecoratorProxy {
 
-    public static registerMandarinePoweredComponent(targetClass: any, componentType: Mandarine.MandarineCore.ComponentTypes, options: { [prop: string]: any }, methodIndex: number) {
+    public static registerMandarinePoweredComponent(targetClass: any, componentType: Mandarine.MandarineCore.ComponentTypes, options: { [prop: string]: any }, methodIndex: number | null) {
         ComponentsRegistryUtil.registerComponent(targetClass, componentType, options, methodIndex);
         return;
     }
 
     public static valueDecorator(targetClass: any, configKey: string, scope: Mandarine.MandarineCore.ValueScopes, propertyName: string) {
         try {
-            let propertyObject;
+            let propertyObject: any;
             if(scope == Mandarine.MandarineCore.ValueScopes.CONFIGURATION) propertyObject = Mandarine.Global.getMandarineConfiguration();
             if(scope == Mandarine.MandarineCore.ValueScopes.ENVIRONMENTAL) propertyObject = Deno.env.toObject();
 
@@ -23,7 +23,7 @@ export class MainCoreDecoratorProxy {
                 let parts = configKey.split('.');
 
                 if (Array.isArray(parts)) {
-                    let last = parts.pop();
+                    let last: any = parts.pop();
                     let keyPropertiesLength = parts.length;
                     let propertiesStartingIndex = 1;
 

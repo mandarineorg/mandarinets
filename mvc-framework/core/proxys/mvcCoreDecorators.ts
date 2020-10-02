@@ -1,15 +1,15 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { DI } from "../../../main-core/dependency-injection/di.ns.ts";
+import type { DI } from "../../../main-core/dependency-injection/di.ns.ts";
 import { DependencyInjectionUtil } from "../../../main-core/dependency-injection/di.util.ts";
 import { Mandarine } from "../../../main-core/Mandarine.ns.ts";
 import { MandarineConstants } from "../../../main-core/mandarineConstants.ts";
 import { Reflect } from "../../../main-core/reflectMetadata.ts";
 import { ComponentUtils } from "../../../main-core/utils/componentUtils.ts";
 import { ReflectUtils } from "../../../main-core/utils/reflectUtils.ts";
-import { AnnotationMetadataContext } from "../interfaces/mandarine/mandarineAnnotationMetadataContext.ts";
-import { NonComponentMiddlewareTarget } from "../../../main-core/internals/interfaces/middlewareTarget.ts";
-import { GuardTarget } from "../../../main-core/internals/interfaces/guardTarget.ts";
+import type { AnnotationMetadataContext } from "../interfaces/mandarine/mandarineAnnotationMetadataContext.ts";
+import type { NonComponentMiddlewareTarget } from "../../../main-core/internals/interfaces/middlewareTarget.ts";
+import type { GuardTarget } from "../../../main-core/internals/interfaces/guardTarget.ts";
 
 export class MVCDecoratorsProxy {
 
@@ -43,7 +43,7 @@ export class MVCDecoratorsProxy {
             Reflect.defineMetadata(useMiddlewareAnnotationName, [...middlewareList], targetClass);
         } else {
             let useMiddlewareAnnotationName: string = `${MandarineConstants.REFLECTION_MANDARINE_USE_MIDDLEWARE_DECORATOR}:${methodName}`;
-            Reflect.defineMetadata(useMiddlewareAnnotationName, [...middlewareList], targetClass, methodName);
+            Reflect.defineMetadata(useMiddlewareAnnotationName, [...middlewareList], targetClass, <string>methodName);
         }
     }
 
@@ -58,7 +58,7 @@ export class MVCDecoratorsProxy {
         }
     }
 
-    public static registerControllerComponent(targetClass: any, baseRoute: string) {
+    public static registerControllerComponent(targetClass: any, baseRoute: string | undefined) {
         ComponentUtils.createControllerComponent({ pathRoute: baseRoute }, targetClass);
     }
 
@@ -103,8 +103,8 @@ export class MVCDecoratorsProxy {
             let annotationContext: Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData = {
                 className: className,
                 template: template,
-                engine: engine,
-                options: options
+                engine: <Mandarine.MandarineMVC.TemplateEngine.Engines> engine,
+                options: <Mandarine.MandarineMVC.TemplateEngine.RenderingOptions> options
             };
 
             Reflect.defineMetadata(renderAnnotationName, annotationContext, target, methodName);

@@ -1,6 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { Mandarine } from "../../../main-core/Mandarine.ns.ts";
+import type { Mandarine } from "../../../main-core/Mandarine.ns.ts";
 import { LoginHandler } from "./loginHandler.ts";
 
 export class HTTPLoginBuilder implements Mandarine.Security.Core.Modules.LoginBuilder {

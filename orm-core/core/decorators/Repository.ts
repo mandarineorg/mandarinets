@@ -26,6 +26,6 @@ export const Repository = (): Function => {
  */
 export const CustomQuery = (query: string, secure?: boolean): Function => {
     return (target: any, methodName: string) => {
-        ORMCoreDecoratorProxy.registerCustomQueryDecorator(target, query, secure, methodName);
+        ORMCoreDecoratorProxy.registerCustomQueryDecorator(target, query, <boolean> secure, methodName);
     }
 }
