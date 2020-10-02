@@ -2,7 +2,7 @@
 
 import { ApplicationContext } from "../../main-core/application-context/mandarineApplicationContext.ts";
 import { Mandarine } from "../../main-core/Mandarine.ns.ts";
-import { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
+import type { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
 import { handleCors } from "../../mvc-framework/core/middlewares/cors/corsMiddleware.ts";
 import { MVCDecoratorsProxy } from "../../mvc-framework/core/proxys/mvcCoreDecorators.ts";
 import { MandarineMvc } from "../../mvc-framework/mandarine-mvc.ns.ts";

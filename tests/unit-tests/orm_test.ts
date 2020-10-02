@@ -8,7 +8,7 @@ import { MandarineRepository } from "../../orm-core/repository/mandarineReposito
 import { RepositoryComponent } from "../../main-core/components/repository-component/repositoryComponent.ts";
 import { lexicalProcessor } from "../../orm-core/core/lexicalProcessor.ts";
 import { PostgreSQLDialect } from "../../orm-core/dialect/postgreSQLDialect.ts";
-import { Mandarine } from "../../main-core/Mandarine.ns.ts";
+import type { Mandarine } from "../../main-core/Mandarine.ns.ts";
 
 @mockDecorator()
 class MyTable {

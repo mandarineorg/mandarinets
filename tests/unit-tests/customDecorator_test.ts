@@ -6,7 +6,7 @@ import { MVCDecoratorsProxy } from "../../mvc-framework/core/proxys/mvcCoreDecor
 import { DI } from "../../main-core/dependency-injection/di.ns.ts";
 import { parameterDecoratorFactory } from "../../mvc-framework/core/decorators/custom-decorators/decoratorsFactory.ts";
 import { ApplicationContext } from "../../main-core/application-context/mandarineApplicationContext.ts";
-import { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
+import type { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
 
 export class CustomDecoratorTest {
 

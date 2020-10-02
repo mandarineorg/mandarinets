@@ -4,9 +4,9 @@ import { Test, DenoAsserts, Orange, mockDecorator, MockCookies } from "../mod.ts
 import { ApplicationContext } from "../../main-core/application-context/mandarineApplicationContext.ts";
 import { MVCDecoratorsProxy } from "../../mvc-framework/core/proxys/mvcCoreDecorators.ts";
 import { SecurityCoreDecoratorsProxy } from "../../security-core/core/proxys/securityCoreDecorators.ts";
-import { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
+import type { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
 import { MandarineMvc } from "../../mvc-framework/mandarine-mvc.ns.ts";
-import { Mandarine } from "../../main-core/Mandarine.ns.ts";
+import type { Mandarine } from "../../main-core/Mandarine.ns.ts";
 import { verifyPermissions } from "../../security-core/core/internals/permissions/verifyPermissions.ts";
 
 export class AuthAllowOnly {

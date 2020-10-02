@@ -1,6 +1,6 @@
-import { MandarineException } from "../../../main-core/exceptions/mandarineException.ts";
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
+import { MandarineException } from "../../../main-core/exceptions/mandarineException.ts";
 import type { Mandarine } from "../../../main-core/Mandarine.ns.ts";
 import { ApplicationContext } from "../../../mod.ts";
 import { handleCors } from "./cors/corsMiddleware.ts";

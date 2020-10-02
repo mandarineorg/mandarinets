@@ -1,6 +1,6 @@
-import { Log } from "../../logger/log.ts";
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
+import { Log } from "../../logger/log.ts";
 import { ApplicationContext } from "../../main-core/application-context/mandarineApplicationContext.ts";
 import type { Mandarine } from "../../main-core/Mandarine.ns.ts";
 import { ReflectUtils } from "../../main-core/utils/reflectUtils.ts";

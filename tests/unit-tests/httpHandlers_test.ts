@@ -2,8 +2,8 @@
 
 import { ApplicationContext } from "../../main-core/application-context/mandarineApplicationContext.ts";
 import { DI } from "../../main-core/dependency-injection/di.ns.ts";
-import { Mandarine } from "../../main-core/Mandarine.ns.ts";
-import { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
+import type { Mandarine } from "../../main-core/Mandarine.ns.ts";
+import type { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
 import { ViewModel } from "../../mvc-framework/core/modules/view-engine/viewModel.ts";
 import { MVCDecoratorsProxy } from "../../mvc-framework/core/proxys/mvcCoreDecorators.ts";
 import { MandarineMvcFrameworkStarter } from "../../mvc-framework/engine/mandarineMvcFrameworkStarter.ts";
