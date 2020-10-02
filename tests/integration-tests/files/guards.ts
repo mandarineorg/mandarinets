@@ -17,7 +17,7 @@ export class GuardComponent implements GuardTarget {
 
 }
 
-export const falseGuard: GuardTargetMethod = (request) => {
+export const falseGuard: GuardTargetMethod = (request: any) => {
     console.log(request);
     return false;
 }

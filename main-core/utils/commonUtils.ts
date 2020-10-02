@@ -1,15 +1,15 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { v4 } from "https://deno.land/std@0.67.0/uuid/mod.ts";
+import { v4 } from "https://deno.land/std@0.71.0/uuid/mod.ts";
 import { MandarineException } from "../exceptions/mandarineException.ts";
-import { Mandarine } from "../Mandarine.ns.ts";
+import type { Mandarine } from "../Mandarine.ns.ts";
 
 export class CommonUtils {
     public static generateUUID(): string {
         return v4.generate();
     }
 
-    public static compareObjectKeys(a, b): boolean {
+    public static compareObjectKeys(a: object, b: object): boolean {
         var aKeys = Object.keys(a).sort();
         var bKeys = Object.keys(b).sort();
         return JSON.stringify(aKeys) === JSON.stringify(bKeys);
@@ -38,8 +38,8 @@ export class CommonUtils {
         }
     }
 
-    public static setEnvironmentVariablesFromObject(object: object) {
-        Object.keys(object).forEach((key) => {
+    public static setEnvironmentVariablesFromObject(object: any) {
+        Object.keys(object).forEach((key: string) => {
             const value = object[key];
             if(typeof value === 'object' && !Array.isArray(value)) throw new MandarineException(MandarineException.ENV_VARIABLE_ISNT_STRING.replace('%s', key), true);
             Deno.env.set(key, value.toString());
@@ -52,7 +52,7 @@ export class CommonUtils {
         while (new Date().getTime() <= e) {}
     }
 
-    public static arrayIdentical(arr1, arr2){
+    public static arrayIdentical(arr1: Array<any>, arr2: Array<any>){
         if (arr1.length !== arr2.length) return false;
         for (var i = 0, len = arr1.length; i < len; i++){
             let val1 = arr1[i];
@@ -70,7 +70,7 @@ export class CommonUtils {
         return o instanceof Object && o.constructor === Object;
     }
 
-    public static isNumeric(num) {
+    public static isNumeric(num: any) {
         return !isNaN(num);
     }
 
@@ -81,7 +81,7 @@ export class CommonUtils {
         return value;
     }
 
-    public static async asyncIteratorToArray(iterator) {
+    public static async asyncIteratorToArray(iterator: any) {
         const arr = [];
         for await (const entry of iterator) {
           arr.push(entry);
@@ -117,7 +117,9 @@ export class CommonUtils {
         let currentStr = str;
         const references = CommonUtils.getVariableReference(str);
         references.forEach((currentReference) => {
-            currentStr = currentStr.replace(currentReference.fullReference, currentReference.environmentalValue);
+            if(currentReference.environmentalValue) {
+                currentStr = currentStr.replace(currentReference.fullReference, currentReference.environmentalValue);
+            }
         });
         return currentStr;
     }

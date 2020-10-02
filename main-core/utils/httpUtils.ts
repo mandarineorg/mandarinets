@@ -1,7 +1,7 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { decoder } from "https://deno.land/std@0.67.0/encoding/utf8.ts";
-import { Cookies as OakCookies, Request } from "../../deps.ts";
+import { decoder } from "https://deno.land/std@0.71.0/encoding/utf8.ts";
+import type { Cookies as OakCookies, Request } from "../../deps.ts";
 import { Log } from "../../logger/log.ts";
 import { Mandarine } from "../Mandarine.ns.ts";
 import { CommonUtils } from "./commonUtils.ts";
@@ -12,32 +12,36 @@ export class HttpUtils {
         const body = await Deno.readAll(request.serverRequest.body);
         let decodedBody: string = decoder.decode(body);
         let contentType = request.serverRequest.headers.get("content-type");
-        if(contentType.includes('multipart/form-data; boundary=')) contentType = "multipart/form-data";
+        if(contentType) {
+            if(contentType.includes('multipart/form-data; boundary=')) contentType = "multipart/form-data";
 
-        switch(contentType) {
-            case "application/json":
+            switch(contentType) {
+                case "application/json":
 
-                try {
-                    return JSON.parse(decodedBody);
-                } catch(error) {
-                    new Log(HttpUtils).warn("Body could not be parsed");
-                }
+                    try {
+                        return JSON.parse(decodedBody);
+                    } catch(error) {
+                        new Log(HttpUtils).warn("Body could not be parsed");
+                    }
 
+                    break;
+                
+                case "multipart/form-data":
+                    return this.handleMultipartFormData(body, <string> request.serverRequest.headers.get("content-type"));
                 break;
-            
-            case "multipart/form-data":
-                 return this.handleMultipartFormData(body, request.serverRequest.headers.get("content-type"));
-             break;
 
-            case "application/x-www-form-urlencoded":
-                let returningElements: {[key: string]: string} = {};
-                for (const [key, value] of new URLSearchParams(decodedBody).entries()) {
-                    returningElements[key] = value;
-                }
-                return returningElements;
+                case "application/x-www-form-urlencoded":
+                    let returningElements: {[key: string]: string} = {};
+                    for (const [key, value] of new URLSearchParams(decodedBody).entries()) {
+                        returningElements[key] = value;
+                    }
+                    return returningElements;
 
-            default:
-                return body;
+                default:
+                    return body;
+            }
+        } else {
+            return body;
         }
     }
 
@@ -72,8 +76,8 @@ export class HttpUtils {
         return false;
     }
 
-    public static handleMultipartFormData(body, contentType): Mandarine.MandarineMVC.MultipartFormData {
-        let multipartBoundary = contentType.match(/boundary=(?:"([^"]+)"|([^;]+))/i);
+    public static handleMultipartFormData(body: any, contentType: string): Mandarine.MandarineMVC.MultipartFormData {
+        let multipartBoundary = contentType?.match(/boundary=(?:"([^"]+)"|([^;]+))/i);
     
         if ( !multipartBoundary ) {
             throw new Error('Bad content-type header, no multipart boundary');
@@ -81,7 +85,7 @@ export class HttpUtils {
     
         let boundary: any = multipartBoundary[1] || multipartBoundary[2];
     
-        function headerParser(header): Mandarine.MandarineMVC.MultipartHeader {
+        function headerParser(header: string): Mandarine.MandarineMVC.MultipartHeader | undefined {
             const nameMatchResult = header.match(/^.*name="([^"]*)"$/);
             const filenameMatchResult = header.match(/^.*filename="([^"]*)"$/);
             if(nameMatchResult == (null || undefined)) return undefined;
@@ -99,7 +103,7 @@ export class HttpUtils {
             return undefined;
         }
     
-        function rawStringToBuffer(str) {
+        function rawStringToBuffer(str: string) {
             let idx: number;
             const len = str.length;
             let arr = new Array(len);
@@ -132,7 +136,7 @@ export class HttpUtils {
     
         // First part is a preamble, last part is closing '--'
         for (var i=1; i<parts.length-1; i++) {
-          let field: Mandarine.MandarineMVC.MultipartHeader = undefined;
+          let field: Mandarine.MandarineMVC.MultipartHeader | undefined = undefined;
     
           const subparts = parts[i].split('\r\n\r\n');
           const headers = subparts[0].split('\r\n');
@@ -144,18 +148,20 @@ export class HttpUtils {
             }
           }
           if(field && field.name) {
-              if(field.isFile) {
-                let buffer = rawStringToBuffer(subparts[1]);
-                  partsByName.files[field.name] = new Uint8Array(<any> buffer);
-              } else {
-                  partsByName.fields[field.name] = subparts[1];
-              }
+              if(partsByName.files && partsByName.fields) {
+                if(field.isFile) {
+                    let buffer = rawStringToBuffer(subparts[1]);
+                    partsByName.files[field.name] = new Uint8Array(<any> buffer);
+                } else {
+                    partsByName.fields[field.name] = subparts[1];
+                }
+            }
           }
         }
         return partsByName;
     }
 
-    public static createCookie(requestContext: Mandarine.Types.RequestContext, cookieData: Mandarine.MandarineMVC.Cookie): string {
+    public static createCookie(requestContext: Mandarine.Types.RequestContext, cookieData: Mandarine.MandarineMVC.Cookie): string | undefined {
         const cookiesFromRequest: Mandarine.MandarineCore.Cookies = HttpUtils.getCookies(requestContext.request);
         let cookiesNames: Array<string> = Object.keys(cookiesFromRequest);
         let cookieExists: boolean = cookiesNames.some((cookieName) => cookieName === cookieData.name);

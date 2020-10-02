@@ -1,6 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { Mandarine } from "../../Mandarine.ns.ts";
+import type { Mandarine } from "../../Mandarine.ns.ts";
 
 /**
 * This class is used in the DI Container for Mandarine to store components annotated as @Repository
@@ -18,7 +18,7 @@ export class RepositoryComponent implements Mandarine.MandarineCore.ComponentCom
     }
 
     public getName() {
-        return this.name;
+        return this.name || "";
     }
 
     public getClassHandler() {

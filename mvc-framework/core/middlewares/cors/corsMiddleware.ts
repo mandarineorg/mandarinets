@@ -4,22 +4,22 @@ import { Context } from "../../../../deps.ts";
 import { Mandarine } from "../../../../main-core/Mandarine.ns.ts";
 import { HttpUtils } from "../../../../main-core/utils/httpUtils.ts";
 
-const configureOrigin = (corsOptions, res, requestOrigin) => {
+const configureOrigin = (corsOptions: Mandarine.MandarineMVC.CorsMiddlewareOption, res: Mandarine.MandarineMVC.ResponseContext, requestOrigin: string) => {
     let allowOrigin = HttpUtils.verifyCorsOrigin(corsOptions.origin, requestOrigin);
     if(corsOptions.origin === "*") {
         res.headers.set("access-control-allow-origin", "*");
     } else {
-        res.headers.set("access-control-allow-origin", allowOrigin ? requestOrigin : false);
+        res.headers.set("access-control-allow-origin", allowOrigin ? requestOrigin : <any> false);
     }
 }
 
-const configureExposeHeaders = (corsOptions, res) => {
+const configureExposeHeaders = (corsOptions: Mandarine.MandarineMVC.CorsMiddlewareOption, res: Mandarine.MandarineMVC.ResponseContext) => {
     if (corsOptions.exposedHeaders && corsOptions.exposedHeaders.length > 0) {
         res.headers.set("accessl-control-expose-headers", corsOptions.exposedHeaders.join(", "));
     }
 }
 
-const configureCredentials = (corsOptions, res) => {
+const configureCredentials = (corsOptions: Mandarine.MandarineMVC.CorsMiddlewareOption, res: Mandarine.MandarineMVC.ResponseContext) => {
     if (corsOptions.credentials) {
         res.headers.set("access-control-allow-credentials", "true");
     }
@@ -40,14 +40,14 @@ export const handleCors = (requestContext: Mandarine.Types.RequestContext, corsO
         const requestMethods = req.headers.get("access-control-request-methods");
         if (requestMethods && corsOptions.methods && corsOptions.methods.length > 0) {
             const list = requestMethods.split(",").map((v) => v.trim());
-            const allowed = list.filter((v) => corsOptions.methods.includes(v));
+            const allowed = list.filter((v) => corsOptions.methods?.includes(v));
             res.headers.set("access-control-allow-methods", allowed.join(", "));
         }
 
         const requestHeaders = req.headers.get("access-control-request-headers");
         if (requestHeaders && corsOptions.allowedHeaders && corsOptions.allowedHeaders.length > 0) {
             const list = requestHeaders.split(",").map((v) => v.trim());
-            const allowed = list.filter((v) => corsOptions.allowedHeaders.includes(v));
+            const allowed = list.filter((v) => corsOptions.allowedHeaders?.includes(v));
             res.headers.set("access-control-allow-headers",allowed.join(", "));
         }
 
@@ -60,7 +60,7 @@ export const handleCors = (requestContext: Mandarine.Types.RequestContext, corsO
         
         res.status = (corsOptions.optionsSuccessStatus) ? corsOptions.optionsSuccessStatus : <any> Mandarine.MandarineMVC.HttpStatusCode.NO_CONTENT;
     } else {
-        configureOrigin(corsOptions, res, requestOrigin);
+        configureOrigin(corsOptions, res, <string> requestOrigin);
         configureExposeHeaders(corsOptions, res);
         configureCredentials(corsOptions, res);
     }

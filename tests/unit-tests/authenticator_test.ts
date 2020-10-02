@@ -35,7 +35,7 @@ export class AuthenticationTest {
 
             public users = [Object.assign({}, user)];
 
-            public loadUserByUsername(username) {
+            public loadUserByUsername(username: any) {
                 return this.users.find((item) => item.username === username)
             }
         }
@@ -58,7 +58,7 @@ export class AuthenticationTest {
         MainCoreDecoratorProxy.overrideNativeComponent(FakeOverrideClass, Mandarine.MandarineCore.NativeComponents.WebMVCConfigurer);
 
         Mandarine.Global.initializeDefaultSessionContainer();
-        Mandarine.Global.getSessionContainer().store.launch();
+        Mandarine.Global.getSessionContainer().store?.launch();
 
         let requestContext: { request: { headers: Headers }, response: { headers: Headers }, cookies: Cookies } = {
             request: {
@@ -67,7 +67,7 @@ export class AuthenticationTest {
             response: {
                 headers: new Headers()
             },
-            cookies: undefined
+            cookies: <any><unknown> undefined
         }
 
         requestContext.cookies = new Cookies(<any>requestContext.request, <any>requestContext.response, {
@@ -161,38 +161,40 @@ export class AuthenticationTest {
             authSesId: authenticate.authSesId
         });
         let toSetCookies = requestContext.response.headers.get("set-cookie");
-        let processingCookies = toSetCookies.split(", MDAUTHID");
-        let unsignedCookie = processingCookies[0].split("; path=/;")[0].split("=")[1];
-        let signedCookie = processingCookies[1].split("; path=/;")[0].split("=")[1];
+        let processingCookies = toSetCookies?.split(", MDAUTHID");
+        if(processingCookies) {
+            let unsignedCookie = processingCookies[0].split("; path=/;")[0].split("=")[1];
+            let signedCookie = processingCookies[1].split("; path=/;")[0].split("=")[1];
 
-        requestContext.cookies = <any> new MockCookies();
+            requestContext.cookies = <any> new MockCookies();
 
-        requestContext.cookies.set(MandarineConstants.SECURITY_AUTH_COOKIE_NAME, unsignedCookie);
-        requestContext.cookies.set(MandarineConstants.SECURITY_AUTH_COOKIE_NAME + ".sig", signedCookie);
+            requestContext.cookies.set(MandarineConstants.SECURITY_AUTH_COOKIE_NAME, unsignedCookie);
+            requestContext.cookies.set(MandarineConstants.SECURITY_AUTH_COOKIE_NAME + ".sig", signedCookie);
 
-        authenticate = authenticator.performAuthentication("test", "Changeme1", <any>requestContext);
+            authenticate = authenticator.performAuthentication("test", "Changeme1", <any>requestContext);
 
-        DenoAsserts.assertEquals(authenticate, {
-            status: "ALREADY-LOGGED-IN",
-            authSesId: authenticate.authSesId
-        });
-        
-        await handleBuiltinAuth()(<any>requestContext, () => {});
+            DenoAsserts.assertEquals(authenticate, {
+                status: "ALREADY-LOGGED-IN",
+                authSesId: authenticate.authSesId
+            });
+            
+            await handleBuiltinAuth()(<any>requestContext, () => {});
 
-        DenoAsserts.assert((requestContext.request as any).authentication != undefined);
-        DenoAsserts.assert((requestContext.request as any).authentication.AUTH_SES_ID != undefined);
-        DenoAsserts.assert((requestContext.request as any).authentication.AUTH_EXPIRES != undefined);
-        DenoAsserts.assert((requestContext.request as any).authentication.AUTH_PRINCIPAL != undefined);
-        DenoAsserts.assertEquals((requestContext.request as any).authentication.AUTH_PRINCIPAL, user);
+            DenoAsserts.assert((requestContext.request as any).authentication != undefined);
+            DenoAsserts.assert((requestContext.request as any).authentication.AUTH_SES_ID != undefined);
+            DenoAsserts.assert((requestContext.request as any).authentication.AUTH_EXPIRES != undefined);
+            DenoAsserts.assert((requestContext.request as any).authentication.AUTH_PRINCIPAL != undefined);
+            DenoAsserts.assertEquals((requestContext.request as any).authentication.AUTH_PRINCIPAL, user);
 
-        authenticator.stopAuthentication(<any>requestContext);
+            authenticator.stopAuthentication(<any>requestContext);
 
-        await handleBuiltinAuth()(<any>requestContext, () => {});
+            await handleBuiltinAuth()(<any>requestContext, () => {});
 
-        DenoAsserts.assert((requestContext.request as any).authentication === undefined);
+            DenoAsserts.assert((requestContext.request as any).authentication === undefined);
 
-        Mandarine.Global.getSessionContainer().store.stopIntervals();
-        Mandarine.Global.getSessionContainer().store = null;
+            Mandarine.Global.getSessionContainer().store?.stopIntervals();
+            Mandarine.Global.getSessionContainer().store = <any><unknown>null;
+        }
 
     }
 

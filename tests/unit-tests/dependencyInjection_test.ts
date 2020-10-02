@@ -109,14 +109,16 @@ export class DependencyInjectionTest {
         class MyComponent1 {
 
             @mockDecorator()
+            // @ts-ignore
             public propertyInjection: MyComponent2;
 
             @mockDecorator()
+            //@ts-ignore
             public propertyInjectionInvalid: MyComponent3;
 
         }
 
-        DependencyInjectionDecoratorsProxy.registerInject(MyComponent1.prototype, "propertyInjection", null);
+        DependencyInjectionDecoratorsProxy.registerInject(MyComponent1.prototype, "propertyInjection", <any><unknown>null);
         MainCoreDecoratorProxy.registerMandarinePoweredComponent(MyComponent1, Mandarine.MandarineCore.ComponentTypes.COMPONENT, {}, null);
         MainCoreDecoratorProxy.registerMandarinePoweredComponent(MyComponent2, Mandarine.MandarineCore.ComponentTypes.COMPONENT, {}, null);
 

@@ -9,7 +9,7 @@ import { GET } from "../../../mvc-framework/core/decorators/stereotypes/controll
 class TestController {
 
     @GET('/session-counter')
-    public helloWorld(@RequestParam() request, @Session() session: any): object {
+    public helloWorld(@RequestParam() request: any, @Session() session: any): object {
         if(session.times == undefined) session.times = 0;
         else session.times = session.times + 1;
 

@@ -73,7 +73,7 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
         }
     }
 
-    public get(itemName: string): Mandarine.MandarineCore.ComponentRegistryContext {
+    public get(itemName: string): Mandarine.MandarineCore.ComponentRegistryContext | undefined {
         return this.components.get(itemName);
     }
 
@@ -81,8 +81,10 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
         this.components.clear();
     }
 
-    public update(itemName: string, newValue: Mandarine.MandarineCore.ComponentRegistryContext): void {
-        this.components.set(itemName, newValue);
+    public update(itemName: string, newValue: Mandarine.MandarineCore.ComponentRegistryContext | undefined): void {
+        if(newValue) {
+            this.components.set(itemName, newValue);
+        }
     }
 
     public exist(itemName: string): boolean {
@@ -94,8 +96,8 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
         return Array.from(this.components.keys());
     }
 
-    public getAllComponentNamesByType(componentType: Mandarine.MandarineCore.ComponentTypes): Array<string> {
-        return Array.from(this.components.values()).filter(item => item.componentType == componentType).map(item => item.componentName);
+    public getAllComponentNamesByType(componentType: Mandarine.MandarineCore.ComponentTypes): Array<string> | undefined {
+        return Array.from(this.components.values()).filter(item => item.componentType == componentType).map(item => item.componentName || "");
     }
 
     public getComponents(): Mandarine.MandarineCore.ComponentRegistryContext[] {
@@ -114,9 +116,9 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
         return this.getComponentsByComponentType(Mandarine.MandarineCore.ComponentTypes.REPOSITORY);
     }
 
-    public getComponentByHandlerType(classType: any): Mandarine.MandarineCore.ComponentRegistryContext {
+    public getComponentByHandlerType(classType: any): Mandarine.MandarineCore.ComponentRegistryContext | undefined {
         try {
-            return this.getComponents().find(component => {
+            return this.getComponents().find((component: Mandarine.MandarineCore.ComponentRegistryContext) => {
                 let instance = undefined;
                 if(component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT) {
                     instance = component.componentInstance;
@@ -162,7 +164,7 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
         repositoryMethods.forEach((methodName) => {
 
             if(ApplicationContext.getInstance().getEntityManager().getDataSource() == undefined) {
-                repositoryTarget.prototype[methodName] = (...args) => {
+                repositoryTarget.prototype[methodName] = (...args: Array<any>) => {
                     this.logger.compiler("A data source is required for repositories. Operation not supported", "warn");
                     return undefined;
                 }
@@ -172,8 +174,8 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
             let manualQuery: { query: string, secure?: boolean } = Reflect.getMetadata(`${MandarineConstants.REFLECTION_MANDARINE_REPOSITORY_METHOD_MANUAL_QUERY}:${methodName}`, new repositoryTarget(), methodName);
             
             if(manualQuery != undefined) {
-                repositoryTarget.prototype[methodName] = (...args) => {
-                    return repositoryProxy.manualProxy(manualQuery.query, manualQuery.secure, args);
+                repositoryTarget.prototype[methodName] = (...args: Array<any>) => {
+                    return repositoryProxy.manualProxy(manualQuery.query, manualQuery.secure || false, args);
                 }
                 return;
             }
@@ -195,26 +197,26 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
                     }
                     return;
                 case 'save':
-                    repositoryTarget.prototype[methodName] = (model) => {
+                    repositoryTarget.prototype[methodName] = (model: any) => {
                         return repositoryProxy.save(model);
                     }
                     return;
             }
 
             if(methodName.startsWith('find')) {
-                repositoryTarget.prototype[methodName] = (...args) => { 
+                repositoryTarget.prototype[methodName] = (...args: Array<any>) => { 
                     return repositoryProxy.mainProxy(methodName, "findBy", args);
                 }
             } else if(methodName.startsWith('exists')) {
-                repositoryTarget.prototype[methodName] = (...args) => { 
+                repositoryTarget.prototype[methodName] = (...args: Array<any>) => { 
                     return repositoryProxy.mainProxy(methodName, "existsBy", args);
                 }
             } else if(methodName.startsWith('delete')) {
-                repositoryTarget.prototype[methodName] = (...args) => { 
+                repositoryTarget.prototype[methodName] = (...args: Array<any>) => { 
                     return repositoryProxy.mainProxy(methodName, "deleteBy", args);
                 }
             } else if(methodName.startsWith('count')) {
-                repositoryTarget.prototype[methodName] = (...args) => { 
+                repositoryTarget.prototype[methodName] = (...args: Array<any>) => { 
                     return repositoryProxy.mainProxy(methodName, "countBy", args);
                 }
             }
@@ -228,18 +230,22 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
         let repositoriesArray = this.getAllRepositories();
 
         repositoriesArray.forEach((repo: Mandarine.MandarineCore.ComponentRegistryContext) => {
+            const repoName = repo.componentName;
+            if(!repoName) return;
             let componentInstance: RepositoryComponent = repo.componentInstance;
             let newRepositoryProxy: any = this.connectRepositoryToProxy(repo);
             let handler: any = newRepositoryProxy.getClassHandler();
             componentInstance.classHandler = new handler();
-            this.update(repo.componentName, repo);
+            this.update(repoName, repo);
         });
 
-        ApplicationContext.CONTEXT_METADATA.engineMetadata.orm.repositoriesAmount = repositoriesArray.length;
+        if(ApplicationContext.CONTEXT_METADATA.engineMetadata?.orm) { 
+            ApplicationContext.CONTEXT_METADATA.engineMetadata.orm.repositoriesAmount = repositoriesArray.length || 0;
+        }
     }
 
-    public getRepositoryByHandlerType(classType: any): Mandarine.MandarineCore.ComponentRegistryContext {
-        return this.getAllRepositories().find(repo => {
+    public getRepositoryByHandlerType(classType: any): Mandarine.MandarineCore.ComponentRegistryContext | undefined {
+        return this.getAllRepositories().find((repo: Mandarine.MandarineCore.ComponentRegistryContext) => {
             let component: RepositoryComponent = repo.componentInstance;
             let instance = component.getClassHandler();
             if(!ReflectUtils.checkClassInitialized(instance)) instance = new instance();

@@ -1,10 +1,10 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { Mandarine } from "../../main-core/Mandarine.ns.ts";
+import type { Mandarine } from "../../main-core/Mandarine.ns.ts";
 
 export const lexicalProcessor = (currentProxy: Mandarine.ORM.RepositoryProxy, methodName: string, proxyType: Mandarine.ORM.ProxyType, tableMetadata: Mandarine.ORM.Entity.TableMetadata, entity: Mandarine.ORM.Entity.Table, dialect: Mandarine.ORM.Dialect.Dialect) => {
 
-    let columnsNames = entity.columns.map(item => item.name.toLowerCase());
+    let columnsNames = entity.columns.map(item => item?.name?.toLowerCase());
     methodName = methodName.replace(proxyType, "").toLowerCase();
 
     let mainQuery = "";

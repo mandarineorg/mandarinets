@@ -46,6 +46,8 @@ export class ResourceHandlerTest {
 
         DenoAsserts.assertEquals(resourceHandlers, [
             {
+                resourceCors: undefined,
+                resourceHandlerIndex: undefined,
                 resourceHandlerPath: [new RegExp("/docs/(.*)")],
                 resourceHandlerLocations: ["./docs"],
                 resourceResolver: mandarineResolver

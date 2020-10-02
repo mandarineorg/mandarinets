@@ -11,11 +11,11 @@ import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
  */
 export class ResourceHandler implements Mandarine.MandarineCore.IResourceHandler {
 
-    public resourceHandlerPath: Array<RegExp>;
-    public resourceHandlerLocations: Array<string>;
-    public resourceHandlerIndex: Array<string>;
-    public resourceResolver: Mandarine.MandarineMVC.HTTPResolvers.ResourceResolver;
-    public resourceCors: Mandarine.MandarineMVC.CorsMiddlewareOption;
+    public resourceHandlerPath: Array<RegExp> | undefined = undefined;
+    public resourceHandlerLocations: Array<string> | undefined = undefined;
+    public resourceHandlerIndex: Array<string> | undefined = undefined;
+    public resourceResolver: Mandarine.MandarineMVC.HTTPResolvers.ResourceResolver | undefined = undefined;
+    public resourceCors: Mandarine.MandarineMVC.CorsMiddlewareOption | undefined = undefined; 
     
     public addResourceHandler(...resourceHandlerPath: Array<RegExp>): ResourceHandler {
         this.resourceHandlerPath = resourceHandlerPath;

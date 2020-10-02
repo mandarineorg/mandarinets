@@ -1,6 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { Mandarine } from "../../../../main-core/Mandarine.ns.ts";
+import type { Mandarine } from "../../../../main-core/Mandarine.ns.ts";
 
 /**
  * Contains all the util methods that are related to the router and routings
@@ -14,7 +14,7 @@ export class RoutingUtils {
         return new URLSearchParams(searchs);
     }
 
-    public static findRouteParams(url: string): Mandarine.MandarineMVC.Routing.RoutingParams[] {
+    public static findRouteParams(url: string): Mandarine.MandarineMVC.Routing.RoutingParams[] | null {
         if(url == null) return null;
         return url.split('/').reduce((acc: Mandarine.MandarineMVC.Routing.RoutingParams[], el, i) => {
             if (/:[A-Za-z1-9]{1,}/.test(el)) {
@@ -25,7 +25,7 @@ export class RoutingUtils {
         }, []);
     }
     
-    public static findRouteParamSignature(route: string, method: Mandarine.MandarineMVC.HttpMethods): Array<string> {
+    public static findRouteParamSignature(route: string, method: Mandarine.MandarineMVC.HttpMethods): Array<string> | null {
         if(route == null) return null;
         return route.split('/').reduce((acc: string[], el: string, i: any) => {
             if(acc.length === 0) acc.push(`${method}`);

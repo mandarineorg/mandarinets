@@ -15,6 +15,6 @@ export const Catch = (exception: any): Function => {
     return (target: any) => {
         MainCoreDecoratorProxy.registerMandarinePoweredComponent(target, Mandarine.MandarineCore.ComponentTypes.CATCH, {
             exceptionType: exception
-        }, undefined);
+        }, null);
     };
 };

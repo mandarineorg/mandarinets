@@ -23,18 +23,21 @@ export class MandarineTSFrameworkEngineMethods {
         // Since middlewares run on every request.
         let appContext: Mandarine.ApplicationContext.IApplicationContext = ApplicationContext.getInstance();
         let componentsRegistry: Mandarine.MandarineCore.IComponentsRegistry = appContext.getComponentsRegistry();
-        let middlewareComponentKeys: Array<string> = componentsRegistry.getAllComponentNamesByType(Mandarine.MandarineCore.ComponentTypes.MIDDLEWARE);
+        let middlewareComponentKeys: Array<string> | undefined = componentsRegistry.getAllComponentNamesByType(Mandarine.MandarineCore.ComponentTypes.MIDDLEWARE);
         if(middlewareComponentKeys != (null || undefined)) {
             middlewareComponentKeys.forEach((componentName) => {
-                let component: Mandarine.MandarineCore.ComponentRegistryContext = componentsRegistry.get(componentName);
-                let componentInstance: Mandarine.Types.MiddlewareComponent = component.componentInstance;
-                
-                if(!componentInstance.configuration.regexRoute) return;
-                middleware.push(componentInstance);
+                let component: Mandarine.MandarineCore.ComponentRegistryContext | undefined = componentsRegistry.get(componentName);
+                if(component) {
+                    let componentInstance: Mandarine.Types.MiddlewareComponent = component.componentInstance;
+                    
+                    if(!componentInstance.configuration.regexRoute) return;
+                    middleware.push(componentInstance);
+                }
             });
 
         }
-
-        ApplicationContext.CONTEXT_METADATA.engineMetadata.mvc.middlewareAmount = middleware.length;
+        if(ApplicationContext.CONTEXT_METADATA.engineMetadata?.mvc) {
+            ApplicationContext.CONTEXT_METADATA.engineMetadata.mvc.middlewareAmount = middleware.length;
+        }
     }
 }

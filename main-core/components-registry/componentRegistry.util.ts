@@ -1,7 +1,7 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
 import { MandarineORMException } from "../../orm-core/core/exceptions/mandarineORMException.ts";
-import { MandarineRepository } from "../../orm-core/repository/mandarineRepository.ts";
+import type { MandarineRepository } from "../../orm-core/repository/mandarineRepository.ts";
 import { ApplicationContext } from "../application-context/mandarineApplicationContext.ts";
 import { ComponentExceptions } from "../exceptions/componentExceptions.ts";
 import { InvalidAnnotationError } from "../exceptions/invalidAnnotationError.ts";
@@ -15,7 +15,7 @@ import { ReflectUtils } from "../utils/reflectUtils.ts";
 */
 export class ComponentsRegistryUtil {
 
-    public static registerComponent(componentTarget: any, componentType: Mandarine.MandarineCore.ComponentTypes, configuration: any, index: number): any {
+    public static registerComponent(componentTarget: any, componentType: Mandarine.MandarineCore.ComponentTypes, configuration: any, index: number | null): any {
         if((index != null)) throw new InvalidAnnotationError(InvalidAnnotationError.CLASS_ONLY_ANNOTATION);
         
         let parentClassName: string = ReflectUtils.getClassName(componentTarget);
@@ -39,7 +39,7 @@ export class ComponentsRegistryUtil {
 
     public static registerRepositoryComponent(repositoryTarget: any) {
         let mandarineRepository: object & MandarineRepository<any> = new repositoryTarget();
-        let entity: Mandarine.ORM.Entity.Table = mandarineRepository.getModeler().entity;
+        let entity: Mandarine.ORM.Entity.Table | undefined = mandarineRepository.getModeler().entity;
         if(entity != (null || undefined)) {
             this.registerComponent(repositoryTarget, Mandarine.MandarineCore.ComponentTypes.REPOSITORY, {
                 table: entity.tableName,

@@ -1,7 +1,7 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
 import { Log } from "../../logger/log.ts";
-import { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
+import type { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
 import { TemplateUtils } from "../../mvc-framework/core/utils/templateUtils.ts";
 import { ApplicationContext } from "../application-context/mandarineApplicationContext.ts";
 import { MandarineException } from "../exceptions/mandarineException.ts";
@@ -26,8 +26,8 @@ export class TemplatesManager implements Mandarine.MandarineCore.ITemplatesManag
                 try {
                     let context: Mandarine.MandarineMVC.TemplateEngine.Template = {
                         templateFullPath: fullPath,
-                        engine: engine,
-                        content: undefined
+                        engine: <Mandarine.MandarineMVC.TemplateEngine.Engines>engine,
+                        content: <string> (<unknown>undefined)
                     };
 
                     const decoder = new TextDecoder();
@@ -43,15 +43,15 @@ export class TemplatesManager implements Mandarine.MandarineCore.ITemplatesManag
             }
         } else {
             this.templates.set(TemplateUtils.getTemplateKey(renderData), {
-                templateFullPath: undefined,
-                engine: engine,
+                templateFullPath: <string> (<unknown>undefined),
+                engine: <Mandarine.MandarineMVC.TemplateEngine.Engines>engine,
                 content: renderData.template
             })
         }
 
     }
 
-    public getTemplate(templatePath: Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData, manual?: boolean): Mandarine.MandarineMVC.TemplateEngine.Template {
+    public getTemplate(templatePath: Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData, manual?: boolean): Mandarine.MandarineMVC.TemplateEngine.Template | undefined {
         let key: string;
         if(manual) {
             key = TemplateUtils.getTemplateKey(templatePath);
@@ -86,7 +86,9 @@ export class TemplatesManager implements Mandarine.MandarineCore.ITemplatesManag
         });
 
         let numberOfTemplates: number = Array.from(this.templates.keys()).length;
-        ApplicationContext.CONTEXT_METADATA.engineMetadata.mvc.templatesAmount = numberOfTemplates;
+        if(ApplicationContext.CONTEXT_METADATA.engineMetadata?.mvc?.templatesAmount) {
+            ApplicationContext.CONTEXT_METADATA.engineMetadata.mvc.templatesAmount = numberOfTemplates;
+        }
     }
 
 }

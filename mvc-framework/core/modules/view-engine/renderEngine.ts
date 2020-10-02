@@ -1,6 +1,7 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
 import { renderEjs } from "https://raw.githubusercontent.com/mandarineorg/mandarinets-modules/master/view-engine/1.1.1/lib/engines/ejs.ts";
+// @ts-nocheck
 import { renderHandlebars } from "https://raw.githubusercontent.com/mandarineorg/mandarinets-modules/master/view-engine/1.1.1/lib/engines/handlebars.ts";
 import { Log } from "../../../../logger/log.ts";
 import { ApplicationContext } from "../../../../main-core/application-context/mandarineApplicationContext.ts";
@@ -35,7 +36,7 @@ export class RenderEngineClass {
 
         let manual: boolean = renderData.options != undefined && renderData.options.manual == true;
 
-        let template: Mandarine.MandarineMVC.TemplateEngine.Template = templatesManager.getTemplate(renderData, manual);
+        let template: Mandarine.MandarineMVC.TemplateEngine.Template | undefined = templatesManager.getTemplate(renderData, manual);
         if(template == undefined) throw new TemplateEngineException(TemplateEngineException.INVALID_TEMPLATE_PROCESSING);
         
         return viewEngine(template.content, (model instanceof ViewModel) ? model.toObject() : model);

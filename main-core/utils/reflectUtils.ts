@@ -22,7 +22,7 @@ export class ReflectUtils {
         return result;
     }
 
-    public static getMethodsFromClass(objClass): Array<string> {
+    public static getMethodsFromClass(objClass: any): Array<string> {
         try {
             return Object.getOwnPropertyNames(objClass.prototype).filter(methodName => methodName != "constructor");
         } catch(error) {
@@ -30,7 +30,7 @@ export class ReflectUtils {
         }
     }
 
-    public static checkClassInitialized(objClass): boolean {
+    public static checkClassInitialized(objClass: any): boolean {
         try {
             new objClass();
         } catch(error) {
@@ -39,7 +39,7 @@ export class ReflectUtils {
         return false;
     }
 
-    public static constructorHasParameters(objClass): boolean {
+    public static constructorHasParameters(objClass: any): boolean {
         return Reflect.getMetadata("design:paramtypes", objClass) != undefined;
     }
 

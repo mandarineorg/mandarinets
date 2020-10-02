@@ -1,8 +1,7 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
 import { Mandarine } from "../Mandarine.ns.ts";
-import { MandarineSecurity } from "../../security-core/mandarine-security.ns.ts";
-import { AuthenticationManagerBuilder } from "../mandarine-native/security/authenticationManagerBuilderDefault.ts";
+import type { MandarineSecurity } from "../../security-core/mandarine-security.ns.ts";
 
 export namespace NativeComponentsOverrideProxy {
 

@@ -44,7 +44,7 @@ export class ComponentCreationTests {
             componentType: Mandarine.MandarineCore.ComponentTypes.CONTROLLER,
             componentInstance: MyController
         });
-        DenoAsserts.assert(Mandarine.Global.getComponentsRegistry().get("MyController").componentInstance instanceof ControllerComponent);
+        DenoAsserts.assert(Mandarine.Global.getComponentsRegistry().get("MyController")?.componentInstance instanceof ControllerComponent);
     }
 
     @Test({
@@ -71,7 +71,7 @@ export class ComponentCreationTests {
             componentType: Mandarine.MandarineCore.ComponentTypes.CONTROLLER,
             componentInstance: MyController2
         });
-        DenoAsserts.assert(Mandarine.Global.getComponentsRegistry().get("MyController2").componentInstance instanceof ControllerComponent);
+        DenoAsserts.assert(Mandarine.Global.getComponentsRegistry().get("MyController2")?.componentInstance instanceof ControllerComponent);
     }
 
     @Test({
@@ -96,7 +96,7 @@ export class ComponentCreationTests {
             componentType: Mandarine.MandarineCore.ComponentTypes.COMPONENT,
             componentInstance: MyComponent,
         });
-        DenoAsserts.assert(Mandarine.Global.getComponentsRegistry().get("MyComponent").componentInstance instanceof ComponentComponent);
+        DenoAsserts.assert(Mandarine.Global.getComponentsRegistry().get("MyComponent")?.componentInstance instanceof ComponentComponent);
     }
 
     @Test({
@@ -121,7 +121,7 @@ export class ComponentCreationTests {
             componentType: Mandarine.MandarineCore.ComponentTypes.SERVICE,
             componentInstance: MyService,
         });
-        DenoAsserts.assert(Mandarine.Global.getComponentsRegistry().get("MyService").componentInstance instanceof ComponentComponent);
+        DenoAsserts.assert(Mandarine.Global.getComponentsRegistry().get("MyService")?.componentInstance instanceof ComponentComponent);
     }
 
     @Test({
@@ -150,7 +150,7 @@ export class ComponentCreationTests {
             componentType: Mandarine.MandarineCore.ComponentTypes.MIDDLEWARE,
             componentInstance: MyMiddleware,
         });
-        let componentInsideDIFactory = Mandarine.Global.getComponentsRegistry().get("MyMiddleware").componentInstance;
+        let componentInsideDIFactory = Mandarine.Global.getComponentsRegistry().get("MyMiddleware")?.componentInstance;
         DenoAsserts.assert(componentInsideDIFactory instanceof ComponentComponent);
         DenoAsserts.assert(((<any>componentInsideDIFactory).configuration.regexRoute) == regex);
     }
@@ -177,7 +177,7 @@ export class ComponentCreationTests {
             componentType: Mandarine.MandarineCore.ComponentTypes.CONFIGURATION,
             componentInstance: MyConfiguration,
         });
-        DenoAsserts.assert(Mandarine.Global.getComponentsRegistry().get("MyConfiguration").componentInstance instanceof ComponentComponent);
+        DenoAsserts.assert(Mandarine.Global.getComponentsRegistry().get("MyConfiguration")?.componentInstance instanceof ComponentComponent);
     }
 
     @Test({
@@ -206,7 +206,7 @@ export class ComponentCreationTests {
             componentType: Mandarine.MandarineCore.ComponentTypes.CATCH,
             componentInstance: createCatchComponent,
         });
-        DenoAsserts.assert(Mandarine.Global.getComponentsRegistry().get("createCatchComponent").componentInstance instanceof ComponentComponent);
+        DenoAsserts.assert(Mandarine.Global.getComponentsRegistry().get("createCatchComponent")?.componentInstance instanceof ComponentComponent);
     }
 
 

@@ -2,8 +2,8 @@
 
 import { ApplicationContext } from "../../main-core/application-context/mandarineApplicationContext.ts";
 import { DI } from "../../main-core/dependency-injection/di.ns.ts";
-import { Mandarine } from "../../main-core/Mandarine.ns.ts";
-import { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
+import type { Mandarine } from "../../main-core/Mandarine.ns.ts";
+import type { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
 import { ViewModel } from "../../mvc-framework/core/modules/view-engine/viewModel.ts";
 import { MVCDecoratorsProxy } from "../../mvc-framework/core/proxys/mvcCoreDecorators.ts";
 import { MandarineMvcFrameworkStarter } from "../../mvc-framework/engine/mandarineMvcFrameworkStarter.ts";
@@ -58,17 +58,17 @@ export class HttpHandlersTest {
             }
         }
 
-        MVCDecoratorsProxy.registerHttpAction("/api-get", MandarineMvc.HttpMethods.GET, MyControllerWithRoutes.prototype, "getRoute", undefined);
-        MVCDecoratorsProxy.registerHttpAction("/api-post", MandarineMvc.HttpMethods.POST, MyControllerWithRoutes.prototype, "postRoute", undefined);
-        MVCDecoratorsProxy.registerHttpAction("/api-put", MandarineMvc.HttpMethods.PUT, MyControllerWithRoutes.prototype, "putRoute", undefined);
-        MVCDecoratorsProxy.registerHttpAction("/api-delete", MandarineMvc.HttpMethods.DELETE, MyControllerWithRoutes.prototype, "deleteRoute", undefined);
-        MVCDecoratorsProxy.registerHttpAction("/api-head", MandarineMvc.HttpMethods.HEAD, MyControllerWithRoutes.prototype, "headRoute", undefined);
-        MVCDecoratorsProxy.registerHttpAction("/api-options", MandarineMvc.HttpMethods.OPTIONS, MyControllerWithRoutes.prototype, "optionsRoute", undefined);
-        MVCDecoratorsProxy.registerHttpAction("/api-patch", MandarineMvc.HttpMethods.PATCH, MyControllerWithRoutes.prototype, "patchRoute", undefined);
+        MVCDecoratorsProxy.registerHttpAction("/api-get", MandarineMvc.HttpMethods.GET, MyControllerWithRoutes.prototype, "getRoute", <any><unknown>undefined);
+        MVCDecoratorsProxy.registerHttpAction("/api-post", MandarineMvc.HttpMethods.POST, MyControllerWithRoutes.prototype, "postRoute", <any><unknown>undefined);
+        MVCDecoratorsProxy.registerHttpAction("/api-put", MandarineMvc.HttpMethods.PUT, MyControllerWithRoutes.prototype, "putRoute", <any><unknown>undefined);
+        MVCDecoratorsProxy.registerHttpAction("/api-delete", MandarineMvc.HttpMethods.DELETE, MyControllerWithRoutes.prototype, "deleteRoute", <any><unknown>undefined);
+        MVCDecoratorsProxy.registerHttpAction("/api-head", MandarineMvc.HttpMethods.HEAD, MyControllerWithRoutes.prototype, "headRoute", <any><unknown>undefined);
+        MVCDecoratorsProxy.registerHttpAction("/api-options", MandarineMvc.HttpMethods.OPTIONS, MyControllerWithRoutes.prototype, "optionsRoute", <any><unknown>undefined);
+        MVCDecoratorsProxy.registerHttpAction("/api-patch", MandarineMvc.HttpMethods.PATCH, MyControllerWithRoutes.prototype, "patchRoute", <any><unknown>undefined);
         MVCDecoratorsProxy.registerControllerComponent(MyControllerWithRoutes, undefined);
         ApplicationContext.getInstance().getComponentsRegistry().initializeControllers();
         new MandarineMvcFrameworkStarter()["intializeControllersRoutes"]();
-        let actions: Map<String, Mandarine.MandarineMVC.Routing.RoutingAction> = ApplicationContext.getInstance().getComponentsRegistry().get("MyControllerWithRoutes").componentInstance.getActions();
+        let actions: Map<String, Mandarine.MandarineMVC.Routing.RoutingAction> = ApplicationContext.getInstance().getComponentsRegistry().get("MyControllerWithRoutes")?.componentInstance.getActions();
         DenoAsserts.assertArrayContains(Array.from(actions.values()), [
               {
                 actionParent: "MyControllerWithRoutes",
@@ -167,20 +167,21 @@ export class HttpHandlersTest {
         class MyController {
             
             @mockDecorator()
-            public getRoute(invalidParam, invalidParam2, nameQueryParam, invalidParam3, frameworkQueryParam) {
+            public getRoute(invalidParam: any, invalidParam2:any, nameQueryParam: any, invalidParam3: any, frameworkQueryParam: any) {
             }
 
         }
 
-        MVCDecoratorsProxy.registerHttpAction("/api-get-2", MandarineMvc.HttpMethods.GET, MyController.prototype, "getRoute", undefined);
+        MVCDecoratorsProxy.registerHttpAction("/api-get-2", MandarineMvc.HttpMethods.GET, MyController.prototype, "getRoute", <any><unknown>undefined);
         MVCDecoratorsProxy.registerRoutingParam(MyController.prototype, DI.InjectionTypes.QUERY_PARAM, "getRoute", 2, "name");
         MVCDecoratorsProxy.registerRoutingParam(MyController.prototype, DI.InjectionTypes.QUERY_PARAM, "getRoute", 4, "framework");
         MVCDecoratorsProxy.registerControllerComponent(MyController, undefined);
         ApplicationContext.getInstance().getComponentsRegistry().resolveDependencies();
         ApplicationContext.getInstance().getComponentsRegistry().initializeControllers();
-        let controller: ControllerComponent = ApplicationContext.getInstance().getComponentsRegistry().get("MyController").componentInstance;
+        let controller: ControllerComponent = ApplicationContext.getInstance().getComponentsRegistry().get("MyController")?.componentInstance;
         let actions: Map<String, Mandarine.MandarineMVC.Routing.RoutingAction> = controller.getActions();
         let action = actions.get(controller.getActionName("getRoute"));
+        if(!action) throw new Error();
         let args = await DI.Factory.methodArgumentResolver(controller.getClassHandler(), action.actionMethodName, <any> {
             request: {
                 url: new URL("http://localhost/api-get-2?name=testing&framework=Mandarine")
@@ -200,20 +201,21 @@ export class HttpHandlersTest {
         class MyController {
             
             @mockDecorator()
-            public getRoute(invalidParam, nameRouteParam, lastnameRouteParam, lastInvalidParam) {
+            public getRoute(invalidParam: any, nameRouteParam: any, lastnameRouteParam: any, lastInvalidParam: any) {
             }
 
         }
 
-        MVCDecoratorsProxy.registerHttpAction("/api-get-3/:name/:lastname", MandarineMvc.HttpMethods.GET, MyController.prototype, "getRoute", undefined);
+        MVCDecoratorsProxy.registerHttpAction("/api-get-3/:name/:lastname", MandarineMvc.HttpMethods.GET, MyController.prototype, "getRoute", <any><unknown>undefined);
         MVCDecoratorsProxy.registerRoutingParam(MyController.prototype, DI.InjectionTypes.ROUTE_PARAM, "getRoute", 1, "name");
         MVCDecoratorsProxy.registerRoutingParam(MyController.prototype, DI.InjectionTypes.ROUTE_PARAM, "getRoute", 2, "lastname");
         MVCDecoratorsProxy.registerControllerComponent(MyController, undefined);
         ApplicationContext.getInstance().getComponentsRegistry().resolveDependencies();
         ApplicationContext.getInstance().getComponentsRegistry().initializeControllers();
-        let controller: ControllerComponent = ApplicationContext.getInstance().getComponentsRegistry().get("MyController").componentInstance;
+        let controller: ControllerComponent = ApplicationContext.getInstance().getComponentsRegistry().get("MyController")?.componentInstance;
         let actions: Map<String, Mandarine.MandarineMVC.Routing.RoutingAction> = controller.getActions();
         let action = actions.get(controller.getActionName("getRoute"));
+        if(!action) throw new Error();
         let args = await DI.Factory.methodArgumentResolver(controller.getClassHandler(), action.actionMethodName, <any> {
             request: {
                 url: new URL("http://localhost/api-get-3/Steve/Jobs")
@@ -237,26 +239,27 @@ export class HttpHandlersTest {
         class MyController {
             
             @mockDecorator()
-            public getRoute(invalidParam, mySession) {
+            public getRoute(invalidParam: any, mySession: any) {
             }
 
         }
 
-        MVCDecoratorsProxy.registerHttpAction("/api-get-4", MandarineMvc.HttpMethods.GET, MyController.prototype, "getRoute", undefined);
+        MVCDecoratorsProxy.registerHttpAction("/api-get-4", MandarineMvc.HttpMethods.GET, MyController.prototype, "getRoute", <any><unknown>undefined);
         MVCDecoratorsProxy.registerRoutingParam(MyController.prototype, DI.InjectionTypes.SESSION_PARAM, "getRoute", 1, undefined);
         MVCDecoratorsProxy.registerControllerComponent(MyController, undefined);
         ApplicationContext.getInstance().getComponentsRegistry().resolveDependencies();
         ApplicationContext.getInstance().getComponentsRegistry().initializeControllers();
-        let controller: ControllerComponent = ApplicationContext.getInstance().getComponentsRegistry().get("MyController").componentInstance;
+        let controller: ControllerComponent = ApplicationContext.getInstance().getComponentsRegistry().get("MyController")?.componentInstance;
         let actions: Map<String, Mandarine.MandarineMVC.Routing.RoutingAction> = controller.getActions();
         let action = actions.get(controller.getActionName("getRoute"));
-
+        if(!action) throw new Error();
         let args = await DI.Factory.methodArgumentResolver(controller.getClassHandler(), action.actionMethodName, <any> {
             request: {
                 url: new URL("http://localhost/api-get-4"),
                 session: {}
             }
         });
+        if(!args) throw new Error();
 
         DenoAsserts.assertEquals(args, [undefined, {}]);
         let session = args[1];
@@ -278,25 +281,26 @@ export class HttpHandlersTest {
         class MyController {
             
             @mockDecorator()
-            public getRoute(invalidParam, myTemplateModel) {
+            public getRoute(invalidParam: any, myTemplateModel: any) {
             }
 
         }
 
-        MVCDecoratorsProxy.registerHttpAction("/api-get-5", MandarineMvc.HttpMethods.GET, MyController.prototype, "getRoute", undefined);
+        MVCDecoratorsProxy.registerHttpAction("/api-get-5", MandarineMvc.HttpMethods.GET, MyController.prototype, "getRoute", <any><unknown>undefined);
         MVCDecoratorsProxy.registerRoutingParam(MyController.prototype, DI.InjectionTypes.TEMPLATE_MODEL_PARAM, "getRoute", 1, undefined);
         MVCDecoratorsProxy.registerControllerComponent(MyController, undefined);
         ApplicationContext.getInstance().getComponentsRegistry().resolveDependencies();
         ApplicationContext.getInstance().getComponentsRegistry().initializeControllers();
-        let controller: ControllerComponent = ApplicationContext.getInstance().getComponentsRegistry().get("MyController").componentInstance;
+        let controller: ControllerComponent = ApplicationContext.getInstance().getComponentsRegistry().get("MyController")?.componentInstance;
         let actions: Map<String, Mandarine.MandarineMVC.Routing.RoutingAction> = controller.getActions();
         let action = actions.get(controller.getActionName("getRoute"));
-
+        if(!action) throw new Error();
         let args = await DI.Factory.methodArgumentResolver(controller.getClassHandler(), action.actionMethodName, <any> {
             request: {
                 url: new URL("http://localhost/api-get-5")
             }
         });
+        if(!args) throw new Error();
 
         DenoAsserts.assertEquals(args[0], undefined);
         DenoAsserts.assert(args[1] instanceof ViewModel);
@@ -312,19 +316,21 @@ export class HttpHandlersTest {
         class MyController {
             
             @mockDecorator()
-            public getRoute(invalidParam, myAllParameters) {
+            public getRoute(invalidParam: any, myAllParameters: any) {
             }
 
         }
 
-        MVCDecoratorsProxy.registerHttpAction("/api-get-test-parameters/:param1/:param2", MandarineMvc.HttpMethods.GET, MyController.prototype, "getRoute", undefined);
+        MVCDecoratorsProxy.registerHttpAction("/api-get-test-parameters/:param1/:param2", MandarineMvc.HttpMethods.GET, MyController.prototype, "getRoute", <any><unknown>undefined);
         MVCDecoratorsProxy.registerRoutingParam(MyController.prototype, DI.InjectionTypes.PARAMETERS_PARAM, "getRoute", 1, undefined);
         MVCDecoratorsProxy.registerControllerComponent(MyController, undefined);
         ApplicationContext.getInstance().getComponentsRegistry().resolveDependencies();
         ApplicationContext.getInstance().getComponentsRegistry().initializeControllers();
-        let controller: ControllerComponent = ApplicationContext.getInstance().getComponentsRegistry().get("MyController").componentInstance;
+        let controller: ControllerComponent = ApplicationContext.getInstance().getComponentsRegistry().get("MyController")?.componentInstance;
         let actions: Map<String, Mandarine.MandarineMVC.Routing.RoutingAction> = controller.getActions();
         let action = actions.get(controller.getActionName("getRoute"));
+
+        if(!action) throw new Error();
 
         let args = await DI.Factory.methodArgumentResolver(controller.getClassHandler(), action.actionMethodName, <any> {
             request: {
@@ -336,8 +342,8 @@ export class HttpHandlersTest {
             }
         });
 
-        DenoAsserts.assertEquals(args[0], undefined);
-        DenoAsserts.assertEquals(args[1], {
+        DenoAsserts.assertEquals((<any>args)[0], undefined);
+        DenoAsserts.assertEquals((<any>args)[1], {
             query: {
                 favoriteMovie: "Interstellar"
             },
@@ -360,22 +366,22 @@ export class HttpHandlersTest {
             
             @mockDecorator()
             @mockDecorator()
-            public getRoute(invalidParam, myAllParameters) {
+            public getRoute(invalidParam: any, myAllParameters: any) {
             }
 
         }
 
-        MVCDecoratorsProxy.registerResponseStatusDecorator(MyController, 400, undefined);
-        MVCDecoratorsProxy.registerHttpAction("/response-status-decorator", MandarineMvc.HttpMethods.GET, MyController.prototype, "getRoute", undefined);
+        MVCDecoratorsProxy.registerResponseStatusDecorator(MyController, 400, <any><unknown>undefined);
+        MVCDecoratorsProxy.registerHttpAction("/response-status-decorator", MandarineMvc.HttpMethods.GET, MyController.prototype, "getRoute", <any><unknown>undefined);
         MVCDecoratorsProxy.registerRoutingParam(MyController.prototype, DI.InjectionTypes.PARAMETERS_PARAM, "getRoute", 1, undefined);
         MVCDecoratorsProxy.registerResponseStatusDecorator(MyController.prototype, 301, "getRoute");
         MVCDecoratorsProxy.registerControllerComponent(MyController, undefined);
         ApplicationContext.getInstance().getComponentsRegistry().resolveDependencies();
         ApplicationContext.getInstance().getComponentsRegistry().initializeControllers();
-        let controller: ControllerComponent = ApplicationContext.getInstance().getComponentsRegistry().get("MyController").componentInstance;
+        let controller: ControllerComponent = ApplicationContext.getInstance().getComponentsRegistry().get("MyController")?.componentInstance;
         let actions: Map<String, Mandarine.MandarineMVC.Routing.RoutingAction> = controller.getActions();
         let action = actions.get(controller.getActionName("getRoute"));
-        DenoAsserts.assertEquals(action.routingOptions.responseStatus, 301);
+        DenoAsserts.assertEquals(action?.routingOptions?.responseStatus, 301);
         DenoAsserts.assertEquals(controller.options.responseStatus, 400);
     }
 

@@ -1,8 +1,8 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { Cookie } from "../mvc-framework/core/interfaces/http/cookie.ts";
+import type { Cookie } from "../mvc-framework/core/interfaces/http/cookie.ts";
 import { Mandarine } from "../main-core/Mandarine.ns.ts";
-import { Request, Response } from "../deps.ts"
+import type { Request, Response } from "../deps.ts"
 
 /**
  * Contains all the essentials for Mandarine's security core to work
@@ -32,7 +32,7 @@ export namespace MandarineSecurity {
          */
         export interface MandarineSession {
             sessionID: string;
-            sessionCookie: Cookie;
+            sessionCookie: Cookie | undefined;
             sessionData?: object;
             expiresAt?: Date;
             createdAt?: Date;
@@ -52,11 +52,11 @@ export namespace MandarineSecurity {
                 expiration: number; 
             };
             launch(): void;
-            get(sessionID: string, callback: (error, result) => void, config?: { touch: boolean }): void;
-            getAll(callback: (error, result) => void): void;
-            set(sessionID: string, session: MandarineSession, callback: (error, result) => void): void;
-            destroy(sessionID: string, callback: (error, result) => void): void;
-            touch(sessionId: string, callback: (error, result) => void): void;
+            get(sessionID: string, callback: (error: any, result: Mandarine.Security.Sessions.MandarineSession | undefined) => void, config?: { touch: boolean }): void;
+            getAll(callback: (error: any, result: Array<Mandarine.Security.Sessions.MandarineSession>) => void): void;
+            set(sessionID: string, session: MandarineSession, callback: (error: any, result: Mandarine.Security.Sessions.MandarineSession) => void): void;
+            destroy(sessionID: string, callback: (error: any, result: Mandarine.Security.Sessions.MandarineSession | undefined | boolean) => void): void;
+            touch(sessionId: string, callback: (error: any, result: Mandarine.Security.Sessions.MandarineSession | undefined) => void): void;
             exist?(sessionID: string): boolean;
 
             clearExpiredSessions(): void;
@@ -69,7 +69,7 @@ export namespace MandarineSecurity {
             path?: string,
             httpOnly?: boolean
             secure?: boolean,
-            maxAge?: number
+            maxAge?: number | null
         }
 
         /**
@@ -251,12 +251,12 @@ export namespace MandarineSecurity {
          * Data to be used for login/logout purposes from built-in authentication
          */
         export interface LoginConfigurer {
-            loginProcessingUrl: string;
-            loginSucessUrl: string;
-            usernameParameter: string;
-            passwordParameter: string;
-            logoutUrl: string;
-            logoutSuccessUrl: string;
+            loginProcessingUrl: string | undefined;
+            loginSucessUrl: string | undefined;
+            usernameParameter: string | undefined;
+            passwordParameter: string | undefined;
+            logoutUrl: string | undefined;
+            logoutSuccessUrl: string | undefined;
             handler: Auth.Handler;
         }
 

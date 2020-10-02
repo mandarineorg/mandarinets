@@ -20,7 +20,12 @@ export class MandarineException extends Error {
     public static INVALID_PIPE_LOCATION: string = "Pipes can only target parameters of a HTTP Handler";
     public static INVALID_PIPE_EXECUTION: string = "Pipe execution failed because it's either an invalid pipe or an exception was thrown during transformation";
     public static INVALID_GUARD_EXECUTION: string = "A guard was found but it is not a valid mandarine-powered component nor a function";
-  
+    public static INVALID_SESSION_GENID: string = "Sessions cannot be used because an ID Generator is missing";
+    public static INVALID_SESSION_STORAGE_INSTANCE: string = "Sessions cannot be used because an storage instance is missing";
+    public static INVALID_COMPONENT_CONTEXT: string = "Component context is invalid or missing";
+    public static NEEDED_RESOURCE_HANDLER_LOCATION: string = "Resource Handler failed to obtain resource since it's lacking a resource handler location";
+    public static INVALID_ROUTE_SIGNATURE_NULL: string = "The signature of the route is null which is invalid in the current context";
+
     constructor(public message: string, public superAlert: boolean = false) {
       super(message);
       this.name = "MandarineException";

@@ -4,9 +4,9 @@ import { Test, DenoAsserts, Orange, mockDecorator, MockCookies } from "../mod.ts
 import { ApplicationContext } from "../../main-core/application-context/mandarineApplicationContext.ts";
 import { MVCDecoratorsProxy } from "../../mvc-framework/core/proxys/mvcCoreDecorators.ts";
 import { SecurityCoreDecoratorsProxy } from "../../security-core/core/proxys/securityCoreDecorators.ts";
-import { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
+import type { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
 import { MandarineMvc } from "../../mvc-framework/mandarine-mvc.ns.ts";
-import { Mandarine } from "../../main-core/Mandarine.ns.ts";
+import type { Mandarine } from "../../main-core/Mandarine.ns.ts";
 import { verifyPermissions } from "../../security-core/core/internals/permissions/verifyPermissions.ts";
 
 export class AuthAllowOnly {
@@ -32,8 +32,8 @@ export class AuthAllowOnly {
 
         }
         MVCDecoratorsProxy.registerControllerComponent(MyController, undefined);
-        SecurityCoreDecoratorsProxy.registerAllowOnlyDecorator(MyController, ["ANY_PERMISSION", "isAuthenticated()"], undefined);
-        const controllerComponent = <ControllerComponent>ApplicationContext.getInstance().getComponentsRegistry().get("MyController").componentInstance;
+        SecurityCoreDecoratorsProxy.registerAllowOnlyDecorator(MyController, ["ANY_PERMISSION", "isAuthenticated()"], <any><unknown>undefined);
+        const controllerComponent = <ControllerComponent>ApplicationContext.getInstance().getComponentsRegistry().get("MyController")?.componentInstance;
         controllerComponent.initializeControllerFunctionality();
         DenoAsserts.assertEquals(controllerComponent.options.withPermissions, ["ANY_PERMISSION", "isAuthenticated()"]);
     }
@@ -53,21 +53,21 @@ export class AuthAllowOnly {
         }
 
         SecurityCoreDecoratorsProxy.registerAllowOnlyDecorator(MyControllerWithRoutes.prototype, ["MODERATOR", "ADMIN"], "getRoute");
-        MVCDecoratorsProxy.registerHttpAction("/api-get-allow-only", MandarineMvc.HttpMethods.GET, MyControllerWithRoutes.prototype, "getRoute", undefined);
+        MVCDecoratorsProxy.registerHttpAction("/api-get-allow-only", MandarineMvc.HttpMethods.GET, MyControllerWithRoutes.prototype, "getRoute", <any><unknown>undefined);
         MVCDecoratorsProxy.registerControllerComponent(MyControllerWithRoutes, undefined);
         ApplicationContext.getInstance().getComponentsRegistry().initializeControllers();
-        let actions: Map<String, Mandarine.MandarineMVC.Routing.RoutingAction> = ApplicationContext.getInstance().getComponentsRegistry().get("MyControllerWithRoutes").componentInstance.getActions();
+        let actions: Map<String, Mandarine.MandarineMVC.Routing.RoutingAction> = ApplicationContext.getInstance().getComponentsRegistry().get("MyControllerWithRoutes")?.componentInstance.getActions();
         let getRouteHandler = actions.get("MyControllerWithRoutes.getRoute");
-        DenoAsserts.assertEquals(getRouteHandler.routingOptions.withPermissions, ["MODERATOR", "ADMIN"]);
+        DenoAsserts.assertEquals(getRouteHandler?.routingOptions?.withPermissions, ["MODERATOR", "ADMIN"]);
     }
 
     @Test({
         name: "Verify permissions",
         description: "Should verify multiple scenarios of permissions"
     })
-    public verifyPermissions(Test) {
+    public verifyPermissions(Test: any) {
         const permisions = ["ADMIN", "MOD"];
-        const mockRequest = {
+        const mockRequest: any = {
             authentication: {
                 AUTH_PRINCIPAL: {
                     roles: ["ADMIN", "MOD"]
@@ -114,6 +114,7 @@ export class AuthAllowOnly {
         }})(isAuthenticated);
         DenoAsserts.assertEquals(verifyPermissionTest6, true);
 
+        // @ts-ignore
         const verifyPermissionTest7 = verifyPermissions({authentication: undefined})(isAuthenticated);
         DenoAsserts.assertEquals(verifyPermissionTest7, false);
 
@@ -124,6 +125,7 @@ export class AuthAllowOnly {
         }})([...permisions, "isAuthenticated()"]);
         DenoAsserts.assertEquals(verifyPermissionTest8, true);
 
+        // @ts-ignore
         const verifyPermissionTest9 = verifyPermissions({authentication: undefined})([...permisions, "isAuthenticated()"]);
         DenoAsserts.assertEquals(verifyPermissionTest9, false);
 
@@ -136,7 +138,8 @@ export class AuthAllowOnly {
         const verifyPermissionTest12 = verifyPermissions({...mockRequest})(["hasRole('LOL') || isAuthenticated()"]);
         DenoAsserts.assertEquals(verifyPermissionTest12, true);
 
-        const verifyPermissionTest13 = verifyPermissions({authentication: undefined})(["hasRole('LOL') || isAuthenticated()"]);
+        // @ts-ignore
+        const verifyPermissionTest13 = verifyPermissions({authentication: undefined })(["hasRole('LOL') || isAuthenticated()"]);
         DenoAsserts.assertEquals(verifyPermissionTest13, false);
     }
 
@@ -145,7 +148,7 @@ export class AuthAllowOnly {
         description: "Verify an expression that contains built-in methods"
     })
     public securityexpressiontest() {
-        const mockRequest = {
+        const mockRequest: any = {
             authentication: {
                 AUTH_PRINCIPAL: {
                     roles: ["ADMIN", "MOD"]
@@ -162,9 +165,10 @@ export class AuthAllowOnly {
         const expr3 = verifyPermissions(mockRequest)("hasRole(ADMIN)");
         DenoAsserts.assertEquals(expr3, true);
 
-        const expr4 = verifyPermissions({})("hasRole(ADMIN)");
+        const expr4 = verifyPermissions(<any>{})("hasRole(ADMIN)");
         DenoAsserts.assertEquals(expr4, false);
 
+        // @ts-ignore
         const expr5 = verifyPermissions({ authentication: undefined })("hasRole(ADMIN)");
         DenoAsserts.assertEquals(expr5, false);
 

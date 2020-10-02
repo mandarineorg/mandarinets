@@ -1,7 +1,7 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
 import { EntityManagerClass } from "./core/entityManager.ts";
-import { Types } from "./sql/types.ts";
+import type { Types } from "./sql/types.ts";
 
 /**
  * Contains all the essentials for Mandarine's ORM to work.
@@ -40,8 +40,8 @@ export namespace MandarineORM {
         export interface Dialect {
             getDefaultSchema(): string;
             getTableMetadata(table: Entity.Table): Entity.TableMetadata;
-            getColumnTypeSyntax(column: Entity.Column): string;
-            createTable(tableMetadata: Entity.TableMetadata, columns: Array<Entity.Column>, ifNotExist: boolean): string;
+            getColumnTypeSyntax(column: Entity.Column): string | undefined;
+            createTable(tableMetadata: Entity.TableMetadata, columns: Array<Entity.Column> | undefined, ifNotExist: boolean): string;
             getTableName(tableMetadata: Entity.TableMetadata): string;
             addPrimaryKey(tableMetadata: Entity.TableMetadata, primaryKeyCol: Entity.Column): string;
             addUniqueConstraint(tableMetadata: Entity.TableMetadata, uniqueCol: Entity.Column): string;

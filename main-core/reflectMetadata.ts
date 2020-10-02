@@ -687,6 +687,7 @@ export namespace Reflect {
         const Metadata = new _WeakMap<any, Map<string | symbol | undefined, Map<any, any>>>();
 
         function decorate(decorators: ClassDecorator[], target: Function): Function;
+        // @ts-ignore
         function decorate(decorators: (PropertyDecorator | MethodDecorator)[], target: any, propertyKey: string | symbol, attributes?: PropertyDescriptor | null): PropertyDescriptor | undefined;
         function decorate(decorators: (PropertyDecorator | MethodDecorator)[], target: any, propertyKey: string | symbol, attributes: PropertyDescriptor): PropertyDescriptor;
 

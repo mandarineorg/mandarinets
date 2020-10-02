@@ -1,6 +1,5 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { MandarineSecurity } from "../../security-core/mandarine-security.ns.ts";
 import { DI } from "../dependency-injection/di.ns.ts";
 import { Mandarine } from "../Mandarine.ns.ts";
 

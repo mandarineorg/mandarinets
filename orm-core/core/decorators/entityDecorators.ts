@@ -1,6 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { Mandarine } from "../../../main-core/Mandarine.ns.ts";
+import type { Mandarine } from "../../../main-core/Mandarine.ns.ts";
 import { ORMCoreDecoratorProxy } from "../proxys/ormCoreDecoratorProxy.ts";
 
 /**
@@ -27,7 +27,7 @@ export const Table = (decoratorOptions: Mandarine.ORM.Entity.Decorators.Table): 
  */
 export const Column = (decoratorOptions?: Mandarine.ORM.Entity.Decorators.Column): Function => {
     return (target: any, propertyKey: string) => {
-        ORMCoreDecoratorProxy.registerColumnDecorator(target, decoratorOptions, propertyKey);
+        ORMCoreDecoratorProxy.registerColumnDecorator(target, <Mandarine.ORM.Entity.Decorators.Column> decoratorOptions, propertyKey);
     }
 }
 

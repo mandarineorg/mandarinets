@@ -26,6 +26,7 @@ export class ManualInjectionService {
 export class Service1 {
 
     @Inject()
+    // @ts-ignore
     public service: ManualInjectionService;
 
     public getResult(): string {

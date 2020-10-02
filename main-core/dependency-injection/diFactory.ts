@@ -20,7 +20,7 @@ export class DependencyInjectionFactory {
      * Resolve dependencies from a component's constructor. This method will look for the requested dependencies in the DI Container at mandarine compile time.
      *
      */
-    public constructorResolver<T>(componentSource: Mandarine.MandarineCore.ComponentRegistryContext, componentRegistry: Mandarine.MandarineCore.IComponentsRegistry): T {
+    public constructorResolver<T>(componentSource: Mandarine.MandarineCore.ComponentRegistryContext, componentRegistry: Mandarine.MandarineCore.IComponentsRegistry): T | undefined{
         if(componentSource.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT ||
             componentSource.componentType == Mandarine.MandarineCore.ComponentTypes.REPOSITORY) return;
 
@@ -28,7 +28,7 @@ export class DependencyInjectionFactory {
 
         const providers = Reflect.getMetadata('design:paramtypes', target);
         const args = providers.map((provider: DI.Constructor) => {
-        let component: Mandarine.MandarineCore.ComponentRegistryContext = componentRegistry.getComponentByHandlerType(provider);
+        let component: Mandarine.MandarineCore.ComponentRegistryContext | undefined = componentRegistry.getComponentByHandlerType(provider);
             if(component != (undefined || null)) {
                 let isComponentManual = component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT; 
                 let classHandler: any = (isComponentManual) ? component.componentInstance : component.componentInstance.getClassHandler();
@@ -51,46 +51,49 @@ export class DependencyInjectionFactory {
     public componentDependencyResolver(componentRegistry: ComponentsRegistry) {
         // Initialize all components
 
-        const ignoreComponentIf = (component): boolean => component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT || component.componentType == Mandarine.MandarineCore.ComponentTypes.REPOSITORY;
+        const ignoreComponentIf = (component: Mandarine.MandarineCore.ComponentRegistryContext): boolean => component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT || component.componentType == Mandarine.MandarineCore.ComponentTypes.REPOSITORY;
 
         componentRegistry.getAllComponentNames().forEach((componentName) => {
-            let component: Mandarine.MandarineCore.ComponentRegistryContext = componentRegistry.get(componentName);
+            let component: Mandarine.MandarineCore.ComponentRegistryContext | undefined = componentRegistry.get(componentName);
     
-            if(ignoreComponentIf(component)) {
-                return;
-            }
-    
-            let componentClassHandler = component.componentInstance.getClassHandler();
-    
-            if(ReflectUtils.constructorHasParameters(componentClassHandler)) {
-                component.componentInstance.setClassHandler(this.constructorResolver(component, componentRegistry));
-            } else {
-                component.componentInstance.setClassHandler(new componentClassHandler());
+            if(component) {
+                if(ignoreComponentIf(component)) {
+                    return;
+                }
+        
+                let componentClassHandler = component.componentInstance.getClassHandler();
+        
+                if(ReflectUtils.constructorHasParameters(componentClassHandler)) {
+                    component.componentInstance.setClassHandler(this.constructorResolver(component, componentRegistry));
+                } else {
+                    component.componentInstance.setClassHandler(new componentClassHandler());
+                }
             }
         });
         
         // Initialize manual injections after components have been initialized
         componentRegistry.getAllComponentNames().forEach((componentName) => {
-            let component: Mandarine.MandarineCore.ComponentRegistryContext = componentRegistry.get(componentName);
-    
-            if(ignoreComponentIf(component)) {
-                return;
-            }
+            let component: Mandarine.MandarineCore.ComponentRegistryContext | undefined = componentRegistry.get(componentName);
+            if(component) {
+                if(ignoreComponentIf(component)) {
+                    return;
+                }
 
-            let componentHandler: any = component.componentInstance.getClassHandler();
-    
-            let reflectMetadataInjectionKeys = Reflect.getMetadataKeys(componentHandler);
-            if(reflectMetadataInjectionKeys != (undefined || null)) {
-                reflectMetadataInjectionKeys = reflectMetadataInjectionKeys.filter((metadataKey: string) => metadataKey.startsWith(`${MandarineConstants.REFLECTION_MANDARINE_INJECTABLE_FIELD}:`));
+                let componentHandler: any = component.componentInstance.getClassHandler();
+        
+                let reflectMetadataInjectionKeys = Reflect.getMetadataKeys(componentHandler);
                 if(reflectMetadataInjectionKeys != (undefined || null)) {
-                    (<Array<string>>reflectMetadataInjectionKeys).forEach((metadataKey) => {
-                        let metadata: {propertyType: any, propertyName: string, propertyTypeName: string} = Reflect.getMetadata(metadataKey, componentHandler);
-                        let injectableComponent: any = componentRegistry.getComponentByHandlerType(metadata.propertyType);
-                        if(injectableComponent != (null || undefined)) {
-                            let injectableHandler = (injectableComponent.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT) ? injectableComponent.componentInstance : injectableComponent.componentInstance.getClassHandler();
-                            componentHandler[metadata.propertyName] = injectableHandler;
-                        }
-                    });
+                    reflectMetadataInjectionKeys = reflectMetadataInjectionKeys.filter((metadataKey: string) => metadataKey.startsWith(`${MandarineConstants.REFLECTION_MANDARINE_INJECTABLE_FIELD}:`));
+                    if(reflectMetadataInjectionKeys != (undefined || null)) {
+                        (<Array<string>>reflectMetadataInjectionKeys).forEach((metadataKey) => {
+                            let metadata: {propertyType: any, propertyName: string, propertyTypeName: string} = Reflect.getMetadata(metadataKey, componentHandler);
+                            let injectableComponent: any = componentRegistry.getComponentByHandlerType(metadata.propertyType);
+                            if(injectableComponent != (null || undefined)) {
+                                let injectableHandler = (injectableComponent.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT) ? injectableComponent.componentInstance : injectableComponent.componentInstance.getClassHandler();
+                                componentHandler[metadata.propertyName] = injectableHandler;
+                            }
+                        });
+                    }
                 }
             }
         })
@@ -103,14 +106,15 @@ export class DependencyInjectionFactory {
      */
     public async methodArgumentResolver(object: any, methodName: string, context: Mandarine.Types.RequestContext) {
         const args: Array<DI.ArgumentValue> = [];
-        const { componentMethodParams, metadataValues, queryParams, routeParams, requestCookies } = DependencyInjectionUtil.getDIHandlerContext(object, methodName, context);
+
+        const { componentMethodParams, metadataValues, queryParams, routeParams, requestCookies } = <any> DependencyInjectionUtil.getDIHandlerContext(object, methodName, context);
     
         for(let i = 0; i < componentMethodParams.length; i++) {
             const pipes: Array<any> | any = getPipes(object, i, methodName);
             if(!metadataValues.some((injectionMetadata: DI.InjectionMetadataContext) => injectionMetadata.parameterIndex === i)) {
                 args.push(undefined);
             } else {
-                const param = metadataValues.find(injectionMetadata => injectionMetadata.parameterIndex === i);
+                const param = metadataValues.find((injectionMetadata: any) => injectionMetadata.parameterIndex === i);
                 
                 let valueToInject: any = undefined;
                 switch(param.injectionType) {

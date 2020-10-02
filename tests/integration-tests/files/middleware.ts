@@ -21,7 +21,7 @@ export class MyDocsMiddleware implements MiddlewareTarget {
 
     constructor(public readonly myService: MyService) {}
 
-    public onPreRequest(@RequestParam() request) {
+    public onPreRequest(@RequestParam() request: any) {
         request["TEST_MIDDLEWARE"] = `DOCS INTERCEPTION ${this.myService.calculate()}`;
         return true;
     }
@@ -35,7 +35,7 @@ export class MyNonRegexMiddleware implements MiddlewareTarget {
 
     constructor(public readonly myService: MyService) {}
 
-    public onPreRequest(@RequestParam() request) {
+    public onPreRequest(@RequestParam() request: any) {
         request["TEST_MIDDLEWARE"] = `Hello ${this.myService.calculate()}`;
         return true;
     }
@@ -50,7 +50,7 @@ export class MyNonRegexMiddleware implements MiddlewareTarget {
 export class MyController {
 
     @GET('/with-middleware-controller')
-    public handler(@RequestParam() request) {
+    public handler(@RequestParam() request: any) {
         return request;
     }
 
@@ -62,29 +62,29 @@ export class MyController2 {
 
     @GET('/with-middleware-method')
     @UseMiddleware([MyNonRegexMiddleware])
-    public handler(@RequestParam() request) {
+    public handler(@RequestParam() request: any) {
         return request;
     }
 
     @GET('/hello-world')
-    public handler3(@RequestParam() request) {
+    public handler3(@RequestParam() request: any) {
         return request;
     }
 
     @GET('/docs/my-doc')
-    public handler4(@RequestParam() request) {
+    public handler4(@RequestParam() request: any) {
         return request;
     }
 
     @GET('/docs-my-doc')
-    public handler5(@RequestParam() request) {
+    public handler5(@RequestParam() request: any) {
         return request;
     }
 
 }
 
 export const nonComponentMiddlewareContinueFalse = {
-    onPreRequest: (request, response) => {
+    onPreRequest: (request: any, response: any) => {
         request["TEST_MIDDLEWARE_NONCOMPONENT"] = "Superman"
         response.body = {
             request: request,
@@ -92,16 +92,16 @@ export const nonComponentMiddlewareContinueFalse = {
         }
         return false;
     },
-    onPostRequest: (request, response) => {
+    onPostRequest: (request: any, response: any) => {
     }
 }
 
 export const nonComponentMiddlewareContinueTrue = {
-    onPreRequest: (request, response) => {
+    onPreRequest: (request: any, response: any) => {
         request["TEST_MIDDLEWARE_NONCOMPONENT"] = "Batman"
         return true;
     },
-    onPostRequest: (request, response) => {
+    onPostRequest: (request: any, response: any) => {
     }
 }
 
@@ -109,25 +109,25 @@ export const nonComponentMiddlewareContinueTrue = {
 export class MyController3 {
     @GET('/api/get-4')
     @UseMiddleware([nonComponentMiddlewareContinueFalse, MyNonRegexMiddleware])
-    public handler3(@RequestParam() request) {
+    public handler3(@RequestParam() request: any) {
         return request;
     }
 
     @GET('/api/get-5')
     @UseMiddleware([nonComponentMiddlewareContinueFalse])
-    public handler5(@RequestParam() request) {
+    public handler5(@RequestParam() request: any) {
         return request;
     }
 
     @GET('/api/get-6')
     @UseMiddleware([])
-    public handler6(@RequestParam() request) {
+    public handler6(@RequestParam() request: any) {
         return request;
     }
 
     @GET('/api/get-7')
     @UseMiddleware([nonComponentMiddlewareContinueTrue])
-    public handler7(@RequestParam() request) {
+    public handler7(@RequestParam() request: any) {
         return request;
     }
 }

@@ -4,7 +4,7 @@ import { Mandarine } from "../../Mandarine.ns.ts";
 
 export class MandarineSessionHandler implements Mandarine.Security.Sessions.SessionStore {
 
-    public options = {
+    public options: any = {
         expiration: (1000 * 60 * 60 * 24),
         expirationIntervalHandler: undefined,
         expirationInterval: (1000 * 60 * 60),
@@ -24,7 +24,7 @@ export class MandarineSessionHandler implements Mandarine.Security.Sessions.Sess
         return (window as any).mandarineSessionsContainer;
     }
 
-    public get(sessionId: string, callback: (error, result) => void, config?: { touch: boolean }): void {
+    public get(sessionId: string, callback: (error: any, result: Mandarine.Security.Sessions.MandarineSession | undefined) => void, config?: { touch: boolean }): void {
         if(!this.exist(sessionId)) {
             callback(Mandarine.Security.Sessions.MandarineSessionExceptions.SESSION_NOT_FOUND, undefined);
             return;
@@ -34,11 +34,14 @@ export class MandarineSessionHandler implements Mandarine.Security.Sessions.Sess
                 this.touch(sessionId, () => {});
             }
 
-            let sessionContainer: Array<Mandarine.Security.Sessions.MandarineSession>;
-            this.getAll((error, result) => sessionContainer = result);
+            let sessionContainer: Array<Mandarine.Security.Sessions.MandarineSession> | undefined = undefined;
+            this.getAll((error: any, result: Array<Mandarine.Security.Sessions.MandarineSession>) => {
+                sessionContainer = result 
             
-            let session: Mandarine.Security.Sessions.MandarineSession = sessionContainer.find(ses => ses.sessionID === sessionId);
-            callback(undefined, session);
+                let session: Mandarine.Security.Sessions.MandarineSession | undefined = sessionContainer?.find((ses: any) => ses.sessionID === sessionId);
+                callback(undefined, session);
+            });
+            
         }
     }
 
@@ -47,11 +50,11 @@ export class MandarineSessionHandler implements Mandarine.Security.Sessions.Sess
         return sessionContainer.some(ses => ses.sessionID === sessionId);
     }
 
-    public getAll(callback: (error, result) => void): void {
+    public getAll(callback: (error: any, result: Array<Mandarine.Security.Sessions.MandarineSession>) => void): void {
         callback(undefined, this.getSessionsContainer());
     }
 
-    public set(sessionID: string, sessionData: Mandarine.Security.Sessions.MandarineSession, callback: (error, result) => void): void {
+    public set(sessionID: string, sessionData: Mandarine.Security.Sessions.MandarineSession, callback: (error: any, result: Mandarine.Security.Sessions.MandarineSession) => void): void {
         let sessionContainer: Array<Mandarine.Security.Sessions.MandarineSession> = this.getSessionsContainer();
 
         if(!this.exist(sessionID)) {
@@ -64,7 +67,7 @@ export class MandarineSessionHandler implements Mandarine.Security.Sessions.Sess
         }
     }
 
-    public destroy(sessionID: string, callback: (error, result) => void): void {
+    public destroy(sessionID: string, callback: (error: any, result: Mandarine.Security.Sessions.MandarineSession | undefined | boolean) => void): void {
         if(!this.exist(sessionID)) {
             callback(Mandarine.Security.Sessions.MandarineSessionExceptions.SESSION_NOT_FOUND, undefined);
             return;
@@ -76,21 +79,23 @@ export class MandarineSessionHandler implements Mandarine.Security.Sessions.Sess
         }
     }
 
-    public touch(sessionId: string, callback: (error, result) => void): void {
+    public touch(sessionId: string, callback: (error: any, result: Mandarine.Security.Sessions.MandarineSession | undefined) => void): void {
         let now = new Date();
         if(!this.exist(sessionId)) {
             callback(Mandarine.Security.Sessions.MandarineSessionExceptions.SESSION_NOT_FOUND, undefined);
             return;
         } else {
-            this.get(sessionId, (error, session: Mandarine.Security.Sessions.MandarineSession) => {
-                session.expiresAt = new Date(now.getTime() + this.options.expiration);
-                this.set(sessionId, session, (error, callback) => {});
+            this.get(sessionId, (error: any, session: Mandarine.Security.Sessions.MandarineSession | undefined) => {
+                if(session) {
+                    session.expiresAt = new Date(now.getTime() + this.options.expiration);
+                    this.set(sessionId, session, (error, callback) => {});
+                }
             });
         }
     }
 
     public clearExpiredSessions(): void {
-        let expiredSessions: Array<Mandarine.Security.Sessions.MandarineSession> = this.getSessionsContainer().filter((session: Mandarine.Security.Sessions.MandarineSession) => new Date() > session.expiresAt); 
+        let expiredSessions: Array<Mandarine.Security.Sessions.MandarineSession> = this.getSessionsContainer().filter((session: Mandarine.Security.Sessions.MandarineSession) => new Date() > <Date> session.expiresAt); 
         expiredSessions.forEach((item) => {
             this.destroy(item.sessionID, (err, callback) => {});
         });
