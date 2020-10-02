@@ -8,7 +8,7 @@ The single entry point file serves as an index for all your Mandarine-powered co
 
 ## Usage
 ```typescript
-import { MandarineCore } from "https://deno.land/x/mandarinets@v2.0.0/mod.ts";
+import { MandarineCore } from "https://deno.land/x/mandarinets@v2.1.0/mod.ts";
 
 const services = [/* References */];
 const controllers = [/* References */];
@@ -26,7 +26,7 @@ In the above example, we can see how we have different arrays where we will refe
 
 A good real example would look as follows:
 ```typescript
-import { MandarineCore } from "https://deno.land/x/mandarinets@v2.0.0/mod.ts";
+import { MandarineCore } from "https://deno.land/x/mandarinets@v2.1.0/mod.ts";
 import { Controller1, Controller2, Controller3 } from "./controllers-exports.ts";
 
 const services = [/* References */];

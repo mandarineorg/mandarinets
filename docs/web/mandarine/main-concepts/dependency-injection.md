@@ -58,7 +58,7 @@ Dependencies are essentially classes that rely on other classes (also dependents
 The `@Inject` is used for declaring property-based injections.
 
 ```typescript
-import { Service, Inject } from "https://deno.land/x/mandarinets@v2.0.0/mod.ts";
+import { Service, Inject } from "https://deno.land/x/mandarinets@v2.1.0/mod.ts";
 
 @Service()
 export class MyService2 {
@@ -105,7 +105,7 @@ The injectable decorator handles the creation of a manual component. When `@Inje
      - This method should return an initialized class that will be the reference to the expected object in dependency injection requests.
      
 ```typescript
-import { Service, Configuration Injectable } from "https://deno.land/x/mandarinets@v2.0.0/mod.ts";
+import { Service, Configuration Injectable } from "https://deno.land/x/mandarinets@v2.1.0/mod.ts";
 
 export class MyThirdPartyClass {
     constructor(public readonly name: string) {}
