@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest, macOS-latest]
-        deno: ["v1.3.2", "v1.3.1"]
+        deno: ["v1.4.2", "v1.4.1"]
       fail-fast: true
     steps:
       - uses: actions/checkout@v2

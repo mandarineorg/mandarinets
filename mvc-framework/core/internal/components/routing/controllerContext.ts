@@ -1,6 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { blue, red } from "https://deno.land/std@0.67.0/fmt/colors.ts";
+import { blue, red } from "https://deno.land/std@0.71.0/fmt/colors.ts";
 import { MandarineException } from "../../../../../main-core/exceptions/mandarineException.ts";
 import { RoutingException } from "../../../../../main-core/exceptions/routingException.ts";
 import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
@@ -8,12 +8,12 @@ import { MandarineConstants } from "../../../../../main-core/mandarineConstants.
 import { Reflect } from "../../../../../main-core/reflectMetadata.ts";
 import { CommonUtils } from "../../../../../main-core/utils/commonUtils.ts";
 import { ReflectUtils } from "../../../../../main-core/utils/reflectUtils.ts";
-import { AnnotationMetadataContext } from "../../../interfaces/mandarine/mandarineAnnotationMetadataContext.ts";
+import type { AnnotationMetadataContext } from "../../../interfaces/mandarine/mandarineAnnotationMetadataContext.ts";
 import { MandarineMVCContext } from "../../../mandarineMvcContext.ts";
 import { RoutingUtils } from "../../../utils/mandarine/routingUtils.ts";
 import { ApplicationContext } from "../../../../../main-core/application-context/mandarineApplicationContext.ts";
 import { MiddlewareUtil } from "../../../../../main-core/utils/components/middlewareUtil.ts";
-import { NonComponentMiddlewareTarget } from "../../../../../main-core/internals/interfaces/middlewareTarget.ts";
+import type { NonComponentMiddlewareTarget } from "../../../../../main-core/internals/interfaces/middlewareTarget.ts";
 import { ComponentComponent } from "../../../../../main-core/components/component-component/componentComponent.ts";
 /**
  * This class is used in the DI Container for Mandarine to store components annotated as @Controller
@@ -26,7 +26,7 @@ export class ControllerComponent {
     private actions: Map<String, Mandarine.MandarineMVC.Routing.RoutingAction> = new Map<String, Mandarine.MandarineMVC.Routing.RoutingAction>();
     private classHandler: any;
     private classHandlerType: any;
-    public options: Mandarine.MandarineMVC.Routing.RoutingOptions = {
+    public options: Mandarine.MandarineMVC.Routing.RoutingOptions & any = {
         responseStatus: Mandarine.MandarineMVC.HttpStatusCode.OK
     };
 
@@ -46,27 +46,29 @@ export class ControllerComponent {
 
     public registerAction(routeAction: Mandarine.MandarineMVC.Routing.RoutingAction): void {
         let actionName: string = this.getActionName(routeAction.actionMethodName);
-        let routingAction: Mandarine.MandarineMVC.Routing.RoutingAction = this.actions.get(actionName);
+        let routingAction: Mandarine.MandarineMVC.Routing.RoutingAction | undefined = this.actions.get(actionName);
 
         if(routingAction != null && routingAction.initializationStatus == Mandarine.MandarineMVC.Routing.RouteInitializationStatus.CREATED) throw new RoutingException(RoutingException.EXISTENT_ACTION);
 
         this.initializeRoutingActionContext(routeAction);
         
         if(this.existRoutingAction(routeAction.actionMethodName)) {
-            let currentRoutingAction: Mandarine.MandarineMVC.Routing.RoutingAction = this.actions.get(actionName);
-            currentRoutingAction.actionMethodName = routeAction.actionMethodName;
-            currentRoutingAction.actionType = routeAction.actionType;
-            currentRoutingAction.route = routeAction.route;
-            currentRoutingAction.routingOptions = routeAction.routingOptions;
-            currentRoutingAction.routeParams = routeAction.routeParams;
-            this.actions.set(actionName, currentRoutingAction);
+            let currentRoutingAction: Mandarine.MandarineMVC.Routing.RoutingAction | undefined = this.actions.get(actionName);
+            if(currentRoutingAction) {
+                currentRoutingAction.actionMethodName = routeAction.actionMethodName;
+                currentRoutingAction.actionType = routeAction.actionType;
+                currentRoutingAction.route = routeAction.route;
+                currentRoutingAction.routingOptions = routeAction.routingOptions;
+                currentRoutingAction.routeParams = routeAction.routeParams;
+                this.actions.set(actionName, currentRoutingAction);
+            }
         } else {
             this.actions.set(actionName, routeAction);
         }
     }
 
     private initializeControllerOptions(): void {
-        const REFLECTION_OPTIONS = {
+        const REFLECTION_OPTIONS: any = {
             cors: MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_CORS_MIDDLEWARE, 
             withPermissions: MandarineConstants.REFLECTION_MANDARINE_SECURITY_ALLOWONLY_DECORATOR,
             responseStatus: MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_DEFAULT_HTTP_RESPONSE_CODE,
@@ -75,19 +77,19 @@ export class ControllerComponent {
         };
         let metadataKeysFromClass: Array<any> = Reflect.getMetadataKeys(this.getClassHandlerType());
 
-        Object.keys(REFLECTION_OPTIONS).forEach((interfaceKey) => {
+        Object.keys(REFLECTION_OPTIONS).forEach((interfaceKey: string) => {
             const optionLookup = REFLECTION_OPTIONS[interfaceKey];
             const metadata: Array<any> = metadataKeysFromClass?.find((metadataKey: string) => metadataKey === optionLookup);
             if(metadata) {
-                const metadataValue = Reflect.getMetadata(metadata, this.getClassHandlerType());
+                const metadataValue: any = Reflect.getMetadata(metadata, this.getClassHandlerType());
                 this.options[interfaceKey] = metadataValue;
             }
         });
     }
 
     private initializeRouteContextOptions(routeContext: Mandarine.MandarineMVC.Routing.RoutingAnnotationContext, classHandler: any) {
-        const ROUTE_REFLECTION_OPTIONS = {
-            cors: MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_CORS_MIDDLEWARE,
+        const ROUTE_REFLECTION_OPTIONS: any = {
+            "cors": MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_CORS_MIDDLEWARE,
             withPermissions: MandarineConstants.REFLECTION_MANDARINE_SECURITY_ALLOWONLY_DECORATOR,
             responseStatus: MandarineConstants.REFLECTION_MANDARINE_CONTROLLER_DEFAULT_HTTP_RESPONSE_CODE,
             middleware: MandarineConstants.REFLECTION_MANDARINE_USE_MIDDLEWARE_DECORATOR,
@@ -96,15 +98,16 @@ export class ControllerComponent {
         if(!routeContext.options) routeContext.options = {};
 
         Object.keys(ROUTE_REFLECTION_OPTIONS).forEach((interfaceKey) => {
-            const metadataValue = Reflect.getMetadata(`${ROUTE_REFLECTION_OPTIONS[interfaceKey]}:${routeContext.methodName}`, classHandler, routeContext.methodName);
+            const metadataValue: any = Reflect.getMetadata(`${ROUTE_REFLECTION_OPTIONS[interfaceKey]}:${routeContext.methodName}`, classHandler, routeContext.methodName);
             if(metadataValue) {
                 routeContext.options[interfaceKey] = metadataValue;
             }
         })
     }
 
-    public initializeMiddleware(middlewareList: Array<NonComponentMiddlewareTarget | Mandarine.Types.MiddlewareComponent>): Array<NonComponentMiddlewareTarget | Mandarine.Types.MiddlewareComponent> {
-        if(!middlewareList) return;
+    public initializeMiddleware(middlewareList: Array<NonComponentMiddlewareTarget | Mandarine.Types.MiddlewareComponent> | undefined): Array<NonComponentMiddlewareTarget | Mandarine.Types.MiddlewareComponent> {
+        if(!middlewareList) return [];
+
         const newMiddlewareList = [...middlewareList];
         newMiddlewareList.forEach((item, index) => {
             let middlewareHandler: NonComponentMiddlewareTarget | Mandarine.Types.MiddlewareComponent;
@@ -126,7 +129,7 @@ export class ControllerComponent {
             newMiddlewareList[index] = middlewareHandler;
         });
 
-        return newMiddlewareList;
+        return newMiddlewareList || [];
     }
 
     public initializeTopLevelMiddleware() {
@@ -150,14 +153,14 @@ export class ControllerComponent {
                 routeContext.options.middleware = this.initializeMiddleware(routeContext.options.middleware) || [];
 
                 const fullRoute = this.getFullRoute(routeContext.route);
-                const routingAction = {
+                const routingAction: Mandarine.MandarineMVC.Routing.RoutingAction = {
                     actionParent: routeContext.className,
                     actionType: routeContext.methodType,
                     actionMethodName: routeContext.methodName,
                     route: fullRoute,
                     routingOptions: routeContext.options,
                     initializationStatus: Mandarine.MandarineMVC.Routing.RouteInitializationStatus.CREATED,
-                    routeSignature: RoutingUtils.findRouteParamSignature(fullRoute, routeContext.methodType)
+                    routeSignature: <Array<string>> RoutingUtils.findRouteParamSignature(fullRoute, routeContext.methodType)
                 };
 
                 this.registerAction(routingAction);
@@ -173,13 +176,13 @@ export class ControllerComponent {
     }
 
     private processParamRoutes(routeAction: Mandarine.MandarineMVC.Routing.RoutingAction) {
-        let routeParams: Mandarine.MandarineMVC.Routing.RoutingParams[] = RoutingUtils.findRouteParams(routeAction.route);
+        let routeParams: Mandarine.MandarineMVC.Routing.RoutingParams[] | null = RoutingUtils.findRouteParams(routeAction.route);
         if(routeParams == null) return;
-        routeParams.forEach((value) => routeAction.routeParams.push(value));
+        routeParams.forEach((value) => routeAction?.routeParams?.push(value));
     }
 
     public getFullRoute(route: string) {
-        if(this.getRoute() != null) return this.getRoute() + route;
+        if(this.getRoute() != (null || undefined)) return this.getRoute() + route;
         else return route;
     }
 
@@ -187,7 +190,7 @@ export class ControllerComponent {
         return this.getFullRoute(routeAction.route);
     }
 
-    public getRoutingAction(actionMethodName: string): Mandarine.MandarineMVC.Routing.RoutingAction {
+    public getRoutingAction(actionMethodName: string): Mandarine.MandarineMVC.Routing.RoutingAction | undefined {
         return this.actions.get(`${this.getName()}.${actionMethodName}`);
     }
 
@@ -196,15 +199,19 @@ export class ControllerComponent {
         else return true;
     }
 
-    public validateRouteSignature(routeSignature: Array<string>) {
-        const currentRoutes = MandarineMVCContext.getInstance().routeSignatures;
+    public validateRouteSignature(routeSignature: Array<string> | null) {
+        if(routeSignature) {
+            const currentRoutes = MandarineMVCContext.getInstance().routeSignatures;
 
-        if(currentRoutes.some((currentRouteSignature) => CommonUtils.arrayIdentical(currentRouteSignature, routeSignature))) {
-            let errorMessage = MandarineException.ROUTE_ALREADY_EXIST.replace("$s", `${blue(Mandarine.MandarineMVC.HttpMethods[routeSignature[0]])} ${red(routeSignature.slice(1).join("/"))}`);
-            throw new MandarineException(errorMessage);
+            if(currentRoutes.some((currentRouteSignature) => CommonUtils.arrayIdentical(currentRouteSignature, routeSignature))) {
+                let errorMessage = MandarineException.ROUTE_ALREADY_EXIST.replace("$s", `${blue(Mandarine.MandarineMVC.HttpMethods[(parseInt(routeSignature[0]))])} ${red(routeSignature.slice(1).join("/"))}`);
+                throw new MandarineException(errorMessage);
+            }
+
+            MandarineMVCContext.getInstance().routeSignatures.push(routeSignature);
+        } else {
+            throw new MandarineException(MandarineException.INVALID_ROUTE_SIGNATURE_NULL);
         }
-
-        MandarineMVCContext.getInstance().routeSignatures.push(routeSignature);
     }
 
     public getActionName(methodName: string): string {
@@ -212,15 +219,17 @@ export class ControllerComponent {
     }
 
     public getName(): string {
-        return this.name;
+        return this.name || "";
     }
 
     public getRoute(): string {
-        return this.route;
+        return this.route || "";
     }
 
-    public setRoute(route: string): void {
-        this.route = route;
+    public setRoute(route: string | undefined): void {
+        if(route) {
+            this.route = route;
+        }
     }
 
     public setClassHandler(classHandler: any) {

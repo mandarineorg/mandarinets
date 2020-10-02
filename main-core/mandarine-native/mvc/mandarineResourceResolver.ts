@@ -1,7 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { Context } from "../../../deps.ts";
-import { Mandarine } from "../../Mandarine.ns.ts";
+import type { Mandarine } from "../../Mandarine.ns.ts";
 import { CommonUtils } from "../../utils/commonUtils.ts";
 
 /**
@@ -12,7 +11,7 @@ import { CommonUtils } from "../../utils/commonUtils.ts";
  */
 export class MandarineResourceResolver implements Mandarine.MandarineMVC.HTTPResolvers.ResourceResolver {
 
-    public resolve(httpContext: Mandarine.Types.RequestContext, resourcePath: string): Uint8Array {
+    public resolve(httpContext: Mandarine.Types.RequestContext, resourcePath: string): Uint8Array | undefined {
 
         let resourceExt = null;
 

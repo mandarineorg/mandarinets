@@ -58,37 +58,41 @@ export class MandarineCore {
     }
 
     private writeOnCompiler() {
-        const templatesAmount = this.currentContextMetadata.engineMetadata.mvc.templatesAmount;
+        if(this.currentContextMetadata.engineMetadata?.mvc && this.currentContextMetadata.engineMetadata?.orm) {
+            const templatesAmount = this.currentContextMetadata.engineMetadata.mvc.templatesAmount;
 
-        const dbEntitiesAmount = this.currentContextMetadata.engineMetadata.orm.dbEntitiesAmount;
-        const repositoriesAmount = this.currentContextMetadata.engineMetadata.orm.repositoriesAmount;
+            const dbEntitiesAmount = this.currentContextMetadata.engineMetadata.orm.dbEntitiesAmount;
+            const repositoriesAmount = this.currentContextMetadata.engineMetadata.orm.repositoriesAmount;
 
-        if(dbEntitiesAmount && dbEntitiesAmount > 0) {
-            MandarineCore.logger.compiler(`A total of ${dbEntitiesAmount} database entities have been found`, "info")
-        }
-        if(repositoriesAmount && repositoriesAmount > 0) {
-            MandarineCore.logger.compiler(`A total of ${repositoriesAmount} repositories have been found`, "info")
-        }
-        if(templatesAmount && templatesAmount > 0) {
-            MandarineCore.logger.compiler(`A total of ${templatesAmount} templates have been found`, "info")
+            if(dbEntitiesAmount && dbEntitiesAmount > 0) {
+                MandarineCore.logger.compiler(`A total of ${dbEntitiesAmount} database entities have been found`, "info")
+            }
+            if(repositoriesAmount && repositoriesAmount > 0) {
+                MandarineCore.logger.compiler(`A total of ${repositoriesAmount} repositories have been found`, "info")
+            }
+            if(templatesAmount && templatesAmount > 0) {
+                MandarineCore.logger.compiler(`A total of ${templatesAmount} templates have been found`, "info")
+            }
         }
     }
 
     public MVC() {
         return new MandarineMVC(() => {
-            Mandarine.Global.getSessionContainer().store.launch();
+            Mandarine.Global.getSessionContainer().store?.launch();
         }, () => {
-            const controllersAmount = this.currentContextMetadata.engineMetadata.mvc.controllersAmount;
-            const middlewareAmount = this.currentContextMetadata.engineMetadata.mvc.middlewareAmount;
+            if(this.currentContextMetadata.engineMetadata?.mvc) {
+                const controllersAmount = this.currentContextMetadata.engineMetadata.mvc.controllersAmount;
+                const middlewareAmount = this.currentContextMetadata.engineMetadata.mvc.middlewareAmount;
 
-            if(controllersAmount && controllersAmount > 0) {
-                MandarineCore.logger.compiler(`A total of ${controllersAmount} controllers have been initialized`, "info");
-            } else {
-                MandarineCore.logger.compiler(`No controllers have been found`, "warn")
-            }
+                if(controllersAmount && controllersAmount > 0) {
+                    MandarineCore.logger.compiler(`A total of ${controllersAmount} controllers have been initialized`, "info");
+                } else {
+                    MandarineCore.logger.compiler(`No controllers have been found`, "warn")
+                }
 
-            if(middlewareAmount && middlewareAmount > 0) {
-                MandarineCore.logger.compiler(`A total of ${middlewareAmount} middleware have been found`, "info");
+                if(middlewareAmount && middlewareAmount > 0) {
+                    MandarineCore.logger.compiler(`A total of ${middlewareAmount} middleware have been found`, "info");
+                }
             }
         });
     }

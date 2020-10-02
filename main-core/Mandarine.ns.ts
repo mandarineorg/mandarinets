@@ -2,15 +2,16 @@
 
 import { Log } from "../logger/log.ts";
 import { TemplateEngineException } from "../main-core/exceptions/templateEngineException.ts";
-import { ResourceHandler } from "../mvc-framework/core/internal/components/resource-handler-registry/resourceHandler.ts";
+import type { ResourceHandler } from "../mvc-framework/core/internal/components/resource-handler-registry/resourceHandler.ts";
 import { ResourceHandlerRegistry } from "../mvc-framework/core/internal/components/resource-handler-registry/resourceHandlerRegistry.ts";
 import { MandarineMvc } from "../mvc-framework/mandarine-mvc.ns.ts";
 import { MandarineORM } from "../orm-core/mandarine-orm.ns.ts";
 import { MandarineSecurity } from "../security-core/mandarine-security.ns.ts";
 import { ComponentsRegistry } from "./components-registry/componentRegistry.ts";
-import { DI } from "./dependency-injection/di.ns.ts";
+import type { DI } from "./dependency-injection/di.ns.ts";
 import { NativeComponentsRegistry } from "./mandarine-native/nativeComponentsRegistry.ts";
 import { AuthenticationManagerBuilder } from "./mandarine-native/security/authenticationManagerBuilderDefault.ts";
+// @ts-ignore
 import { MandarineMiscellaneous } from "./Mandarine.miscellaneous.ns.ts";
 import { MandarineNative } from "./Mandarine.native.ns.ts";
 import { MandarineEnvironmentalConstants } from "./MandarineEnvConstants.ts";
@@ -19,10 +20,11 @@ import { TemplatesManager } from "./templates-registry/templatesRegistry.ts";
 import { CommonUtils } from "./utils/commonUtils.ts";
 import { JsonUtils } from "./utils/jsonUtils.ts";
 import { MandarineUtils } from "./utils/mandarineUtils.ts";
-import { CookieConfig } from "../mvc-framework/core/interfaces/http/cookie.ts";
+import type { CookieConfig } from "../mvc-framework/core/interfaces/http/cookie.ts";
 import { HTTPLoginBuilder } from "../security-core/core/modules/loginBuilder.ts";
+// @ts-ignore
 import { MandarineCommonInterfaces } from "./Mandarine.commonInterfaces.ns.ts";
-import { ComponentComponent } from "./components/component-component/componentComponent.ts";
+import type { ComponentComponent } from "./components/component-component/componentComponent.ts";
 
 /**
 * This namespace contains all the essentials for mandarine to work
@@ -101,7 +103,7 @@ export namespace Mandarine {
      * If mandarine.json is present, some behaviors of the Mandarine starter can be altered such as the location of the properties.json file
      */
     export interface MandarineInitialProperties {
-        propertiesFilePath: string;
+        propertiesFilePath: string | undefined;
         denoEnv: {
             [prop: string]: string
         }
@@ -122,7 +124,7 @@ export namespace Mandarine {
     export interface EnvironmentalReference {
         fullReference: string;
         variable: string;
-        environmentalValue: string;
+        environmentalValue: string | undefined;
     }
 
     /**
@@ -157,7 +159,7 @@ export namespace Mandarine {
         */
         export function initializeMandarineGlobal() {
             if (!(window as any).mandarineGlobal) {
-                (window as any).mandarineGlobal = <MandarineGlobalInterface> {
+                (window as any).mandarineGlobal = {
                     mandarineComponentsRegistry: undefined,
                     mandarineSessionContainer: undefined,
                     mandarineEntityManager: undefined,
@@ -522,18 +524,18 @@ export namespace Mandarine {
         */
         export interface IComponentsRegistry {
             register(componentName: string, componentInstance: any, componentType: ComponentTypes, configuration: any): void;
-            get(componentName: string): ComponentRegistryContext;
+            get(componentName: string): ComponentRegistryContext | undefined;
             clearComponentRegistry(): void;
-            update(itemName: string, newValue: ComponentRegistryContext): void;
+            update(itemName: string, newValue: ComponentRegistryContext | undefined): void;
             exist(itemName: string): boolean;
             getAllComponentNames(): Array<string>
-            getAllComponentNamesByType(componentType: ComponentTypes): Array<string>
+            getAllComponentNamesByType(componentType: ComponentTypes): Array<string> | undefined
             getComponents(): ComponentRegistryContext[];
             getControllers(): ComponentRegistryContext[];
             getComponentsByComponentType(componentType: Mandarine.MandarineCore.ComponentTypes): Mandarine.MandarineCore.ComponentRegistryContext[];
-            getComponentByHandlerType(classType: any): ComponentRegistryContext;
+            getComponentByHandlerType(classType: any): ComponentRegistryContext | undefined;
             resolveDependencies(): void;
-            getRepositoryByHandlerType(classType: any): Mandarine.MandarineCore.ComponentRegistryContext;
+            getRepositoryByHandlerType(classType: any): Mandarine.MandarineCore.ComponentRegistryContext | undefined;
             connectRepositoriesToProxy(): void;
             initializeControllers(): void;
         };
@@ -545,7 +547,7 @@ export namespace Mandarine {
         */
         export interface ITemplatesManager {
             register(renderData: Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData, engine?: Mandarine.MandarineMVC.TemplateEngine.Engines): void;
-            getTemplate(templatePath: Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData, manual: boolean): Mandarine.MandarineMVC.TemplateEngine.Template;
+            getTemplate(templatePath: Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData, manual: boolean): Mandarine.MandarineMVC.TemplateEngine.Template | undefined;
             getFullPath(templatePath: string): string;
             initializeTemplates(): void;
         }
@@ -567,10 +569,10 @@ export namespace Mandarine {
         * Handlers the information of a resource handler that will be processed.
         */
         export interface IResourceHandler {
-            resourceHandlerPath: Array<RegExp>;
-            resourceHandlerLocations: Array<string>;
-            resourceHandlerIndex: Array<string>;
-            resourceResolver: Mandarine.MandarineMVC.HTTPResolvers.ResourceResolver;
+            resourceHandlerPath: Array<RegExp> | undefined;
+            resourceHandlerLocations: Array<string> | undefined;
+            resourceHandlerIndex: Array<string> | undefined;
+            resourceResolver: Mandarine.MandarineMVC.HTTPResolvers.ResourceResolver | undefined;
             addResourceHandler(...resourceHandlerPath: Array<RegExp>): ResourceHandler;
             addResourceHandlerLocation(...resourceHandlerLocations: Array<string>): ResourceHandler;
             addResourceHandlerIndex(...resourceHandlerIndex: Array<string>): ResourceHandler;

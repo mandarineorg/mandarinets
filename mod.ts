@@ -13,7 +13,7 @@ export { Component } from "./main-core/decorators/stereotypes/component/componen
 export { Configuration } from "./main-core/decorators/stereotypes/configuration/configuration.ts";
 export { Service } from "./main-core/decorators/stereotypes/service/service.ts";
 export { Middleware } from "./main-core/decorators/stereotypes/middleware/Middleware.ts";
-export { MiddlewareTarget, NonComponentMiddlewareTarget } from "./main-core/internals/interfaces/middlewareTarget.ts";
+export type { MiddlewareTarget, NonComponentMiddlewareTarget } from "./main-core/internals/interfaces/middlewareTarget.ts";
 export { Inject } from "./main-core/dependency-injection/decorators/Inject.ts";
 export { Injectable } from "./main-core/dependency-injection/decorators/injectable.ts";
 export { MandarineCore } from "./main-core/mandarineCore.ts";
@@ -46,8 +46,8 @@ export { MandarineSessionHandler } from "./main-core/mandarine-native/sessions/m
 export { AllowOnly } from "./security-core/core/decorators/allowOnly.ts";
 export { UseMiddleware } from "./mvc-framework/core/decorators/stereotypes/controller/useMiddleware.ts";
 
-export { ExceptionContext, ExceptionFilter } from "./main-core/internals/interfaces/exceptionFilter.ts";
-export { GuardTarget, GuardTargetMethod } from "./main-core/internals/interfaces/guardTarget.ts";
+export type { ExceptionContext, ExceptionFilter } from "./main-core/internals/interfaces/exceptionFilter.ts";
+export type { GuardTarget, GuardTargetMethod } from "./main-core/internals/interfaces/guardTarget.ts";
 
 export { UseGuards } from "./mvc-framework/core/decorators/stereotypes/controller/useGuards.ts";
 

@@ -1,9 +1,9 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
 import { ApplicationContext } from "../../../../../main-core/application-context/mandarineApplicationContext.ts";
-import { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
+import type { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
 import { ReflectUtils } from "../../../../../main-core/utils/reflectUtils.ts";
-import { ControllerComponent } from "../../../internal/components/routing/controllerContext.ts";
+import type { ControllerComponent } from "../../../internal/components/routing/controllerContext.ts";
 import { MVCDecoratorsProxy } from "../../../proxys/mvcCoreDecorators.ts";
 
 /**
@@ -21,9 +21,9 @@ export const Controller = (baseRoute?: string): Function => {
         let getComponentsRegistry = ApplicationContext.getInstance().getComponentsRegistry();
             if(getComponentsRegistry.exist(className)) {
 
-                let objectContext: Mandarine.MandarineCore.ComponentRegistryContext = getComponentsRegistry.get(className);
-                let controllerComponent:ControllerComponent = <ControllerComponent> objectContext.componentInstance;
-                controllerComponent.setRoute(baseRoute);
+                let objectContext: Mandarine.MandarineCore.ComponentRegistryContext | undefined = getComponentsRegistry.get(className);
+                let controllerComponent:ControllerComponent = <ControllerComponent> objectContext?.componentInstance;
+                controllerComponent?.setRoute(baseRoute);
 
                 getComponentsRegistry.update(className, objectContext);
             } else {

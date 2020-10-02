@@ -1,6 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { Mandarine } from "../../../../main-core/Mandarine.ns.ts";
+import type { Mandarine } from "../../../../main-core/Mandarine.ns.ts";
 import { PermissionValidatorsRegistry } from "./permissionValidatorsRegistry.ts";
 
 const getExpressionParameters = (expression: string): Array<string> => {
@@ -21,8 +21,8 @@ const expressionHasParameters = (expression: string) => {
     }
 }
 
-const executeValidator = (permissionLowerName, request, authentication, inputs) => {
-    const callValidator = PermissionValidatorsRegistry.getInstance().callValidator(permissionLowerName, request, authentication, inputs);
+const executeValidator = (permissionLowerName: string, request: Mandarine.MandarineMVC.RequestDataContext, authentication: Mandarine.Security.Auth.RequestAuthObj, inputs: Array<any> | undefined) => {
+    const callValidator = PermissionValidatorsRegistry.getInstance().callValidator(permissionLowerName, request, authentication, inputs || []);
     if(callValidator === false) {
         return false;
     } else if(callValidator === true) {
@@ -30,18 +30,18 @@ const executeValidator = (permissionLowerName, request, authentication, inputs) 
     }
 }
 
-const executeExpression = (expr: string, hasParameters: boolean, request, authentication) => {
+const executeExpression = (expr: string, hasParameters: boolean, request: Mandarine.MandarineMVC.RequestDataContext, authentication: Mandarine.Security.Auth.RequestAuthObj) => {
     expr = expr.replace(`('`, '(').replace(`("`, '(').replace(`")`, ')').replace(`')`, ')');
-    let inputs = undefined;
+    let inputs: Array<any> | undefined = undefined;
     if(hasParameters) inputs = getExpressionParameters(expr);
     return executeValidator(expr.toLowerCase(), request, authentication, inputs)
 };
 
-const processExpression = (request: any, authentication: Mandarine.Security.Auth.RequestAuthObj) => {
+const processExpression = (request: Mandarine.MandarineMVC.RequestDataContext, authentication: Mandarine.Security.Auth.RequestAuthObj) => {
         return (expression: any) => {
             const divideExpression = expression.split(/(?!\(.*)\s(?![^(]*?\))/g);
-            const evaluation = [];
-            divideExpression.forEach((expr) => {
+            const evaluation: Array<any> = [];
+            divideExpression.forEach((expr: string) => {
                 if(expr === "OR" || expr === "AND" || expr === "||" || expr === "&&") {
                     if(expr === "OR") expr = "||";
                     if(expr === "AND") expr = "&&";
@@ -66,9 +66,9 @@ const processExpression = (request: any, authentication: Mandarine.Security.Auth
         };
 }
 
-export const verifyPermissions = (request: any) => {
+export const verifyPermissions = (request: Mandarine.MandarineMVC.RequestDataContext) => {
     return (permissions: Mandarine.Security.Auth.Permissions): boolean => {
-        const authentication = (request.authentication) ? Object.assign({}, request.authentication) : undefined;
+        const authentication: Mandarine.Security.Auth.RequestAuthObj | undefined = (request.authentication) ? Object.assign({}, request.authentication) : undefined;
         const currentRoles = (<Array<string>>(authentication?.AUTH_PRINCIPAL?.roles))?.map((role) => role.toLowerCase());
         let isAllowed: boolean = true;
 
@@ -77,7 +77,7 @@ export const verifyPermissions = (request: any) => {
                 const permissionLower = permission.toLowerCase();
                 const expressionHasParametersStatement = expressionHasParameters(permissionLower);
                 if((permissionLower.endsWith("()") || permissionLower.endsWith("();")) || expressionHasParametersStatement) {
-                    let callValidator = processExpression(request, authentication)(permission);
+                    let callValidator = processExpression(request, <Mandarine.Security.Auth.RequestAuthObj> authentication)(permission);
                     if(callValidator === false) {
                         isAllowed = false;
                     } else if(callValidator === true) {
@@ -100,7 +100,7 @@ export const verifyPermissions = (request: any) => {
                 }
             }
         } else if(typeof permissions === 'string') {
-            isAllowed = processExpression(request, authentication)(permissions);
+            isAllowed = processExpression(request, <Mandarine.Security.Auth.RequestAuthObj> authentication)(permissions);
         }
 
         return isAllowed;

@@ -14,10 +14,13 @@ import { Mandarine } from "../../main-core/Mandarine.ns.ts";
 class MyTable {
 
     @mockDecorator()
+    //@ts-ignore
     private id: number;
     @mockDecorator()
+    //@ts-ignore
     private name: string;
     @mockDecorator()
+    //@ts-ignore
     private isAdult: boolean;
 
 }
@@ -36,9 +39,9 @@ export class ORMTests {
         description: "Create the representation of a table with columns"
     })
     public createEntity() {
-        ORMCoreDecoratorProxy.registerColumnDecorator(MyTable.prototype, undefined, "isAdult");
-        ORMCoreDecoratorProxy.registerColumnDecorator(MyTable.prototype, undefined, "name");
-        ORMCoreDecoratorProxy.registerColumnDecorator(MyTable.prototype, undefined, "id");
+        ORMCoreDecoratorProxy.registerColumnDecorator(MyTable.prototype, <any><unknown> undefined, "isAdult");
+        ORMCoreDecoratorProxy.registerColumnDecorator(MyTable.prototype, <any><unknown> undefined, "name");
+        ORMCoreDecoratorProxy.registerColumnDecorator(MyTable.prototype, <any><unknown> undefined, "id");
         ORMCoreDecoratorProxy.registerIdDecorator(MyTable.prototype, "id");
         ORMCoreDecoratorProxy.registerGeneratedValueDecorator(MyTable.prototype, {
             strategy: "SEQUENCE"
@@ -48,9 +51,9 @@ export class ORMTests {
             schema: "public"
         });
         let entity = ApplicationContext.getInstance().getEntityManager().entityRegistry.getEntity("public", "mytable");
-        DenoAsserts.assertEquals(entity.tableName, "mytable");
-        DenoAsserts.assertEquals(entity.schema, "public");
-        DenoAsserts.assertEquals(entity.columns,[{
+        DenoAsserts.assertEquals(entity?.tableName, "mytable");
+        DenoAsserts.assertEquals(entity?.schema, "public");
+        DenoAsserts.assertEquals(entity?.columns,[{
             name: "isAdult",
             length: 255,
             scale: 2,
@@ -89,7 +92,7 @@ export class ORMTests {
             },
             incrementStrategy: true
         }]);
-        DenoAsserts.assertEquals(entity.uniqueConstraints, [{
+        DenoAsserts.assertEquals(entity?.uniqueConstraints, [{
             name: "id",
             length: 255,
             scale: 2,
@@ -106,7 +109,7 @@ export class ORMTests {
             },
             incrementStrategy: true
           }]);
-        DenoAsserts.assertEquals(entity.primaryKey, {
+        DenoAsserts.assertEquals(entity?.primaryKey, {
             name: "id",
             length: 255,
             scale: 2,
@@ -144,7 +147,7 @@ export class ORMTests {
         ApplicationContext.getInstance().getComponentsRegistry().connectRepositoriesToProxy();
         ApplicationContext.getInstance().getComponentsRegistry().resolveDependencies();
         let repository = ApplicationContext.getInstance().getComponentsRegistry().get("MyRepository");
-        DenoAsserts.assert(repository.componentInstance instanceof RepositoryComponent)
+        DenoAsserts.assert(repository?.componentInstance instanceof RepositoryComponent)
         let handler = repository.componentInstance.getClassHandler();
         DenoAsserts.assert(typeof handler.save === 'function');
         DenoAsserts.assert(typeof handler.findAll === 'function');

@@ -1,8 +1,9 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
 import { KeyStack } from "../keyStack.ts";
-import { MandarineSecurity } from "../mandarine-security.ns.ts";
-import { Cookie } from "../../mvc-framework/core/interfaces/http/cookie.ts";
+import type { MandarineSecurity } from "../mandarine-security.ns.ts";
+import type { Cookie } from "../../mvc-framework/core/interfaces/http/cookie.ts";
+// @ts-ignore
 import { Mandarine } from "../../main-core/Mandarine.ns.ts";
 
 /**
@@ -28,7 +29,8 @@ export class SessionsUtils {
             sessionCookie.maxAge = sessionContainerConfig.cookie.maxAge;
         }
 
-        sessionCookie.expires = new Date(new Date().getTime() + sessionContainerConfig.store.options.expiration);
+        let expirationTime = sessionContainerConfig?.store?.options?.expiration || 0;
+        sessionCookie.expires = new Date(new Date().getTime() + expirationTime);
 
         sessionCookie.value = new KeyStack(sessionContainerConfig.keys).sign(`${sessionCookie.name}=${sessionCookie.value}`);
 

@@ -3,7 +3,7 @@
 import { BcryptEncoder } from "../../../security-core/encoders/bcryptEncoder.ts";
 import { ApplicationContext } from "../../application-context/mandarineApplicationContext.ts";
 import { MandarineSecurityException } from "../../exceptions/mandarineSecurityException.ts";
-import { Mandarine } from "../../Mandarine.ns.ts";
+import type { Mandarine } from "../../Mandarine.ns.ts";
 
 export class AuthenticationManagerBuilder implements Mandarine.Security.Auth.AuthenticationManagerBuilder {
     private _userDetailsServiceType = undefined;

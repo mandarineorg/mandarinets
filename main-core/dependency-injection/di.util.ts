@@ -6,7 +6,7 @@ import { ReflectUtils } from "../utils/reflectUtils.ts";
 import { DI } from "./di.ns.ts";
 import { MandarineException } from "../exceptions/mandarineException.ts";
 import { RoutingUtils } from "../../mvc-framework/core/utils/mandarine/routingUtils.ts";
-import { Mandarine } from "../Mandarine.ns.ts";
+import type { Mandarine } from "../Mandarine.ns.ts";
 
 /**
  * Contains all the util methods that are related to the DI built-in framework.
@@ -38,7 +38,7 @@ export class DependencyInjectionUtil {
                 parameterIndex: parameterIndex,
                 parameterMethodName: propertyName,
                 parameterObjectToInject: (injectionType == DI.InjectionTypes.INJECTABLE_OBJECT) ? methodArgumentTypes[parameterIndex] : undefined,
-                propertyName: undefined,
+                propertyName: <string> <unknown> undefined,
                 className: parentClassName,
                 parameterConfiguration: parameterConfiguration
             };

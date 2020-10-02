@@ -18,8 +18,11 @@ export class Authenticator implements Mandarine.Security.Auth.Authenticator {
 
     public isAuthenticated(requestContext: Mandarine.Types.RequestContext) {
         const authCookie = AuthUtils.findAuthCookie(requestContext);
-        if(authCookie != undefined && Mandarine.Global.getSessionContainer().store.exist(authCookie)) {
-            return true;
+        const sessionContainer = Mandarine.Global.getSessionContainer();
+        if(sessionContainer.store && sessionContainer.store.exist) {
+            if(authCookie != undefined && sessionContainer.store.exist(authCookie)) {
+                return true;
+            }
         }
 
         return false;
@@ -90,7 +93,7 @@ export class Authenticator implements Mandarine.Security.Auth.Authenticator {
             }, Mandarine.Global.getMandarineConfiguration().mandarine.authentication.expiration);
             mandarineSession.sessionData = userDetailsLookUp;
 
-            Mandarine.Global.getSessionContainer().store.set(sessionAuthCookie, mandarineSession, (error, result) => {});
+            Mandarine.Global.getSessionContainer().store?.set(sessionAuthCookie, mandarineSession, (error, result) => {});
             
             result.authSesId = sessionAuthCookie;
             result.message = "Success";
@@ -112,7 +115,7 @@ export class Authenticator implements Mandarine.Security.Auth.Authenticator {
         requestContext.cookies.delete(MandarineConstants.SECURITY_AUTH_COOKIE_NAME, {
             signed: true
         });
-        Mandarine.Global.getSessionContainer().store.destroy(requestContext.request?.authentication?.AUTH_SES_ID, (error, result) => {
+        Mandarine.Global.getSessionContainer().store?.destroy(requestContext.request?.authentication?.AUTH_SES_ID, (error, result) => {
         });
     }
 

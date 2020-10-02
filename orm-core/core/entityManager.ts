@@ -14,8 +14,8 @@ import { ApplicationContext } from "../../main-core/application-context/mandarin
  */
 export class EntityManagerClass {
 
-    private dialectClass: Mandarine.ORM.Dialect.Dialect;
-    private dialect: Mandarine.ORM.Dialect.Dialects;
+    private dialectClass: Mandarine.ORM.Dialect.Dialect | undefined = undefined;
+    private dialect: Mandarine.ORM.Dialect.Dialects | undefined = undefined;
     public entityRegistry: EntityRegistry;
     private databaseClient: any | PostgresConnector;
     private fullyInitialized: boolean = false;
@@ -29,69 +29,75 @@ export class EntityManagerClass {
     public async initializeAllEntities() {
         let entities: Array<Mandarine.ORM.Entity.Table> = this.entityRegistry.getAllEntities();
         
-        let dialect: Mandarine.ORM.Dialect.Dialect = this.dialectClass;
-        // CREATE TABLES
-        let tableQueries: Array<string> = new Array<string>();
-        entities.forEach((table) => {
-            let tableMetadata: Mandarine.ORM.Entity.TableMetadata = dialect.getTableMetadata(table);
+        let dialect: Mandarine.ORM.Dialect.Dialect | undefined = this.dialectClass;
+        if(dialect) {
+            // CREATE TABLES
+            let tableQueries: Array<string> = new Array<string>();
+            entities.forEach((table) => {
+                let tableMetadata: Mandarine.ORM.Entity.TableMetadata = (<Mandarine.ORM.Dialect.Dialect>dialect).getTableMetadata(table);
 
-            let entityCreationQuery = dialect.createTable(tableMetadata, undefined, true);
+                let entityCreationQuery = (<Mandarine.ORM.Dialect.Dialect>dialect).createTable(tableMetadata, undefined, true);
 
-            tableQueries.push(entityCreationQuery);
-        });
+                tableQueries.push(entityCreationQuery);
+            });
 
-        let columnQueries: Array<string> = new Array<string>();
-        entities.forEach(async (table) => {
-            let tableMetadata: Mandarine.ORM.Entity.TableMetadata = dialect.getTableMetadata(table);
-            let entityColumnsInitializationQuery = "";
+            let columnQueries: Array<string> = new Array<string>();
+            entities.forEach(async (table) => {
+                let tableMetadata: Mandarine.ORM.Entity.TableMetadata = (<Mandarine.ORM.Dialect.Dialect>dialect).getTableMetadata(table);
+                let entityColumnsInitializationQuery = "";
 
-            if(table.columns != (null || undefined)) {
-                table.columns.forEach((col) => {
-                    entityColumnsInitializationQuery += dialect.addColumn(tableMetadata, col);
-                });
-            }
-
-            if(entityColumnsInitializationQuery != "") {
-                columnQueries.push(entityColumnsInitializationQuery);
-            }
-        });
-
-        // CREATE PRIMARY KEY AND UNIQUE CONSTRAINTS FOR THE COLUMNS IN TABLE
-        let constraintQueries: Array<string> = new Array<string>();
-        entities.forEach(async (table) => {
-            let tableMetadata: Mandarine.ORM.Entity.TableMetadata = dialect.getTableMetadata(table);
-
-            let entityPrimaryKeyConstraintsQuery = "";
-
-            if(table.primaryKey != (null || undefined)) {
-                entityPrimaryKeyConstraintsQuery += dialect.addPrimaryKey(tableMetadata, table.primaryKey);
-            }
-
-            if(table.uniqueConstraints != (null || undefined)) {
-                table.uniqueConstraints.forEach((uniqueConstraint: Mandarine.ORM.Entity.Column) => {
-                    entityPrimaryKeyConstraintsQuery += dialect.addUniqueConstraint(tableMetadata, uniqueConstraint);
-                })
-            }
-
-            if(entityPrimaryKeyConstraintsQuery != "") {
-                constraintQueries.push(entityPrimaryKeyConstraintsQuery);
-            }
-        });
-
-        switch(this.getDialect()) {
-            case Mandarine.ORM.Dialect.Dialects.POSTGRESQL:
-                try {
-                    let connection = await (<PostgresConnector>this.databaseClient).makeConnection();
-                    await (<PostgresConnector>this.databaseClient).queryWithConnection(connection, tableQueries.join(" "));
-                    await (<PostgresConnector>this.databaseClient).queryWithConnection(connection, columnQueries.join(" "));
-                    await (<PostgresConnector>this.databaseClient).queryWithConnection(connection, constraintQueries.join(" "));
-                    connection = null;
-                }catch(error){
+                if(table.columns != (null || undefined)) {
+                    table.columns.forEach((col) => {
+                        entityColumnsInitializationQuery += (<Mandarine.ORM.Dialect.Dialect>dialect).addColumn(tableMetadata, col);
+                    });
                 }
-            break;
-        }
 
-        ApplicationContext.CONTEXT_METADATA.engineMetadata.orm.dbEntitiesAmount = entities.length;
+                if(entityColumnsInitializationQuery != "") {
+                    columnQueries.push(entityColumnsInitializationQuery);
+                }
+            });
+
+            // CREATE PRIMARY KEY AND UNIQUE CONSTRAINTS FOR THE COLUMNS IN TABLE
+            let constraintQueries: Array<string> = new Array<string>();
+            entities.forEach(async (table) => {
+                let tableMetadata: Mandarine.ORM.Entity.TableMetadata = (<Mandarine.ORM.Dialect.Dialect>dialect).getTableMetadata(table);
+
+                let entityPrimaryKeyConstraintsQuery = "";
+
+                if(table.primaryKey != (null || undefined)) {
+                    entityPrimaryKeyConstraintsQuery += (<Mandarine.ORM.Dialect.Dialect>dialect).addPrimaryKey(tableMetadata, table.primaryKey);
+                }
+
+                if(table.uniqueConstraints != (null || undefined)) {
+                    table.uniqueConstraints.forEach((uniqueConstraint: Mandarine.ORM.Entity.Column) => {
+                        entityPrimaryKeyConstraintsQuery += (<Mandarine.ORM.Dialect.Dialect>dialect).addUniqueConstraint(tableMetadata, uniqueConstraint);
+                    })
+                }
+
+                if(entityPrimaryKeyConstraintsQuery != "") {
+                    constraintQueries.push(entityPrimaryKeyConstraintsQuery);
+                }
+            });
+
+            switch(this.getDialect()) {
+                case Mandarine.ORM.Dialect.Dialects.POSTGRESQL:
+                    try {
+                        let connection: any = await (<PostgresConnector>this.databaseClient).makeConnection();
+                        if(connection) {
+                            await (<PostgresConnector>this.databaseClient).queryWithConnection(connection, tableQueries.join(" "));
+                            await (<PostgresConnector>this.databaseClient).queryWithConnection(connection, columnQueries.join(" "));
+                            await (<PostgresConnector>this.databaseClient).queryWithConnection(connection, constraintQueries.join(" "));
+                            connection = null;
+                        }
+                    }catch(error){
+                    }
+                break;
+            }
+
+            if(ApplicationContext.CONTEXT_METADATA.engineMetadata?.orm) {
+                ApplicationContext.CONTEXT_METADATA.engineMetadata.orm.dbEntitiesAmount = entities.length;
+            }
+        }
     }
 
     public getDataSource(): any {

@@ -1,10 +1,10 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { PoolClient } from "https://raw.githubusercontent.com/mandarineorg/mandarine-postgres/v1.0.3/client.ts";
-import { Pool } from "https://raw.githubusercontent.com/mandarineorg/mandarine-postgres/v1.0.3/mod.ts";
-import { QueryConfig, QueryResult } from "https://raw.githubusercontent.com/mandarineorg/mandarine-postgres/v1.0.3/query.ts";
+import type { PoolClient } from "https://raw.githubusercontent.com/mandarineorg/mandarine-postgres/v1.1.0/client.ts";
+import { Pool } from "https://raw.githubusercontent.com/mandarineorg/mandarine-postgres/v1.1.0/mod.ts";
+import type { QueryConfig, QueryResult } from "https://raw.githubusercontent.com/mandarineorg/mandarine-postgres/v1.1.0/query.ts";
 import { Log } from "../../logger/log.ts";
-import { Mandarine } from "../../main-core/Mandarine.ns.ts";
+import type { Mandarine } from "../../main-core/Mandarine.ns.ts";
 import { MandarineORMException } from "../core/exceptions/mandarineORMException.ts";
 
 export interface PostgresConnectorInterface extends Mandarine.ORM.Connection.Connector {
@@ -15,13 +15,13 @@ export interface PostgresConnectorInterface extends Mandarine.ORM.Connection.Con
     connected?: boolean;
     
     /** Connect to an external database instance. */
-    makeConnection(): Promise<PoolClient>;
+    makeConnection(): Promise<PoolClient | undefined>;
     
     /** Execute a query on the external database instance. */
-    query(query: string | QueryConfig): Promise<QueryResult>;
+    query(query: string | QueryConfig): Promise<QueryResult | undefined>;
 
     /** Execute a query on the external database instance with an existing connection. */
-    queryWithConnection(connection: PoolClient, query: string | QueryConfig, releaseOnFinish: boolean): Promise<QueryResult>;
+    queryWithConnection(connection: PoolClient, query: string | QueryConfig, releaseOnFinish: boolean): Promise<QueryResult | undefined>;
     
     /** Execute queries within a transaction on the database instance. */
     transaction?(queries: string[]): Promise<any[]>;
@@ -54,7 +54,7 @@ export class PostgresConnector implements PostgresConnectorInterface {
       }
     }
   
-    public async makeConnection(): Promise<PoolClient> {
+    public async makeConnection(): Promise<PoolClient | undefined> {
       try {
         return await this.clientPooler.connect();
       }catch(error) {
@@ -62,7 +62,7 @@ export class PostgresConnector implements PostgresConnectorInterface {
       }
     }
 
-    public async query(query: string | QueryConfig): Promise<QueryResult> {
+    public async query(query: string | QueryConfig): Promise<QueryResult | undefined> {
       try {
         const connection = await this.makeConnection();
         if(!connection) throw new Error(`Connection could not be made under query ${query}`);
@@ -74,7 +74,7 @@ export class PostgresConnector implements PostgresConnectorInterface {
       }
     }
 
-    public async queryWithConnection(connection: PoolClient, query: string | QueryConfig): Promise<QueryResult> {
+    public async queryWithConnection(connection: PoolClient, query: string | QueryConfig): Promise<QueryResult | undefined> {
       try {
         let result: Promise<QueryResult> = connection.query(query);
         return result;

@@ -1,6 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { rgb8 } from "https://deno.land/std@0.67.0/fmt/colors.ts";
+import { rgb8 } from "https://deno.land/std@0.71.0/fmt/colors.ts";
 import { Log } from "../logger/log.ts";
 import { MandarineConstants } from "./mandarineConstants.ts";
 

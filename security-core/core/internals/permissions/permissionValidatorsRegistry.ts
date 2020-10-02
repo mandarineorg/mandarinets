@@ -1,6 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { Mandarine } from "../../../../main-core/Mandarine.ns.ts";
+import type { Mandarine } from "../../../../main-core/Mandarine.ns.ts";
 import { isAuthenticated } from "./validators/isAuthenticated.ts";
 import { hasRole } from "./validators/hasRole.ts";
 
@@ -20,6 +20,7 @@ export class PermissionValidatorsRegistry {
         if(validator) {
             return validator(request, authentication)(inputs);
         }
+        return false;
     }
 
     public getAllValidators() {

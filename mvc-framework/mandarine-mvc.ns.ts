@@ -1,14 +1,14 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { Context, Request, Response } from "../deps.ts";
-import { DI } from "../main-core/dependency-injection/di.ns.ts";
-import { MandarineSessionContainer } from "../main-core/mandarine-native/sessions/mandarineSessionContainer.ts";
-import { Mandarine } from "../mod.ts";
-import { Cookie as MandarineCookie } from "./core/interfaces/http/cookie.ts";
+import type { Context, Request, Response } from "../deps.ts";
+import type { DI } from "../main-core/dependency-injection/di.ns.ts";
+import type { MandarineSessionContainer } from "../main-core/mandarine-native/sessions/mandarineSessionContainer.ts";
+import type { Mandarine } from "../mod.ts";
+import type { Cookie as MandarineCookie } from "./core/interfaces/http/cookie.ts";
 import { MandarineMVCContext } from "./core/mandarineMvcContext.ts";
 import { RenderEngineClass } from "./core/modules/view-engine/renderEngine.ts";
-import { NonComponentMiddlewareTarget } from "../main-core/internals/interfaces/middlewareTarget.ts";
-import { GuardTarget } from "../main-core/internals/interfaces/guardTarget.ts";
+import type { NonComponentMiddlewareTarget } from "../main-core/internals/interfaces/middlewareTarget.ts";
+import type { GuardTarget } from "../main-core/internals/interfaces/guardTarget.ts";
 
 /**
 * This namespace contains all the essentials for Mandarine MVC to work
@@ -498,7 +498,8 @@ export namespace MandarineMvc {
             withPermissions?: Mandarine.Security.Auth.Permissions,
             middleware?: Array<NonComponentMiddlewareTarget | Mandarine.Types.MiddlewareComponent>;
             guards?: Array<Function | GuardTarget>
-        }
+            [key: string]: any
+        };
 
         /**
         * Refers to the information of a param in a route.
@@ -679,7 +680,7 @@ export namespace MandarineMvc {
          * @param resourcePath is injected
          */
         export interface ResourceResolver {
-            resolve(httpContext: Mandarine.Types.RequestContext, resourcePath: string): Uint8Array;
+            resolve(httpContext: Mandarine.Types.RequestContext, resourcePath: string): Uint8Array | undefined;
         }
 
     }

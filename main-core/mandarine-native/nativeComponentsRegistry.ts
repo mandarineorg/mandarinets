@@ -79,7 +79,7 @@ export class NativeComponentsRegistry {
                 if(child.methodName === "onInitialization") throw new MandarineException(MandarineException.ON_INITIALIZATION_OVERRIDEN);
                 const methodCall = (child.providers) ? nativeComponent[child.methodName](...child.providers) : nativeComponent[child.methodName]();
                 if(!(methodCall instanceof child.type)) throw new MandarineException(MandarineException.INVALID_OVERRIDEN_ON_METHOD.replace("%s", child.methodName));
-                if(child.onOverride || (child.isReadonly === false || child.isReadonly === undefined)) child.onOverride(methodCall);
+                if(child.onOverride || (child.isReadonly === false || child.isReadonly === undefined) && child.onOverride) child.onOverride(methodCall);
             }
         });
 
