@@ -47,16 +47,8 @@ new MandarineCore().MVC().run();
 
 const mandarineDefaultTsConfig = `{
     "compilerOptions": {
-        "strict": false,
-        "noImplicitAny": false,
-        "noImplicitThis": false,
-        "alwaysStrict": false,
-        "strictNullChecks": false,
-        "strictFunctionTypes": true,
-        "strictPropertyInitialization": false,
         "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
-        "allowUmdGlobalAccess": false,
+        "emitDecoratorMetadata": true
     }
 }`;
 
