@@ -1,8 +1,8 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import type { MandarineSecurity } from "../../../security-core/mandarine-security.ns.ts";
 import { CommonUtils } from "../../utils/commonUtils.ts";
 import { MandarineSessionHandler } from "./mandarineDefaultSessionStore.ts";
+import type { MandarineSecurity } from "../../../security-core/mandarine-security.ns.ts";
 
 export class MandarineSessionContainer implements MandarineSecurity.Sessions.SessionContainer {
     public cookie: MandarineSecurity.Sessions.SessionCookie;

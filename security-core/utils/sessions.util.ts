@@ -1,10 +1,10 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
 import { KeyStack } from "../keyStack.ts";
-import type { MandarineSecurity } from "../mandarine-security.ns.ts";
 import type { Cookie } from "../../mvc-framework/core/interfaces/http/cookie.ts";
 // @ts-ignore
 import { Mandarine } from "../../main-core/Mandarine.ns.ts";
+import type { MandarineSecurity } from "../../security-core/mandarine-security.ns.ts";
 
 /**
  * Contains all the util methods used by the session middleware
