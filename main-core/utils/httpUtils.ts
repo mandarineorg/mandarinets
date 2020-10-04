@@ -194,8 +194,6 @@ export class HttpUtils {
     }
 
     public static assignContentType(context: Mandarine.Types.RequestContext) {
-        if(context.isResource) return;
-        
         let contentType: string = Mandarine.Global.getMandarineConfiguration().mandarine.server.responseType;
 
         const responseBody = context.response.body;
