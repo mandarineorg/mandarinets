@@ -25,7 +25,7 @@ Targets: HTTP Parameter
 
 ## Usage
 ```typescript
-import { UseGuards, Guard, GuardTargetMethod, GuardTarget, Controller, GET } from "https://deno.land/x/mandarinets@v2.1.0/mod.ts";
+import { UseGuards, Guard, GuardTargetMethod, GuardTarget, Controller, GET } from "https://deno.land/x/mandarinets@v2.1.1/mod.ts";
 
 @Component()
 export class MymathService implements Mandarine.Types.PipeTransform {

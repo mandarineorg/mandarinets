@@ -76,7 +76,10 @@ export class MandarineMVC {
         .use(starter.getRouter().routes())
         .use(starter.getRouter().allowedMethods())
         .use(async (ctx: any, next) => {
-            HttpUtils.assignContentType(ctx);
+            const typedContext: Mandarine.Types.RequestContext = ctx;
+            if(!typedContext.isResource) {
+                HttpUtils.assignContentType(ctx);
+            }
             await next();
         });
         app.keys = [mandarineConfiguration.mandarine.security.cookiesSignKeys];

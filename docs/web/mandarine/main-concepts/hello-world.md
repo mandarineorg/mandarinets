@@ -4,7 +4,7 @@ Mandarine has a very simple & straightforward way to be written, this is what ma
 ```typescript
 // myFile.ts
 
-import { MandarineCore, Controller, GET } from "https://deno.land/x/mandarinets@v2.1.0/mod.ts";
+import { MandarineCore, Controller, GET } from "https://deno.land/x/mandarinets@v2.1.1/mod.ts";
 
     @Controller()
     export class MyController {
