@@ -27,7 +27,7 @@ Controllers are responsible for dealing with Mandarine's HTTP Dispatcher & your 
 ## Usage
 
 ```typescript
-import { Controller } from "https://deno.land/x/mandarinets@v2.1.0/mod.ts";
+import { Controller } from "https://deno.land/x/mandarinets@v2.1.1/mod.ts";
 
 @Controller()
 export class MyController {
@@ -35,7 +35,7 @@ export class MyController {
 ```
 ----
 ```typescript
-import { Controller } from "https://deno.land/x/mandarinets@v2.1.0/mod.ts";
+import { Controller } from "https://deno.land/x/mandarinets@v2.1.1/mod.ts";
 
 @Controller('/api')
 export class MyController {

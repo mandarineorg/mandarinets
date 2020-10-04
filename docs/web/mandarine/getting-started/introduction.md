@@ -7,7 +7,7 @@ Under the hood, Mandarine uses [Oak](https://oakserver.github.io/oak/) as its ma
 ----
 &nbsp;
 ## Documentation
-> Deno >= v1.4.2 & Mandarine >= 2.1.0 is required for this documentation. Lower versions may result in failure. <br> Legacy documentation can be found [here](https://mandarineframework.gitbook.io/mandarine-ts/)
+> Deno >= v1.4.2 & Mandarine >= 2.1.1 is required for this documentation. Lower versions may result in failure. <br> Legacy documentation can be found [here](https://mandarineframework.gitbook.io/mandarine-ts/)
 
 ## Philosophy
 [Node.js](https://nodejs.org/en/) has made Javascript become the new thing in the last years, however, we believe Deno can satisfy many business needs in better ways (_programmatically speaking_).  

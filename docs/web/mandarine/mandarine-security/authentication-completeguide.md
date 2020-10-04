@@ -12,7 +12,7 @@ In order to fully use all the features related to Mandarine's built-in authentic
 The following example contains a full but simple example on how to use Mandarine's built-in authentication.  
 
 ```typescript
-import { Service, Mandarine, Override, Controller, GET, AuthPrincipal } from "https://deno.land/x/mandarinets@v2.1.0/mod.ts";
+import { Service, Mandarine, Override, Controller, GET, AuthPrincipal } from "https://deno.land/x/mandarinets@v2.1.1/mod.ts";
 
 @Service()
 export class UserDetailsServiceImplementation implements Mandarine.Security.Auth.UserDetailsService {
