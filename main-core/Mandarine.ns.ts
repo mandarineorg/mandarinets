@@ -41,12 +41,21 @@ export namespace Mandarine {
 
     export type IniFile = { [prop: string]: string; };
 
+    /**
+     * Contains the different properties different stereotypes/components take
+     */
     export namespace Components {
+        /**
+         * Interface that provides with the necessary fields for `configuration` in a Mandarine-powered component stereotype of Middleware
+         */
         export interface MiddlewareComponent {
             configuration: {
                 regexRoute: RegExp;
             }
         }
+        /**
+         * Interface that provides with the necessary fields for `configuration` in a Mandarine-powered component stereotype of Catch
+         */
         export interface CatchComponent {
             configuration: {
                 exceptionType: any;
@@ -398,6 +407,9 @@ export namespace Mandarine {
             const componentRegistry = getNativeComponentsRegistry();
         };
 
+        /**
+         * Initializes the core modules of Mandarine's security core.
+         */
         export function initializeSecurityInternals() {
             let mandarineGlobal: Mandarine.Global.MandarineGlobalInterface = Mandarine.Global.getMandarineGlobal();
             if(!mandarineGlobal.__SECURITY__.auth.authManagerBuilder) {
@@ -416,6 +428,10 @@ export namespace Mandarine {
     */
     export namespace ApplicationContext {
 
+        /**
+         * Stats/Metadata of Mandarine's core.
+         * This includes information such as: When Mandarine was started, number of templates, controller, and others.
+         */
         export interface ApplicationContextMetadata {    
             startupDate?: number;
             engineMetadata?: {
@@ -431,6 +447,9 @@ export namespace Mandarine {
             }
         }
 
+        /**
+         * Interface used by the `ApplicationContext` class. Such class contains the necessary bridges for Mandarine's core to work
+         */
         export interface IApplicationContext {
             getComponentsRegistry(): MandarineCore.IComponentsRegistry;
             getEntityManager(): Mandarine.ORM.Entity.EntityManager;
@@ -580,6 +599,10 @@ export namespace Mandarine {
             addResourceCors(cors: Mandarine.MandarineMVC.CorsMiddlewareOption): ResourceHandler;
         };
 
+        /**
+         * Properties used by the native components registry.
+         * This interface provides mandarine with the management of native components in the core.
+         */
         export interface NativeComponentsProperties {
             key: NativeComponents;
             type: any;
@@ -593,11 +616,17 @@ export namespace Mandarine {
             }>
         };
 
+        /**
+         * List of necessary fields for a Native Component
+         */
         export interface MandarineNativeComponent<T> {
             overriden?: boolean;
             onInitialization(): T;
         }
 
+        /**
+         * Class responsible for storing resource handlers
+         */
         export class MandarineResourceHandlerRegistry extends ResourceHandlerRegistry {}
 
     };
@@ -614,12 +643,27 @@ export namespace Mandarine {
     */
    export import Security = MandarineSecurity; 
 
-   export import ORM = MandarineORM; 
 
+    /**
+     * Refers to the namespace of the Mandarine ORM Core
+     * Inside this module, you can find everything related to `Mandarine Data` or `Mandarine ORM` which handles the logic behind databases
+     */
+   export import ORM = MandarineORM;
+
+   /**
+    * Refers to the namespace containing a list of classes that are used for Mandarine native objects.
+    * Native objects/classes are used to alter the behavior of internal functionalities
+    */
    export import Native = MandarineNative;
 
+   /**
+    * Refers to the namespace containing interfaces & modules that are not directly part of Mandarine's core
+    */
    export import Miscellaneous = MandarineMiscellaneous;
-   
+
+    /**
+     * Refers to the namespace of types & interface shortcuts used by Mandarine
+     */
    export import Types = MandarineCommonInterfaces;
 
     /**

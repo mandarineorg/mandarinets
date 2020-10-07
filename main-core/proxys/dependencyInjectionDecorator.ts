@@ -5,6 +5,9 @@ import { DI } from "../dependency-injection/di.ns.ts";
 import { DependencyInjectionUtil } from "../dependency-injection/di.util.ts";
 import { Mandarine } from "../Mandarine.ns.ts";
 
+/**
+ * Logic behind decorators of Dependency Injection's core
+ */
 export class DependencyInjectionDecoratorsProxy {
 
     public static registerInject(targetClass: any, propertyName: string, propertyInMethodIndex: number) {

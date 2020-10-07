@@ -9,13 +9,17 @@ import { CommonUtils } from "../../utils/commonUtils.ts";
 import { HttpUtils } from "../../utils/httpUtils.ts";
 import { MandarineAuthenticationException } from "../../exceptions/mandarineAuthException.ts";
 
+/**
+ * The authenticator class contains the logic behind executing built-in authentication by Mandarine.
+ * This class is requested by Mandarine's built-in authentication
+ */
 export class Authenticator implements Mandarine.Security.Auth.Authenticator {
 
     public verifyAuthenticationSatisfaction(): boolean {
         return AuthUtils.verifyAuthenticationSatisfaction();
     }
 
-    public isAuthenticated(requestContext: Mandarine.Types.RequestContext) {
+    public isAuthenticated(requestContext: Mandarine.Types.RequestContext): boolean {
         const authCookie = AuthUtils.findAuthCookie(requestContext);
         const sessionContainer = Mandarine.Global.getSessionContainer();
         if(sessionContainer.store && sessionContainer.store.exist) {
@@ -27,7 +31,7 @@ export class Authenticator implements Mandarine.Security.Auth.Authenticator {
         return false;
     }
 
-    public performAuthentication(username: string, password: string, requestContext: Mandarine.Types.RequestContext) {
+    public performAuthentication(username: string, password: string, requestContext: Mandarine.Types.RequestContext): Mandarine.Security.Auth.AuthenticationResult {
 
         const result: Mandarine.Security.Auth.AuthenticationResult = {
             status: "FAILED"
@@ -110,7 +114,7 @@ export class Authenticator implements Mandarine.Security.Auth.Authenticator {
         }
     }
     
-    public stopAuthentication(requestContext: Mandarine.Types.RequestContext) {
+    public stopAuthentication(requestContext: Mandarine.Types.RequestContext): void {
         requestContext.cookies.delete(MandarineConstants.SECURITY_AUTH_COOKIE_NAME, {
             signed: true
         });
