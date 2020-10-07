@@ -6,6 +6,7 @@ import { ApplicationContext } from "./application-context/mandarineApplicationCo
 import { MandarineTSFrameworkEngineMethods } from "./engine/mandarineTSFrameworkEngineMethods.ts";
 import { Mandarine } from "./Mandarine.ns.ts";
 import { MandarineConstants } from "./mandarineConstants.ts";
+import { MandarineUtils } from "./utils/mandarineUtils.ts";
 
 /**
  * Contains core methods & information related to Mandarine
@@ -28,9 +29,11 @@ export class MandarineCore {
 
         this.initializeControllers();
         this.initializeTemplates();
-        this.initializeEntityManager();
+        this.initializeEntityManager(); 
 
         this.writeOnCompiler();
+
+        Mandarine.Global.getMandarineGlobal().mandarineProperties = <Readonly<any>> MandarineUtils.absoluteZeroFreeze(Mandarine.Global.getMandarineGlobal().mandarineProperties);
     }
 
     private resolveComponentsDependencies(): void {
