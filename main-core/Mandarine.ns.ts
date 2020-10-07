@@ -151,7 +151,7 @@ export namespace Mandarine {
             mandarineEntityManager: Mandarine.ORM.Entity.EntityManager;
             mandarineTemplatesManager: MandarineCore.ITemplatesManager,
             mandarineResourceHandlerRegistry: MandarineCore.IResourceHandlerRegistry
-            mandarineProperties: Properties;
+            mandarineProperties: Properties | Readonly<Properties>;
             mandarineInitialProperties: MandarineInitialProperties;
             mandarineMiddleware: Array<ComponentComponent & Components.MiddlewareComponent>;
             mandarineNativeComponentsRegistry: NativeComponentsRegistry;
