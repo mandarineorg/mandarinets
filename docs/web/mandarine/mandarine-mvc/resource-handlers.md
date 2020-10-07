@@ -48,7 +48,7 @@ export class WebMvcConfigurer extends Mandarine.Native.WebMvcConfigurer {
          * This will mean you will have to add a Resource Handler to handle static content.
          * Do not use `getNew()` in order to keep the default static content handler.
          */
-        let resourceHandlerRegistry = Mandarine.Global.getResourceHandlerRegistry();
+        let resourceHandlerRegistry: Mandarine.MandarineCore.IResourceHandlerRegistry = Mandarine.Global.getResourceHandlerRegistry();
         // Or let resourceHandlerRegistry = Mandarine.Global.getResourceHandlerRegistry().getNew();
         
         resourceHandlerRegistry.addResourceHandler(
