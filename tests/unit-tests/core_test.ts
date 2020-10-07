@@ -4,9 +4,18 @@ import { Mandarine } from "../../main-core/Mandarine.ns.ts";
 import { MandarineConstants } from "../../main-core/mandarineConstants.ts";
 import { MandarineCore } from "../../main-core/mandarineCore.ts";
 import { CommonUtils } from "../../main-core/utils/commonUtils.ts";
-import { DenoAsserts, Test } from "./../mod.ts";
+import { ApplicationContext } from "../../mod.ts";
+import { DenoAsserts, Orange, Test } from "./../mod.ts";
 
 export class CoreTest {
+
+    constructor() {
+        Orange.setOptions(this, {
+            hooks: {
+                beforeEach: () => ApplicationContext.getInstance().getComponentsRegistry().clearComponentRegistry()
+            }
+        })
+    }
 
     @Test({
         name: "Freeze project properties",
@@ -14,8 +23,10 @@ export class CoreTest {
     })
     public async checkCopyright() {
 
+        try {
         Mandarine;
         new MandarineCore();
+        } catch {}
 
         DenoAsserts.assertThrows(() => {
             Mandarine.Global.getMandarineGlobal().mandarineProperties.mandarine.security.cookiesSignKeys.push("Error");
