@@ -13,7 +13,7 @@ import { MandarineCore } from "https://deno.land/x/mandarinets@v2.1.1/mod.ts";
 
 let MVC = new MandarineCore().MVC();
 
-MVC.addMiddleware(async (context, next) => {
+MVC.addMiddleware(async (context: any, next: Function) => {
 
 });
 ```

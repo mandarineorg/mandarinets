@@ -20,25 +20,25 @@ The optional class lets you handle possible null values in a programmatic way, t
 ```typescript
 import { Optional } from "https://deno.land/x/mandarinets@v2.1.1/mod.ts";
 
-let myNullVariable = null;
+let myNullVariable: any = null;
 Optional.of(myNullVariable).ifPresent(); // Returns `false` because value is null.
 
-let organizationName = null;
+let organizationName: any = null;
 Optional.of(organizationName).orElseGet("Mandarine.ts Organization"); // Returns `Mandarine.ts Organization` because value is null.
 
-let frameworkName = "React";
+let frameworkName: any = "React";
 Optional.of(frameworkName).orElseGet("Mandarine.ts"); // Returns `React` bacause value **is not** null;
 
-let mySecondNullVariable = null;
+let mySecondNullVariable: any = null;
 Optional.of(mySecondNullVariable).get(); // Throws an error because value is not present/is null.
 
-let companyName = "Amazon Inc.";
+let companyName: any = "Amazon Inc.";
 Optional.of(companyName).get(); // Returns `Amazon Inc.` because value is present.
 
-let myThirdNullVariable = null;
+let myThirdNullVariable: any = null;
 Optional.of(myThirdNullVariable).orElseThrows(new Error("My custom error")); // Throws `Error: My custom error` because value is null.
 
-let computerName = "Macbook Air";
+let computerName: any = "Macbook Air";
 Optional.of(computerName).orElseThrows(new Error("My custom error")); // Returns `Macbook Air` because value is present/ **not null**.
 
 ```
