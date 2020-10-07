@@ -30,9 +30,12 @@ export class MandarineCore {
         this.initializeControllers();
         this.initializeTemplates();
         this.initializeEntityManager(); 
+        this.freezeMandarineProperties();
 
         this.writeOnCompiler();
+    }
 
+    private freezeMandarineProperties(): void {
         Mandarine.Global.getMandarineGlobal().mandarineProperties = <Readonly<any>> MandarineUtils.absoluteZeroFreeze(Mandarine.Global.getMandarineGlobal().mandarineProperties);
     }
 
