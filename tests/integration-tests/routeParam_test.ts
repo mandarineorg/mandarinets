@@ -16,7 +16,7 @@ export class RouteParamTest {
     }
 
     @Test({
-        name: "Test Endpoints from `files/routeParam.ts`",
+        name: "[IT05] Test Endpoints from `files/routeParam.ts`",
         description: "Test all endpoints in file, and verifies its return values"
     })
     public async testSayHi() {

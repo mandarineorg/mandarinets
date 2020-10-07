@@ -16,7 +16,7 @@ export class TemplatesTest {
     }
 
     @Test({
-        name: "Test Endpoints from `files/templates.ts`",
+        name: "[IT06] Test Endpoints from `files/templates.ts`",
         description: "Verifies manual templates are working properly"
     })
     public async testTemplatesEndpoints() {

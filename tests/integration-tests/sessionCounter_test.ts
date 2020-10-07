@@ -16,7 +16,7 @@ export class SessionCounterTest {
     }
 
     @Test({
-        name: "Test Endpoints from `files/sessionCounter.ts`",
+        name: "[IT05] Test Endpoints from `files/sessionCounter.ts`",
         description: "Verifies Mandarine native session system is working properly"
     })
     public async testSessionCounter() {

@@ -555,6 +555,9 @@ export namespace MandarineMvc {
         className?: string;
     }
 
+    /**
+     * Information used by CORS decorator & CORS Middleware for functionality
+     */
     export interface CorsMiddlewareOption {
         origin: string | RegExp | Array<string | RegExp>;
         methods?: Array<string>;
@@ -565,6 +568,9 @@ export namespace MandarineMvc {
         optionsSuccessStatus?: number;
     }
 
+    /**
+     * Interface of object returned when using decorator `@RequestBody()` in request which data is of `Multipart/form-data`
+     */
     export interface MultipartFormData {
         fields?: {
             [prop: string]: any
@@ -582,6 +588,11 @@ export namespace MandarineMvc {
     export interface Cookie extends MandarineCookie {
     }
 
+    /**
+     * Interface of object returned when using decorator `@Parameters()`.
+     * @field `query` returns an object with keys & values of query parameters
+     * @field `route` returns an object with keys & values of route parameters.
+     */
     export interface AllParameters {
         query: {
             [prop: string]: any;
@@ -612,10 +623,17 @@ export namespace MandarineMvc {
         getResponse(): ResponseContext;
     }
 
+    /**
+     * Interface used for the custom decorator executor.
+     * Custom Decorator Executor refers to the context of a mandarine-powered decorator created by the user.
+     */
     export type CustomDecoratorExecutor<DecoratorData = any, DecoratorReturn = any> = (context: Mandarine.Types.RequestContextAcessor, 
                                                                                        ...data: Array<DecoratorData>) => DecoratorReturn;
                                             
 
+    /**
+     * Metadata & information of a Mandarine-generated decorator through custom decorators
+     */                                                                                   
     export interface DecoratorFactoryData<DecoratorData, DecoratorReturn> {
         provider: CustomDecoratorExecutor;
         paramData: Array<any>;

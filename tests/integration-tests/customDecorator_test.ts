@@ -16,7 +16,7 @@ export class CustomDecoratorIntTest {
     }
 
     @Test({
-        name: "Test Endpoints from `files/customDecorator.ts`",
+        name: "[IT01] Test Endpoints from `files/customDecorator.ts`",
         description: "Test all endpoints in file, and verifies that a simple custom decorator is working fine."
     })
     public async testCustomDecorator() {

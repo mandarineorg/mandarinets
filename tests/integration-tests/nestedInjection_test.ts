@@ -16,7 +16,7 @@ export class NestedInjectionTest {
     }
 
     @Test({
-        name: "Test Endpoints from `files/nestedInjection.ts`",
+        name: "[IT03] Test Endpoints from `files/nestedInjection.ts`",
         description: "Test all endpoints in file, and verifies its return values"
     })
     public async testPiInService() {

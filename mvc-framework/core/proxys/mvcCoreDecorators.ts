@@ -11,6 +11,9 @@ import type { AnnotationMetadataContext } from "../interfaces/mandarine/mandarin
 import type { NonComponentMiddlewareTarget } from "../../../main-core/internals/interfaces/middlewareTarget.ts";
 import type { GuardTarget } from "../../../main-core/internals/interfaces/guardTarget.ts";
 
+/**
+ * Logic behind MVC Core Decorators.
+ */
 export class MVCDecoratorsProxy {
 
     public static registerResponseStatusDecorator(targetClass: any, httpCode: Mandarine.MandarineMVC.HttpStatusCode, methodName: string) {
