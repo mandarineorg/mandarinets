@@ -16,7 +16,7 @@ export class MiddlewareTest {
     }
 
     @Test({
-        name: "Test Endpoints from `files/middleware.ts`",
+        name: "[IT03] Test Endpoints from `files/middleware.ts`",
         description: "Test all endpoints in file, and verifies middleware references are working fine"
     })
     public async testMiddlewareEndpoints() {

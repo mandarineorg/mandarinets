@@ -76,6 +76,10 @@ export class MandarineCore {
         }
     }
 
+    /**
+     * Creates bridge between Mandarine's core and Mandarine MVC Core.
+     * Allows you to create Mandarine-powered web applications.
+     */
     public MVC() {
         return new MandarineMVC(() => {
             Mandarine.Global.getSessionContainer().store?.launch();

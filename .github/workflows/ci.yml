@@ -1,4 +1,4 @@
-name: ci
+name: Unit Tests
 
 on: [push, pull_request]
 
@@ -18,4 +18,4 @@ jobs:
         with:
           deno-version: ${{ matrix.deno }}
       - name: run tests
-        run: deno test -c tsconfig.json --reload --allow-all --unstable
+        run: deno test -c tsconfig.json --reload --allow-all --unstable tests/unit-tests/

@@ -2,6 +2,10 @@
 
 import { Mandarine } from "../../Mandarine.ns.ts";
 
+/**
+ * `MandarineSessionHandler` serves as the default implementation of the `SessionStore`.
+ * If not implementation is overriden, you may still use Sessions as this class is already implemented by Mandarine's core
+ */
 export class MandarineSessionHandler implements Mandarine.Security.Sessions.SessionStore {
 
     public options: any = {

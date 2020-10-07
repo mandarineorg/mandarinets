@@ -16,7 +16,7 @@ export class GuardsTest {
     }
 
     @Test({
-        name: "Test Endpoints from `files/guards.ts`",
+        name: "[IT02] Test Endpoints from `files/guards.ts`",
         description: "Test all endpoints in file, and verifies that guards are working fine"
     })
     public async testGuardsEndpoints() {

@@ -6,6 +6,9 @@ import { CommonUtils } from "../utils/commonUtils.ts";
 import { ReflectUtils } from "../utils/reflectUtils.ts";
 import { MandarineException } from "../exceptions/mandarineException.ts";
 
+/**
+ * Logic behind decorators of Mandarine's core
+ */
 export class MainCoreDecoratorProxy {
 
     public static registerMandarinePoweredComponent(targetClass: any, componentType: Mandarine.MandarineCore.ComponentTypes, options: { [prop: string]: any }, methodIndex: number | null) {

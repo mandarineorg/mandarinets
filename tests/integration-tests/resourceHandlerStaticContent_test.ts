@@ -16,7 +16,7 @@ export class ResourceHandlerStaticContentTest {
     }
 
     @Test({
-        name: "Test Endpoints from `files/resourceHandlerStaticContent.ts`",
+        name: "[IT04] Test Endpoints from `files/resourceHandlerStaticContent.ts`",
         description: "Verifies Mandarine is serving static content"
     })
     public async testTemplatesEndpoints() {

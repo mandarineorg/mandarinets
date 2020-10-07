@@ -16,8 +16,8 @@ Non-component middleware are specifically created to target a controller or a HT
 
 ```typescript
 export const nonComponentMiddlewareContinueFalse = {
-    onPreRequest: (request, response) => { console.log("OnPreRequest"); return true; },
-    onPostRequest: (request, response) => console.log("OnPostRequest")
+    onPreRequest: (request: Mandarine.Types.CurrentRequest, response: Mandarine.Types.CurrentResponse) => { console.log("OnPreRequest"); return true; },
+    onPostRequest: (request: Mandarine.Types.CurrentRequest, response: Mandarine.Types.CurrentResponse) => console.log("OnPostRequest")
 }
 
 @Controller()
