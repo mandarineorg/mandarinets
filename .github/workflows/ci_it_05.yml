@@ -1,4 +1,4 @@
-name: ci
+name: Integration Tests 05
 
 on: [push, pull_request]
 
