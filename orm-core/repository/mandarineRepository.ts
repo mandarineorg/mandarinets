@@ -42,7 +42,7 @@ export abstract class MandarineRepository<T> {
          return this.modeler;
      }
 
-     public save(model: T) {}
+     public save(model: Partial<T>) {}
      public findAll() {}
      public deleteAll() {}
      public countAll() {}
