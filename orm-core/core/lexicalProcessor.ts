@@ -1,10 +1,17 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
 import type { Mandarine } from "../../main-core/Mandarine.ns.ts";
+import { MandarineORMException } from "./exceptions/mandarineORMException.ts";
 
 export const lexicalProcessor = (currentProxy: Mandarine.ORM.RepositoryProxy, methodName: string, proxyType: Mandarine.ORM.ProxyType, tableMetadata: Mandarine.ORM.Entity.TableMetadata, entity: Mandarine.ORM.Entity.Table, dialect: Mandarine.ORM.Dialect.Dialect) => {
 
-    let columnsNames = entity.columns.map(item => item?.name?.toLowerCase());
+    const columnNamesCases: Map<String, String> = new Map<String, String>();
+    entity.columns.forEach((item) => {
+        columnNamesCases.set(<string> item.name, <string> item.name?.toLowerCase());
+    });
+    const columnNameEntries = Array.from(columnNamesCases.entries());
+
+    let columnsNames = Array.from(columnNamesCases.values());
     methodName = methodName.replace(proxyType, "").toLowerCase();
 
     let mainQuery = "";
@@ -119,7 +126,11 @@ export const lexicalProcessor = (currentProxy: Mandarine.ORM.RepositoryProxy, me
         const { previous, current, next } = iterator;
 
         if(current && isColumn(current)) {
-            queryData.push(current);
+
+            const originalName = columnNameEntries.find(([key, value]) => value === current);
+            if(!originalName) throw new MandarineORMException(MandarineORMException.MQL_INVALID_KEY, "");
+            queryData.push(`"${originalName[0]}"`);
+
             if(next && isOperator(next)) {
                 if(next == 'and' || next == 'or') {
                     addOperator("=", false);

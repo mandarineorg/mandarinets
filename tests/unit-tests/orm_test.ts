@@ -191,6 +191,9 @@ export class ORMTests {
                 },
                 {
                     name: "country"
+                },
+                {
+                    name: "CarModEl"
                 }
             ]
         }
@@ -198,34 +201,37 @@ export class ORMTests {
         const dialect = new PostgreSQLDialect();
 
         const countByCountry = lexicalProcessor(fakeRepositoryProxy, "countByCountry", "countBy", fakeTableMetadata, fakeEntity, dialect);
-        DenoAsserts.assertEquals(countByCountry, "SELECT COUNT(*) FROM public.users WHERE country = $1");
+        DenoAsserts.assertEquals(countByCountry, `SELECT COUNT(*) FROM public.users WHERE "country" = $1`);
 
         const findByCountry = lexicalProcessor(fakeRepositoryProxy, "findByCountry", "findBy", fakeTableMetadata, fakeEntity, dialect);
-        DenoAsserts.assertEquals(findByCountry, "SELECT * FROM public.users WHERE country = $1");
+        DenoAsserts.assertEquals(findByCountry, `SELECT * FROM public.users WHERE "country" = $1`);
 
         const findByFirstnameAndCountry = lexicalProcessor(fakeRepositoryProxy, "findByFirstnameAndCountry", "findBy", fakeTableMetadata, fakeEntity, dialect);
-        DenoAsserts.assertEquals(findByFirstnameAndCountry, "SELECT * FROM public.users WHERE firstname = $1 AND country = $2");
+        DenoAsserts.assertEquals(findByFirstnameAndCountry, `SELECT * FROM public.users WHERE "firstname" = $1 AND "country" = $2`);
 
         const findByCountryIsNotNull = lexicalProcessor(fakeRepositoryProxy, "findByCountryIsNotNull", "findBy", fakeTableMetadata, fakeEntity, dialect);
-        DenoAsserts.assertEquals(findByCountryIsNotNull, "SELECT * FROM public.users WHERE country IS NOT NULL");
+        DenoAsserts.assertEquals(findByCountryIsNotNull, `SELECT * FROM public.users WHERE "country" IS NOT NULL`);
 
         const findByCountryIsNull = lexicalProcessor(fakeRepositoryProxy, "findByCountryIsNull", "findBy", fakeTableMetadata, fakeEntity, dialect);
-        DenoAsserts.assertEquals(findByCountryIsNull, "SELECT * FROM public.users WHERE country IS NULL");
+        DenoAsserts.assertEquals(findByCountryIsNull, `SELECT * FROM public.users WHERE "country" IS NULL`);
 
         const findByFirstnameIsNotEmptyAndCountryIsEmpty = lexicalProcessor(fakeRepositoryProxy, "findByFirstnameIsNotEmptyAndCountryIsEmpty", "findBy", fakeTableMetadata, fakeEntity, dialect);
-        DenoAsserts.assertEquals(findByFirstnameIsNotEmptyAndCountryIsEmpty, "SELECT * FROM public.users WHERE firstname <> '' AND country = ''");
+        DenoAsserts.assertEquals(findByFirstnameIsNotEmptyAndCountryIsEmpty, `SELECT * FROM public.users WHERE "firstname" <> '' AND "country" = ''`);
 
         const findByLastnameStartingWith = lexicalProcessor(fakeRepositoryProxy, "findByLastnameStartingWith", "findBy", fakeTableMetadata, fakeEntity, dialect);
-        DenoAsserts.assertEquals(findByLastnameStartingWith, "SELECT * FROM public.users WHERE lastname LIKE '' || $1 || '%'");
+        DenoAsserts.assertEquals(findByLastnameStartingWith, `SELECT * FROM public.users WHERE "lastname" LIKE '' || $1 || '%'`);
 
         const findByLastnameAndCountryLikeAndFirstnameEndsWith = lexicalProcessor(fakeRepositoryProxy, "findByLastnameAndCountryLikeAndFirstnameEndsWith", "findBy", fakeTableMetadata, fakeEntity, dialect);
-        DenoAsserts.assertEquals(findByLastnameAndCountryLikeAndFirstnameEndsWith, "SELECT * FROM public.users WHERE lastname = $1 AND country LIKE '%' || $2 || '%' AND firstname LIKE '%' || $3 || ''");
+        DenoAsserts.assertEquals(findByLastnameAndCountryLikeAndFirstnameEndsWith, `SELECT * FROM public.users WHERE "lastname" = $1 AND "country" LIKE '%' || $2 || '%' AND "firstname" LIKE '%' || $3 || ''`);
 
         const findByFirstnameAndCountryAndLastnameEndsWithAndFirstnameIsNotNullOrLastnameIsNullAndCountryLike = lexicalProcessor(fakeRepositoryProxy, "findByFirstnameAndCountryAndLastnameEndsWithAndFirstnameIsNotNullOrLastnameIsNullAndCountryLike", "findBy", fakeTableMetadata, fakeEntity, dialect);
-        DenoAsserts.assertEquals(findByFirstnameAndCountryAndLastnameEndsWithAndFirstnameIsNotNullOrLastnameIsNullAndCountryLike, "SELECT * FROM public.users WHERE firstname = $1 AND country = $2 AND lastname LIKE '%' || $3 || '' AND firstname IS NOT NULL OR lastname IS NULL AND country LIKE '%' || $4 || '%'");
+        DenoAsserts.assertEquals(findByFirstnameAndCountryAndLastnameEndsWithAndFirstnameIsNotNullOrLastnameIsNullAndCountryLike, `SELECT * FROM public.users WHERE "firstname" = $1 AND "country" = $2 AND "lastname" LIKE '%' || $3 || '' AND "firstname" IS NOT NULL OR "lastname" IS NULL AND "country" LIKE '%' || $4 || '%'`);
     
         const findByFirstnameAndAgeGreaterThanAndPostsLessThanOrPostsGreaterThan = lexicalProcessor(fakeRepositoryProxy, "findByFirstnameAndAgeGreaterThanAndPostsLessThanOrPostsGreaterThan", "findBy", fakeTableMetadata, fakeEntity, dialect);
-        DenoAsserts.assertEquals(findByFirstnameAndAgeGreaterThanAndPostsLessThanOrPostsGreaterThan, "SELECT * FROM public.users WHERE firstname = $1 AND age > $2 AND posts < $3 OR posts > $4")
+        DenoAsserts.assertEquals(findByFirstnameAndAgeGreaterThanAndPostsLessThanOrPostsGreaterThan, `SELECT * FROM public.users WHERE "firstname" = $1 AND "age" > $2 AND "posts" < $3 OR "posts" > $4`);
+
+        const findByCarmodel = lexicalProcessor(fakeRepositoryProxy, "findByCarModel", "findBy", fakeTableMetadata, fakeEntity, dialect);
+        DenoAsserts.assertEquals(findByCarmodel, `SELECT * FROM public.users WHERE "CarModEl" = $1`);
     }
 
 }
