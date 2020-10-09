@@ -5,7 +5,10 @@ import { Log } from "../../logger/log.ts";
 import { ApplicationContext } from "../../main-core/application-context/mandarineApplicationContext.ts";
 import { Mandarine } from "../../main-core/Mandarine.ns.ts";
 import type { ControllerComponent } from "../core/internal/components/routing/controllerContext.ts";
-import { middlewareResolver, requestResolver } from "../core/internal/components/routing/routingResolver.ts";
+import {
+  middlewareResolver,
+  requestResolver,
+} from "../core/internal/components/routing/routingResolver.ts";
 import { handleCors } from "../core/middlewares/cors/corsMiddleware.ts";
 import { SessionMiddleware } from "../core/middlewares/sessionMiddleware.ts";
 import { AuthenticationRouting } from "../core/internal/auth/authenticationRouting.ts";
@@ -17,6 +20,7 @@ import type { GuardTarget } from "../../main-core/internals/interfaces/guardTarg
 // @ts-ignore
 import { DI } from "../../main-core/dependency-injection/di.ns.ts";
 import { MandarineException } from "../../main-core/exceptions/mandarineException.ts";
+import { responseTimeHandler } from "../core/middlewares/responseTimeHeaderMiddleware.ts";
 
 /**
  * This class works as the MVC engine and it is responsible for the initialization & behavior of HTTP requests.
@@ -24,202 +28,289 @@ import { MandarineException } from "../../main-core/exceptions/mandarineExceptio
  * This class is the Mandarine Compiler since it is the most important class for the MVC framework to work as it resolves everything it needs
  */
 export class MandarineMvcFrameworkStarter {
+  private router: Router = new Router();
 
-    private router: Router = new Router();
+  private logger: Log = Log.getLogger(MandarineMvcFrameworkStarter);
 
-    private logger: Log = Log.getLogger(MandarineMvcFrameworkStarter);
+  private essentials: {
+    sessionMiddleware: SessionMiddleware | undefined;
+  } = {
+    sessionMiddleware: undefined,
+  };
 
-    private essentials: {
-        sessionMiddleware: SessionMiddleware | undefined,
-    } = {
-        sessionMiddleware: undefined,
+  constructor(callback?: Function) {
+    this.logger.compiler("Starting MVC Module", "info");
+
+    if (callback) {
+      callback(this);
+    }
+  }
+
+  public initializeEssentials() {
+    this.essentials.sessionMiddleware = new SessionMiddleware();
+  }
+
+  public intializeControllersRoutes(): void {
+    let mvcControllers: Mandarine.MandarineCore.ComponentRegistryContext[] = ApplicationContext.getInstance()
+      .getComponentsRegistry()
+      .getControllers();
+
+    if (ApplicationContext.CONTEXT_METADATA.engineMetadata?.mvc) {
+      ApplicationContext.CONTEXT_METADATA.engineMetadata.mvc.controllersAmount =
+        mvcControllers.length;
     }
 
-    constructor(callback?: Function) {
-        this.logger.compiler("Starting MVC Module", "info");
+    const authenticationRoute = new AuthenticationRouting();
+    this.router = authenticationRoute.initialize(this.router);
 
-        if(callback) {
-            callback(this);
+    try {
+      mvcControllers.forEach(
+        (
+          component: Mandarine.MandarineCore.ComponentRegistryContext,
+          index
+        ) => {
+          let controller: ControllerComponent = <ControllerComponent>(
+            component.componentInstance
+          );
+          controller.getActions().forEach((value, key) => {
+            this.router = this.addPathToRouter(this.router, value, controller);
+          });
         }
+      );
+    } catch (error) {
+      this.logger.compiler(
+        `Controllers could not be initialized`,
+        "error",
+        error
+      );
     }
+  }
 
-    public initializeEssentials() {
-        this.essentials.sessionMiddleware = new SessionMiddleware();
-    }
+  private handleCorsMiddleware(
+    context: Mandarine.Types.RequestContext,
+    routingAction: Mandarine.MandarineMVC.Routing.RoutingAction,
+    controllerComponent: ControllerComponent
+  ) {
+    let classLevelCors = controllerComponent.options.cors;
+    let methodLevelCors = routingAction.routingOptions?.cors;
+    handleCors(
+      context,
+      classLevelCors ? classLevelCors : methodLevelCors,
+      true
+    );
+  }
 
-    public intializeControllersRoutes(): void {
-        let mvcControllers: Mandarine.MandarineCore.ComponentRegistryContext[] = ApplicationContext.getInstance().getComponentsRegistry().getControllers();
+  private handleResponseTimeHeaderMiddleware(
+    requestContext: Mandarine.Types.RequestContext,
+    isPostRequest: boolean = false
+  ) {
+    responseTimeHandler(requestContext, isPostRequest);
+  }
 
-        if(ApplicationContext.CONTEXT_METADATA.engineMetadata?.mvc) {
-            ApplicationContext.CONTEXT_METADATA.engineMetadata.mvc.controllersAmount = mvcControllers.length;
+  private preRequestInternalMiddlewares(
+    context: Mandarine.Types.RequestContext,
+    routingAction: Mandarine.MandarineMVC.Routing.RoutingAction,
+    controllerComponent: ControllerComponent
+  ): void {
+    this.handleResponseTimeHeaderMiddleware(context);
+    this.essentials.sessionMiddleware?.createSessionCookie(context);
+    this.handleCorsMiddleware(context, routingAction, controllerComponent);
+  }
+
+  private postRequestInternalMiddlewares(
+    context: Mandarine.Types.RequestContext
+  ): void {
+    this.essentials.sessionMiddleware?.storeSession(context);
+    this.handleResponseTimeHeaderMiddleware(context, true);
+  }
+
+  private async executeUserMiddlewares(
+    preRequestMiddleware: boolean,
+    middlewares: Array<
+      Mandarine.Types.MiddlewareComponent | NonComponentMiddlewareTarget
+    >,
+    context: Mandarine.Types.RequestContext
+  ): Promise<boolean> {
+    for (const middlewareComponent of middlewares) {
+      if (middlewareComponent instanceof ComponentComponent) {
+        let middlewareResolved: boolean | undefined = undefined;
+        const resolveMiddleware = async () =>
+          await middlewareResolver(
+            preRequestMiddleware,
+            <Mandarine.Types.MiddlewareComponent>middlewareComponent,
+            context
+          );
+        if (middlewareComponent.configuration.regexRoute) {
+          let finalRegex = new RegExp(
+            context.request.url.host +
+              middlewareComponent.configuration.regexRoute.source
+          );
+          if (
+            finalRegex.test(
+              context.request.url.host + context.request.url.pathname
+            )
+          ) {
+            middlewareResolved = (await resolveMiddleware()) || false;
+          }
+        } else {
+          middlewareResolved = (await resolveMiddleware()) || false;
         }
 
-        const authenticationRoute = new AuthenticationRouting();
-        this.router = authenticationRoute.initialize(this.router);
-
-        try {
-            mvcControllers.forEach((component: Mandarine.MandarineCore.ComponentRegistryContext, index) => {
-                let controller: ControllerComponent = <ControllerComponent> component.componentInstance;
-                controller.getActions().forEach((value, key) => {
-                    this.router = this.addPathToRouter(this.router, value, controller);
-                });
-            });
-        }catch(error){
-            this.logger.compiler(`Controllers could not be initialized`, "error", error);
+        if (preRequestMiddleware && middlewareResolved === false) {
+          return middlewareResolved;
         }
-
-    }
-
-    private handleCorsMiddleware(context: Mandarine.Types.RequestContext, routingAction: Mandarine.MandarineMVC.Routing.RoutingAction, controllerComponent: ControllerComponent) {
-        let classLevelCors = controllerComponent.options.cors;
-        let methodLevelCors = routingAction.routingOptions?.cors;
-        handleCors(context, (classLevelCors) ? classLevelCors : methodLevelCors, true);
-    }
-
-    private preRequestInternalMiddlewares(context: Mandarine.Types.RequestContext, routingAction: Mandarine.MandarineMVC.Routing.RoutingAction, controllerComponent: ControllerComponent): void {
-        this.essentials.sessionMiddleware?.createSessionCookie(context);
-        this.handleCorsMiddleware(context, routingAction, controllerComponent);
-    }
-
-    private postRequestInternalMiddlewares(context: Mandarine.Types.RequestContext): void {
-        this.essentials.sessionMiddleware?.storeSession(context);
-    }
-
-    private async executeUserMiddlewares(preRequestMiddleware: boolean, middlewares: Array<Mandarine.Types.MiddlewareComponent | NonComponentMiddlewareTarget>, context: Mandarine.Types.RequestContext): Promise<boolean> {
-        for(const middlewareComponent of middlewares) {
-            if(middlewareComponent instanceof ComponentComponent) {
-                let middlewareResolved: boolean | undefined = undefined;
-                const resolveMiddleware = async () => await middlewareResolver(preRequestMiddleware, <Mandarine.Types.MiddlewareComponent> middlewareComponent, context);
-                if(middlewareComponent.configuration.regexRoute) {
-                    let finalRegex = new RegExp(context.request.url.host + middlewareComponent.configuration.regexRoute.source);
-                    if(finalRegex.test(context.request.url.host + context.request.url.pathname)) {
-                        middlewareResolved = (await resolveMiddleware()) || false;
-                    }
-                }  else {
-                    middlewareResolved = (await resolveMiddleware()) || false;
-                }
-
-                if(preRequestMiddleware && middlewareResolved === false) {
-                    return middlewareResolved;
-                }
-            } else {
-                if(preRequestMiddleware) {
-                    const execution = middlewareComponent.onPreRequest(context.request, context.response);
-                    if(execution === false) return false;
-                } else {
-                    middlewareComponent.onPostRequest(context.request, context.response);
-                }
-            }
+      } else {
+        if (preRequestMiddleware) {
+          const execution = middlewareComponent.onPreRequest(
+            context.request,
+            context.response
+          );
+          if (execution === false) return false;
+        } else {
+          middlewareComponent.onPostRequest(context.request, context.response);
         }
-        return true;
+      }
     }
+    return true;
+  }
 
-    private async executeUseGuards(guards: Array<GuardTarget | Function>, context: Mandarine.Types.RequestContext) {
-        for(const currentGuard of guards) {
-            let guardPassed: boolean = true;
-            const dependency: ComponentComponent = ApplicationContext.getInstance().getDIFactory().getComponentByType(currentGuard);
-            if(dependency) {
-                const componentHandler = dependency.getClassHandler();
-                const resolveGuardParameters: Array<any> | null = await DI.Factory.methodArgumentResolver(componentHandler, "onGuard", context);
-                if(resolveGuardParameters) {
-                    guardPassed = await (componentHandler["onGuard"](context, ...resolveGuardParameters));
-                }
-            } else {
-                if(typeof currentGuard === 'function') {
-                    guardPassed = await (currentGuard(context));
-                } else {
-                    throw new MandarineException(MandarineException.INVALID_GUARD_EXECUTION);
-                }
-            }
-
-            if(guardPassed === false) {
-                return false;
-            }
+  private async executeUseGuards(
+    guards: Array<GuardTarget | Function>,
+    context: Mandarine.Types.RequestContext
+  ) {
+    for (const currentGuard of guards) {
+      let guardPassed: boolean = true;
+      const dependency: ComponentComponent = ApplicationContext.getInstance()
+        .getDIFactory()
+        .getComponentByType(currentGuard);
+      if (dependency) {
+        const componentHandler = dependency.getClassHandler();
+        const resolveGuardParameters: Array<
+          any
+        > | null = await DI.Factory.methodArgumentResolver(
+          componentHandler,
+          "onGuard",
+          context
+        );
+        if (resolveGuardParameters) {
+          guardPassed = await componentHandler["onGuard"](
+            context,
+            ...resolveGuardParameters
+          );
         }
-        return true;
-    }
-
-    private addPathToRouter(router: Router, routingAction: Mandarine.MandarineMVC.Routing.RoutingAction, controllerComponent: ControllerComponent): Router {
-        let route: string = routingAction.route;
-
-        let availableMiddlewares: Array<Mandarine.Types.MiddlewareComponent | NonComponentMiddlewareTarget> = [...Mandarine.Global.getMiddleware()];
-        availableMiddlewares = availableMiddlewares.concat((routingAction.routingOptions?.middleware || [])).concat((controllerComponent.options.middleware || []));
-
-
-        let responseHandler = async (context: Mandarine.Types.RequestContext, next: Function) => {
-
-            if(context.isResource) {
-                await next();
-                return;
-            }
-
-            this.preRequestInternalMiddlewares(context, routingAction, controllerComponent); // Execute internal middleware like sessions
-
-            const controllerPermissions = controllerComponent.options.withPermissions;
-            const routePermissions = routingAction.routingOptions?.withPermissions;
-            let allowed = true;
-
-            if(controllerPermissions) {
-                allowed = verifyPermissions(context.request)(controllerPermissions);
-            }
-            if(routePermissions && allowed) {
-                allowed = verifyPermissions(context.request)(routePermissions);
-            }
-
-            const controllerGuards = controllerComponent.options.guards;
-            const routeGuards = routingAction.routingOptions?.guards;
-
-            if(allowed) {
-                if(controllerGuards) {
-                    allowed = await this.executeUseGuards(controllerGuards, context);
-                }
-                if(routeGuards) {
-                    allowed = await this.executeUseGuards(routeGuards, context);
-                }
-            }
-
-            if(!allowed) {
-                context.response.status = 401;
-                return;
-            }
-
-            let continueRequest: boolean = await this.executeUserMiddlewares(true, availableMiddlewares, context); // If the user has any middleware, execute it
-
-            if(continueRequest) {
-                await requestResolver(routingAction, context);
-
-                this.executeUserMiddlewares(false, availableMiddlewares, context);
-                this.postRequestInternalMiddlewares(context);
-
-                if(context.request.url.pathname === routingAction.route) {
-                    return;
-                } else {
-                    await next();
-                }
-            }
-
-        };
-
-        switch(routingAction.actionType) {
-            case Mandarine.MandarineMVC.HttpMethods.GET:
-                return router.get(route, <any> responseHandler);
-            case Mandarine.MandarineMVC.HttpMethods.POST:
-                return router.post(route, <any> responseHandler);
-            case Mandarine.MandarineMVC.HttpMethods.DELETE:
-                return router.delete(route, <any> responseHandler);
-            case Mandarine.MandarineMVC.HttpMethods.OPTIONS:
-                return router.options(route, <any> responseHandler);
-            case Mandarine.MandarineMVC.HttpMethods.PUT:
-                return router.put(route, <any> responseHandler);
-            case Mandarine.MandarineMVC.HttpMethods.PATCH:
-                return router.patch(route, <any> responseHandler);
-            case Mandarine.MandarineMVC.HttpMethods.HEAD:
-                return router.head(route, <any> responseHandler);
+      } else {
+        if (typeof currentGuard === "function") {
+          guardPassed = await currentGuard(context);
+        } else {
+          throw new MandarineException(
+            MandarineException.INVALID_GUARD_EXECUTION
+          );
         }
-    }
+      }
 
-    public getRouter(): Router {
-        return this.router;
+      if (guardPassed === false) {
+        return false;
+      }
     }
+    return true;
+  }
 
+  private addPathToRouter(
+    router: Router,
+    routingAction: Mandarine.MandarineMVC.Routing.RoutingAction,
+    controllerComponent: ControllerComponent
+  ): Router {
+    let route: string = routingAction.route;
+
+    let availableMiddlewares: Array<
+      Mandarine.Types.MiddlewareComponent | NonComponentMiddlewareTarget
+    > = [...Mandarine.Global.getMiddleware()];
+    availableMiddlewares = availableMiddlewares
+      .concat(routingAction.routingOptions?.middleware || [])
+      .concat(controllerComponent.options.middleware || []);
+
+    let responseHandler = async (
+      context: Mandarine.Types.RequestContext,
+      next: Function
+    ) => {
+      if (context.isResource) {
+        await next();
+        return;
+      }
+
+      this.preRequestInternalMiddlewares(
+        context,
+        routingAction,
+        controllerComponent
+      ); // Execute internal middleware like sessions
+
+      const controllerPermissions = controllerComponent.options.withPermissions;
+      const routePermissions = routingAction.routingOptions?.withPermissions;
+      let allowed = true;
+
+      if (controllerPermissions) {
+        allowed = verifyPermissions(context.request)(controllerPermissions);
+      }
+      if (routePermissions && allowed) {
+        allowed = verifyPermissions(context.request)(routePermissions);
+      }
+
+      const controllerGuards = controllerComponent.options.guards;
+      const routeGuards = routingAction.routingOptions?.guards;
+
+      if (allowed) {
+        if (controllerGuards) {
+          allowed = await this.executeUseGuards(controllerGuards, context);
+        }
+        if (routeGuards) {
+          allowed = await this.executeUseGuards(routeGuards, context);
+        }
+      }
+
+      if (!allowed) {
+        context.response.status = 401;
+        return;
+      }
+
+      let continueRequest: boolean = await this.executeUserMiddlewares(
+        true,
+        availableMiddlewares,
+        context
+      ); // If the user has any middleware, execute it
+
+      if (continueRequest) {
+        await requestResolver(routingAction, context);
+
+        this.executeUserMiddlewares(false, availableMiddlewares, context);
+        this.postRequestInternalMiddlewares(context);
+
+        if (context.request.url.pathname === routingAction.route) {
+          return;
+        } else {
+          await next();
+        }
+      }
+    };
+
+    switch (routingAction.actionType) {
+      case Mandarine.MandarineMVC.HttpMethods.GET:
+        return router.get(route, <any>responseHandler);
+      case Mandarine.MandarineMVC.HttpMethods.POST:
+        return router.post(route, <any>responseHandler);
+      case Mandarine.MandarineMVC.HttpMethods.DELETE:
+        return router.delete(route, <any>responseHandler);
+      case Mandarine.MandarineMVC.HttpMethods.OPTIONS:
+        return router.options(route, <any>responseHandler);
+      case Mandarine.MandarineMVC.HttpMethods.PUT:
+        return router.put(route, <any>responseHandler);
+      case Mandarine.MandarineMVC.HttpMethods.PATCH:
+        return router.patch(route, <any>responseHandler);
+      case Mandarine.MandarineMVC.HttpMethods.HEAD:
+        return router.head(route, <any>responseHandler);
+    }
+  }
+
+  public getRouter(): Router {
+    return this.router;
+  }
 }
