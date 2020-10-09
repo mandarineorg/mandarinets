@@ -14,6 +14,10 @@ export const responseTimeHandler = (
     );
     if (currentDateString != null) {
       const responseTime: number = Date.now() - parseInt(currentDateString);
+      typedContext.response.headers.set(
+        "X-Response-Time",
+        responseTime.toString()
+      );
     }
   }
 };
