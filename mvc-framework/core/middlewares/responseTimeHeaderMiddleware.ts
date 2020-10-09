@@ -1,23 +1,17 @@
 import { Mandarine } from "../../../main-core/Mandarine.ns.ts";
 
-export const responseTimeHandler = (
-  context: Mandarine.Types.RequestContext,
-  isPostRequest: boolean = false
-) => {
+export const responseTimeHandler = (context: Mandarine.Types.RequestContext, isPostRequest: boolean = false) => {
   const typedContext: Mandarine.Types.RequestContext = context;
 
   if (!isPostRequest) {
-    typedContext.response.headers.set("X-Response-Time", Date.now().toString());
+    typedContext.timeMetadata.startedAt = Date.now();
   } else {
-    const currentDateString: string | null = typedContext.response.headers.get(
-      "X-Response-Time"
-    );
-    if (currentDateString != null) {
-      const responseTime: number = Date.now() - parseInt(currentDateString);
-      typedContext.response.headers.set(
-        "X-Response-Time",
-        responseTime.toString()
-      );
-    }
+    typedContext.timeMetadata.finishedAt = Date.now();
+
+    const { finishedAt, startedAt } = typedContext.timeMetadata;
+
+    const responseTime: number = finishedAt - startedAt;
+    typedContext.response.headers.set("X-Response-Time", responseTime.toString());
+
   }
 };

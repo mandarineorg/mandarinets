@@ -611,10 +611,16 @@ export namespace MandarineMvc {
         session: any;
     }
 
+    export interface RequestTimeContext {
+        startedAt: number;
+        finishedAt: number;
+    }
+
     export interface RequestContext extends Context {
         params: any;
         request: RequestDataContext;
         isResource: boolean;
+        timeMetadata: RequestTimeContext;
     }
 
     export interface RequestContextAccessor {

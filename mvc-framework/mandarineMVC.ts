@@ -68,8 +68,7 @@ export class MandarineMVC {
   private initializeMVCApplication(): Application {
     let mandarineConfiguration: Mandarine.Properties = Mandarine.Global.getMandarineConfiguration();
 
-    let starter: MandarineMvcFrameworkStarter = new MandarineMvcFrameworkStarter(
-      (engine: MandarineMvcFrameworkStarter) => {
+    let starter: MandarineMvcFrameworkStarter = new MandarineMvcFrameworkStarter((engine: MandarineMvcFrameworkStarter) => {
         engine.intializeControllersRoutes();
         engine.initializeEssentials();
       }
@@ -104,12 +103,7 @@ export class MandarineMVC {
     });
 
     app.addEventListener("listen", (options) => {
-      this.logger.compiler(
-        `Server has started ~ ${options.secure ? "https://" : "http://"}${
-          options.hostname ?? "localhost"
-        }:${options.port}`,
-        "info"
-      );
+      this.logger.compiler(`Server has started ~ ${options.secure ? "https://" : "http://"}${options.hostname ?? "localhost"}:${options.port}`, "info");
     });
     return app;
   }
