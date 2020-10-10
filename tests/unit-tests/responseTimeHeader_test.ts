@@ -21,7 +21,13 @@ export class ResponseTimeHeaderTest {
     })
     public testResponseHeader() {
 
-        Mandarine.Global.getMandarineConfiguration().mandarine.server.responseTimeHeader = true;
+        Mandarine.Global.setConfiguration({
+            mandarine: {
+                server: {
+                    responseTimeHeader: true
+                }
+            }
+        })
 
         const fakeRequest: any = {
             timeMetadata: {
@@ -53,7 +59,13 @@ export class ResponseTimeHeaderTest {
     })
     public testResponseHeaderNull() {
 
-        Mandarine.Global.getMandarineConfiguration().mandarine.server.responseTimeHeader = false;
+        Mandarine.Global.setConfiguration({
+            mandarine: {
+                server: {
+                    responseTimeHeader: false
+                }
+            }
+        })
         
         const fakeRequest: any = {
             timeMetadata: {
