@@ -254,7 +254,7 @@
           "title": "Built-in",
           "children": [
             {
-              "title": "Response Time Header",
+              "title": "X-Response-Time",
               "url": "built-in-response-time-header"
             }
           ]
