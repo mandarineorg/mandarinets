@@ -68,8 +68,7 @@ export class MandarineMVC {
   private initializeMVCApplication(): Application {
     let mandarineConfiguration: Mandarine.Properties = Mandarine.Global.getMandarineConfiguration();
 
-    let starter: MandarineMvcFrameworkStarter = new MandarineMvcFrameworkStarter(
-      (engine: MandarineMvcFrameworkStarter) => {
+    let starter: MandarineMvcFrameworkStarter = new MandarineMvcFrameworkStarter((engine: MandarineMvcFrameworkStarter) => {
         engine.intializeControllersRoutes();
         engine.initializeEssentials();
       }
@@ -87,11 +86,6 @@ export class MandarineMVC {
           HttpUtils.assignContentType(ctx);
         }
         await next();
-      })
-      .use(async (context: any, next: Function) => {
-        console.log(context);
-        console.log("A new request has been received");
-        await next();
       });
     app.keys = [mandarineConfiguration.mandarine.security.cookiesSignKeys];
 
@@ -104,12 +98,7 @@ export class MandarineMVC {
     });
 
     app.addEventListener("listen", (options) => {
-      this.logger.compiler(
-        `Server has started ~ ${options.secure ? "https://" : "http://"}${
-          options.hostname ?? "localhost"
-        }:${options.port}`,
-        "info"
-      );
+      this.logger.compiler(`Server has started ~ ${options.secure ? "https://" : "http://"}${options.hostname ?? "localhost"}:${options.port}`, "info");
     });
     return app;
   }
