@@ -5,6 +5,11 @@ import type { Mandarine } from "../../../main-core/Mandarine.ns.ts";
 export const responseTimeHandler = (context: Mandarine.Types.RequestContext, isPostRequest: boolean = false) => {
   const typedContext: Mandarine.Types.RequestContext = context;
 
+  if(!typedContext.timeMetadata) typedContext.timeMetadata = { 
+    startedAt: 0,
+    finishedAt: 0
+  };
+
   if (!isPostRequest) {
     typedContext.timeMetadata.startedAt = Date.now();
   } else {
