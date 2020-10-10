@@ -582,6 +582,7 @@ export namespace Mandarine {
             addResourceHandler(input: ResourceHandler): IResourceHandlerRegistry;
             getResourceHandlers(): Array<ResourceHandler>;
             getNew(): IResourceHandlerRegistry;
+            freezeResourceHandlers(): void;
         }
 
         /**

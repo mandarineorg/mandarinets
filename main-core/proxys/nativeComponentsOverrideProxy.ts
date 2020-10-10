@@ -37,6 +37,7 @@ export namespace NativeComponentsOverrideProxy {
                 let mandarineGlobal: Mandarine.Global.MandarineGlobalInterface  = Mandarine.Global.getMandarineGlobal();
                 mandarineGlobal.mandarineResourceHandlerRegistry = newResourceHandlerRegistry;
                 mandarineGlobal.mandarineResourceHandlerRegistry.overriden = true;
+                mandarineGlobal.mandarineResourceHandlerRegistry.freezeResourceHandlers();
             } 
         }
     }
