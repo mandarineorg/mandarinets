@@ -74,7 +74,8 @@ export namespace Mandarine {
             server: {
                 host?: string,
                 port: number,
-                responseType?: MandarineMVC.MediaTypes
+                responseType?: MandarineMVC.MediaTypes,
+                responseTimeHeader?: boolean
             } & any,
             resources: {
                 staticRegExpPattern?: string,
@@ -334,6 +335,7 @@ export namespace Mandarine {
             if(properties.mandarine.server.host == (null || undefined)) properties.mandarine.server.host = defaultConfiguration.mandarine.server.host;
             if(properties.mandarine.server.port == (null || undefined)) properties.mandarine.server.port = defaultConfiguration.mandarine.server.port;
             if(properties.mandarine.server.responseType == (null || undefined)) properties.mandarine.server.responseType = defaultConfiguration.mandarine.server.responseType;
+            if(properties.mandarine.server.responseTimeHeader == (null || undefined)) properties.mandarine.server.responseTimeHeader = defaultConfiguration.mandarine.server.responseTimeHeader;
             if(properties.mandarine.templateEngine == (null || undefined)) properties.mandarine.templateEngine = defaultConfiguration.mandarine.templateEngine;
             if(properties.mandarine.templateEngine.path == (null || undefined)) properties.mandarine.templateEngine.path = defaultConfiguration.mandarine.templateEngine.path;
             if(properties.mandarine.templateEngine.engine == (null || undefined)) properties.mandarine.templateEngine.engine = defaultConfiguration.mandarine.templateEngine.engine;
@@ -679,7 +681,8 @@ export namespace Mandarine {
                 server: {
                     host: "0.0.0.0",
                     port: 8080,
-                    responseType: MandarineMVC.MediaTypes.TEXT_HTML
+                    responseType: MandarineMVC.MediaTypes.TEXT_HTML,
+                    responseTimeHeader: false
                 },
                 resources: {
                     staticFolder: "./src/main/resources/static",
