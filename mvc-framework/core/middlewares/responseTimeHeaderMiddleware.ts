@@ -1,10 +1,13 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import type { Mandarine } from "../../../main-core/Mandarine.ns.ts";
+import { Mandarine } from "../../../main-core/Mandarine.ns.ts";
 
 export const responseTimeHandler = (context: Mandarine.Types.RequestContext, isPostRequest: boolean = false) => {
   const typedContext: Mandarine.Types.RequestContext = context;
 
+  const config = Mandarine.Global.getMandarineConfiguration();
+  if(!config.mandarine.server.responseTimeHeader) return;
+  
   if(!typedContext.timeMetadata) typedContext.timeMetadata = { 
     startedAt: 0,
     finishedAt: 0
