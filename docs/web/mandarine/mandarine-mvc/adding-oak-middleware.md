@@ -7,13 +7,13 @@ Since version 1.2.3, Mandarine allows you to add a custom Oak middleware to your
 Before running your application through `new MandarineCore().MVC().run()`, you can use the method `addMiddleware` part of MandarineMVC to add an [Oak Middleware](https://github.com/oakserver/oak#application-middleware-and-context)
 
 ```typescript
-import { MandarineCore } from "https://deno.land/x/mandarinets@v2.1.1/mod.ts";
+import { MandarineCore } from "https://deno.land/x/mandarinets@v2.1.2/mod.ts";
 
 ... 
 
 let MVC = new MandarineCore().MVC();
 
-MVC.addMiddleware(async (context, next) => {
+MVC.addMiddleware(async (context: any, next: Function) => {
 
 });
 ```

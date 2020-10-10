@@ -5,6 +5,10 @@ import { ApplicationContext } from "../../application-context/mandarineApplicati
 import { MandarineSecurityException } from "../../exceptions/mandarineSecurityException.ts";
 import type { Mandarine } from "../../Mandarine.ns.ts";
 
+/**
+ * The `AuthenticationManagerBuilder` class is responsible for handling two necessary properties in order for Mandarine built-in auth to work.
+ * `userDetails` & `passwordEncoder` are required. By using such methods, you are able to plug in the implementations that will be used by Mandarine to execute authentication.
+ */
 export class AuthenticationManagerBuilder implements Mandarine.Security.Auth.AuthenticationManagerBuilder {
     private _userDetailsServiceType = undefined;
     private _passwordEncoder: Mandarine.Security.Crypto.PasswordEncoder = new BcryptEncoder();

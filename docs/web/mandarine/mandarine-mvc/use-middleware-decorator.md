@@ -23,8 +23,8 @@ Targets: HTTP Handler | Controller
 
 ```typescript
 export const nonComponentMiddlewareContinueFalse = {
-    onPreRequest: (request, response) => { console.log("OnPreRequest"); return true; },
-    onPostRequest: (request, response) => console.log("OnPostRequest")
+    onPreRequest: (request: Mandarine.Types.CurrentRequest, response: Mandarine.Types.CurrentResponse) => { console.log("OnPreRequest"); return true; },
+    onPostRequest: (request: Mandarine.Types.CurrentRequest, response: Mandarine.Types.CurrentResponse) => console.log("OnPostRequest")
 }
 
 @Middleware()

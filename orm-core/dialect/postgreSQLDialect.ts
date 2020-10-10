@@ -128,7 +128,7 @@ export class PostgreSQLDialect implements Mandarine.ORM.Dialect.Dialect {
     }
 
     public addColumn(tableMetadata: Mandarine.ORM.Entity.TableMetadata, column: Mandarine.ORM.Entity.Column): string {
-        return `ALTER TABLE ${this.getTableName(tableMetadata)} ADD COLUMN IF NOT EXISTS ${column.name} ${this.getColumnTypeSyntax(column)};`
+        return `ALTER TABLE ${this.getTableName(tableMetadata)} ADD COLUMN IF NOT EXISTS "${column.name}" ${this.getColumnTypeSyntax(column)};`
     }
 
     public selectStatement(tableMetadata: Mandarine.ORM.Entity.TableMetadata): string {
@@ -156,7 +156,7 @@ export class PostgreSQLDialect implements Mandarine.ORM.Dialect.Dialect {
     }
 
     public selectColumnSyntax(colName: string, operator: string, colValue: string, secureParameter?: boolean): string {
-        return `${colName} ${operator} ${(secureParameter != undefined && secureParameter == true) ? `${colValue}` : `'${colValue}'`}`;
+        return `"${colName}" ${operator} ${(secureParameter != undefined && secureParameter == true) ? `${colValue}` : `'${colValue}'`}`;
     }
 
     public insertStatement(tableMetadata: Mandarine.ORM.Entity.TableMetadata, entity: Mandarine.ORM.Entity.Table, values: object): any {
@@ -191,7 +191,7 @@ export class PostgreSQLDialect implements Mandarine.ORM.Dialect.Dialect {
                 value = null;
             }
 
-            insertionValues[<string>column.name] = value;
+            insertionValues[`"${column.name}"`] = value;
         });
 
         let columnsForInsertion = Object.keys(insertionValues);
@@ -204,14 +204,14 @@ export class PostgreSQLDialect implements Mandarine.ORM.Dialect.Dialect {
     }
 
     public updateStatement(tableMetadata: Mandarine.ORM.Entity.TableMetadata, entity: Mandarine.ORM.Entity.Table, values: object): any {
-        let syntax: string = `UPDATE ${this.getTableName(tableMetadata)} SET (%columns%) = (%values%) WHERE ${entity.primaryKey.name} = %primaryKeyValue%`;
+        let syntax: string = `UPDATE ${this.getTableName(tableMetadata)} SET (%columns%) = (%values%) WHERE "${entity.primaryKey.name}" = %primaryKeyValue%`;
 
         let updateValues = {};
         entity.columns.forEach((column) => {
-            let value = (<any>values)[<string>column.name];
+            let value = (<any>values)[`"${column.name}"`];
             if(value == undefined) value = null;
 
-            (<any>updateValues)[<string>column.name] = value;
+            (<any>updateValues)[`"${column.name}"`] = value;
         });
 
         let setters: Array<any> = new Array<any>();

@@ -16,7 +16,7 @@ export class ManualInjectionTest {
     }
 
     @Test({
-        name: "Test Endpoints from `files/manualInjection.ts`",
+        name: "[IT02] Test Endpoints from `files/manualInjection.ts`",
         description: "Test all endpoints in file, and verifies its return values"
     })
     public async testManualInjectionEndpoint() {

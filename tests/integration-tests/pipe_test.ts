@@ -16,7 +16,7 @@ export class PipeTest {
     }
 
     @Test({
-        name: "Test Endpoints from `files/pipes.ts`",
+        name: "[IT04] Test Endpoints from `files/pipes.ts`",
         description: "Test all endpoints in file, and verifies that transformation from pipe is working fine"
     })
     public async testManualInjectionEndpoint() {

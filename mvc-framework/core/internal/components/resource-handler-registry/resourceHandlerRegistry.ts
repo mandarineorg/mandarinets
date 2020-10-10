@@ -2,6 +2,7 @@
 
 import type { Mandarine } from "../../../../../main-core/Mandarine.ns.ts";
 import { CommonUtils } from "../../../../../main-core/utils/commonUtils.ts";
+import { MandarineUtils } from "../../../../../main-core/utils/mandarineUtils.ts";
 import type { ResourceHandler } from "./resourceHandler.ts";
 
 /**
@@ -26,6 +27,14 @@ export class ResourceHandlerRegistry implements Mandarine.MandarineCore.IResourc
 
     public getNew(): Mandarine.MandarineCore.IResourceHandlerRegistry {
         return new ResourceHandlerRegistry();
+    }
+
+    public freezeResourceHandlers(): void {
+        this.resourceHandlers.forEach((item, index) => {
+            const newItem = MandarineUtils.absoluteZeroFreeze<ResourceHandler>(item);
+            this.resourceHandlers[index] = newItem;
+        })
+        this.resourceHandlers = <any> Object.freeze(this.resourceHandlers);
     }
 
 }

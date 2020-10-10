@@ -2,6 +2,7 @@
 import { Orange } from "https://deno.land/x/orange@v0.3.0/lib/core.ns.ts";
 import { Test } from "https://deno.land/x/orange@v0.3.0/lib/decorators/testDecorator.ts";
 import { ApplicationContext } from "../../main-core/application-context/mandarineApplicationContext.ts";
+import { Mandarine } from "../../mod.ts";
 import { responseTimeHandler } from "../../mvc-framework/core/middlewares/responseTimeHeaderMiddleware.ts";
 import { DenoAsserts } from "../mod.ts";
 
@@ -19,6 +20,15 @@ export class ResponseTimeHeaderTest {
         name: "Test Response Header creator"
     })
     public testResponseHeader() {
+
+        Mandarine.Global.setConfiguration({
+            mandarine: {
+                server: {
+                    responseTimeHeader: true
+                }
+            }
+        })
+
         const fakeRequest: any = {
             timeMetadata: {
 
@@ -42,5 +52,32 @@ export class ResponseTimeHeaderTest {
         responseTimeHandler(fakeRequest);
         responseTimeHandler(fakeRequest, true);
         DenoAsserts.assertEquals(fakeRequest.response.headers.get("X-Response-Time"), "2");
+    }
+
+    @Test({
+        name: "Test Response Header creator should be NULL"
+    })
+    public testResponseHeaderNull() {
+
+        Mandarine.Global.setConfiguration({
+            mandarine: {
+                server: {
+                    responseTimeHeader: false
+                }
+            }
+        })
+        
+        const fakeRequest: any = {
+            timeMetadata: {
+
+            },
+            response: {
+                headers: new Headers()
+            }
+        }
+
+        responseTimeHandler(fakeRequest);
+        responseTimeHandler(fakeRequest, true);
+        DenoAsserts.assertEquals(fakeRequest.response.headers.get("X-Response-Time"), null);
     }
 }

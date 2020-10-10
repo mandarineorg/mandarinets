@@ -7,6 +7,7 @@ export class MandarineORMException extends Error {
     public static GENERATION_HANDLER_REQUIRED: string = "The strategy for primary key is 'MANUAL'. You must identify a handler in order to generate values";
     public static IMPOSSIBLE_CONNECTION: string = "The connection could not be made because the database client did not accept it.";
     public static INSTANCE_IN_SAVE: string = "Saving an instance is not a valid save statement. Please save an initialized object.";
+    public static MQL_INVALID_KEY: string = "MQL has failed to process the expression.";
     
     constructor(public message: string, public objectName: string) {
       super(message + " ~ Object name: " + objectName);

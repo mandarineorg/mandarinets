@@ -12,7 +12,8 @@ Mandarine.TS contains a property structure that allows the developer to modify s
             server: {
                 host?: string,
                 port: number,
-                responseType?: MandarineMVC.MediaTypes
+                responseType?: MandarineMVC.MediaTypes,
+                responseTimeHeader?: boolean
             } & any,
             resources: {
                 staticRegExpPattern?: string,

@@ -16,10 +16,10 @@ The promise repeater plugin allows you to "try" and repeat promises until they a
 ## API
 
 ```typescript
-import { PromiseRepeater } from "https://deno.land/x/mandarinets@v2.1.1/mod.ts";
+import { PromiseRepeater } from "https://deno.land/x/mandarinets@v2.1.2/mod.ts";
 
-let i = 0;
-const promiseFunction = async () => {
+let i: number = 0;
+const promiseFunction: Function = async () => {
     i++;
     console.log(`Attempt ${i}`);
     if(i < 3) throw new Error();
@@ -27,13 +27,13 @@ const promiseFunction = async () => {
     return true;
 }
 
-const val1 = await new PromiseRepeater(promiseFunction).maxAttempts(4).start();
+const val1: any = await new PromiseRepeater(promiseFunction).maxAttempts(4).start();
 i = 0;
-const val2 = await new PromiseRepeater(promiseFunction).maxAttempts(4).delay(2000).start();
+const val2: any = await new PromiseRepeater(promiseFunction).maxAttempts(4).delay(2000).start();
 i = 0;
-const val3 =  await new PromiseRepeater(promiseFunction).unlimitedAttempts().delay(1000).start();
+const val3: any =  await new PromiseRepeater(promiseFunction).unlimitedAttempts().delay(1000).start();
 i = 0;
-const val4 = await new PromiseRepeater(promiseFunction).maxAttempts(1).start();
+const val4: any = await new PromiseRepeater(promiseFunction).maxAttempts(1).start();
 
 console.log(val1);
 console.log(val2);

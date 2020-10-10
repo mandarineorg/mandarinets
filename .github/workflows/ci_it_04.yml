@@ -1,15 +1,15 @@
-name: Copyright Test
+name: Integration Tests 04
 
 on: [push, pull_request]
 
 jobs:
   build:
-    name: Copyright header (${{ matrix.os }})
+    name: tests (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macOS-latest]
-        deno: ["v1.2.3"]
+        os: [windows-latest, macOS-latest]
+        deno: ["v1.4.6", "v1.4.4"]
       fail-fast: true
     steps:
       - uses: actions/checkout@v2
@@ -17,5 +17,5 @@ jobs:
         uses: denolib/setup-deno@master
         with:
           deno-version: ${{ matrix.deno }}
-      - name: Verifying copyright header in files
-        run: deno test -c tsconfig.json --reload --allow-all --unstable tests/copyright.ts
+      - name: run tests
+        run: deno test -c tsconfig.json --reload --allow-all --unstable --filter "IT04" tests/integration-tests/

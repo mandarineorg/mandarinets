@@ -2,6 +2,7 @@
 
 import type { Mandarine } from "../Mandarine.ns.ts";
 import { MandarineException } from "../exceptions/mandarineException.ts";
+import { CommonUtils } from "./commonUtils.ts";
 
 export class MandarineUtils {
 
@@ -42,5 +43,21 @@ export class MandarineUtils {
                 throw error;
             }
         }
+    }
+
+    public static absoluteZeroFreeze<T = any>(object: Object): Readonly<T> {
+        const objectKeys: Array<string> = Object.keys(object);
+        let objectToReturn: { [prop: string]: any } = Object.assign({}, object);
+
+        objectKeys.forEach((key: string) => {
+            const currentPropertyValue: any = objectToReturn[key];
+            if(CommonUtils.isObject(currentPropertyValue)) {
+                objectToReturn[key] = this.absoluteZeroFreeze(currentPropertyValue);
+            } else {
+                objectToReturn[key] = Object.freeze(currentPropertyValue);
+            }
+        });
+
+        return <T> Object.freeze(objectToReturn);
     }
 }

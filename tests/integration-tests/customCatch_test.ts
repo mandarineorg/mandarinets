@@ -16,7 +16,7 @@ export class CustomCatchTest {
     }
 
     @Test({
-        name: "Test Endpoints from `files/customCatch.ts`",
+        name: "[IT01]  Test Endpoints from `files/customCatch.ts`",
         description: "Test all endpoints in file, and verifies that a custom exception catcher is working."
     })
     public async testCustomCatch() {

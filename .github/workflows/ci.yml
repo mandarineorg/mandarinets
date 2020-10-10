@@ -1,4 +1,4 @@
-name: ci
+name: Unit Tests
 
 on: [push, pull_request]
 
@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest, macOS-latest]
-        deno: ["v1.4.2", "v1.4.1"]
+        deno: ["v1.4.6", "v1.4.4"]
       fail-fast: true
     steps:
       - uses: actions/checkout@v2
@@ -18,4 +18,4 @@ jobs:
         with:
           deno-version: ${{ matrix.deno }}
       - name: run tests
-        run: deno test -c tsconfig.json --reload --allow-all --unstable
+        run: deno test -c tsconfig.json --reload --allow-all --unstable tests/unit-tests/
