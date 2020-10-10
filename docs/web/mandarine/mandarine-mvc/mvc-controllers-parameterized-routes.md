@@ -13,7 +13,7 @@ Parameterized routes help you develop flexible endpoints as they can receive inf
 ## API
 
 ```typescript
-import { GET, Controller, RouteParam, MandarineCore } from "https://deno.land/x/mandarinets@v2.1.1/mod.ts";
+import { GET, Controller, RouteParam, MandarineCore } from "https://deno.land/x/mandarinets@v2.1.2/mod.ts";
 
 @Controller()
 export class MyController {
