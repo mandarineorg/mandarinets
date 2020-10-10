@@ -86,11 +86,6 @@ export class MandarineMVC {
           HttpUtils.assignContentType(ctx);
         }
         await next();
-      })
-      .use(async (context: any, next: Function) => {
-        console.log(context);
-        console.log("A new request has been received");
-        await next();
       });
     app.keys = [mandarineConfiguration.mandarine.security.cookiesSignKeys];
 
