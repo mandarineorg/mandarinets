@@ -302,5 +302,9 @@
     {
       "url": "entry-point",
       "document": "mandarine-mvc/entry-point.md"
+    },
+    {
+      "url": "built-in-response-time-header",
+      "document": "mandarine-mvc/built-in-response-time-header.md"
     }
 ]
