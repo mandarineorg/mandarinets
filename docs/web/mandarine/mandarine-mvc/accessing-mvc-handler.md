@@ -8,7 +8,7 @@ You can access the MVC handler by invoking the property `handle` part of Mandari
 
 ```typescript
 
-import { MandarineCore } from "https://deno.land/x/mandarinets@v2.1.1/mod.ts";
+import { MandarineCore } from "https://deno.land/x/mandarinets@v2.1.2/mod.ts";
 
 ... 
 

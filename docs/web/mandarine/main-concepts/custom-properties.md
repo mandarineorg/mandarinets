@@ -24,3 +24,5 @@ After having your Mandarine's configuration file set up, you can add your own cu
     "myCustomPropertyKey": "My custom value"
 }
 ```
+
+> See a list of all possible properties to configure [by clicking here](https://www.mandarinets.org/docs/master/mandarine/properties)

@@ -249,6 +249,15 @@
         {
           "title": "Multipart Form Data",
           "url": "multipart-formdata"
+        },
+        {
+          "title": "Built-in",
+          "children": [
+            {
+              "title": "Response Time Header",
+              "url": "built-in-response-time-header"
+            }
+          ]
         }
       ]
     },

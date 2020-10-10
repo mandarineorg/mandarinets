@@ -4,7 +4,7 @@ Mandarine has a very simple & straightforward way to be written, this is what ma
 ```typescript
 // myFile.ts
 
-import { MandarineCore, Controller, GET } from "https://deno.land/x/mandarinets@v2.1.1/mod.ts";
+import { MandarineCore, Controller, GET } from "https://deno.land/x/mandarinets@v2.1.2/mod.ts";
 
 @Controller()
 export class MyController {
@@ -22,5 +22,5 @@ new MandarineCore().MVC().run();
 Terminal
 
 ```shell script
-$ deno run -c tsconfig.json --allow-net --allow-read myFile.ts
+$ deno run -c tsconfig.json --allow-net --allow-read --allow-env myFile.ts
 ```
