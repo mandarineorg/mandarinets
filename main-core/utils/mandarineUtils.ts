@@ -45,7 +45,7 @@ export class MandarineUtils {
         }
     }
 
-    public static absoluteZeroFreeze(object: Object) {
+    public static absoluteZeroFreeze<T = any>(object: Object): Readonly<T> {
         const objectKeys: Array<string> = Object.keys(object);
         let objectToReturn: { [prop: string]: any } = Object.assign({}, object);
 
@@ -58,6 +58,6 @@ export class MandarineUtils {
             }
         });
 
-        return Object.freeze(objectToReturn);
+        return <T> Object.freeze(objectToReturn);
     }
 }

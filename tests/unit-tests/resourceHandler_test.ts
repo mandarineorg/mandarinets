@@ -22,7 +22,7 @@ export class ResourceHandlerTest {
 
     @Test({
         name: "Test Resource Handlers",
-        description: "Test the creation of multiple resource handlers"
+        description: "Test the creation of multiple resource handlers & freezing"
     })
     public createResourceHandlers() {
         let mandarineResolver = new MandarineResourceResolver();
@@ -54,6 +54,13 @@ export class ResourceHandlerTest {
             }
         ]);
         DenoAsserts.assert(resourceHandlers[0].resourceResolver instanceof MandarineResourceResolver);
+
+        const firstResourceHandler = Mandarine.Global.getResourceHandlerRegistry().getResourceHandlers()[0];
+        DenoAsserts.assertThrows(() => {
+            if(firstResourceHandler.resourceHandlerPath != undefined && Array.isArray(firstResourceHandler.resourceHandlerPath)) {
+                firstResourceHandler.resourceHandlerPath.push(new RegExp("whatever"));
+            }
+        }, TypeError, "object is not extensible")
     }
 
 }
