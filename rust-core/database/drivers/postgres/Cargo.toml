@@ -1,0 +1,18 @@
+[package]
+name = "postgres"
+version = "0.1.0"
+authors = ["Andres Pirela"]
+edition = "2018"
+
+[lib]
+crate-type = ["cdylib"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+deno_core = "0.63.0"
+serde_json = "1.0.52"
+postgres = "0.17.5"
+lazy_static = "1.4.0"
+serde = "1.0.106"
+mongodb =  "0.9.2" 
