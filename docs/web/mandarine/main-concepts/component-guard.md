@@ -48,7 +48,7 @@ const myGuard: GuardTargetMethod = (requestContext: Mandarine.Types.RequestConte
 
 ```typescript
 
-import { UseGuards, Guard, GuardTargetMethod, GuardTarget, Controller, GET } from "https://deno.land/x/mandarinets@v2.1.2/mod.ts";
+import { UseGuards, Guard, GuardTargetMethod, GuardTarget, Controller, GET } from "https://deno.land/x/mandarinets@v2.1.3/mod.ts";
 
 @Guard()
 export class GuardComponent implements GuardTarget {
