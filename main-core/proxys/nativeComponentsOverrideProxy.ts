@@ -25,6 +25,7 @@ export namespace NativeComponentsOverrideProxy {
                 resave: (newSessionContainer.resave) ? newSessionContainer.resave : defaultContainer.resave,
                 rolling: (newSessionContainer.rolling) ? newSessionContainer.rolling : defaultContainer.rolling,
                 saveUninitialized: (newSessionContainer.saveUninitialized) ? newSessionContainer.saveUninitialized : defaultContainer.saveUninitialized,
+                keys: (newSessionContainer.keys) ? newSessionContainer.keys : defaultContainer.keys,
                 store: (newSessionContainer.store) ? newSessionContainer.store : defaultContainer.store,
             };
         }
