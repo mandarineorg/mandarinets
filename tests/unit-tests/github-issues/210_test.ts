@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { Mandarine } from "../../../main-core/Mandarine.ns.ts";
 import { NativeComponentsOverrideProxy } from "../../../main-core/proxys/nativeComponentsOverrideProxy.ts";
 import { Test, DenoAsserts, Orange, mockDecorator, MockCookies } from "../../mod.ts";
