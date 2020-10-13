@@ -20,7 +20,7 @@ _`MiddlewareTarget`_ contains two key methods which you will need to provide fun
 
 // middleware.ts
 
-import { Middleware, MiddlewareTarget, ResponseParam, Controller, GET, MandarineCore } from "https://deno.land/x/mandarinets@v2.1.2/mod.ts";
+import { Middleware, MiddlewareTarget, ResponseParam, Controller, GET, MandarineCore } from "https://deno.land/x/mandarinets@v2.1.3/mod.ts";
 
 @Middleware(new RegExp('/api/*'))
 export class Middleware1 implements MiddlewareTarget {

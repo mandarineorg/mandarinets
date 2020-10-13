@@ -14,7 +14,7 @@ Security expressions are available for usage in [`@AllowOnly` decorator](/docs/m
 
 ## Examples
 ```typescript
-import { Controller, AllowOnly, GET } from "https://deno.land/x/mandarinets@v2.1.2/mod.ts";
+import { Controller, AllowOnly, GET } from "https://deno.land/x/mandarinets@v2.1.3/mod.ts";
 
 @Controller()
 @AllowOnly("isAuthenticated()")
