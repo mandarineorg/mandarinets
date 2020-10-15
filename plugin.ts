@@ -10,24 +10,24 @@ Deno.core.setAsyncHandler(mandarine_postgres_plugin, (msg: Uint8Array) => {
     return msg;
 });
 
-//@ts-ignore
-let x = Deno.core.dispatch(mandarine_postgres_plugin, 
-    encode.encode(JSON.stringify({
-    command_type: "Connect",
-    client_id: 0
-})), encode.encode(JSON.stringify({
-    host: "127.0.0.1",
-    username: "postgres",
-    password: "Changeme1",
-    dbname: "mandarine",
-    port: 5432
-})));
+// //@ts-ignore
+// let x = Deno.core.dispatch(mandarine_postgres_plugin, 
+//     encode.encode(JSON.stringify({
+//     command_type: "Connect",
+//     client_id: 0
+// })), encode.encode(JSON.stringify({
+//     host: "127.0.0.1",
+//     username: "postgres",
+//     password: "Changeme1",
+//     dbname: "mandarine",
+//     port: 5432
+// })));
 
-console.log("x");
+console.log("Before process");
 // @ts-ignore
 let lol: Promise<number> = Deno.core.dispatch(mandarine_postgres_plugin, 
     encode.encode(JSON.stringify({
         command_type: "Calculate", client_id: 1
     })), 
     encode.encode(JSON.stringify({"x": "x"})));
-console.log(lol);
+console.log("After process");
