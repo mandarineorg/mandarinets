@@ -19,7 +19,7 @@ pub struct ConnectResult {
 pub fn connect(command: Command) -> util::JsonResult<ConnectResult> {
     let args: ConnectArgs = serde_json::from_slice(command.data[0].as_ref()).map_err(|e| e.to_string()).unwrap();
 
-    let mut pg_config = tokio_postgres::Config::new();
+    let mut pg_config = PGConfig::new();
     pg_config.user(&args.username.unwrap());
     pg_config.password(&args.password.unwrap());
     pg_config.port(args.port.unwrap());
@@ -32,8 +32,10 @@ pub fn connect(command: Command) -> util::JsonResult<ConnectResult> {
 
     let pool_instance = Pool::new(manager, 25);
 
-    let mut pg_pool_value = PG_POOL.lock().unwrap();
-    pg_pool_value.replace(pool_instance);
+    POOL_INSTANCE.set(pool_instance);
+
+    //let mut pg_pool_value = PG_POOL.lock().unwrap();
+    //pg_pool_value.replace(pool_instance);
 
     let mut is_connected_value = IS_CONNECTED.lock().unwrap();
     is_connected_value.replace(true);

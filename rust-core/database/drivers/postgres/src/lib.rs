@@ -4,8 +4,10 @@ extern crate lazy_static;
 #[macro_use]
 extern crate serde_json;
 
-use std::sync::Arc;
-use std::cell::RefCell;
+mod commands;
+mod util;
+mod types;
+
 use tokio_postgres::{Config as PGConfig, NoTls};
 use futures::{Future, FutureExt};
 use deno_core::plugin_api::{Interface, Op, ZeroCopyBuf};
@@ -20,19 +22,16 @@ use std::{
     },
 };
 use tokio::runtime::{Builder as TokioRuntimeBuilder, Runtime as TokioRuntime};
-use tokio::sync::oneshot;
-mod commands;
-mod util;
+use once_cell::sync::OnceCell;
+
+/** Globals */
+static POOL_INSTANCE: OnceCell<Pool> = OnceCell::new();
 
 lazy_static! {
-    static ref PG_CONFIG: Mutex<PGConfig> = Mutex::new(PGConfig::new());
-    static ref PG_POOL: Mutex<Option<Pool>> = Mutex::new(None);
-    static ref PG_MANAGER: Mutex<Option<Manager<NoTls>>> = Mutex::new(None);
     static ref IS_CONNECTED: Mutex<Option<bool>> = Mutex::new(Some(false));
-    static ref MUTEX_TOKIO: TokioRuntime = TokioRuntime::new().unwrap();
+    static ref STATIC_TOKIO: TokioRuntime = TokioRuntimeBuilder::new().threaded_scheduler().enable_all().build().unwrap();
 }
-
-pub type Buf = Box<[u8]>;
+/** End Globals */
 
 #[derive(Serialize)]
 pub struct SyncResult<T>
@@ -66,12 +65,6 @@ pub struct CommandArgs {
 }
 
 #[derive(Serialize, Deserialize, Clone)]
-pub struct PoolConf<M, P> {
-    manager: M,
-    pool: P,
-}
-
-#[derive(Serialize, Deserialize, Clone)]
 pub struct Command {
     args: CommandArgs,
     #[serde(skip)]
@@ -99,6 +92,6 @@ fn op_command(_interface: &mut dyn Interface, zero_copy: &mut [ZeroCopyBuf]) -> 
     let args2: Command = args.clone();
     match args2.args.command_type {
         CommandType::Connect => util::sync_op(commands::connect, args2),
-        CommandType::Calculate => util::async_op(commands::calculate, args2)
+        CommandType::Calculate => util::async_op(commands::execute_query, args2)
     }
 }

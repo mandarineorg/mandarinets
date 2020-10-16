@@ -1,5 +1,5 @@
 mod connect;
-mod query;
+mod execute_query;
 
 pub use connect::{connect};
-pub use query::{calculate};
+pub use execute_query::{execute_query};
