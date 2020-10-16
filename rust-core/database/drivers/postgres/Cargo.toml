@@ -19,4 +19,4 @@ mongodb =  "0.9.2"
 tokio-postgres = "0.5.5"
 futures = "0.3.6"
 deadpool-postgres = "0.5.6"
-tokio = { version = "0.3.0", features = ["full", "rt", "rt-multi-thread", "net", "process"] }
+tokio = { version = "0.2.22" }

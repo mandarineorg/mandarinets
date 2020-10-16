@@ -4,6 +4,7 @@ extern crate lazy_static;
 #[macro_use]
 extern crate serde_json;
 
+use std::sync::Arc;
 use std::cell::RefCell;
 use tokio_postgres::{Config as PGConfig, NoTls};
 use futures::{Future, FutureExt};
@@ -19,6 +20,7 @@ use std::{
     },
 };
 use tokio::runtime::{Builder as TokioRuntimeBuilder, Runtime as TokioRuntime};
+use tokio::sync::oneshot;
 mod commands;
 mod util;
 
@@ -27,10 +29,7 @@ lazy_static! {
     static ref PG_POOL: Mutex<Option<Pool>> = Mutex::new(None);
     static ref PG_MANAGER: Mutex<Option<Manager<NoTls>>> = Mutex::new(None);
     static ref IS_CONNECTED: Mutex<Option<bool>> = Mutex::new(Some(false));
-}
-
-thread_local! {
-    //static TOKIO_RUNTIME: RefCell<Runtime> = RefCell::new(TokioRuntimeBuilder::new_current_thread().build().unwrap());
+    static ref MUTEX_TOKIO: TokioRuntime = TokioRuntime::new().unwrap();
 }
 
 pub type Buf = Box<[u8]>;

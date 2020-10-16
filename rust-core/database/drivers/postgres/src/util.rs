@@ -1,5 +1,4 @@
 use crate::*;
-use serde_json::Value;
 
 pub type JsonResult<T> = Result<T, String>;
 
@@ -82,8 +81,4 @@ pub fn async_error(args: &CommandArgs, error: String) -> Buf {
     let json = json!(result);
     let data = serde_json::to_vec(&json).unwrap();
     Buf::from(data)
-}
-
-pub fn unbox<T>(value: Box<T>) -> T {
-    *value
 }
