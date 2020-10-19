@@ -1,5 +1,5 @@
 mod connect;
-mod execute_query;
+mod prepared_statement_query;
 
 pub use connect::{connect};
-pub use execute_query::{execute_query};
+pub use prepared_statement_query::{prepared_statement_query};

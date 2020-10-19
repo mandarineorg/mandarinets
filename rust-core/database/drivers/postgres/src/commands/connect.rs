@@ -34,9 +34,6 @@ pub fn connect(command: Command) -> util::JsonResult<ConnectResult> {
 
     POOL_INSTANCE.set(pool_instance);
 
-    //let mut pg_pool_value = PG_POOL.lock().unwrap();
-    //pg_pool_value.replace(pool_instance);
-
     let mut is_connected_value = IS_CONNECTED.lock().unwrap();
     is_connected_value.replace(true);
     

@@ -7,6 +7,7 @@ extern crate serde_json;
 mod commands;
 mod util;
 mod types;
+mod pg_utils;
 
 use tokio_postgres::{Config as PGConfig, NoTls};
 use futures::{Future, FutureExt};
@@ -55,7 +56,7 @@ where
 #[derive(Serialize, Deserialize, Clone)]
 pub enum CommandType {
     Connect,
-    Calculate
+    PreparedStatementQuery
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -92,6 +93,6 @@ fn op_command(_interface: &mut dyn Interface, zero_copy: &mut [ZeroCopyBuf]) -> 
     let args2: Command = args.clone();
     match args2.args.command_type {
         CommandType::Connect => util::sync_op(commands::connect, args2),
-        CommandType::Calculate => util::async_op(commands::execute_query, args2)
+        CommandType::PreparedStatementQuery => util::async_op(commands::prepared_statement_query, args2)
     }
 }
