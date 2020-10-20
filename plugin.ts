@@ -29,8 +29,8 @@ let lol: Promise<number> = Deno.core.dispatch(mandarine_postgres_plugin,
         command_type: "PreparedStatementQuery", client_id: 1
     })), 
     encode.encode(JSON.stringify({
-        statement: "SELECT 1 + $1 as result;",
-        parameters: [5]
+        statement: "SELECT $1 as result;",
+        parameters: ["x"]
     })));
 
 console.log("After process");

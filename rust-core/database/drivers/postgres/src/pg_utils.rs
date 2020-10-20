@@ -9,6 +9,17 @@ pub struct ColumnData<N, V> {
     columnValue: V
 }
 
+pub enum PGValue {
+    Null,
+    I64(i64),
+    U64(u64),
+    ARRAY(Vec<PGValue>),
+    STRING(String),
+    F64(f64),
+    BOOLEAN(bool),
+    Object(Map<String, Value>)
+}
+
 pub fn get_column_value(row: &tokio_postgres::Row, column: &tokio_postgres::Column, col_idx: usize) -> Value {
     let columnName = column.name();
     println!("{}", columnName);
@@ -45,6 +56,10 @@ pub fn get_column_value(row: &tokio_postgres::Row, column: &tokio_postgres::Colu
         },
         "bytea" => {
             let val: Vec<u8>  = row.get(col_idx);
+            *current_value.pointer_mut("/columnValue").unwrap() = val.into();
+        },
+        "bool" | "boolean" => {
+            let val: bool  = row.get(col_idx);
             *current_value.pointer_mut("/columnValue").unwrap() = val.into();
         },
         _ => {
