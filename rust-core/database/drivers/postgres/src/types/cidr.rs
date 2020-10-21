@@ -60,7 +60,7 @@ impl tokio_postgres::types::ToSql for Cidr {
 }
 
 impl<'a> tokio_postgres::types::FromSql<'a> for Cidr {
-    fn from_sql(ty: &Type, mut buf: &[u8]) -> StdResult<Self, Box<dyn Error + Sync + Send>> {
+    fn from_sql(_: &Type, buf: &[u8]) -> StdResult<Self, Box<dyn Error + Sync + Send>> {
         let mut current_ip: Option<IpNetwork> = None;
         let buf_len = buf.len();
         assert_or_error!(4 <= buf_len, "input (cidr) is too short.");
@@ -86,9 +86,8 @@ impl<'a> tokio_postgres::types::FromSql<'a> for Cidr {
         } else {
             assert_or_error!(false, "invalid network address format")
         }
-        return Err("invalid buffer size".into());
-        
-        //Ok(Cidr::new(current_ip))
+
+        Ok(Cidr::new(current_ip))
 
     }
 

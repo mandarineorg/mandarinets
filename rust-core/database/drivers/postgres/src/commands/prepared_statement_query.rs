@@ -4,6 +4,7 @@ use serde_json::Value;
 use tokio_postgres::types::*;
 use std::collections::*;
 use pg_utils::PGParameters;
+use std::result::{Result as StdResult};
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
@@ -117,18 +118,26 @@ pub fn prepared_statement_query(command: Command) -> util::AsyncJsonOp<Vec<Vec<V
                     } else {
                         let rows: Vec<tokio_postgres::Row> = rows.unwrap();
                         
-                        let mandarine_rows: Vec<Vec<serde_json::Value>> = (&rows).iter().map(|row| {
+                        let mandarine_rows: StdResult<Vec<Vec<serde_json::Value>>, String> = (&rows).iter().map(|row| {
                         let cols = row.columns().iter();
                         let mut return_columns: Vec<serde_json::Value> = vec![];
                                 
                         for (colnumber, column) in cols.enumerate() {
-                            return_columns.push(pg_utils::get_column_value(row, column, colnumber));
+                            let colval = pg_utils::get_column_value(row, column, colnumber);
+                            if let Err(e) = colval {
+                                return Err(e.to_string());
+                            } else {
+                                return_columns.push(colval.unwrap());
+                            }
                         }
 
-                        return_columns
+                        Ok(return_columns)
                         }).collect();
                             
-                        Ok(mandarine_rows)
+                        match mandarine_rows {
+                            Ok(val) => Ok(val),
+                            Err(err) => Err(err)
+                        }
                     }
                 }
             }
