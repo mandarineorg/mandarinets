@@ -238,6 +238,18 @@ pub fn get_column_value(row: &tokio_postgres::Row, column: &tokio_postgres::Colu
                 };
             }
         },
+        "inet" => {
+            let val: StdResult<Option<std::net::IpAddr>, Error> = row.try_get(col_idx);
+
+            if let Err(err) = val {
+                with_error.replace(format!("{} : {}", get_row_error_msg, err));
+            } else {
+                *current_value.pointer_mut("/columnValue").unwrap() = match val.unwrap() {
+                    Some(val) => val.to_string().into(),
+                    None => Value::Null
+                };
+            }
+        },
         _ => {
             *current_value.pointer_mut("/columnValue").unwrap() = Value::Null
         }
