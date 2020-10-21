@@ -14,7 +14,7 @@ where
     })
 }
 
-pub fn sync_result<T>(data: T) -> types::Buf
+pub fn sync_result<T>(data: T) -> plugin_types::Buf
 where
     T: Serialize,
 {
@@ -24,17 +24,17 @@ where
     };
     let json = json!(result);
     let data = serde_json::to_vec(&json).unwrap();
-    types::Buf::from(data)
+    plugin_types::Buf::from(data)
 }
 
-pub fn sync_error(error: String) -> types::Buf {
+pub fn sync_error(error: String) -> plugin_types::Buf {
     let result = SyncResult::<usize> {
         data: None,
         error: Some(error),
     };
     let json = json!(result);
     let data = serde_json::to_vec(&json).unwrap();
-    types::Buf::from(data)
+    plugin_types::Buf::from(data)
 }
 
 pub type AsyncJsonOp<T> = Pin<Box<dyn Future<Output = JsonResult<T>>>>;
@@ -56,7 +56,7 @@ where
     Op::Async(fut.boxed_local())
 }
 
-pub fn async_result<T>(args: &CommandArgs, data: T) -> types::Buf
+pub fn async_result<T>(args: &CommandArgs, data: T) -> plugin_types::Buf
 where
     T: Serialize,
 {
@@ -68,10 +68,10 @@ where
     };
     let json = json!(result);
     let data = serde_json::to_vec(&json).unwrap();
-    types::Buf::from(data)
+    plugin_types::Buf::from(data)
 }
 
-pub fn async_error(args: &CommandArgs, error: String) -> types::Buf {
+pub fn async_error(args: &CommandArgs, error: String) -> plugin_types::Buf {
     let args = args.clone();
     let result = AsyncResult::<usize> {
         command_type: args.command_type,
@@ -80,5 +80,5 @@ pub fn async_error(args: &CommandArgs, error: String) -> types::Buf {
     };
     let json = json!(result);
     let data = serde_json::to_vec(&json).unwrap();
-    types::Buf::from(data)
+    plugin_types::Buf::from(data)
 }

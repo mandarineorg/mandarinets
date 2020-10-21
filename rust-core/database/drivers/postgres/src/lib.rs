@@ -6,8 +6,9 @@ extern crate serde_json;
 
 mod commands;
 mod util;
-mod types;
 mod pg_utils;
+mod plugin_types;
+mod types;
 
 use tokio_postgres::{Config as PGConfig, NoTls};
 use futures::{Future, FutureExt};
