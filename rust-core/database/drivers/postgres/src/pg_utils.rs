@@ -210,7 +210,34 @@ pub fn get_column_value(row: &tokio_postgres::Row, column: &tokio_postgres::Colu
                     None => Value::Null
                 };
             }
-        }
+        },
+        "circle" => {
+            let val: StdResult<Option<types::Circle>, Error> = row.try_get(col_idx);
+
+            if let Err(err) = val {
+                with_error.replace(format!("{} : {}", get_row_error_msg, err));
+            } else {
+                *current_value.pointer_mut("/columnValue").unwrap() = match val.unwrap() {
+                    Some(val) => serde_json::to_value(val).unwrap(),
+                    None => Value::Null
+                };
+            }
+        },
+        "date" => {
+            let val: StdResult<Option<time::Date>, Error> = row.try_get(col_idx);
+
+            if let Err(err) = val {
+                with_error.replace(format!("{} : {}", get_row_error_msg, err));
+            } else {
+                *current_value.pointer_mut("/columnValue").unwrap() = match val.unwrap() {
+                    Some(val) => {
+                        let date_format = format!("{}-{}-{}", val.year(), val.month(), val.day());
+                        date_format.into()
+                    },
+                    None => Value::Null
+                };
+            }
+        },
         _ => {
             *current_value.pointer_mut("/columnValue").unwrap() = Value::Null
         }

@@ -29,7 +29,7 @@ let lol: Promise<number> = Deno.core.dispatch(mandarine_postgres_plugin,
         command_type: "PreparedStatementQuery", client_id: 1
     })), 
     encode.encode(JSON.stringify({
-        statement: `select ('192.168.1.0/24'::cidr) as result`,
+        statement: `select (date '2001-09-28' + integer '7'	) as result`,
         parameters: ["1000"]
     })));
 
