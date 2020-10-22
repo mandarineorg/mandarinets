@@ -33,7 +33,7 @@ impl Money {
 }
 
 impl tokio_postgres::types::ToSql for Money {
-    fn to_sql(&self, _: &Type, w: &mut BytesMut) -> StdResult<IsNull, Box<dyn Error + Sync + Send>> {
+    fn to_sql(&self, _: &Type, _: &mut BytesMut) -> StdResult<IsNull, Box<dyn Error + Sync + Send>> {
         //w.put_i64(self.value);
         Ok(IsNull::No)
     }
@@ -43,7 +43,7 @@ impl tokio_postgres::types::ToSql for Money {
 }
 
 impl<'a> tokio_postgres::types::FromSql<'a> for Money {
-    fn from_sql(ty: &Type, mut buf: &[u8]) -> StdResult<Self, Box<dyn Error + Sync + Send>> {
+    fn from_sql(_: &Type, mut buf: &[u8]) -> StdResult<Self, Box<dyn Error + Sync + Send>> {
         let v = buf.read_i64::<BigEndian>()?;
 
         if !buf.is_empty() {

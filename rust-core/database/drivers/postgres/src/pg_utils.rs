@@ -4,24 +4,7 @@ use serde_json::*;
 use std::result::{Result as StdResult};
 use tokio_postgres::Error;
 use std::collections::HashMap;
-
-#[derive(Serialize, Deserialize)]
-pub struct ColumnData {
-    name: String,
-    value: Value,
-    #[serde(rename = "type")]
-    ctype: String
-}
-
-impl ColumnData {
-    pub fn new(name: String, value: Value, ctype: String) -> ColumnData {
-        ColumnData {
-            name,
-            value,
-            ctype
-        }
-    }
-}
+use pg_interfaces::{Row};
 
 use bit_vec::BitVec;
 
@@ -54,7 +37,7 @@ fn process_column_value_non_complex<'a, T>(column_name: String, column_type: Str
     if let Err(err) = value {
         Err(format!("{} : {}", get_error_message(), err))
     } else {
-        Ok(json!(ColumnData::new(column_name, match value.unwrap() {
+        Ok(json!(Row::new(column_name, match value.unwrap() {
             Some(val) => val.into(),
             None => Value::Null
         }, column_type)))
@@ -65,7 +48,7 @@ fn process_column_complex<'a, T, F: Fn(T) -> Value>(column_name: String, column_
     if let Err(err) = value {
         Err(format!("{} : {}", get_error_message(), err))
     } else {
-        Ok(json!(ColumnData::new(column_name, match value.unwrap() {
+        Ok(json!(Row::new(column_name, match value.unwrap() {
             Some(val) => f(val),
             None => Value::Null
         }, column_type)))
@@ -77,7 +60,7 @@ fn process_complex_column_vector<'a, T, F: Fn(&T) -> Value>(column_name: String,
     if let Err(err) = value {
         Err(format!("{} : {}", get_error_message(), err))
     } else {
-        Ok(json!(ColumnData::new(column_name, match value.unwrap() {
+        Ok(json!(Row::new(column_name, match value.unwrap() {
             Some(val) => {
                 let values: Vec<Value> = val.iter().map(f).collect();
                 values.into()
@@ -340,10 +323,36 @@ pub fn get_column_value(row: &tokio_postgres::Row, column: &tokio_postgres::Colu
             result = process_complex_column_vector(column_name, column_type, val, |val| serde_json::to_value(val).unwrap());
         }
         _ => {
-            result = Ok(Value::Null);
+            let val: StdResult<Option<types::Unknown>, Error> = row.try_get(col_idx);
+            result = process_column_complex(column_name, column_type, val, |val| val.value().into());
         }
         
     }
 
     result
+}
+
+pub fn get_parameter_types(parameters: Vec<Value>) -> Vec<tokio_postgres::types::Type> {
+    let parameters_get_types = parameters.iter().map(|p| {
+        match p {
+            Value::Bool(_) => tokio_postgres::types::Type::BOOL,
+            Value::Number(val) => {
+                if val.is_i64() || val.is_u64() {
+                    tokio_postgres::types::Type::INT8
+                } else if val.is_f64() {
+                    tokio_postgres::types::Type::FLOAT4
+                } else {
+                    tokio_postgres::types::Type::NUMERIC
+                }
+            },
+            Value::String(_) => tokio_postgres::types::Type::TEXT,
+            _ => tokio_postgres::types::Type::VARCHAR
+        }
+    });
+    let parameters_get_types = parameters_get_types.collect::<Vec<tokio_postgres::types::Type>>();
+    parameters_get_types
+}
+
+pub fn get_empty_rows_list() -> Vec<Vec<Value>> {
+    Vec::new()
 }

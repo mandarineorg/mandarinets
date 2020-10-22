@@ -9,6 +9,7 @@ mod util;
 mod pg_utils;
 mod plugin_types;
 mod types;
+mod pg_interfaces;
 
 use tokio_postgres::{Config as PGConfig, NoTls};
 use futures::{Future, FutureExt};
@@ -52,18 +53,21 @@ where
     command_type: CommandType,
     data: Option<T>,
     error: Option<String>,
+    command_id: String
 }
 
 #[derive(Serialize, Deserialize, Clone)]
 pub enum CommandType {
     Connect,
-    PreparedStatementQuery
+    Query,
+    Execute
 }
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct CommandArgs {
     command_type: CommandType,
     client_id: Option<usize>,
+    command_id: String
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -94,6 +98,7 @@ fn op_command(_interface: &mut dyn Interface, zero_copy: &mut [ZeroCopyBuf]) -> 
     let args2: Command = args.clone();
     match args2.args.command_type {
         CommandType::Connect => util::sync_op(commands::connect, args2),
-        CommandType::PreparedStatementQuery => util::async_op(commands::prepared_statement_query, args2)
+        CommandType::Query => util::async_op(commands::prepared_statement_query, args2),
+        CommandType::Execute => util::async_op(commands::execute_query, args2)
     }
 }

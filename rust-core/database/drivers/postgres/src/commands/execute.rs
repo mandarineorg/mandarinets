@@ -1,14 +1,14 @@
 use crate::*;
-use std::fmt::*;
 use serde_json::Value;
 use tokio_postgres::types::*;
 use std::collections::*;
 use pg_utils::*;
-use std::result::{Result as StdResult};
 use pg_interfaces::{QueryResult, CommonStatementArgs};
+use std::convert::TryFrom;
 
-pub fn prepared_statement_query(command: Command) -> util::AsyncJsonOp<QueryResult> {
+pub fn execute_query(command: Command) -> util::AsyncJsonOp<QueryResult> {
     let args: CommonStatementArgs = serde_json::from_slice(command.data[0].as_ref()).map_err(|e| e.to_string()).unwrap();
+
     let fut = async move {
         let pool = POOL_INSTANCE.get().unwrap();
         let ias = (STATIC_TOKIO).spawn(async move {
@@ -20,7 +20,24 @@ pub fn prepared_statement_query(command: Command) -> util::AsyncJsonOp<QueryResu
             } else {
                 let unwrapped_pool = client.unwrap();
 
-                let prepared_statement = unwrapped_pool.prepare_typed(&args.statement, &get_parameter_types(parameters.clone())).await;
+                let parameters_get_types = parameters.iter().map(|p| {
+                    match p {
+                        Value::Bool(_) => Type::BOOL,
+                        Value::Number(val) => {
+                            if val.is_i64() || val.is_u64() {
+                                Type::INT8
+                            } else if val.is_f64() {
+                                Type::FLOAT4
+                            } else {
+                                Type::NUMERIC
+                            }
+                        },
+                        Value::String(_) => Type::TEXT,
+                        _ => Type::VARCHAR
+                    }
+                });
+                let parameters_get_types = parameters_get_types.collect::<Vec<Type>>();
+                let prepared_statement = unwrapped_pool.prepare_typed(&args.statement, &parameters_get_types).await;
                 
                 if let Err(e) = prepared_statement {
                     Err(e.to_string())
@@ -88,45 +105,31 @@ pub fn prepared_statement_query(command: Command) -> util::AsyncJsonOp<QueryResu
                         processed_params.push(processed_value.unwrap());
                     }
 
-                    let rows = unwrapped_pool.query(&(prepared_statement.unwrap()), &processed_params).await;
+                    let rows = unwrapped_pool.execute(&(prepared_statement.unwrap()), &processed_params).await;
 
                     if let Err(e) = rows {
                         Err(e.to_string())
                     } else {
-                        let rows: Vec<tokio_postgres::Row> = rows.unwrap();
+                        let rows_affected: u64 = rows.unwrap();
+                        let rows_affected = usize::try_from(rows_affected);
+                        let mut final_rows_affected: Option<usize> = None;
                         
-                        let mandarine_rows: StdResult<Vec<Vec<serde_json::Value>>, String> = (&rows).iter().map(|row| {
-                        let cols = row.columns().iter();
-                        let mut return_columns: Vec<serde_json::Value> = vec![];
-                                
-                        for (colnumber, column) in cols.enumerate() {
-                            let colval = pg_utils::get_column_value(row, column, colnumber);
-                            if let Err(e) = colval {
-                                return Err(e.to_string());
-                            } else {
-                                return_columns.push(colval.unwrap());
-                            }
+                        if let Err(e) = rows_affected {
+                            final_rows_affected.replace(usize::MIN);
+                        } else {
+                            final_rows_affected.replace(rows_affected.unwrap());
                         }
 
-                        Ok(return_columns)
-                        }).collect();
-                            
-                        match mandarine_rows {
-                            Ok(val) => {
-                                let count = (&val).len();
-                                let query_result: QueryResult = QueryResult::new(args.statement, val, count);
-                                Ok(query_result)
-                            },
-                            Err(err) => Err(err)
-                        }
+                        Ok(QueryResult::new(args.statement, pg_utils::get_empty_rows_list(), final_rows_affected.unwrap()))
                     }
                 }
             }
             
         }).await.unwrap();
 
-       ias
+        ias
     };
 
     fut.boxed()
+
 }

@@ -66,6 +66,7 @@ where
         command_type: args.command_type,
         data: Some(data),
         error: None,
+        command_id: args.command_id
     };
     let json = json!(result);
     let data = serde_json::to_vec(&json).unwrap();
@@ -78,6 +79,7 @@ pub fn async_error(args: &CommandArgs, error: String) -> plugin_types::Buf {
         command_type: args.command_type,
         data: None,
         error: Some(error),
+        command_id: args.command_id
     };
     let json = json!(result);
     let data = serde_json::to_vec(&json).unwrap();
