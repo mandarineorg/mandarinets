@@ -29,7 +29,7 @@ let lol: Promise<number> = Deno.core.dispatch(mandarine_postgres_plugin,
         command_type: "PreparedStatementQuery", client_id: 1
     })), 
     encode.encode(JSON.stringify({
-        statement: `select (ARRAY['1'::bpchar]) as result`,
+        statement: `select (ARRAY['12.34'::float8::numeric::money, '12.34'::float8::numeric::money]) as result`,
         parameters: ["1000"]
     })));
 
