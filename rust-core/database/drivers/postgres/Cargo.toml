@@ -16,7 +16,7 @@ postgres = "0.17.5"
 lazy_static = "1.4.0"
 serde = "1.0.106"
 mongodb =  "0.9.2" 
-tokio-postgres = { version = "0.5.5", features = ["with-serde_json-1", "with-bit-vec-0_6", "with-geo-types-0_4", "with-chrono-0_4", "with-time-0_2"] }
+tokio-postgres = { version = "0.5.5", features = ["with-serde_json-1", "with-bit-vec-0_6", "with-uuid-0_8", "with-geo-types-0_4", "with-chrono-0_4", "with-time-0_2", "with-eui48-0_4"] }
 futures = "0.3.6"
 deadpool-postgres = "0.5.6"
 tokio = { version = "0.2.22", features = ["full"] }
@@ -31,3 +31,6 @@ geo-types = "0.4"
 ipnetwork = { version = "0.17.0", features = ["serde"] }
 chrono = "0.4"
 time = "0.2.22"
+eui48 = "0.4"
+hex = "0.4.2"
+uuid = "0.8.1"

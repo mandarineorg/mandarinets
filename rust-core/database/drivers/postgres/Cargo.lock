@@ -489,6 +489,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "eui48"
+version = "0.4.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8c4cf866e4d3e5e773691f5f61615a224a7b0b72b7daf994fc56d1b82dab0b6b"
+dependencies = [
+ "rustc-serialize",
+]
+
+[[package]]
 name = "fake-simd"
 version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1239,8 +1248,10 @@ dependencies = [
  "deadpool-postgres",
  "deno_core",
  "diesel",
+ "eui48",
  "futures",
  "geo-types",
+ "hex 0.4.2",
  "ipnetwork",
  "lazy_static",
  "mongodb",
@@ -1253,6 +1264,7 @@ dependencies = [
  "time 0.2.22",
  "tokio",
  "tokio-postgres",
+ "uuid",
 ]
 
 [[package]]
@@ -1296,12 +1308,14 @@ dependencies = [
  "bit-vec",
  "bytes",
  "chrono",
+ "eui48",
  "fallible-iterator",
  "geo-types",
  "postgres-protocol",
  "serde",
  "serde_json",
  "time 0.2.22",
+ "uuid",
 ]
 
 [[package]]
@@ -1534,6 +1548,12 @@ name = "rustc-demangle"
 version = "0.1.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b2610b7f643d18c87dff3b489950269617e6601a51f1f05aa5daefee36f64f0b"
+
+[[package]]
+name = "rustc-serialize"
+version = "0.3.24"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dcf128d1287d2ea9d80910b5f1120d0b8eede3fbf1abe91c40d39ea7d51e6fda"
 
 [[package]]
 name = "rustc_version"
@@ -2168,6 +2188,12 @@ dependencies = [
  "percent-encoding",
  "serde",
 ]
+
+[[package]]
+name = "uuid"
+version = "0.8.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9fde2f6a4bea1d6e007c4ad38c6839fa71cbb63b6dbf5b595aa38dc9b1093c11"
 
 [[package]]
 name = "vcpkg"
