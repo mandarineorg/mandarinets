@@ -103,7 +103,7 @@ pub fn execute_query(command: Command) -> util::AsyncJsonOp<QueryResult> {
                             final_rows_affected.replace(rows_affected.unwrap());
                         }
 
-                        Ok(QueryResult::new(args.statement, pg_utils::get_empty_rows_list(), final_rows_affected.unwrap()))
+                        Ok(QueryResult::new(args.statement, pg_utils::get_empty_rows_list(), final_rows_affected.unwrap(), true))
                     }
                 }
             }

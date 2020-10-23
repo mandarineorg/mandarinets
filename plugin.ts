@@ -49,12 +49,12 @@ function dispatchAsync(
       //@ts-ignore
       Deno.core.dispatch(mandarine_postgres_plugin, 
         encode.encode(JSON.stringify({
-            command_type: "Execute", 
+            command_type: "BatchExecute", 
             client_id: 1, 
             command_id: command_id
         })), 
         encode.encode(JSON.stringify({
-            statement: `INSERT INTO public.users VALUES (12, 'asdasdasd', '$20'); INSERT INTO public.users VALUES (13, 'asdasdasd', '$20')`,
+            statement: `INSERT INTO public.users VALUES (1123, 'asdasdasd', '$20'); INSERT INTO public.users VALUES (1213, 'asdasdasd', '$20')`,
             parameters: ["1000"]
         })));
 

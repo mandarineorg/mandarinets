@@ -114,7 +114,7 @@ pub fn prepared_statement_query(command: Command) -> util::AsyncJsonOp<QueryResu
                         match mandarine_rows {
                             Ok(val) => {
                                 let count = (&val).len();
-                                let query_result: QueryResult = QueryResult::new(args.statement, val, count);
+                                let query_result: QueryResult = QueryResult::new(args.statement, val, count, true);
                                 Ok(query_result)
                             },
                             Err(err) => Err(err)

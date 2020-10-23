@@ -60,7 +60,8 @@ where
 pub enum CommandType {
     Connect,
     Query,
-    Execute
+    Execute,
+    BatchExecute
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -99,6 +100,7 @@ fn op_command(_interface: &mut dyn Interface, zero_copy: &mut [ZeroCopyBuf]) -> 
     match args2.args.command_type {
         CommandType::Connect => util::sync_op(commands::connect, args2),
         CommandType::Query => util::async_op(commands::prepared_statement_query, args2),
-        CommandType::Execute => util::async_op(commands::execute_query, args2)
+        CommandType::Execute => util::async_op(commands::execute_query, args2),
+        CommandType::BatchExecute => util::async_op(commands::batch_execute, args2)
     }
 }
