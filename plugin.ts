@@ -54,7 +54,7 @@ function dispatchAsync(
             command_id: command_id
         })), 
         encode.encode(JSON.stringify({
-            statement: `INSERT INTO public.users VALUES (4, 'asdasdasd')`,
+            statement: `INSERT INTO public.users VALUES (12, 'asdasdasd', '$20'); INSERT INTO public.users VALUES (13, 'asdasdasd', '$20')`,
             parameters: ["1000"]
         })));
 

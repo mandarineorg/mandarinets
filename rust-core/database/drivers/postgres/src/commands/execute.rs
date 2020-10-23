@@ -20,25 +20,8 @@ pub fn execute_query(command: Command) -> util::AsyncJsonOp<QueryResult> {
             } else {
                 let unwrapped_pool = client.unwrap();
 
-                let parameters_get_types = parameters.iter().map(|p| {
-                    match p {
-                        Value::Bool(_) => Type::BOOL,
-                        Value::Number(val) => {
-                            if val.is_i64() || val.is_u64() {
-                                Type::INT8
-                            } else if val.is_f64() {
-                                Type::FLOAT4
-                            } else {
-                                Type::NUMERIC
-                            }
-                        },
-                        Value::String(_) => Type::TEXT,
-                        _ => Type::VARCHAR
-                    }
-                });
-                let parameters_get_types = parameters_get_types.collect::<Vec<Type>>();
-                let prepared_statement = unwrapped_pool.prepare_typed(&args.statement, &parameters_get_types).await;
-                
+                let prepared_statement = unwrapped_pool.prepare_typed(&args.statement, &get_parameter_types(parameters.clone())).await;
+
                 if let Err(e) = prepared_statement {
                     Err(e.to_string())
                 } else {
