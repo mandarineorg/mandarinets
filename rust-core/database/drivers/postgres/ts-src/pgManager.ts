@@ -4,7 +4,26 @@ import { CommandTypes } from "./commandTypes.ts";
 import { DenoCore } from "./common.ts";
 import { encoder, DispatchSync, initAsyncHandler } from "./lib.ts";
 import { PgClient } from "./pgClient.ts";
+import {
+    prepare,
+} from "https://deno.land/x/plugin_prepare@v0.8.0/mod.ts";
 
+const pluginOptions = {
+    name: "test_plugin",
+  
+    // Whether to output log. Optional, default is true
+    // printLog: true,
+  
+    // Whether to use locally cached files. Optional, default is true
+    // checkCache: true,
+  
+    // Support "http://", "https://", "file://"
+    urls: {
+      darwin: `./tests/db-tests/pg/libmandarine_postgres.dylib`,
+      windows: `./tests/db-tests/pg/libmandarine_postgres.dll`,
+      linux: `./tests/db-tests/pg/libmandarine_postgres.so`,
+    },
+  };
 export interface Configuration {
     host: string,
     username: string,
@@ -40,7 +59,17 @@ export class PgManager {
         if(!PgManager.rid || PgManager.opId == -1) {
             let rid;
             if(Deno.env.get('MANDARINE_TEST') != undefined) {
-                rid = Deno.openPlugin("./tests/db-tests/pg/libmandarine_postgres.dylib");
+                switch(Deno.build.os) {
+                    case "darwin":
+                        rid = Deno.openPlugin("./tests/db-tests/pg/libmandarine_postgres.dylib");
+                    break;
+                    case "linux":
+                        rid = Deno.openPlugin("./tests/db-tests/pg/libmandarine_postgres.so");
+                    break;
+                    case "windows":
+                        rid = Deno.openPlugin("./tests/db-tests/pg/libmandarine_postgres.dll");
+                    break;
+                }
             } else {
                 rid = -1;
             }
