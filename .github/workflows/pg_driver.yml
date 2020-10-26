@@ -1,4 +1,4 @@
-name: Unit Tests
+name: Pg driver
 
 on: [push, pull_request]
 
