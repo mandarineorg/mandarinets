@@ -1,4 +1,4 @@
-const fileExists = (path: string): boolean => {
+const pathExists = (path: string): boolean => {
     try {
         Deno.statSync(path);
         return true;
@@ -20,11 +20,13 @@ export const fetchPlugin = async (downloadBaseUrl: string, pluginName: string): 
             break;
     }
     const pluginFull = `${pluginName}.${pluginExtension}`;
+    if(!pathExists('./mandarine_target')) {
+        Deno.mkdirSync("mandarine_target");
+    }
     const pluginPath = `./mandarine_target/${pluginFull}`;
-    if(!fileExists(pluginPath)) {
+    if(!pathExists(pluginPath)) {
         const fetching = await fetch(`${downloadBaseUrl}/${pluginFull}`);
         const data = await fetching.arrayBuffer();
-        Deno.mkdirSync("mandarine_target");
         Deno.writeFileSync(pluginPath, new Uint8Array(data), { 
             create: false
         });
