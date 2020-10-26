@@ -44,6 +44,7 @@ jobs:
           name: 'Artifacts'
           path: |
             target/release/
+            ./rust-core/database/drivers/postgres/target/release/
 
       - name: Release
         uses: softprops/action-gh-release@v1
