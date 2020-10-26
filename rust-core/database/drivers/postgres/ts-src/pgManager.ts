@@ -4,7 +4,6 @@ import { CommandTypes } from "./commandTypes.ts";
 import { DenoCore } from "./common.ts";
 import { encoder, DispatchSync, initAsyncHandler } from "./lib.ts";
 import { PgClient } from "./pgClient.ts";
-import { opCommandBuilder } from "./utils.ts";
 
 export interface Configuration {
     host: string,
@@ -20,8 +19,6 @@ export interface Configuration {
 }
 
 export class PgManager {
-    private pendingCommands: Map<String, { resolve: (data: unknown) => void; reject: (reason: any) => void }> = new Map();
-
     public static opId: number = -1;
     public static rid: number;
  
@@ -35,26 +32,27 @@ export class PgManager {
             dbname: config.dbname,
             port: config.port ?? 5432
         })));
-
+        
         if(connection.error || !connection.data.success) throw new Error(connection.error);
     }
 
     private preparePlugin() {
-        if(PgManager.rid) throw new Error("Plugin has already been opened");
-        let rid;
-        if(Deno.env.get('MANDARINE_TEST') != undefined) {
-            rid = Deno.openPlugin("./tests/db-tests/pg/libmandarine_postgres.dylib");
-        } else {
-            rid = -1;
-        }
+        if(!PgManager.rid || PgManager.opId == -1) {
+            let rid;
+            if(Deno.env.get('MANDARINE_TEST') != undefined) {
+                rid = Deno.openPlugin("./tests/db-tests/pg/libmandarine_postgres.dylib");
+            } else {
+                rid = -1;
+            }
 
-        PgManager.rid = rid;
-        
-        const { mandarine_postgres_plugin } = DenoCore.ops();
-        
-        if(PgManager.opId != -1) throw new Error("Plugin has already been prepared");
-        PgManager.opId = mandarine_postgres_plugin;
-        initAsyncHandler();
+            PgManager.rid = rid;
+            
+            const { mandarine_postgres_plugin } = DenoCore.ops();
+            
+            if(PgManager.opId != -1) throw new Error("Plugin has already been prepared");
+            PgManager.opId = mandarine_postgres_plugin;
+            initAsyncHandler();
+        }
     }
 
     public getClient(): PgClient {
