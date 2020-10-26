@@ -1,6 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { CommandTypes } from "./commandTypes.ts";
+import type { CommandTypes } from "./commandTypes.ts";
 
 export interface AsyncResult<T> {
     command_type: CommandTypes,

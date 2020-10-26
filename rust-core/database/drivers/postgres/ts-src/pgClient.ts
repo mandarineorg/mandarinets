@@ -4,7 +4,7 @@ import { CommandTypes } from "./commandTypes.ts";
 import { DispatchAsync, encoder, QueryMapper } from "./lib.ts";
 import { PgManager } from "./pgManager.ts";
 import { IQueryResult, QueryResult } from "./queryResult.ts";
-import { AsyncResult } from "./utils.ts";
+import type { AsyncResult } from "./utils.ts";
 
 const defaultQueryMapper = (result: AsyncResult<IQueryResult>): any => {
     return new QueryResult(result, result.data?.statement, result.data?.rows, result.data?.rowCount, result.data?.success);

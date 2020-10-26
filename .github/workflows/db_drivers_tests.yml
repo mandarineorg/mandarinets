@@ -36,8 +36,8 @@ jobs:
       # Build
       - name: Clone repository
         uses: actions/checkout@v2      
-      - name: Build
-        run: cd rust-core && cd database && cd drivers && cd postgres && cargo build --release --locked --all-targets  
+      # - name: Build
+      #   run: cd rust-core && cd database && cd drivers && cd postgres && cargo build --release --locked --all-targets  
       - name: Setup deno
         uses: denolib/setup-deno@master
         with:

@@ -4,7 +4,7 @@ import { v4 } from "https://deno.land/std/uuid/mod.ts";
 import { CommandTypes } from "./commandTypes.ts";
 import { DenoCore } from "./common.ts";
 import { PgManager } from "./pgManager.ts";
-import { IQueryResult } from "./queryResult.ts";
+import type { IQueryResult } from "./queryResult.ts";
 import { AsyncResult, opCommandBuilder, SyncResult } from "./utils.ts";
 
 export type QueryMapper<T = any> =(data: AsyncResult<IQueryResult>) => T;

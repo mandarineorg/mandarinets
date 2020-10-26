@@ -1,7 +1,7 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { Row } from "./rows.ts";
-import { AsyncResult } from "./utils.ts";
+import type { Row } from "./rows.ts";
+import type { AsyncResult } from "./utils.ts";
 
 export interface IQueryResult {
     statement: string | undefined,
