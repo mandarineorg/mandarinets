@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [macOS-latest]
+        os: [macOS-latest, ubuntu-latest, windows-latest]
         deno: ["v1.4.6", "v1.4.4"]
       fail-fast: true    
 

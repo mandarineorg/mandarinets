@@ -7,7 +7,7 @@ const pgManager: PgManager = new PgManager({
     host: "127.0.0.1",
     username: "postgres",
     password: "Changeme1",
-    dbname: "mandarine",
+    dbname: "postgres",
     port: 5432
   });
 
