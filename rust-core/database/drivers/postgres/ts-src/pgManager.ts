@@ -1,29 +1,13 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
+import { fetchPlugin } from "../../../../plugins/pluginPrepare.ts";
 import { CommandTypes } from "./commandTypes.ts";
 import { DenoCore } from "./common.ts";
 import { encoder, DispatchSync, initAsyncHandler } from "./lib.ts";
 import { PgClient } from "./pgClient.ts";
-import {
-    prepare,
-} from "https://deno.land/x/plugin_prepare@v0.8.0/mod.ts";
 
-const pluginOptions = {
-    name: "test_plugin",
-  
-    // Whether to output log. Optional, default is true
-    // printLog: true,
-  
-    // Whether to use locally cached files. Optional, default is true
-    // checkCache: true,
-  
-    // Support "http://", "https://", "file://"
-    urls: {
-      darwin: `./tests/db-tests/pg/libmandarine_postgres.dylib`,
-      windows: `./tests/db-tests/pg/libmandarine_postgres.dll`,
-      linux: `./tests/db-tests/pg/libmandarine_postgres.so`,
-    },
-  };
+const pluginPath: string = await fetchPlugin('https://github.com/mandarineorg/mandarinets/raw/rust-plugin/rust-core/plugins/artifacts', 'libmandarine_postgres');
+
 export interface Configuration {
     host: string,
     username: string,
@@ -57,27 +41,8 @@ export class PgManager {
 
     private preparePlugin() {
         if(!PgManager.rid || PgManager.opId == -1) {
-            let rid;
-            if(Deno.env.get('MANDARINE_TEST') != undefined) {
-                switch(Deno.build.os) {
-                    case "darwin":
-                        rid = Deno.openPlugin("./tests/db-tests/pg/libmandarine_postgres.dylib");
-                    break;
-                    case "linux":
-                        rid = Deno.openPlugin("./tests/db-tests/pg/libmandarine_postgres.so");
-                    break;
-                    case "windows":
-                        rid = Deno.openPlugin("./tests/db-tests/pg/libmandarine_postgres.dll");
-                    break;
-                }
-            } else {
-                rid = -1;
-            }
-
-            PgManager.rid = rid;
-            
+            PgManager.rid = Deno.openPlugin(pluginPath);
             const { mandarine_postgres_plugin } = DenoCore.ops();
-            
             if(PgManager.opId != -1) throw new Error("Plugin has already been prepared");
             PgManager.opId = mandarine_postgres_plugin;
             initAsyncHandler();
