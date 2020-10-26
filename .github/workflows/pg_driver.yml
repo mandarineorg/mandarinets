@@ -9,19 +9,34 @@ jobs:
     strategy:
       matrix:
         os: [macOS-latest, windows-2019, ubuntu-latest]
-        deno: ["v1.4.6", "v1.4.4"]
       fail-fast: true
     steps:
-      - uses: actions/checkout@v2
-      - name: Setup deno
-        uses: denolib/setup-deno@master
+      - name: Setup Environment
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+          echo ::set-env name=GH_ACTIONS::1
+          echo ::set-env name=RUST_BACKTRACE::full
+
+      - name: Clone repository
+        uses: actions/checkout@v2
+
+      - name: Install rust
+        uses: hecrj/setup-rust-action@v1
         with:
-          deno-version: ${{ matrix.deno }}
-      - name: run tests
-        run: deno test -c tsconfig.json --reload --allow-all --unstable tests/unit-tests/
+          rust-version: 1.47.0
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target/
+          key: ${{ runner.os }}-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-
       # Build
       - name: Build
-        run: cargo build --release --locked --all-targets
+        run: cd rust-core && cd database && cd drivers && cd postgres && cargo build --release --locked --all-targets
 
       - name: Release
         uses: softprops/action-gh-release@v1
