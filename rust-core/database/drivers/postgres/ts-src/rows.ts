@@ -3,7 +3,7 @@
 export interface Column {
     name: string,
     value: any,
-    ctype: string
+    type: string
 }
 
 export type Row = Array<Column>;

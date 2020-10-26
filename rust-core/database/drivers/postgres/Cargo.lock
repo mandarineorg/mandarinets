@@ -894,6 +894,36 @@ dependencies = [
 ]
 
 [[package]]
+name = "mandarine_postgres"
+version = "0.1.0"
+dependencies = [
+ "bit-vec",
+ "byteorder",
+ "bytes",
+ "chrono",
+ "deadpool-postgres",
+ "deno_core",
+ "diesel",
+ "eui48",
+ "futures",
+ "geo-types",
+ "hex 0.4.2",
+ "ipnetwork",
+ "lazy_static",
+ "mongodb",
+ "once_cell",
+ "postgres",
+ "rust_decimal",
+ "serde",
+ "serde_json",
+ "serde_postgres",
+ "time 0.2.22",
+ "tokio",
+ "tokio-postgres",
+ "uuid",
+]
+
+[[package]]
 name = "match_cfg"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1239,36 +1269,6 @@ checksum = "8b870d8c151b6f2fb93e84a13146138f05d02ed11c7e7c54f8826aaaf7c9f184"
 
 [[package]]
 name = "postgres"
-version = "0.1.0"
-dependencies = [
- "bit-vec",
- "byteorder",
- "bytes",
- "chrono",
- "deadpool-postgres",
- "deno_core",
- "diesel",
- "eui48",
- "futures",
- "geo-types",
- "hex 0.4.2",
- "ipnetwork",
- "lazy_static",
- "mongodb",
- "once_cell",
- "postgres 0.17.5",
- "rust_decimal",
- "serde",
- "serde_json",
- "serde_postgres",
- "time 0.2.22",
- "tokio",
- "tokio-postgres",
- "uuid",
-]
-
-[[package]]
-name = "postgres"
 version = "0.17.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "14d864cf6c2eabf1323afe4145ff273aad1898e4f2a3bcb30347715df8624a07"
@@ -1538,7 +1538,7 @@ dependencies = [
  "byteorder",
  "bytes",
  "num-traits",
- "postgres 0.17.5",
+ "postgres",
  "serde",
  "tokio-postgres",
 ]

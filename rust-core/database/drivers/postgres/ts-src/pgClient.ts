@@ -7,7 +7,7 @@ import { IQueryResult, QueryResult } from "./queryResult.ts";
 import { AsyncResult } from "./utils.ts";
 
 const defaultQueryMapper = (result: AsyncResult<IQueryResult>): any => {
-    return new QueryResult(result.data.statement, result.data.rows, result.data.rowCount, result.data.success);
+    return new QueryResult(result, result.data?.statement, result.data?.rows, result.data?.rowCount, result.data?.success);
 }
 
 export class PgClient {

@@ -1,5 +1,5 @@
 [package]
-name = "postgres"
+name = "mandarine_postgres"
 version = "0.1.0"
 authors = ["Andres Pirela"]
 edition = "2018"

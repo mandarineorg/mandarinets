@@ -45,6 +45,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           files: |
-            target/release/mandarine_libpostgres.dylib
-            target/release/mandarine_libpostgres.so
-            target/release/mandarine_libpostgres.dll
+            target/release/libmandarine_postgres.dylib
+            target/release/libmandarine_postgres.so
+            target/release/libmandarine_postgres.dll
