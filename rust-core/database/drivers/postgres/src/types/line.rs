@@ -7,7 +7,6 @@ use std::error::Error;
 use tokio_postgres::types::*;
 
 use byteorder::{BigEndian, ReadBytesExt};
-use super::types_utils::{Point};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Line {
@@ -28,7 +27,7 @@ impl Line {
 }
 
 impl tokio_postgres::types::ToSql for Line {
-    fn to_sql(&self, _: &Type, w: &mut BytesMut) -> StdResult<IsNull, Box<dyn Error + Sync + Send>> {
+    fn to_sql(&self, _: &Type, _: &mut BytesMut) -> StdResult<IsNull, Box<dyn Error + Sync + Send>> {
         Ok(IsNull::No)
     }
 

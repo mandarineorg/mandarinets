@@ -6,9 +6,6 @@ use bytes::{BytesMut};
 use std::error::Error;
 use tokio_postgres::types::*;
 
-use byteorder::{BigEndian, ReadBytesExt};
-use super::types_utils::{Point};
-
 #[derive(Serialize, Deserialize, Debug)]
 pub struct PgLsn {
     value: String

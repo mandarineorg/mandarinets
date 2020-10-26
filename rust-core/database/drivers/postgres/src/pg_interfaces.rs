@@ -10,16 +10,16 @@ pub struct CommonStatementArgs {
 }
 
 #[derive(Serialize, Deserialize)]
-pub struct Row {
+pub struct Column {
     name: String,
     value: Value,
     #[serde(rename = "type")]
     ctype: String
 }
 
-impl Row {
-    pub fn new(name: String, value: Value, ctype: String) -> Row {
-        Row {
+impl Column {
+    pub fn new(name: String, value: Value, ctype: String) -> Column {
+        Column {
             name,
             value,
             ctype

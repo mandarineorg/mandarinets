@@ -32,10 +32,13 @@ pub fn connect(command: Command) -> util::JsonResult<ConnectResult> {
 
     let pool_instance = Pool::new(manager, 25);
 
-    POOL_INSTANCE.set(pool_instance);
-
-    let mut is_connected_value = IS_CONNECTED.lock().unwrap();
-    is_connected_value.replace(true);
-    
-    Ok(ConnectResult { success: true} )
+    let setting_pool = POOL_INSTANCE.set(pool_instance);
+    if let Err(_) = setting_pool {
+        Err("There was an error initializing the pool. Try again.".to_owned())
+    } else {
+        let mut is_connected_value = IS_CONNECTED.lock().unwrap();
+        is_connected_value.replace(true);
+        
+        Ok(ConnectResult { success: true} )
+    }
 }

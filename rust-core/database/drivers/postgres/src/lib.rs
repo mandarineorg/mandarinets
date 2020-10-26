@@ -14,7 +14,7 @@ mod pg_interfaces;
 use tokio_postgres::{Config as PGConfig, NoTls};
 use futures::{Future, FutureExt};
 use deno_core::plugin_api::{Interface, Op, ZeroCopyBuf};
-use deadpool_postgres::{Manager, ManagerConfig, Pool, RecyclingMethod};
+use deadpool_postgres::{Manager, ManagerConfig, Pool, RecyclingMethod, Transaction};
 use serde::{Deserialize, Serialize};
 use std::{
     clone::Clone,
@@ -26,6 +26,7 @@ use std::{
 };
 use tokio::runtime::{Builder as TokioRuntimeBuilder, Runtime as TokioRuntime};
 use once_cell::sync::OnceCell;
+use std::collections::{HashMap};
 
 /** Globals */
 static POOL_INSTANCE: OnceCell<Pool> = OnceCell::new();
@@ -33,6 +34,7 @@ static POOL_INSTANCE: OnceCell<Pool> = OnceCell::new();
 lazy_static! {
     static ref IS_CONNECTED: Mutex<Option<bool>> = Mutex::new(Some(false));
     static ref STATIC_TOKIO: TokioRuntime = TokioRuntimeBuilder::new().threaded_scheduler().enable_all().build().unwrap();
+    static ref PG_TRANSACTIONS: Mutex<HashMap<String, Transaction<'static>>> = Mutex::new(HashMap::new());
 }
 /** End Globals */
 
@@ -91,6 +93,8 @@ impl Command {
 #[no_mangle]
 pub fn deno_plugin_init(interface: &mut dyn Interface) {
     interface.register_op("mandarine_postgres_plugin", op_command);
+
+    //PG_TRANSACTIONS.get_or_init(|| Mutex::new(HashMap::new());
 }
 
 fn op_command(_interface: &mut dyn Interface, zero_copy: &mut [ZeroCopyBuf]) -> Op {

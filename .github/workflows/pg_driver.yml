@@ -1,0 +1,37 @@
+name: PG Driver Lib
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: tests (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, macOS-latest]
+        deno: ["v1.4.6", "v1.4.4"]
+      fail-fast: true
+    steps:
+       - name: Setup Environment
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+          echo ::set-env name=GH_ACTIONS::1
+          echo ::set-env name=RUST_BACKTRACE::full
+
+      - name: Clone repository
+        uses: actions/checkout@v2
+
+      - name: Install rust
+        uses: hecrj/setup-rust-action@v1
+        with:
+          rust-version: 1.46.0
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo
+            ~/.cargo/git
+            target/
+          key: ${{ runner.os }}-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-

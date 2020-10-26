@@ -1,5 +1,4 @@
 use crate::*;
-use std::convert::AsMut;
 
 pub type JsonResult<T> = Result<T, String>;
 
@@ -45,7 +44,6 @@ where
     D: Fn(Command) -> AsyncJsonOp<T>,
     T: Serialize + 'static,
 {   
-    println!("Invoking func");
     let res = d(command.clone());
     let fut = res.then(move |res| {
         futures::future::ready(match res {
@@ -84,14 +82,4 @@ pub fn async_error(args: &CommandArgs, error: String) -> plugin_types::Buf {
     let json = json!(result);
     let data = serde_json::to_vec(&json).unwrap();
     plugin_types::Buf::from(data)
-}
-
-pub fn clone_into_array<A, T>(slice: &[T]) -> A
-where
-    A: Default + AsMut<[T]>,
-    T: Clone,
-{
-    let mut a = A::default();
-    <A as AsMut<[T]>>::as_mut(&mut a).clone_from_slice(slice);
-    a
 }

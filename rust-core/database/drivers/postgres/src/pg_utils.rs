@@ -4,7 +4,7 @@ use serde_json::*;
 use std::result::{Result as StdResult};
 use tokio_postgres::Error;
 use std::collections::HashMap;
-use pg_interfaces::{Row};
+use pg_interfaces::{Column};
 
 use bit_vec::BitVec;
 
@@ -37,7 +37,7 @@ fn process_column_value_non_complex<'a, T>(column_name: String, column_type: Str
     if let Err(err) = value {
         Err(format!("{} : {}", get_error_message(), err))
     } else {
-        Ok(json!(Row::new(column_name, match value.unwrap() {
+        Ok(json!(Column::new(column_name, match value.unwrap() {
             Some(val) => val.into(),
             None => Value::Null
         }, column_type)))
@@ -48,7 +48,7 @@ fn process_column_complex<'a, T, F: Fn(T) -> Value>(column_name: String, column_
     if let Err(err) = value {
         Err(format!("{} : {}", get_error_message(), err))
     } else {
-        Ok(json!(Row::new(column_name, match value.unwrap() {
+        Ok(json!(Column::new(column_name, match value.unwrap() {
             Some(val) => f(val),
             None => Value::Null
         }, column_type)))
@@ -60,7 +60,7 @@ fn process_complex_column_vector<'a, T, F: Fn(&T) -> Value>(column_name: String,
     if let Err(err) = value {
         Err(format!("{} : {}", get_error_message(), err))
     } else {
-        Ok(json!(Row::new(column_name, match value.unwrap() {
+        Ok(json!(Column::new(column_name, match value.unwrap() {
             Some(val) => {
                 let values: Vec<Value> = val.iter().map(f).collect();
                 values.into()

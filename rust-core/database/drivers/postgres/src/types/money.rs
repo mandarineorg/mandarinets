@@ -1,5 +1,3 @@
-use crate::*;
-
 use byteorder::{BigEndian, ReadBytesExt};
 use tokio_postgres::types::{Type, IsNull};
 use std::result::{Result as StdResult};

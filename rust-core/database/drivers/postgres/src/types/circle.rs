@@ -26,7 +26,7 @@ impl Circle {
 }
 
 impl tokio_postgres::types::ToSql for Circle {
-    fn to_sql(&self, _: &Type, w: &mut BytesMut) -> StdResult<IsNull, Box<dyn Error + Sync + Send>> {
+    fn to_sql(&self, _: &Type, _: &mut BytesMut) -> StdResult<IsNull, Box<dyn Error + Sync + Send>> {
         Ok(IsNull::No)
     }
 

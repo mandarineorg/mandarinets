@@ -1,6 +1,5 @@
 use crate::*;
 use serde_json::Value;
-use tokio_postgres::types::*;
 use std::collections::*;
 use pg_utils::*;
 use pg_interfaces::{QueryResult, CommonStatementArgs};
@@ -97,7 +96,7 @@ pub fn execute_query(command: Command) -> util::AsyncJsonOp<QueryResult> {
                         let rows_affected = usize::try_from(rows_affected);
                         let mut final_rows_affected: Option<usize> = None;
                         
-                        if let Err(e) = rows_affected {
+                        if let Err(_) = rows_affected {
                             final_rows_affected.replace(usize::MIN);
                         } else {
                             final_rows_affected.replace(rows_affected.unwrap());
