@@ -50,21 +50,21 @@ export class PgDriverTests {
         description: "Inserts data in the table previously created with parameters"
     })
     public async createUserTest() {
-        let val = await pgManager.getClient().execute("INSERT INTO users VALUES ($1, $2, $3)", [12193, 'mandarine', '$20']);
+        let val = await pgManager.getClient().execute("INSERT INTO users VALUES ($1, $2, $3::money)", [12193, 'mandarine', '$20']);
         DenoAsserts.assertEquals(val.rows, []);
         DenoAsserts.assertEquals(val.rowCount, 1);
         DenoAsserts.assertEquals(val.success, true);
         DenoAsserts.assertEquals(val.error, undefined);
 
-        let val2 = await pgManager.getClient().execute("INSERT INTO users VALUES ($1, $2, $3)", [12194, 'mandarine', '$20']);
+        let val2 = await pgManager.getClient().execute("INSERT INTO users VALUES ($1, $2, $3::money)", [12194, 'mandarine', '$20']);
     }
 
     @Test({
-        name: "Query records",
-        description: "Select from users table"
+        name: "Query records & Delete",
+        description: "Select from users table & then delete"
     })
     public async selectTest() {
-        let val = await pgManager.getClient().query("SELECT FROM * users");
+        let val = await pgManager.getClient().query("SELECT * FROM users");
         DenoAsserts.assertEquals(val.rowCount, 2);
         DenoAsserts.assertNotEquals(val.rows, []);
         let row = val.rows[0];
@@ -79,14 +79,8 @@ export class PgDriverTests {
         DenoAsserts.assertEquals(row[0].type, "int4");
         DenoAsserts.assertEquals(row[1].type, "varchar");
         DenoAsserts.assertEquals(row[2].type, "money");
-    }
 
-    @Test({
-        name: "Delete records",
-        description: "Delete all records from table"
-    })
-    public async deleterecordsTest() {
-        let val = await pgManager.getClient().execute("DELETE FROM users where username = $1", ['mandarine']);
+        val = await pgManager.getClient().execute("DELETE FROM users where username = $1", ['mandarine']);
         DenoAsserts.assertEquals(val.rows, []);
         DenoAsserts.assertEquals(val.rowCount, 2);
         DenoAsserts.assertEquals(val.success, true);
