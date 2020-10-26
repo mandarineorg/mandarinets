@@ -9,6 +9,7 @@ const pathExists = (path: string): boolean => {
 }
 export const fetchPlugin = async (downloadBaseUrl: string, pluginName: string): Promise<string> => {
     let pluginExtension: "dylib" | "dll" | "so" | undefined = undefined;
+    
     switch(Deno.build.os) {
         case "darwin":
             pluginExtension = "dylib"
@@ -33,6 +34,6 @@ export const fetchPlugin = async (downloadBaseUrl: string, pluginName: string): 
             create: true
         });
     }
-    
+
     return pluginPath;
 }
