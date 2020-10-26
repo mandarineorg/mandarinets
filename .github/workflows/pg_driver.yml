@@ -53,6 +53,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           files: |
-            target/release/libmandarine_postgres.dylib
-            target/release/libmandarine_postgres.so
-            target/release/libmandarine_postgres.dll
+            ./rust-core/database/drivers/postgres/target/release/libmandarine_postgres.dylib
+            ./rust-core/database/drivers/postgres/target/release/libmandarine_postgres.so
+            ./rust-core/database/drivers/postgres/target/release/libmandarine_postgres.dll
