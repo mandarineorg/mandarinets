@@ -34,9 +34,10 @@ jobs:
           key: ${{ runner.os }}-${{ github.sha }}
           restore-keys: ${{ runner.os }}-
       # Build
+      - name: Clone repository
+        uses: actions/checkout@v2      
       - name: Build
         run: cd rust-core && cd database && cd drivers && cd postgres && cargo build --release --locked --all-targets  
-      - uses: actions/checkout@v2
       - name: Setup deno
         uses: denolib/setup-deno@master
         with:
