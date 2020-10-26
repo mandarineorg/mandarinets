@@ -55,4 +55,4 @@ jobs:
           files: |
             ./rust-core/database/drivers/postgres/target/release/libmandarine_postgres.dylib
             ./rust-core/database/drivers/postgres/target/release/libmandarine_postgres.so
-            ./rust-core/database/drivers/postgres/target/release/libmandarine_postgres.dll
+            ./rust-core/database/drivers/postgres/target/release/mandarine_postgres.dll
