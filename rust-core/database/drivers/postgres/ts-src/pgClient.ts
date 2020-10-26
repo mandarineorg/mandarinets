@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { CommandTypes } from "./commandTypes.ts";
 import { DispatchAsync, encoder, QueryMapper } from "./lib.ts";
 import { PgManager } from "./pgManager.ts";

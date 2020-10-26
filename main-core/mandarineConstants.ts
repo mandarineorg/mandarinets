@@ -33,6 +33,7 @@ export class MandarineConstants {
         "./main-core/**/*.ts",
         "./mvc-framework/**/*.ts",
         "./orm-core/**/*.ts",
+        "./rust-core/**/*.ts",
         "./pluggins/**/*.ts",
         "./security-core/**/*.ts",
         "./tests/**/*.ts",
