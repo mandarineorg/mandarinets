@@ -41,7 +41,13 @@ export class PgManager {
 
     private preparePlugin() {
         if(PgManager.rid) throw new Error("Plugin has already been opened");
-        const rid = Deno.openPlugin("./rust-core/database/drivers/postgres/target/release/libpostgres.dylib");
+        let rid;
+        if(Deno.env.get('MANDARINE_TEST') != undefined) {
+            rid = Deno.openPlugin("./rust-core/database/drivers/postgres/target/release/libmandarine_postgres.dylib");
+        } else {
+            rid = -1;
+        }
+
         PgManager.rid = rid;
         
         const { mandarine_postgres_plugin } = DenoCore.ops();

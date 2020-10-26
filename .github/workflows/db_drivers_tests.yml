@@ -43,5 +43,5 @@ jobs:
         with:
           deno-version: ${{ matrix.deno }}
       - name: run tests
-        run: deno test -c tsconfig.json --reload --allow-all --unstable tests/db-tests/  
+        run: MANDARINE_TEST=true deno test -c tsconfig.json --reload --allow-all --unstable tests/db-tests/  
     
