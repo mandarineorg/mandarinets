@@ -1,4 +1,4 @@
-const mandarineTargetFolderName = "mandarine_target";
+const mandarineTargetFolderName = ".mandarine_target";
 const pathExists = (path: string): boolean => {
     try {
         Deno.statSync(path);

@@ -38,14 +38,6 @@ jobs:
       - name: Build
         run: cd rust-core && cd database && cd drivers && cd postgres && cargo build --release --locked --all-targets
 
-      # - name: Artifacts
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: 'Artifacts'
-      #     path: |
-      #       target/release/
-      #       ./rust-core/database/drivers/postgres/target/release/
-
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
