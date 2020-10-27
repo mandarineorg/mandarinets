@@ -17,7 +17,7 @@ To see all the available documentation of Mandarine Postgres, please [Click here
 
 ## Basic Usage
 ```typescript
-import { PgManager, PgClient, Configuration, QueryResult } from "https://deno.land/x/mandarine_postgres@v2.1.5/ts-src/mod.ts";
+import { PgManager, PgClient, Configuration, QueryResult } from "https://deno.land/x/mandarine_postgres@v2.1.6/ts-src/mod.ts";
 
 const configuration: Configuration = {
   host: "127.0.0.1",
@@ -29,7 +29,7 @@ const configuration: Configuration = {
 
 const manager: PgManager = new PgManager(configuration);
 const client: PgClient = manager.getClient();
-const query: QueryResult = client.query("SELECT * FROM users where id = $1", [1]);
+const query: QueryResult = await client.query("SELECT * FROM users where id = $1", [1]);
 
 ```
 

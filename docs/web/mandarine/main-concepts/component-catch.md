@@ -21,7 +21,7 @@ export class MyCatchComponent implements ExceptionFilter {
 ## Usage
 
 ```typescript
-import { Catch, ExceptionFilter, ExceptionContext } from "https://deno.land/x/mandarinets@v2.1.5/mod.ts";
+import { Catch, ExceptionFilter, ExceptionContext } from "https://deno.land/x/mandarinets@v2.1.6/mod.ts";
 
 @Catch(MyException)
 export class MyCatchComponent implements ExceptionFilter<MyException> {

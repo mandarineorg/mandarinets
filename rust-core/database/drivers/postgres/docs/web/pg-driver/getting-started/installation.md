@@ -7,5 +7,5 @@ Mandarine Postgres is available through [deno.land/x](https://deno.land/x/mandar
 
 **deno.land/x**
 ```ts
-import { ... } from "https://deno.land/x/mandarine_postgres@v2.1.5/ts-src/mod.ts";
+import { ... } from "https://deno.land/x/mandarine_postgres@v2.1.6/ts-src/mod.ts";
 ```

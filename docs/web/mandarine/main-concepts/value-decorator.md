@@ -31,7 +31,7 @@ See [Mandarine.MandarineCore.ValueScopes](https://doc.deno.land/https/raw.github
 ```
 
 ```typescript
-import { Value } from "https://deno.land/x/mandarinets@v2.1.5/mod.ts";
+import { Value } from "https://deno.land/x/mandarinets@v2.1.6/mod.ts";
 
 export class ValueDecoratorTest {
 
