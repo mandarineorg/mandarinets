@@ -19,7 +19,7 @@ Repositories are responsible for creating a bridge between your application's la
 ## Usage
 
 ```typescript
-import { Repository, MandarineRepository } from "https://deno.land/x/mandarinets@v2.1.3/mod.ts";
+import { Repository, MandarineRepository } from "https://deno.land/x/mandarinets@v2.1.5/mod.ts";
 
 @Repository()
 abstract class MyRepository extends MandarineRepository<YourModel> {

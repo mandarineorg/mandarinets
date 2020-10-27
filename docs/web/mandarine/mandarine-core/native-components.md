@@ -7,7 +7,7 @@ Native components are instances that Mandarine uses natively, meaning, during & 
 Mandarine allows overriding whole or specific sections of a native class. The purpose behind this is to modify those internal behaviors Mandarine establishes as default. In order to override a native component all you need to do is to use the decorator `@Override` on top of your class and the use of `extends` to the native component you want to override (inside `Mandarine.Native`).  
 A good example of what is described above:
 ```typescript
-import { Override, Mandarine } from "https://deno.land/x/mandarinets@v2.1.3/mod.ts";
+import { Override, Mandarine } from "https://deno.land/x/mandarinets@v2.1.5/mod.ts";
 
 @Override()
 export class WebMvcConfigurer extends Mandarine.Native.WebMvcConfigurer {
