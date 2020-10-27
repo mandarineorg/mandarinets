@@ -4,7 +4,7 @@ The `PgClient` object allows you to execute different type of queries in Postgre
 ---------
 
 ## Usage
-The `PgClient` object takes the [`PgManager` object]() (previously created in the code) in the constructor. You could optionally do `PgManager.getClient()` to get a client from the instance of `PgManager`.
+The `PgClient` object takes the [`PgManager` object](/docs/v2.1.5/pg-driver/pgmanager) (previously created in the code) in the constructor. You could optionally do `PgManager.getClient()` to get a client from the instance of `PgManager`.
 
 ```typescript
 import { PgManager, PgClient, Configuration } from "https://deno.land/x/mandarine_postgres@v2.1.5/ts-src/mod.ts";
@@ -21,7 +21,8 @@ const client: PgClient = new PgClient(manager);
 
 ## Methods
 
-**`query`**
+**`query`**  
+
     - Signature: `query<T = QueryResult>(statement: string, params?: Array<any>, mapper?: QueryMapper): Promise<T>`
         - statement: SQL statement to execute.
         - params: Array of parameters to pass if statement is parametarized
@@ -48,7 +49,8 @@ console.log(users);
  */
 ```
 
-**`execute`**
+**`execute`**  
+
     - Signature: `execute<T = QueryResult>(statement: string, params?: Array<any>, mapper?: QueryMapper): Promise<T>`
         - statement: SQL statement to execute.
         - params: Array of parameters to pass if statement is parametarized
@@ -70,7 +72,8 @@ console.log(insertUsers);
  */
 ```
 
-**`batchExecute`**
+**`batchExecute`**  
+
     - Signature: `batchExecute<T = QueryResult>(statement: string | Array<string>, mapper?: QueryMapper): Promise<T> `
         - statement: An string representing the SQL statement to execute or an string array representing multiple queries to be executed.
         - mapper: Query result processor.

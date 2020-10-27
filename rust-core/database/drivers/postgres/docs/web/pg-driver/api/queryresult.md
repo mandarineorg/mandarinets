@@ -28,7 +28,8 @@ export type Row = Array<Column>;
 ----------------
 
 ## `PgClient` & `QueryResult`
-The different methods found in `PgClient` lead to different behaviors in `QueryResult`.
+The different methods found in `PgClient` lead to different behaviors in `QueryResult`.  
+
 - `query`
     - `rows` are filled with the rows found from the query.
     - `rowCount` is filled with the number of rows returned.
@@ -45,7 +46,8 @@ The different methods found in `PgClient` lead to different behaviors in `QueryR
 ## Mapping rows to an array of objects.
 Optionally, the class `QueryResult` offers a helper method to map the rows from `Array<Column>` to an array of objects where the _key_ is the name of the column and the _value_ is the value of that column for that specific row.
 
-**`rowsToObjects`**
+**`rowsToObjects`**  
+
     - Signature: `rowsToObjects<T = any>(): Array<T>`
 
 ```typescript
