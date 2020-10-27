@@ -24,7 +24,7 @@ export interface Configuration {
     dbname: string,
     port?: number,
     poolSize?: number,
-    sslmode?: boolean,
+    sslmode?: "Disable" | "Prefer" | "Require",
     connectTimeout?: number,
     keepalives?: boolean,
     keepalivesIdle?: number
