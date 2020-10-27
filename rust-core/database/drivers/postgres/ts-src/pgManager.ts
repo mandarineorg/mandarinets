@@ -1,13 +1,21 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
 import { MandarineConstants } from "../../../../../main-core/mandarineConstants.ts";
-import { fetchPlugin } from "../../../../plugins/pluginPrepare.ts";
+import { fetchPlugin, getPluginPathInternal } from "../../../../plugins/pluginPrepare.ts";
 import { CommandTypes } from "./commandTypes.ts";
 import { DenoCore } from "./common.ts";
 import { encoder, DispatchSync, initAsyncHandler } from "./lib.ts";
 import { PgClient } from "./pgClient.ts";
 
-const pluginPath: string = await fetchPlugin(`https://github.com/mandarineorg/mandarinets/releases/download/${Deno.env.get('MANDARINE_VERSION') || MandarineConstants.RELEASE_VERSION}`, 'libmandarine_postgres');
+let _pluginPath: string | undefined;
+
+if(!Deno.env.get('MANDARINE_INTERNAL')) {
+    _pluginPath = await fetchPlugin(`https://github.com/mandarineorg/mandarinets/releases/download/${Deno.env.get('MANDARINE_VERSION') || MandarineConstants.RELEASE_VERSION}`, 'libmandarine_postgres');
+} else {
+    _pluginPath = getPluginPathInternal('./rust-core/database/drivers/postgres', 'libmandarine_postgres');
+}
+
+const pluginPath = _pluginPath;
 
 export interface Configuration {
     host: string,

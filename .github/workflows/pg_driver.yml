@@ -60,7 +60,7 @@ jobs:
       - name: Build
         run: |
           cd rust-core && cd database && cd drivers && cd postgres && cargo build --release --locked --all-targets && cd ../../../../
-          RUST_BACKTRACE=FULL deno test -c tsconfig.json --reload --allow-all --unstable tests/db-tests/pg/
+          RUST_BACKTRACE=FULL MANDARINE_INTERNAL=true deno test -c tsconfig.json --reload --allow-all --unstable tests/db-tests/pg/
 
       - name: Release
         uses: softprops/action-gh-release@v1
