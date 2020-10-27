@@ -1,4 +1,4 @@
-name: PG Driver
+name: PG Driver Ubuntu
 
 on: [push, pull_request]
 
@@ -8,9 +8,19 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest, macOS-latest]
+        os: [ubuntu-latest]
         deno: ["v1.4.6"]
       fail-fast: true    
+
+    services:
+      postgres:
+        image: postgres:11.6-alpine
+        env:
+          POSTGRES_PASSWORD: Changeme1
+        ports:
+          - 5432:5432
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
       - name: Setup Environment
@@ -42,7 +52,9 @@ jobs:
           deno-version: ${{ matrix.deno }}
       # Build
       - name: Build
-        run: cd rust-core && cd database && cd drivers && cd postgres && cargo build --release --locked --all-targets && cd ../../../../
+        run: |
+          cd rust-core && cd database && cd drivers && cd postgres && cargo build --release --locked --all-targets && cd ../../../../
+          RUST_BACKTRACE=FULL MANDARINE_INTERNAL=true deno test -c tsconfig.json --reload --allow-all --unstable tests/db-tests/pg/
 
       - name: Release
         uses: softprops/action-gh-release@v1
@@ -51,5 +63,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           files: |
-            ./rust-core/database/drivers/postgres/target/release/libmandarine_postgres.dylib
-            ./rust-core/database/drivers/postgres/target/release/mandarine_postgres.dll
+            ./rust-core/database/drivers/postgres/target/release/libmandarine_postgres.so
