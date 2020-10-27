@@ -1,7 +1,8 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { MandarineConstants } from "../../../../../main-core/mandarineConstants.ts";
-import { fetchPlugin, getPluginPathInternal } from "../../../../plugins/pluginPrepare.ts";
+import { MandarineConstants } from "https://raw.githubusercontent.com/mandarineorg/mandarinets/master/main-core/mandarineConstants.ts";
+import { fetchPlugin, getPluginPathInternal } from "https://raw.githubusercontent.com/mandarineorg/mandarinets/master/rust-core/plugins/pluginPrepare.ts";
+
 import { CommandTypes } from "./commandTypes.ts";
 import { DenoCore } from "./common.ts";
 import { encoder, DispatchSync, initAsyncHandler } from "./lib.ts";
