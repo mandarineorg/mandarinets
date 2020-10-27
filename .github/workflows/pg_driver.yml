@@ -4,11 +4,12 @@ on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    name: PG Driver (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [macOS-latest, ubuntu-latest, windows-latest]
-        deno: ["v1.4.6", "v1.4.4"]
+        deno: ["v1.4.6"]
       fail-fast: true    
 
     services:
@@ -20,14 +21,7 @@ jobs:
           - 5432:5432
         # needed because the postgres container does not provide a healthcheck
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-  
-    name: PG Driver (${{ matrix.os }})
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [macOS-latest, windows-2019, ubuntu-latest]
-        deno: ["v1.4.6", "v1.4.4"]
-      fail-fast: true
+
     steps:
       - name: Setup Environment
         run: |
