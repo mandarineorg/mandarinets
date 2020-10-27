@@ -2,5 +2,21 @@
     {
         "url": "introduction",
         "document": "getting-started/introduction.md"
+    },
+    {
+        "url": "installation",
+        "document": "getting-started/installation.md"
+    },
+    {
+        "url": "pgclient",
+        "document": "api/pg-client.md"
+    },
+    {
+        "url": "pgmanager",
+        "document": "api/pg-manager.md"
+    },
+    {
+        "url": "queryresult",
+        "document": "api/queryresult.md"
     }
 ]

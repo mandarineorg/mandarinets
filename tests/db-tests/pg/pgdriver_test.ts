@@ -19,7 +19,7 @@ export class PgDriverTests {
     })
     public async createTableTest() {
         let client = pgManager.getClient();
-        let val = await client.batch_execute([`
+        let val = await client.batchExecute([`
         CREATE SEQUENCE public.users_id_seq
         INCREMENT 1
         START 1

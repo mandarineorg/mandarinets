@@ -49,7 +49,7 @@ export class PgClient {
         return this.executeMapper<T>(result, mapper);
     }
 
-    public async batch_execute<T = QueryResult>(statement: string | Array<string>, mapper?: QueryMapper): Promise<T> {
+    public async batchExecute<T = QueryResult>(statement: string | Array<string>, mapper?: QueryMapper): Promise<T> {
         let finalStatement: String;
         if(Array.isArray(statement)) {
             finalStatement = statement.join("; ");
