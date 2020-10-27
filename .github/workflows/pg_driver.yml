@@ -1,14 +1,32 @@
-name: Pg driver
+name: PG Driver
 
 on: [push, pull_request]
 
 jobs:
   build:
-    name: tests (${{ matrix.os }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [macOS-latest, ubuntu-latest, windows-latest]
+        deno: ["v1.4.6", "v1.4.4"]
+      fail-fast: true    
+
+    services:
+      postgres:
+        image: postgres:11.6-alpine
+        env:
+          POSTGRES_PASSWORD: Changeme1
+        ports:
+          - 5432:5432
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+  
+    name: PG Driver (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [macOS-latest, windows-2019, ubuntu-latest]
+        deno: ["v1.4.6", "v1.4.4"]
       fail-fast: true
     steps:
       - name: Setup Environment
@@ -34,9 +52,15 @@ jobs:
             target/
           key: ${{ runner.os }}-${{ github.sha }}
           restore-keys: ${{ runner.os }}-
+      - name: Setup deno
+        uses: denolib/setup-deno@master
+        with:
+          deno-version: ${{ matrix.deno }}
       # Build
       - name: Build
-        run: cd rust-core && cd database && cd drivers && cd postgres && cargo build --release --locked --all-targets
+        run: |
+          cd rust-core && cd database && cd drivers && cd postgres && cargo build --release --locked --all-targets && cd ../../../../
+          RUST_BACKTRACE=FULL deno test -c tsconfig.json --reload --allow-all --unstable tests/db-tests/pg/
 
       - name: Release
         uses: softprops/action-gh-release@v1
