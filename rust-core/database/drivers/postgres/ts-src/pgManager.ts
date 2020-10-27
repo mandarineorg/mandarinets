@@ -25,9 +25,9 @@ export interface Configuration {
     port?: number,
     poolSize?: number,
     sslmode?: boolean,
-    connect_timeout?: number,
-    keepalives?: number,
-    keepalives_idle?: number
+    connectTimeout?: number,
+    keepalives?: boolean,
+    keepalivesIdle?: number
 }
 
 export class PgManager {
@@ -67,7 +67,5 @@ export class PgManager {
             throw new Error("PG Manager cannot be used because it is not fully initialized");
         }
     }
-
-
 
 }
