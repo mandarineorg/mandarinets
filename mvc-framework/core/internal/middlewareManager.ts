@@ -3,25 +3,6 @@
 import { Mandarine } from "../../../main-core/Mandarine.ns.ts";
 import { JsonUtils } from "../../../main-core/utils/jsonUtils.ts";
 
-// export class InternalMiddlewareBuilder {
-
-//     private type: Mandarine.MandarineMVC.Internal.MiddlewareType | undefined;
-//     private caller: Mandarine.MandarineMVC.Internal.InternalMiddlewareFunc | undefined;
-//     private configurationFlags: Array<any> = new Array<any>();
-//     private enabled: boolean = true;
-
-//     constructor(type: Mandarine.MandarineMVC.Internal.MiddlewareType) {
-//         this.type =  type;
-//     }
-
-//     public static create(type: Mandarine.MandarineMVC.Internal.MiddlewareType): InternalMiddlewareBuilder {
-//         return new InternalMiddlewareBuilder(type);
-//     }
-
-
-
-// }
-
 export class MiddlewareManager {
 
     private internalMiddleware: Array<Mandarine.MandarineMVC.Internal.InternalMiddleware> = new Array<Mandarine.MandarineMVC.Internal.InternalMiddleware>();
