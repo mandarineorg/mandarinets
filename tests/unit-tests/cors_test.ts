@@ -101,7 +101,10 @@ export class CORSTest {
         requestMock.request.headers.set("access-control-request-headers", "Origin, allowed-header-1, Content-Type");
 
         requestMock.request.headers.set("origin", "http://localhost");
-        handleCors(<any> requestMock, cors, false);
+        handleCors(<any> requestMock, {
+            corsOptions: cors,
+            useDefaultCors: false
+        });
         DenoAsserts.assertEquals(requestMock.response.headers.get("access-control-allow-origin"), false);
         DenoAsserts.assertEquals(requestMock.response.headers.get("access-control-allow-methods"), "POST, GET");
         DenoAsserts.assertEquals(requestMock.response.headers.get("access-control-allow-headers"), "allowed-header-1");
@@ -113,7 +116,10 @@ export class CORSTest {
         requestMock = this.getMockObject("GET");
 
         requestMock.request.headers.set("origin", "http://localhost");
-        handleCors(<any> requestMock, cors, false);
+        handleCors(<any> requestMock, {
+            corsOptions: cors,
+            useDefaultCors: false
+        });
         DenoAsserts.assertEquals(requestMock.response.headers.get("access-control-allow-origin"), false);
         DenoAsserts.assertEquals(requestMock.response.headers.get("accessl-control-expose-headers"), "exposed-header-1, exposed-header-2");
         DenoAsserts.assert(requestMock.response.headers.get("access-control-allow-credentials") == undefined);
@@ -124,7 +130,10 @@ export class CORSTest {
         cors.credentials = true;
         cors.origin = "http://localhost";
         requestMock.request.headers.set("origin", "http://localhost");
-        handleCors(<any> requestMock, cors, false);
+        handleCors(<any> requestMock, {
+            corsOptions: cors,
+            useDefaultCors: false
+        });
         DenoAsserts.assertEquals(requestMock.response.headers.get("access-control-allow-origin"), "http://localhost");
         DenoAsserts.assertEquals(requestMock.response.headers.get("accessl-control-expose-headers"), "exposed-header-1, exposed-header-2");
         DenoAsserts.assertEquals(requestMock.response.headers.get("access-control-allow-credentials"), "true");
@@ -133,7 +142,10 @@ export class CORSTest {
         requestMock = this.getMockObject("GET");
 
         cors.origin = "*";
-        handleCors(<any> requestMock, cors, false);
+        handleCors(<any> requestMock, {
+            corsOptions: cors,
+            useDefaultCors: false
+        });
         DenoAsserts.assertEquals(requestMock.response.headers.get("access-control-allow-origin"), "*");
 
         // RESET
@@ -141,7 +153,10 @@ export class CORSTest {
 
         cors.maxAge = <number> <unknown> undefined;
         requestMock.request.headers.set("origin", "http://localhost");
-        handleCors(<any> requestMock, cors, false);
+        handleCors(<any> requestMock, {
+            corsOptions: cors,
+            useDefaultCors: false
+        });
         DenoAsserts.assertEquals(requestMock.response.headers.get("access-control-max-age"), "0");
     }
 

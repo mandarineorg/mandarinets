@@ -33,7 +33,10 @@ export const ResourceHandlerMiddleware = () => {
 
                         if(results != (null || undefined)) {
                             if(resourceHandler.resourceCors) {
-                                handleCors(typedContext, resourceHandler.resourceCors, false);
+                                handleCors(typedContext, {
+                                    corsOptions: resourceHandler.resourceCors,
+                                    useDefaultCors: false
+                                });
                             }
                             
                             let resource = results[1];

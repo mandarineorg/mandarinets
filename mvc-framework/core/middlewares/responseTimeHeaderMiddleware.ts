@@ -2,7 +2,15 @@
 
 import { Mandarine } from "../../../main-core/Mandarine.ns.ts";
 
-export const responseTimeHandler = (context: Mandarine.Types.RequestContext, isPostRequest: boolean = false) => {
+interface MiddlewareData {
+  responseTimeIsPostRequest: boolean;
+}
+
+const defaultMiddlewareData: MiddlewareData = {
+  responseTimeIsPostRequest: false
+}
+
+export const responseTimeHandler = (context: Mandarine.Types.RequestContext, data: MiddlewareData = defaultMiddlewareData) => {
   const typedContext: Mandarine.Types.RequestContext = context;
 
   const config = Mandarine.Global.getMandarineConfiguration();
@@ -13,7 +21,7 @@ export const responseTimeHandler = (context: Mandarine.Types.RequestContext, isP
     finishedAt: 0
   };
 
-  if (!isPostRequest) {
+  if (!data.responseTimeIsPostRequest) {
     typedContext.timeMetadata.startedAt = Date.now();
   } else {
     typedContext.timeMetadata.finishedAt = Date.now();
