@@ -76,6 +76,7 @@ export namespace Mandarine {
                 port: number,
                 responseType?: MandarineMVC.MediaTypes,
                 responseTimeHeader?: boolean
+                enableSessions?: boolean
             } & any,
             resources: {
                 staticRegExpPattern?: string,
@@ -682,7 +683,8 @@ export namespace Mandarine {
                     host: "0.0.0.0",
                     port: 8080,
                     responseType: MandarineMVC.MediaTypes.TEXT_HTML,
-                    responseTimeHeader: false
+                    responseTimeHeader: false,
+                    enableSessions: true
                 },
                 resources: {
                     staticFolder: "./src/main/resources/static",

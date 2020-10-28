@@ -49,8 +49,12 @@ export class ResponseTimeHeaderTest {
             }
         };
 
-        responseTimeHandler(fakeRequest);
-        responseTimeHandler(fakeRequest, true);
+        responseTimeHandler(fakeRequest, {
+            responseTimeIsPostRequest: false
+        });
+        responseTimeHandler(fakeRequest, {
+            responseTimeIsPostRequest: true
+        });
         DenoAsserts.assertEquals(fakeRequest.response.headers.get("X-Response-Time"), "2");
     }
 
@@ -77,7 +81,9 @@ export class ResponseTimeHeaderTest {
         }
 
         responseTimeHandler(fakeRequest);
-        responseTimeHandler(fakeRequest, true);
+        responseTimeHandler(fakeRequest, {
+            responseTimeIsPostRequest: true
+        });
         DenoAsserts.assertEquals(fakeRequest.response.headers.get("X-Response-Time"), null);
     }
 }

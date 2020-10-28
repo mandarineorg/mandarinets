@@ -542,6 +542,33 @@ export namespace MandarineMvc {
         }
     }
 
+    /**
+    * Refers to all the internal functioning (in MVC) that is used by Mandarine's core.
+    */
+    export namespace Internal {
+        export enum MiddlewareType {
+            CORS,
+            RESPONSE_TIME,
+            SESSION_COOKIE,
+            SESSION_STORE
+        }
+
+        export type InternalMiddlewareFunc = (context: Mandarine.Types.RequestContext, data: any) => void;
+
+        export type InternalMiddlewareLifecycle = "PRE" | "POST" | "ALL";
+
+        export interface InternalMiddleware {
+            type: MiddlewareType;
+            caller: InternalMiddlewareFunc;
+            configurationFlag: {
+                key: string,
+                expectedValue: any
+            };
+            enabled: boolean;
+            lifecycle: InternalMiddlewareLifecycle;
+        }
+    }
+
     export interface ResponseStatusMetadataContext {
         responseStatus: Mandarine.MandarineMVC.HttpStatusCode;
         methodName?: string;

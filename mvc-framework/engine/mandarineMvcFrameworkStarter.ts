@@ -18,6 +18,7 @@ import type { GuardTarget } from "../../main-core/internals/interfaces/guardTarg
 import { DI } from "../../main-core/dependency-injection/di.ns.ts";
 import { MandarineException } from "../../main-core/exceptions/mandarineException.ts";
 import { responseTimeHandler } from "../core/middlewares/responseTimeHeaderMiddleware.ts";
+import { MiddlewareManager } from "../core/internal/middlewareManager.ts";
 
 /**
  * This class works as the MVC engine and it is responsible for the initialization & behavior of HTTP requests.
@@ -26,14 +27,14 @@ import { responseTimeHandler } from "../core/middlewares/responseTimeHeaderMiddl
  */
 export class MandarineMvcFrameworkStarter {
   private router: Router = new Router();
+  private internalMiddlewareManager: MiddlewareManager = new MiddlewareManager();
 
   private logger: Log = Log.getLogger(MandarineMvcFrameworkStarter);
 
+  // @ts-ignore
   private essentials: {
-    sessionMiddleware: SessionMiddleware | undefined;
-  } = {
-    sessionMiddleware: undefined,
-  };
+    sessionMiddleware: SessionMiddleware;
+  } = {};
 
   constructor(callback?: Function) {
     this.logger.compiler("Starting MVC Module", "info");
@@ -43,8 +44,55 @@ export class MandarineMvcFrameworkStarter {
     }
   }
 
+  public initializeInternalMiddleware() {
+      this.internalMiddlewareManager.new({
+          type: Mandarine.MandarineMVC.Internal.MiddlewareType.RESPONSE_TIME,
+          caller: responseTimeHandler,
+          configurationFlag: {
+              key: "mandarine.server.responseTimeHeader",
+              expectedValue: true
+          },
+          enabled: true,
+          lifecycle: "ALL"
+      });
+    
+      this.internalMiddlewareManager.new({
+          type: Mandarine.MandarineMVC.Internal.MiddlewareType.SESSION_COOKIE,
+          caller: this.essentials.sessionMiddleware.createSessionCookie.bind(this.essentials.sessionMiddleware),
+          configurationFlag: {
+              key: "mandarine.server.enableSessions",
+              expectedValue: true
+          },
+          enabled: true,
+          lifecycle: "PRE"
+      });
+
+      this.internalMiddlewareManager.new({
+          type: Mandarine.MandarineMVC.Internal.MiddlewareType.CORS,
+          caller: handleCors,
+          configurationFlag: {
+              key: "mandarine.server.enableSessions",
+              expectedValue: true
+          },
+          enabled: true,
+          lifecycle: "PRE"
+      });
+
+    this.internalMiddlewareManager.new({
+        type: Mandarine.MandarineMVC.Internal.MiddlewareType.SESSION_STORE,
+        caller: this.essentials.sessionMiddleware.storeSession.bind(this.essentials.sessionMiddleware),
+        configurationFlag: {
+            key: "mandarine.server.enableSessions",
+            expectedValue: true
+        },
+        enabled: true,
+        lifecycle: "POST"
+    });
+  }
+
   public initializeEssentials() {
     this.essentials.sessionMiddleware = new SessionMiddleware();
+    this.initializeInternalMiddleware();
   }
 
   public intializeControllersRoutes(): void {
@@ -70,26 +118,18 @@ export class MandarineMvcFrameworkStarter {
     }
   }
 
-  private handleCorsMiddleware(context: Mandarine.Types.RequestContext, routingAction: Mandarine.MandarineMVC.Routing.RoutingAction, controllerComponent: ControllerComponent
-  ) {
-    let classLevelCors = controllerComponent.options.cors;
-    let methodLevelCors = routingAction.routingOptions?.cors;
-    handleCors(context, classLevelCors ? classLevelCors : methodLevelCors, true);
-  }
-
-  private handleResponseTimeHeaderMiddleware(requestContext: Mandarine.Types.RequestContext, isPostRequest: boolean = false) {
-    responseTimeHandler(requestContext, isPostRequest);
-  }
-
   private preRequestInternalMiddlewares(context: Mandarine.Types.RequestContext, routingAction: Mandarine.MandarineMVC.Routing.RoutingAction, controllerComponent: ControllerComponent): void {
-    this.handleResponseTimeHeaderMiddleware(context);
-    this.essentials.sessionMiddleware?.createSessionCookie(context);
-    this.handleCorsMiddleware(context, routingAction, controllerComponent);
+    this.internalMiddlewareManager.execute(context, {
+      corsOptions: controllerComponent.options.cors ? controllerComponent.options.cors : routingAction.routingOptions?.cors,
+      useDefaultCors: true,
+      responseTimeIsPostRequest: false
+    }, "PRE");
   }
 
   private postRequestInternalMiddlewares(context: Mandarine.Types.RequestContext): void {
-    this.essentials.sessionMiddleware?.storeSession(context);
-    this.handleResponseTimeHeaderMiddleware(context, true);
+    this.internalMiddlewareManager.execute(context, {
+      responseTimeIsPostRequest: true
+    }, "POST");
   }
 
   private async executeUserMiddlewares(preRequestMiddleware: boolean, middlewares: Array<Mandarine.Types.MiddlewareComponent | NonComponentMiddlewareTarget>, context: Mandarine.Types.RequestContext): Promise<boolean> {
