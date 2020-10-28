@@ -492,7 +492,8 @@ export namespace Mandarine {
             MIDDLEWARE,
             REPOSITORY,
             MANUAL_COMPONENT,
-            GUARDS
+            GUARDS,
+            INTERNAL
         };
 
         /**
