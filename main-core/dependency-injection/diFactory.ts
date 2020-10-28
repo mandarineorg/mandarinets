@@ -22,7 +22,8 @@ export class DependencyInjectionFactory {
      */
     public constructorResolver<T>(componentSource: Mandarine.MandarineCore.ComponentRegistryContext, componentRegistry: Mandarine.MandarineCore.IComponentsRegistry): T | undefined{
         if(componentSource.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT ||
-            componentSource.componentType == Mandarine.MandarineCore.ComponentTypes.REPOSITORY) return;
+            componentSource.componentType == Mandarine.MandarineCore.ComponentTypes.REPOSITORY
+                || componentSource.componentType == Mandarine.MandarineCore.ComponentTypes.INTERNAL) return;
 
         let target: DI.Constructor<T> = componentSource.componentInstance.getClassHandler();
 
@@ -31,7 +32,8 @@ export class DependencyInjectionFactory {
         let component: Mandarine.MandarineCore.ComponentRegistryContext | undefined = componentRegistry.getComponentByHandlerType(provider);
             if(component != (undefined || null)) {
                 let isComponentManual = component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT; 
-                let classHandler: any = (isComponentManual) ? component.componentInstance : component.componentInstance.getClassHandler();
+                let isComponentInternal = component.componentType == Mandarine.MandarineCore.ComponentTypes.INTERNAL; 
+                let classHandler: any = (isComponentManual || isComponentInternal) ? component.componentInstance : component.componentInstance.getClassHandler();
 
                 // It is never initialized when it gets here.
                 return (isComponentManual || ReflectUtils.checkClassInitialized(classHandler)) ? classHandler : new classHandler();
@@ -51,7 +53,7 @@ export class DependencyInjectionFactory {
     public componentDependencyResolver(componentRegistry: ComponentsRegistry) {
         // Initialize all components
 
-        const ignoreComponentIf = (component: Mandarine.MandarineCore.ComponentRegistryContext): boolean => component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT || component.componentType == Mandarine.MandarineCore.ComponentTypes.REPOSITORY;
+        const ignoreComponentIf = (component: Mandarine.MandarineCore.ComponentRegistryContext): boolean => component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT || component.componentType == Mandarine.MandarineCore.ComponentTypes.REPOSITORY || component.componentType == Mandarine.MandarineCore.ComponentTypes.INTERNAL;
 
         componentRegistry.getAllComponentNames().forEach((componentName) => {
             let component: Mandarine.MandarineCore.ComponentRegistryContext | undefined = componentRegistry.get(componentName);
@@ -89,7 +91,7 @@ export class DependencyInjectionFactory {
                             let metadata: {propertyType: any, propertyName: string, propertyTypeName: string} = Reflect.getMetadata(metadataKey, componentHandler);
                             let injectableComponent: any = componentRegistry.getComponentByHandlerType(metadata.propertyType);
                             if(injectableComponent != (null || undefined)) {
-                                let injectableHandler = (injectableComponent.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT) ? injectableComponent.componentInstance : injectableComponent.componentInstance.getClassHandler();
+                                let injectableHandler = (injectableComponent.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT || injectableComponent.componentType == Mandarine.MandarineCore.ComponentTypes.INTERNAL) ? injectableComponent.componentInstance : injectableComponent.componentInstance.getClassHandler();
                                 componentHandler[metadata.propertyName] = injectableHandler;
                             }
                         });
@@ -152,7 +154,7 @@ export class DependencyInjectionFactory {
                         let injectableComponent = ApplicationContext.getInstance().getComponentsRegistry().getComponentByHandlerType(param.parameterObjectToInject);
 
                         if(injectableComponent != (null || undefined)) {
-                            valueToInject = (injectableComponent.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT) ? injectableComponent.componentInstance : injectableComponent.componentInstance.getClassHandler();
+                            valueToInject = (injectableComponent.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT || injectableComponent.componentType == Mandarine.MandarineCore.ComponentTypes.INTERNAL) ? injectableComponent.componentInstance : injectableComponent.componentInstance.getClassHandler();
                         }
                         
                         break;
@@ -203,7 +205,7 @@ export class DependencyInjectionFactory {
      */
     public getDependency(type: any) {
         let component = ApplicationContext.getInstance().getComponentsRegistry().getComponentByHandlerType(type);
-        if(component != (null || undefined)) return (component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT) ? component.componentInstance : component.componentInstance.getClassHandler();
+        if(component != (null || undefined)) return (component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT || component.componentType == Mandarine.MandarineCore.ComponentTypes.INTERNAL) ? component.componentInstance : component.componentInstance.getClassHandler();
     }
 
     /** 
@@ -225,7 +227,7 @@ export class DependencyInjectionFactory {
      */
     public getComponentByType(type: any) {
         let component = ApplicationContext.getInstance().getComponentsRegistry().getComponentByHandlerType(type);
-        if(component != (null || undefined) && component.componentType !== Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT) {
+        if(component != (null || undefined) && component.componentType !== Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT && component.componentType !== Mandarine.MandarineCore.ComponentTypes.INTERNAL) {
             return component.componentInstance;
         }
     }

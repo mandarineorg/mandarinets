@@ -19,7 +19,7 @@ export class Log {
         };
 
         if(typeof source === 'string') {
-            this.className = <string> source + ".class";
+            this.className = source === "-" ? "-" : <string> source + ".class";
             return;
         }
         try {

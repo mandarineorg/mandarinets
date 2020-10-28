@@ -25,6 +25,14 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
 
     private logger: Log = Log.getLogger(ComponentsRegistry);
 
+    constructor() {
+        this.components.set("MANDARINE_LOGGER", {
+            componentName: "MANDARINE_LOGGER",
+            componentInstance: new Log("-"),
+            componentType: Mandarine.MandarineCore.ComponentTypes.INTERNAL
+        });
+    }
+
     public register(componentName: string, componentInstance: any, componentType: Mandarine.MandarineCore.ComponentTypes, configuration: any): void {
         let componentExist: boolean = this.exist(componentName);
 
@@ -52,6 +60,7 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
                     componentInstanceInitialized = new ComponentComponent(componentName, componentHandler, Mandarine.MandarineCore.ComponentTypes.MIDDLEWARE, configuration);
                 break;
                 case Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT:
+                case Mandarine.MandarineCore.ComponentTypes.INTERNAL:
                     componentInstanceInitialized = componentInstance;
                 break;
                 case Mandarine.MandarineCore.ComponentTypes.REPOSITORY:
@@ -78,7 +87,11 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
     }
 
     public clearComponentRegistry(): void {
-        this.components.clear();
+        const componentKeys = () => Array.from(this.components.keys());
+        const toDelete = componentKeys().filter((componentKey: string) => {
+            return this.components.get(componentKey)?.componentType != Mandarine.MandarineCore.ComponentTypes.INTERNAL;
+        });
+        toDelete.forEach((key: string) => this.components.delete(key));  
     }
 
     public update(itemName: string, newValue: Mandarine.MandarineCore.ComponentRegistryContext | undefined): void {
@@ -120,7 +133,7 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
         try {
             return this.getComponents().find((component: Mandarine.MandarineCore.ComponentRegistryContext) => {
                 let instance = undefined;
-                if(component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT) {
+                if(component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT || component.componentType == Mandarine.MandarineCore.ComponentTypes.INTERNAL) {
                     instance = component.componentInstance;
                 }else {
                     instance = component.componentInstance.getClassHandler();
