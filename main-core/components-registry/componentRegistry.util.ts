@@ -23,18 +23,14 @@ export class ComponentsRegistryUtil {
 
         let componentsRegistry = ApplicationContext.getInstance().getComponentsRegistry();
 
-        if(componentsRegistry.exist(componentName)) {
-            throw new ComponentExceptions(ComponentExceptions.EXISTENT_COMPONENT.replace("%component%", componentName));
-        } else {
-            Reflect.defineMetadata(`${MandarineConstants.REFLECTION_MANDARINE_COMPONENT}:${Mandarine.MandarineCore.ComponentTypes[componentType].toLowerCase()}:${componentName}`, {
-                componentName: componentName,
-                componentConfiguration: configuration,
-                componentType: componentType,
-                componentInstance: componentTarget
-            }, componentTarget);
+        Reflect.defineMetadata(`${MandarineConstants.REFLECTION_MANDARINE_COMPONENT}:${Mandarine.MandarineCore.ComponentTypes[componentType].toLowerCase()}:${componentName}`, {
+            componentName: componentName,
+            componentConfiguration: configuration,
+            componentType: componentType,
+            componentInstance: componentTarget
+        }, componentTarget);
 
-            componentsRegistry.register(componentName, componentTarget, componentType, configuration);
-        }
+        componentsRegistry.register(componentName, componentTarget, componentType, configuration);
     }
 
     public static registerRepositoryComponent(repositoryTarget: any) {

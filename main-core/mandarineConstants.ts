@@ -40,6 +40,8 @@ export class MandarineConstants {
         "./cli.ts",
         "./deps.ts",
         "./mod.ts"
-    ]
+    ];
+
+    public static MANDARINE_TARGET_FOLDER = ".mandarine_target";
 
 }
