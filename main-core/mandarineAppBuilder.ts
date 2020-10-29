@@ -7,7 +7,7 @@ const getCore = async () => {
     return (await import('./mandarineCore.ts')).MandarineCore;
 }
 
-export class App {
+export class AppBuilder {
 
     private readonly ENVIRONMENTAL_VARIABLES = [
         MandarineEnvironmentalConstants.MANDARINE_SERVER_HOST, 
@@ -18,32 +18,32 @@ export class App {
         MandarineEnvironmentalConstants.MANDARINE_AUTH_EXPIRATION_MS
     ];
 
-    public setHost(host: string): App {
+    public setHost(host: string): AppBuilder {
         Deno.env.set(MandarineEnvironmentalConstants.MANDARINE_SERVER_HOST, host);
         return this;
     }
 
-    public setPort(port: number): App {
+    public setPort(port: number): AppBuilder {
         Deno.env.set(MandarineEnvironmentalConstants.MANDARINE_SERVER_PORT, port.toString());
         return this;
     }
 
-    public enableResponseTimeHeader(): App {
+    public enableResponseTimeHeader(): AppBuilder {
         Deno.env.set(MandarineEnvironmentalConstants.MANDARINE_SERVER_RESPONSE_TIME_HEADER, "true");
         return this;
     }
 
-    public enableSessions(): App {
+    public enableSessions(): AppBuilder {
         Deno.env.set(MandarineEnvironmentalConstants.MANDARINE_SERVER_SESSION_MIDDLEWARE, "true");
         return this;
     }
 
-    public setStaticContentFolder(folderPath: string): App {
+    public setStaticContentFolder(folderPath: string): AppBuilder {
         Deno.env.set(MandarineEnvironmentalConstants.MANDARINE_STATIC_CONTENT_FOLDER, folderPath);
         return this;
     }
 
-    public setAuthExpirationTime(expirationTimeMs: number): App {
+    public setAuthExpirationTime(expirationTimeMs: number): AppBuilder {
         Deno.env.set(MandarineEnvironmentalConstants.MANDARINE_AUTH_EXPIRATION_MS, expirationTimeMs.toString());
         return this;
     }
