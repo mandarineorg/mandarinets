@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { MandarineEnvironmentalConstants } from "./MandarineEnvConstants.ts";
 import { expandGlobSync } from "https://deno.land/std@0.71.0/fs/mod.ts";
 import { readDecoratorsExportedClass, DecoratorReadResult } from "./utils/decoratorFinder.ts";
