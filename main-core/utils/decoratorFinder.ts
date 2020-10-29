@@ -1,3 +1,7 @@
+/**
+ * This code has been created by Rudy Alula (https://github.com/SRNV)
+ */
+
 export type DecoratorReadResult = {
     decorator: string;
     isDefault: boolean;

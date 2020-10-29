@@ -60,7 +60,7 @@ export class AppBuilder {
 
     public automaticBuildAndRun(config: {
         tsconfigPath: string,
-        permissions: Array<string>,
+        flags: Array<string>,
         reload?: boolean
     }) {
         const entries: Map<string, Array<DecoratorReadResult>> = new Map<string, Array<DecoratorReadResult>>();
@@ -134,8 +134,8 @@ export class AppBuilder {
             }
         });
 
-        let cmd = ["deno", "run"].concat(config.permissions).concat(["--config", config.tsconfigPath]);
-        if(config?.reload) cmd = cmd.concat(["--reload"]);
+        let cmd = ["deno", "run"].concat(config.flags).concat(["--config", config.tsconfigPath]);
+        if(config.reload) cmd = cmd.concat(["--reload"]);
         cmd = cmd.concat([targetFileName]);
 
         Deno.run({
