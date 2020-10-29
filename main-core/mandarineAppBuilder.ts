@@ -1,11 +1,22 @@
-import { MandarineMVC } from "../mvc-framework/mandarineMVC.ts";
-import { MandarineCore } from "./mandarineCore.ts";
 import { MandarineEnvironmentalConstants } from "./MandarineEnvConstants.ts";
 import { expandGlobSync } from "https://deno.land/std@0.71.0/fs/mod.ts";
 import { readDecoratorsExportedClass, DecoratorReadResult } from "./utils/decoratorFinder.ts";
 import { MandarineConstants } from "./mandarineConstants.ts";
 
+const getCore = async () => {
+    return (await import('./mandarineCore.ts')).MandarineCore;
+}
+
 export class App {
+
+    private readonly ENVIRONMENTAL_VARIABLES = [
+        MandarineEnvironmentalConstants.MANDARINE_SERVER_HOST, 
+        MandarineEnvironmentalConstants.MANDARINE_SERVER_PORT,
+        MandarineEnvironmentalConstants.MANDARINE_SERVER_RESPONSE_TIME_HEADER,
+        MandarineEnvironmentalConstants.MANDARINE_SERVER_SESSION_MIDDLEWARE,
+        MandarineEnvironmentalConstants.MANDARINE_STATIC_CONTENT_FOLDER,
+        MandarineEnvironmentalConstants.MANDARINE_AUTH_EXPIRATION_MS
+    ];
 
     public setHost(host: string): App {
         Deno.env.set(MandarineEnvironmentalConstants.MANDARINE_SERVER_HOST, host);
@@ -37,17 +48,21 @@ export class App {
         return this;
     }
 
-    public buildCore(components: Array<{ new (): any }>): MandarineCore {
+    public async buildCore(components: Array<{ new (): any }>) {
         // This function does nothing. We only need to import the references and Mandarine will do its magic.
-        return new MandarineCore();
+        return new (await getCore());
     }
 
-    public buildMVC(components: Array<{ new (): any }>): MandarineMVC {
+    public async buildMVC(components: Array<{ new (): any }>) {
         // This function does nothing. We only need to import the references and Mandarine will do its magic.
-        return new MandarineCore().MVC();
+        return (await this.buildCore(components)).MVC();
     }
 
-    public automaticBuildAndRun() {
+    public automaticBuildAndRun(config: {
+        tsconfigPath: string,
+        permissions: Array<string>,
+        reload?: boolean
+    }) {
         const entries: Map<string, Array<DecoratorReadResult>> = new Map<string, Array<DecoratorReadResult>>();
         const decoder: TextDecoder = new TextDecoder();
 
@@ -74,7 +89,7 @@ export class App {
 
         decoratorsArray.forEach((value: DecoratorReadResult, index: number) => {
             const { className } = value;
-            let asClassName = undefined;
+            let asClassName;
             if(isClassNameRepeated(className)) {
                 if(!repetitionStats[className]) {
                     repetitionStats[className] = {
@@ -102,14 +117,33 @@ export class App {
         dynamicEntryFile = dynamicEntryFile.concat('\nnew MandarineCore().MVC().run();\n');
 
         const targetFileName = `./${MandarineConstants.MANDARINE_TARGET_FOLDER}/target.ts`;
-        //Deno.mkdirSync(MandarineConstants.MANDARINE_TARGET_FOLDER);
+
+        try {
+            Deno.statSync(MandarineConstants.MANDARINE_TARGET_FOLDER)
+        } catch {
+            Deno.mkdirSync(MandarineConstants.MANDARINE_TARGET_FOLDER);
+        }
+
         Deno.writeFileSync(targetFileName, new TextEncoder().encode(dynamicEntryFile));
+
+        let cmdEnvVariables: { [key: string]: string } = {};
+        this.ENVIRONMENTAL_VARIABLES.forEach((item) => {
+            const envVariableValue = Deno.env.get(item);
+            if(envVariableValue) {
+                cmdEnvVariables[item] = envVariableValue;
+            }
+        });
+
+        let cmd = ["deno", "run"].concat(config.permissions).concat(["--config", config.tsconfigPath]);
+        if(config?.reload) cmd = cmd.concat(["--reload"]);
+        cmd = cmd.concat([targetFileName]);
 
         Deno.run({
             stderr: "inherit",
             stdin: "inherit",
             stdout: "inherit",
-            cmd: ["deno", "run", "--allow-all", targetFileName]
+            cmd: cmd,
+            env: cmdEnvVariables
         }).status();
         
     }
