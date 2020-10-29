@@ -44,26 +44,75 @@ export namespace MandarineSecurity {
          * SessionStore is used to design & use the process of manipulating sessions
          *
          */
+
         export interface SessionStore {
             options: {
-                expirationIntervalHandler: any;
-                expirationInterval: number;
-                autoclearExpiredSessions: boolean;
-                expiration: number; 
-            };
-            launch(): void;
-            get(sessionID: string, callback: (error: any, result: Mandarine.Security.Sessions.MandarineSession | undefined) => void, config?: { touch: boolean }): void;
-            getAll(callback: (error: any, result: Array<Mandarine.Security.Sessions.MandarineSession>) => void): void;
-            set(sessionID: string, session: MandarineSession, callback: (error: any, result: Mandarine.Security.Sessions.MandarineSession) => void): void;
-            destroy(sessionID: string, callback: (error: any, result: Mandarine.Security.Sessions.MandarineSession | undefined | boolean) => void): void;
-            touch(sessionId: string, callback: (error: any, result: Mandarine.Security.Sessions.MandarineSession | undefined) => void): void;
-            exist?(sessionID: string): boolean;
+                expirationInterval: any,
+                autoclearExpiredSessions: boolean
+            }
 
+            /**
+             * Initialize intervals and creates an object in `windows` or any other context where the sessions will be stored
+             */
+            launch(): void;
+
+            /**
+             * Gets a session. If it does not exist returns undefined. If param config.touch = true, updates the expiration of the session
+             */
+            get(sessionID: string, config?: { touch: boolean }): Mandarine.Security.Sessions.MandarineSession | undefined,
+
+            /**
+             * Gets all the sessions in the session container
+             */
+            getAll(): Array<Mandarine.Security.Sessions.MandarineSession>,
+
+            /**
+             * Adds a session to the session container.
+             * For overriding, set config.override to true
+             */
+            set(sessionID: string, session: Mandarine.Security.Sessions.MandarineSession, config?: { override: boolean }): Mandarine.Security.Sessions.MandarineSession;
+            /**
+             * Removes a session from the session container if it exists
+             */
+            destroy(sessionID: string): void;
+            /**
+             * Updates the expiration of a session
+             */
+            touch(sessionID: string): Mandarine.Security.Sessions.MandarineSession | undefined;
+            /**
+             * Verifies whether a session exists
+             */
+            exists(sessionID: string): boolean;
+
+            /**
+             * Clears all those sessions that have expired in the session container
+             */
             clearExpiredSessions(): void;
+            /**
+             * Starts the interval that control the automatic cleaning of session expiration
+             */
             startExpiringSessions(): void;
-            stopExpiringSessions(): void;
+            /**
+             * Removes the intervals set in the container
+             */
             stopIntervals(): void;
+
+            /**
+             * Gets the current `setInterval` in the session container for expired sessions
+             */
+            getExpirationInterval(): void;
+            /**
+             * Sets a new handler for expired sessions
+             */
+            setExpirationInterval(intervalHandler: any): void;
+
+            /**
+             * Expiration time of a session (IN MS)
+             * Default: (1000 * 60 * 60 * 24) (1 day)
+             */
+            getDefaultExpiration(): number;
         }
+        
 
         export interface SessionCookie {
             path?: string,
@@ -186,7 +235,7 @@ export namespace MandarineSecurity {
              * 
              * @throws MandarineSecurityException if no user was found.
              */
-            loadUserByUsername: (username: string) => UserDetails;
+            loadUserByUsername: (username: string) => UserDetails | undefined;
         }
 
         /**

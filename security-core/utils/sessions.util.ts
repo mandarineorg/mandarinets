@@ -29,7 +29,7 @@ export class SessionsUtils {
             sessionCookie.maxAge = sessionContainerConfig.cookie.maxAge;
         }
 
-        let expirationTime = sessionContainerConfig?.store?.options?.expiration || 0;
+        let expirationTime = sessionContainerConfig?.store?.getDefaultExpiration() || 0;
         sessionCookie.expires = new Date(new Date().getTime() + expirationTime);
 
         sessionCookie.value = new KeyStack(sessionContainerConfig.keys).sign(`${sessionCookie.name}=${sessionCookie.value}`);

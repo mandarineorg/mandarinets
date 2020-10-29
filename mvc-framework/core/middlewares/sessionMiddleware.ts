@@ -49,7 +49,7 @@ export class SessionMiddleware {
             sessionID: sesId,
             sessionCookie: sessionCookie
         }, {
-            expiration: sessionContainerConfig?.store?.options?.expiration || 0
+            expiration: sessionContainerConfig?.store?.getDefaultExpiration() || 0
         });
         
         context.request.sessionID = sesId;
@@ -94,23 +94,22 @@ export class SessionMiddleware {
                 return;
             }
 
-            sessionContainerConfig.store.get(sesId, (error, result: Mandarine.Security.Sessions.MandarineSession | undefined) => {
+            const currentSession = sessionContainerConfig.store.get(sesId, { touch: true });
 
-                if(result == undefined) {
-                    context.request.sessionContext = SessionsUtils.sessionBuilder({
-                        sessionID: <string> sesId,
-                        sessionCookie: sessionCookie
-                    }, {
-                        expiration: sessionContainerConfig?.store?.options?.expiration || 0
-                    });
-                    
-                } else {
-                    context.request.sessionContext = result;
-                }
+            if(currentSession == undefined) {
+                context.request.sessionContext = SessionsUtils.sessionBuilder({
+                    sessionID: <string> sesId,
+                    sessionCookie: sessionCookie
+                }, {
+                    expiration: sessionContainerConfig?.store?.getDefaultExpiration() || 0
+                });
+                
+            } else {
+                context.request.sessionContext = currentSession;
+            }
 
-                context.request.sessionID = <string> sesId;
-                context.request.session = Object.assign({}, context.request.sessionContext.sessionData);
-            }, { touch: true });
+            context.request.sessionID = <string> sesId;
+            context.request.session = Object.assign({}, context.request.sessionContext.sessionData);
         }
     }
 
@@ -128,16 +127,11 @@ export class SessionMiddleware {
 
         if(compareSessionData) {
             if((mandarineSession.isSessionNew && sessionContainerConfig.saveUninitialized != undefined && sessionContainerConfig.saveUninitialized) || (!mandarineSession.isSessionNew && sessionContainerConfig.resave != undefined && sessionContainerConfig.resave)) {
-                sessionContainerConfig.store.set(context.request.sessionID, mandarineSession, (error, result) => {
-                    // DO NOTHING
-                });
+                sessionContainerConfig.store.set(context.request.sessionID, mandarineSession, { override: true });
             }
         } else{
             if(mandarineSession.isSessionNew) { mandarineSession.isSessionNew = false; }
-
-            sessionContainerConfig.store.set(context.request.sessionID, mandarineSession, (error, result) => {
-                // DO NOTHING
-            });
+            sessionContainerConfig.store.set(context.request.sessionID, mandarineSession, { override: true });
         }
     }
 
