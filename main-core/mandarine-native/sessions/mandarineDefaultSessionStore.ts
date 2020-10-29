@@ -1,6 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { Mandarine } from "../../Mandarine.ns.ts";
+import type { Mandarine } from "../../Mandarine.ns.ts";
 
 /**
  * `MandarineSessionHandler` serves as the default implementation of the `SessionStore`.
@@ -8,116 +8,96 @@ import { Mandarine } from "../../Mandarine.ns.ts";
  */
 export class MandarineSessionHandler implements Mandarine.Security.Sessions.SessionStore {
 
-    public options: any = {
-        expiration: (1000 * 60 * 60 * 24),
-        expirationIntervalHandler: undefined,
+    options: any = {
         expirationInterval: (1000 * 60 * 60),
         autoclearExpiredSessions: true
     }
 
-    public launch() {
-        this.initializeSessionsContainer();
-        this.startExpiringSessions();
-    }
+    private expiredSessionInternalHandler: any | undefined; 
 
-    public initializeSessionsContainer(): void {
+    private initializeSessionsContainer(): void {
         if (!(window as any).mandarineSessionsContainer) (window as any).mandarineSessionsContainer = new Array<Mandarine.Security.Sessions.MandarineSession>();
     }
 
-    public getSessionsContainer() {
+    private getSessionsContainer(): Array<Mandarine.Security.Sessions.MandarineSession> {
         return (window as any).mandarineSessionsContainer;
     }
 
-    public get(sessionId: string, callback: (error: any, result: Mandarine.Security.Sessions.MandarineSession | undefined) => void, config?: { touch: boolean }): void {
-        if(!this.exist(sessionId)) {
-            callback(Mandarine.Security.Sessions.MandarineSessionExceptions.SESSION_NOT_FOUND, undefined);
-            return;
-        } else {
-            
-            if(config && config.touch === true) {
-                this.touch(sessionId, () => {});
-            }
+    private setSessionContainer(sessions: Array<Mandarine.Security.Sessions.MandarineSession>) {
+        (window as any).mandarineSessionsContainer = sessions;
+    }
 
-            let sessionContainer: Array<Mandarine.Security.Sessions.MandarineSession> | undefined = undefined;
-            this.getAll((error: any, result: Array<Mandarine.Security.Sessions.MandarineSession>) => {
-                sessionContainer = result 
-            
-                let session: Mandarine.Security.Sessions.MandarineSession | undefined = sessionContainer?.find((ses: any) => ses.sessionID === sessionId);
-                callback(undefined, session);
-            });
-            
+    public launch() {
+        this.initializeSessionsContainer();
+    }
+
+    public get(sessionID: string, config?: { touch: boolean }): Mandarine.Security.Sessions.MandarineSession | undefined {
+        if(config?.touch) this.touch(sessionID);
+        return this.getSessionsContainer().find(ses => ses.sessionID === sessionID);
+    }
+
+    public getAll(): Array<Mandarine.Security.Sessions.MandarineSession> {
+        return this.getSessionsContainer();
+    }
+
+    public set(sessionID: string, session: Mandarine.Security.Sessions.MandarineSession, config?: { override: boolean }): Mandarine.Security.Sessions.MandarineSession {
+        if(!this.exists(sessionID) || this.exists(sessionID) && config?.override) {
+            this.getSessionsContainer().push(session);
+            return session;
+        } else {
+            return <Mandarine.Security.Sessions.MandarineSession> this.get(sessionID);
+        }
+
+    }
+
+    public destroy(sessionID: string): void {
+        if(this.exists(sessionID)) {
+            this.setSessionContainer(this.getSessionsContainer().filter(item => item.sessionID !== sessionID));
         }
     }
 
-    public exist(sessionId: string): boolean {
-        const sessionContainer: Array<Mandarine.Security.Sessions.MandarineSession> = this.getSessionsContainer();
-        return sessionContainer.some(ses => ses.sessionID === sessionId);
-    }
-
-    public getAll(callback: (error: any, result: Array<Mandarine.Security.Sessions.MandarineSession>) => void): void {
-        callback(undefined, this.getSessionsContainer());
-    }
-
-    public set(sessionID: string, sessionData: Mandarine.Security.Sessions.MandarineSession, callback: (error: any, result: Mandarine.Security.Sessions.MandarineSession) => void): void {
-        let sessionContainer: Array<Mandarine.Security.Sessions.MandarineSession> = this.getSessionsContainer();
-
-        if(!this.exist(sessionID)) {
-           sessionContainer.push(sessionData);
-           callback(undefined, sessionData);
+    public touch(sessionID: string): Mandarine.Security.Sessions.MandarineSession | undefined {
+        const now = new Date();
+        if(!this.exists(sessionID)) {
+            return undefined;
         } else {
-            const sessionIndex: number = sessionContainer.findIndex(ses => ses.sessionID === sessionID);
-            sessionContainer[sessionIndex].sessionData = sessionData.sessionData;
-            callback(undefined, sessionContainer[sessionIndex]);
+            const currentSession = <Mandarine.Security.Sessions.MandarineSession> this.get(sessionID);
+            currentSession.expiresAt = new Date(now.getTime() + this.getDefaultExpiration());
+            this.set(sessionID, currentSession, { override: true });
         }
     }
 
-    public destroy(sessionID: string, callback: (error: any, result: Mandarine.Security.Sessions.MandarineSession | undefined | boolean) => void): void {
-        if(!this.exist(sessionID)) {
-            callback(Mandarine.Security.Sessions.MandarineSessionExceptions.SESSION_NOT_FOUND, undefined);
-            return;
-        } else {
-            let sessionContainer: Array<Mandarine.Security.Sessions.MandarineSession> = this.getSessionsContainer();
-            const sessionIndex: number = sessionContainer.findIndex(ses => ses.sessionID === sessionID);
-            (window as any).mandarineSessionsContainer = sessionContainer.filter(ses => ses.sessionID != sessionID);
-            callback(undefined, true);
-        }
-    }
-
-    public touch(sessionId: string, callback: (error: any, result: Mandarine.Security.Sessions.MandarineSession | undefined) => void): void {
-        let now = new Date();
-        if(!this.exist(sessionId)) {
-            callback(Mandarine.Security.Sessions.MandarineSessionExceptions.SESSION_NOT_FOUND, undefined);
-            return;
-        } else {
-            this.get(sessionId, (error: any, session: Mandarine.Security.Sessions.MandarineSession | undefined) => {
-                if(session) {
-                    session.expiresAt = new Date(now.getTime() + this.options.expiration);
-                    this.set(sessionId, session, (error, callback) => {});
-                }
-            });
-        }
+    public exists(sessionID: string): boolean {
+        return this.getAll().find(ses => ses.sessionID === sessionID) != undefined;
     }
 
     public clearExpiredSessions(): void {
         let expiredSessions: Array<Mandarine.Security.Sessions.MandarineSession> = this.getSessionsContainer().filter((session: Mandarine.Security.Sessions.MandarineSession) => new Date() > <Date> session.expiresAt); 
         expiredSessions.forEach((item) => {
-            this.destroy(item.sessionID, (err, callback) => {});
+            this.destroy(item.sessionID);
         });
     }
 
     public async startExpiringSessions(): Promise<void> {
-        if(this.options.autoclearExpiredSessions && this.options.expirationIntervalHandler == undefined && this.options.expirationInterval > 0) {
-            this.options.expirationIntervalHandler = setInterval(() => this.clearExpiredSessions(), this.options.expirationInterval);
-        }
-    }
-
-    public stopExpiringSessions(): void {
-        if(this.options.expirationIntervalHandler != undefined) {
-            this.options.expirationIntervalHandler = undefined;
+        const expirationIntervalHandler = this.getExpirationInterval();
+        if(this.options.autoclearExpiredSessions && expirationIntervalHandler == undefined && this.options.expirationInterval > 0) {
+            this.setExpirationInterval(setInterval(() => this.clearExpiredSessions(), this.options.expirationInterval));
         }
     }
 
     public stopIntervals(): void {
         clearInterval(this.options.expirationIntervalHandler);
+    }
+
+    public getExpirationInterval() {
+        return this.expiredSessionInternalHandler;
+    }
+
+    public setExpirationInterval(intervalHandler: any) {
+        this.expiredSessionInternalHandler = intervalHandler;
+    }
+
+    public getDefaultExpiration(): number {
+        return (1000 * 60 * 60 * 24);
     }
 }

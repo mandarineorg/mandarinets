@@ -14,15 +14,14 @@ export const handleBuiltinAuth = () => {
             return;
         }
 
-        Mandarine.Global.getSessionContainer().store?.get(authCookieId, (error, result: Mandarine.Security.Sessions.MandarineSession | undefined) => {
-            if(error || !result) return;
-            
+        const currentAuthSes = Mandarine.Global.getSessionContainer().store?.get(authCookieId, { touch: true });
+        if(currentAuthSes) {
             typedContext.request.authentication = {
-                AUTH_SES_ID: result.sessionID,
-                AUTH_EXPIRES: <Date> result.expiresAt,
-                AUTH_PRINCIPAL: result.sessionData
+                AUTH_SES_ID: currentAuthSes.sessionID,
+                AUTH_EXPIRES: <Date> currentAuthSes.expiresAt,
+                AUTH_PRINCIPAL: currentAuthSes.sessionData
             }
-        }, { touch: true });
+        }
 
         await next();
     }
