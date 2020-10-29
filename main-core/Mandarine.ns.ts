@@ -681,14 +681,14 @@ export namespace Mandarine {
         export const MandarineDefaultConfiguration: Properties = {
             mandarine: {
                 server: {
-                    host: "0.0.0.0",
-                    port: 8080,
+                    host: Deno.env.get(MandarineEnvironmentalConstants.MANDARINE_SERVER_HOST) || "0.0.0.0",
+                    port: parseInt(Deno.env.get(MandarineEnvironmentalConstants.MANDARINE_SERVER_PORT) || "8080"),
                     responseType: MandarineMVC.MediaTypes.TEXT_HTML,
-                    responseTimeHeader: false,
-                    enableSessions: true
+                    responseTimeHeader: CommonUtils.parseToKnownType(Deno.env.get(MandarineEnvironmentalConstants.MANDARINE_SERVER_RESPONSE_TIME_HEADER) || "false"),
+                    enableSessions: CommonUtils.parseToKnownType(Deno.env.get(MandarineEnvironmentalConstants.MANDARINE_SERVER_SESSION_MIDDLEWARE) || "true")
                 },
                 resources: {
-                    staticFolder: "./src/main/resources/static",
+                    staticFolder: Deno.env.get(MandarineEnvironmentalConstants.MANDARINE_STATIC_CONTENT_FOLDER) || "./src/main/resources/static",
                     staticRegExpPattern: "/(.*)"
                 },
                 templateEngine: {
@@ -696,7 +696,7 @@ export namespace Mandarine {
                     engine: "ejs"
                 },
                 authentication: {
-                    expiration: (1 * 3600 * 1000), // ONE HOUR
+                    expiration: CommonUtils.parseToKnownType(Deno.env.get(MandarineEnvironmentalConstants.MANDARINE_AUTH_EXPIRATION_MS) || (1 * 3600 * 1000).toString()), // ONE HOUR
                     cookie: {
                         httpOnly: false
                     }

@@ -1,6 +1,8 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-const mandarineTargetFolderName = ".mandarine_target";
+import { MandarineConstants } from "https://raw.githubusercontent.com/mandarineorg/mandarinets/master/main-core/mandarineConstants.ts";
+
+const mandarineTargetFolderName = MandarineConstants.MANDARINE_TARGET_FOLDER;
 export type PluginExtension = "dylib" | "dll" | "so" | undefined;
 
 export const getPluginInformation = (pluginNameIn: string): [string, PluginExtension] => {
