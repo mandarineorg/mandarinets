@@ -3,22 +3,6 @@ Mandarine allows you to create an entry point with its application builder. The 
 
 -------------------
 
-## Builder Methods
-
-| Method | Description |
-| ------ | ----------- | 
-| `setHost` | Sets the host IP where Mandarine MVC will run |
-| `setPort` | Sets the port where Mandarine MVC will run |
-| `enableResponseTimeHeader` | Enables `X-Response-Time` <br> Optionally, you could supply a boolean value to enable/disable |
-| `enableSessions` | Enables [the session middleware](https://www.mandarinets.org/docs/master/mandarine/session-middleware) <br> Optionally, you could supply a boolean value to enable/disable |
-| `setStaticContentFolder` | Sets the directory path for serving static content |
-| `setAuthExpirationTime` | Sets the amount of time an authentication session should take in order to be expired |
-| `buildCore` | Takes an array of classes (Mandarine-powered components) to be built in the core & builds the core |
-| `buildMVC` | Takes an array of classes (Mandarine-powered components), builds the core & the MVC engine |
-| `automaticBuildAndRun` | Automatically detects Mandarine-powered components, generates an entry-point file & runs the application |
-
-------------
-
 ## Usage
 
 **Case #1**    
@@ -48,3 +32,19 @@ import { MyController, MyService } from "imports.ts";
 new AppBuilder().setHost("127.0.0.1").setPort(1099).buildMVC([MyController, MyService]).run();
 
 ```
+
+------------
+
+## Builder Methods
+
+| Method | Description |
+| ------ | ----------- | 
+| `setHost` | Sets the host IP where Mandarine MVC will run |
+| `setPort` | Sets the port where Mandarine MVC will run |
+| `enableResponseTimeHeader` | Enables `X-Response-Time` <br> Optionally, you could supply a boolean value to enable/disable |
+| `enableSessions` | Enables [the session middleware](https://www.mandarinets.org/docs/master/mandarine/session-middleware) <br> Optionally, you could supply a boolean value to enable/disable |
+| `setStaticContentFolder` | Sets the directory path for serving static content |
+| `setAuthExpirationTime` | Sets the amount of time an authentication session should take in order to be expired |
+| `buildCore` | Takes an array of classes (Mandarine-powered components) to be built in the core & builds the core |
+| `buildMVC` | Takes an array of classes (Mandarine-powered components), builds the core & the MVC engine |
+| `automaticBuildAndRun` | Automatically detects Mandarine-powered components, generates an entry-point file & runs the application |
