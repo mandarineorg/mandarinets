@@ -4,10 +4,10 @@ The `PgClient` object allows you to execute different type of queries in Postgre
 ---------
 
 ## Usage
-The `PgClient` object takes the [`PgManager` object](/docs/v2.1.6/pg-driver/pgmanager) (previously created in the code) in the constructor. You could optionally do `PgManager.getClient()` to get a client from the instance of `PgManager`.
+The `PgClient` object takes the [`PgManager` object](/docs/v2.2.0/pg-driver/pgmanager) (previously created in the code) in the constructor. You could optionally do `PgManager.getClient()` to get a client from the instance of `PgManager`.
 
 ```typescript
-import { PgManager, PgClient, Configuration } from "https://deno.land/x/mandarine_postgres@v2.1.6/ts-src/mod.ts";
+import { PgManager, PgClient, Configuration } from "https://deno.land/x/mandarine_postgres@v2.2.0/ts-src/mod.ts";
 
 const configuration: Configuration = { ... };
 
@@ -30,7 +30,7 @@ const client: PgClient = new PgClient(manager);
     - Returns: An instance of `QueryResult` if not mapper is set
 
 ```typescript
-import { PgManager, QueryResult } from "https://deno.land/x/mandarine_postgres@v2.1.6/ts-src/mod.ts";
+import { PgManager, QueryResult } from "https://deno.land/x/mandarine_postgres@v2.2.0/ts-src/mod.ts";
 
 const pgManager: PgManager = new PgManager({...});
 const users: QueryResult = await pgManager.getClient().query("SELECT * FROM users");
@@ -58,7 +58,7 @@ console.log(users);
     - Returns: An instance of `QueryResult` if not mapper is set
 
 ```typescript
-import { PgManager, QueryResult } from "https://deno.land/x/mandarine_postgres@v2.1.6/ts-src/mod.ts";
+import { PgManager, QueryResult } from "https://deno.land/x/mandarine_postgres@v2.2.0/ts-src/mod.ts";
 
 const pgManager: PgManager = new PgManager({...});
 const insertUsers: QueryResult = await pgManager.getClient().execute("INSERT INTO users VALUES ($1, $2)", [1, 'mandarine']);
@@ -80,7 +80,7 @@ console.log(insertUsers);
     - Returns: An instance of `QueryResult` if not mapper is set
 
 ```typescript
-import { PgManager, QueryResult } from "https://deno.land/x/mandarine_postgres@v2.1.6/ts-src/mod.ts";
+import { PgManager, QueryResult } from "https://deno.land/x/mandarine_postgres@v2.2.0/ts-src/mod.ts";
 
 const pgManager: PgManager = new PgManager({...});
 const createUsersTable: QueryResult = await pgManager.getClient().batchExecute([
