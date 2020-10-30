@@ -14,7 +14,7 @@ We want to be as self-dependent as we can, this means, the less external modules
   - Check how we run our [unit tests](https://github.com/mandarineorg/mandarinets/blob/8ffe8e237df0cb22405d0fe1c49a5d2398f5da45/.github/workflows/ci.yml#L21)
   - Check how we run our [copyright test](https://github.com/mandarineorg/mandarinets/blob/8ffe8e237df0cb22405d0fe1c49a5d2398f5da45/.github/workflows/copyright.yml#L21)
   - Check how we run our [integration tests](https://github.com/mandarineorg/mandarinets/blob/8ffe8e237df0cb22405d0fe1c49a5d2398f5da45/.github/workflows/integration.yml#L21)
-  - check how we run our [PG Rust Driver tests](https://github.com/mandarineorg/mandarinets/blob/8ffe8e237df0cb22405d0fe1c49a5d2398f5da45/.github/workflows/pg_driver_with_tests.yml#L57)
+  - check how we run our [PG rust driver tests](https://github.com/mandarineorg/mandarinets/blob/8ffe8e237df0cb22405d0fe1c49a5d2398f5da45/.github/workflows/pg_driver_with_tests.yml#L57)
 
 # Branch
   - When starting to work on an issue, you **must always** branch off of `master`
