@@ -26,3 +26,23 @@ Sessions are unique per requester, it is a way to tell your web server who is re
 
 ## Accessing The Session Object
 As described above, the session object is part of the request object when a request is made to an endpoint. The session object is accessible via the use of [HTTP Parameter Decorators](/docs/mandarine/http-handlers), by using the decorator `@Session()` . Please, refer to the link in order to understand this concept.
+
+
+------------
+
+## Disabling Session Middleware
+Some scenearios may require the session middleware to be disabled, these scenarios may go from wanting a better performance when measuring or internal cases which are up to the developer. For this you may:
+
+- Set `mandarine.server.enableSessions` to false in your properties file. For more information about custom properties [click here](https://www.mandarinets.org/docs/master/mandarine/custom-properties)
+
+```json
+{
+    "mandarine": {
+        "server": {
+            "enableSessions": false
+        }
+    }
+}
+```
+
+- Set an environmental variable (`MANDARINE_SERVER_SESSION_MIDDLEWARE`) when running Deno with `false` as its value.

@@ -30,13 +30,13 @@ export class AppBuilder {
         return this;
     }
 
-    public enableResponseTimeHeader(): AppBuilder {
-        Deno.env.set(MandarineEnvironmentalConstants.MANDARINE_SERVER_RESPONSE_TIME_HEADER, "true");
+    public enableResponseTimeHeader(value: boolean = true): AppBuilder {
+        Deno.env.set(MandarineEnvironmentalConstants.MANDARINE_SERVER_RESPONSE_TIME_HEADER, value.toString());
         return this;
     }
 
-    public enableSessions(): AppBuilder {
-        Deno.env.set(MandarineEnvironmentalConstants.MANDARINE_SERVER_SESSION_MIDDLEWARE, "true");
+    public enableSessions(value: boolean = true): AppBuilder {
+        Deno.env.set(MandarineEnvironmentalConstants.MANDARINE_SERVER_SESSION_MIDDLEWARE, value.toString());
         return this;
     }
 
@@ -73,7 +73,7 @@ export class AppBuilder {
             const decorators = readDecoratorsExportedClass(decoder.decode(Deno.readFileSync(path)));
             if(decorators !== null) {
                 const insertionDecorators = decorators.map(decorator =>  { decorator.filePath = path; return decorator; });
-                entries.set(path, decorators.map(decorator =>  { decorator.filePath = path; return decorator; }));
+                entries.set(path, insertionDecorators);
             }
         }
 

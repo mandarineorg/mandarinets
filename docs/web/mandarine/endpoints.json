@@ -304,7 +304,19 @@
       "document": "mandarine-mvc/entry-point.md"
     },
     {
+      "url": "entry-point-builders",
+      "document": "mandarine-mvc/entry-point-builder.md"
+    },
+    {
       "url": "built-in-response-time-header",
       "document": "mandarine-mvc/built-in-response-time-header.md"
+    },
+    {
+      "url": "exposed-injectables",
+      "document": "mandarine-core/exposed-injectables.md"
+    },
+    {
+      "url": "exposed-injectable-logger",
+      "document": "mandarine-core/exposed-injectable-logger.md"
     }
 ]

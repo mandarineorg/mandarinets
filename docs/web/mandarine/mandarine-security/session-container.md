@@ -57,24 +57,24 @@ export interface SessionCookie {
 For the session container, this is the most important interface. The implementations with this interface will handle the logic behind saving, modifying, and deleting a session.
 ```typescript
 export interface SessionStore {
-    options: {
-        expirationIntervalHandler: any;
-        expirationInterval: number;
-        autoclearExpiredSessions: boolean;
-        expiration: number; 
-    };
-    launch(): void;
-    get(sessionID: string, callback: (error, result: Mandarine.Security.Sessions.MandarineSession) => void, config?: { touch: boolean }): void;
-    getAll(callback: (error, result: Array<Mandarine.Security.Sessions.MandarineSession>) => void): void;
-    set(sessionID: string, session: Mandarine.Security.Sessions.MandarineSession, callback: (error, result) => void): void;
-    destroy(sessionID: string, callback: (error, result: any) => void): void;
-    touch(sessionId: string, callback: (error, result: any) => void): void;
-    exist?(sessionID: string): boolean;
+        options: {
+            expirationInterval: any,
+            autoclearExpiredSessions: boolean
+        }
 
-    clearExpiredSessions(): void;
-    startExpiringSessions(): void;
-    stopExpiringSessions(): void;
-    stopIntervals(): void;
+        launch(): void;
+        get(sessionID: string, config?: { touch: boolean }): Mandarine.Security.Sessions.MandarineSession | undefined,
+        getAll(): Array<Mandarine.Security.Sessions.MandarineSession>,
+        set(sessionID: string, session: Mandarine.Security.Sessions.MandarineSession, config?: { override: boolean }): Mandarine.Security.Sessions.MandarineSession;
+        destroy(sessionID: string): void;
+        touch(sessionID: string): Mandarine.Security.Sessions.MandarineSession | undefined;
+        exists(sessionID: string): boolean;
+        clearExpiredSessions(): void;
+        startExpiringSessions(): void;
+        stopIntervals(): void;
+        getExpirationInterval(): void;
+        setExpirationInterval(intervalHandler: any): void;
+        getDefaultExpiration(): number;
 }
 ```
 - `launch`
@@ -91,17 +91,22 @@ export interface SessionStore {
     - Removes a session from the session container
 - `touch`
     - Re-calculates the expiration time
-- `exist`
+- `exists`
     - Verifies whether a session is in the session container
 - `clearExpiredSessions`
     - Function to be called by the _"expired sessions interval"_.
     - This function holds the logic behind removing expired sessions.
 - `startExpiringSession`
     - Creates and adds a `setInterval` to `options.expirationIntervalHandler`, this interval should have `clearExpiredSessions` as its callback.
-- `stopExpiringSessions`
-    - Clears the interval for expired sessions
 - `stopIntervals`
     - This function should hold the logic behind clearing any interval available in the session store implementation
+- `getExpirationInterval`
+    - Get the variable where `setInterval` was assigned.
+- `setExpirationInterval`
+    - Sets a new `setInterval` to internal variable
+- `getDefaultExpiration`
+    - Gets the expiration time of the session (in milliseconds)
+    - Default: `(1000 * 60 * 60 * 24)` (1 day)
 
 &nbsp;
 
