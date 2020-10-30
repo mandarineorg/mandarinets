@@ -137,6 +137,16 @@
               "url": "native-components-list"
             }
           ]
+        },
+        {
+          "title": "Exposed Injectables",
+          "url": "exposed-injectables",
+          "children": [
+            {
+              "url": "exposed-injectable-logger",
+              "title": "Logger"
+            }
+          ]
         }
       ]
     },
@@ -150,6 +160,10 @@
         {
           "title": "Entry Point",
           "url": "entry-point"
+        },
+        {
+          "title": "Entry Point Builder",
+          "url": "entry-point-builders"
         },
         {
           "title": "Resource Handlers",

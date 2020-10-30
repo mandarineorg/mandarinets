@@ -13,7 +13,8 @@ Mandarine.TS contains a property structure that allows the developer to modify s
                 host?: string,
                 port: number,
                 responseType?: MandarineMVC.MediaTypes,
-                responseTimeHeader?: boolean
+                responseTimeHeader?: boolean,
+                enableSessions?: boolean
             } & any,
             resources: {
                 staticRegExpPattern?: string,
@@ -50,13 +51,14 @@ Mandarine.TS contains a property structure that allows the developer to modify s
 ## Default values
 
 ```typescript
-
 {
     mandarine: {
         server: {
             host: "0.0.0.0",
             port: 8080,
-            responseType: Mandarine.MandarineMVC.MediaTypes.TEXT_HTML
+            responseType: Mandarine.MandarineMVC.MediaTypes.TEXT_HTML,
+            responseTimeHeader: false
+            enableSessions: true
         },
         resources: {
             staticFolder: "./src/main/resources/static",
