@@ -1,7 +1,7 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
 import { AppBuilderUtil } from "../../main-core/app-builder/appBuilderUtil.ts";
-import { DecoratorReadResult } from "../../main-core/utils/decoratorFinder.ts";
+import type { DecoratorReadResult } from "../../main-core/utils/decoratorFinder.ts";
 import { Test, DenoAsserts, Orange, mockDecorator, MockCookies } from "../mod.ts";
 
 export class AppBuilderTest {
