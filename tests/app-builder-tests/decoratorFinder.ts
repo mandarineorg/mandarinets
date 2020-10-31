@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { AppBuilder } from "../../main-core/app-builder/appBuilder.ts";
 import { CommonUtils } from "../../main-core/utils/commonUtils.ts";
 import { DenoAsserts, Test } from "../mod.ts";

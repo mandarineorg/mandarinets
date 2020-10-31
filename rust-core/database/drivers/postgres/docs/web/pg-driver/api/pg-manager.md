@@ -24,7 +24,7 @@ interface Configuration {
 ## API
 
 ```typescript
-import { PgManager, Configuration } from "https://deno.land/x/mandarine_postgres@v2.2.0/ts-src/mod.ts";
+import { PgManager, Configuration } from "https://deno.land/x/mandarine_postgres@v2.2.1/ts-src/mod.ts";
 
 const configuration: Configuration = {
   host: "127.0.0.1",
