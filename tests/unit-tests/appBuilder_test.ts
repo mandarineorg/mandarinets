@@ -3,7 +3,7 @@
 import { AppBuilderUtil } from "../../main-core/app-builder/appBuilderUtil.ts";
 import type { DecoratorReadResult } from "../../main-core/utils/decoratorFinder.ts";
 import { Test, DenoAsserts, Orange, mockDecorator, MockCookies } from "../mod.ts";
-
+ 
 export class AppBuilderTest {
 
     @Test({
