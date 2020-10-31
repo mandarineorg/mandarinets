@@ -150,7 +150,7 @@ export class AppBuilder {
         ? currentClassName
         : `{ ${currentClassName} }`;
       dynamicEntryFile = dynamicEntryFile.concat(
-        `\nimport ${importName} from "file:${value.filePath?.replaceAll(
+        `\nimport ${importName} from "file://${value.filePath?.replaceAll(
           "\\",
           "\\\\"
         )}"\n`
