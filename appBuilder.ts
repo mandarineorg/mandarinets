@@ -1,1 +1,1 @@
-export { AppBuilder } from "./main-core/mandarineAppBuilder.ts";
+export { AppBuilder } from "./main-core/app-builder/appBuilder.ts";
