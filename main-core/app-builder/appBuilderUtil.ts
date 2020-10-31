@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { DecoratorReadResult } from "../utils/decoratorFinder.ts";
 import { toFileUrl } from "https://deno.land/std@0.76.0/path/mod.ts";
 
