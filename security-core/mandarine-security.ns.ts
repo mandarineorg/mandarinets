@@ -285,6 +285,7 @@ export namespace MandarineSecurity {
          * Private API to perform authentication (Mandarine's built-in Authentication)
          */
         export interface Authenticator {
+            getAuthenticationId: (requestContext: Mandarine.Types.RequestContext) => string | undefined;
             performAuthentication: (data: PerformAuthenticationOptions) => [AuthenticationResult, UserDetails | undefined];
             performHTTPAuthentication: (data: PerformHTTPAuthenticationOptions) => [AuthenticationResult, UserDetails | undefined];
             stopHTTPAuthentication: (requestContext: Mandarine.Types.RequestContext) => void;

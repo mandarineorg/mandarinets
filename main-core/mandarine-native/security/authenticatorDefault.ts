@@ -32,6 +32,14 @@ export class Authenticator implements Mandarine.Security.Auth.Authenticator {
     }
 
     /**
+     * 
+     * @param requestContext Refers to the context of the current request.
+     */
+    public getAuthenticationId(requestContext: Mandarine.Types.RequestContext): string | undefined {
+        return AuthUtils.findAuthCookie(requestContext);
+    }
+
+    /**
      * This functions performs authentication using Mandarine built-in auth system. Returns the status of the authentication (Mandarine.Security.Auth.AuthenticationResult) & the object with the user's data if successful.
      * 
      * @param data Contains the information to execute the authentication such as user & password. It takes an optional value for `executer` which is a function to be executed when authentication is done (if successful)
