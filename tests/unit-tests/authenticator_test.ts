@@ -209,6 +209,8 @@ export class AuthenticationTest {
                 requestContext: <any>requestContext
             });
 
+            DenoAsserts.assertNotEquals(authenticate2[0].authSesId, undefined);
+
             DenoAsserts.assertEquals(authenticate2[0], {
                 status: "ALREADY-LOGGED-IN",
                 message: "Success",

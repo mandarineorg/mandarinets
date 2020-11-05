@@ -19,16 +19,16 @@ export class Authenticator implements Mandarine.Security.Auth.Authenticator {
         return AuthUtils.verifyAuthenticationSatisfaction(withSessionContainer);
     }
 
-    private isHTTPAuthenticated(requestContext: Mandarine.Types.RequestContext): boolean {
+    private isHTTPAuthenticated(requestContext: Mandarine.Types.RequestContext): [boolean, string | undefined] {
         const authCookie = AuthUtils.findAuthCookie(requestContext);
         const sessionContainer = Mandarine.Global.getSessionContainer();
         if(sessionContainer.store && sessionContainer.store.exists) {
             if(authCookie != undefined && sessionContainer.store.exists(authCookie)) {
-                return true;
+                return [true, authCookie];
             }
         }
 
-        return false;
+        return [false, undefined];
     }
 
     /**
@@ -126,9 +126,10 @@ export class Authenticator implements Mandarine.Security.Auth.Authenticator {
 
             if(!this.verifyAuthenticationSatisfaction()) throw new MandarineSecurityException(MandarineSecurityException.UNSATISFIED_AUTHENTICATOR);
 
-            if(this.isHTTPAuthenticated(requestContext)) {
+            const [isCurrentlyLoggedIn, sessionID] = this.isHTTPAuthenticated(requestContext);
+            if(isCurrentlyLoggedIn) {
                 authenticationObject.status = "ALREADY-LOGGED-IN";
-                authenticationObject.authSesId = AuthUtils.findAuthCookie(requestContext);
+                authenticationObject.authSesId = sessionID;
                 return [authenticationObject, userDetailsObject];
             }
 
