@@ -14,7 +14,7 @@ export class AuthenticationManagerBuilder implements Mandarine.Security.Auth.Aut
     private _userDetailsServiceType: ClassType | undefined = undefined;
     private _passwordEncoder: Mandarine.Security.Crypto.PasswordEncoder = new BcryptEncoder();
 
-    public userDetailsService(userdetailsServiceType: any): AuthenticationManagerBuilder {
+    public userDetailsService(userdetailsServiceType: ClassType): AuthenticationManagerBuilder {
         if(!userdetailsServiceType) throw new MandarineSecurityException(MandarineSecurityException.INVALID_USER_DETAILS_SERVICE);
         if(!userdetailsServiceType.prototype.loadUserByUsername) throw new MandarineSecurityException(MandarineSecurityException.USER_DETAILS_SERVICE_INCOMPLETE);
 
