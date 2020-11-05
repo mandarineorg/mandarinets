@@ -13,6 +13,7 @@ import { getPipes } from "./internals/getPipes.ts";
 import { executePipe } from "../internals/methods/executePipe.ts";
 import { DependencyInjectionUtil } from "./di.util.ts";
 import { MandarineMVCUtils } from "../../mvc-framework/core/utils/mvc.utils.ts";
+import type { ClassType } from "../utils/utilTypes.ts";
 
 export class DependencyInjectionFactory {
 
@@ -203,7 +204,7 @@ export class DependencyInjectionFactory {
     /** 
      * Get a Dependency from the DI Container programatically
      */
-    public getDependency(type: any) {
+    public getDependency(type: ClassType) {
         let component = ApplicationContext.getInstance().getComponentsRegistry().getComponentByHandlerType(type);
         if(component != (null || undefined)) return (component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT || component.componentType == Mandarine.MandarineCore.ComponentTypes.INTERNAL) ? component.componentInstance : component.componentInstance.getClassHandler();
     }
@@ -211,14 +212,14 @@ export class DependencyInjectionFactory {
     /** 
      * Get a Dependency from the DI Container programatically
      */
-    public getSeed(type: any) {
+    public getSeed(type: ClassType) {
         return this.getDependency(type);
     }
 
     /** 
      * Get a Dependency from the DI Container programatically
      */
-    public getInjectable(type: any) {
+    public getInjectable(type: ClassType) {
         return this.getDependency(type);
     }
 

@@ -5,6 +5,7 @@ import { expandGlobSync } from "https://deno.land/std@0.71.0/fs/mod.ts";
 import { readDecoratorsExportedClass, DecoratorReadResult } from "../utils/decoratorFinder.ts";
 import { MandarineConstants } from "../mandarineConstants.ts";
 import { AppBuilderUtil } from "./appBuilderUtil.ts";
+import type { ClassType } from "../utils/utilTypes.ts";
 
 const getCore = async () => {
     return (await import('../mandarineCore.ts')).MandarineCore;
@@ -51,12 +52,12 @@ export class AppBuilder {
         return this;
     }
 
-    public async buildCore(components: Array<{ new (): any }>) {
+    public async buildCore(components: Array<ClassType>) {
         // This function does nothing. We only need to import the references and Mandarine will do its magic.
         return new (await getCore());
     }
 
-    public async buildMVC(components: Array<{ new (): any }>) {
+    public async buildMVC(components: Array<ClassType>) {
         // This function does nothing. We only need to import the references and Mandarine will do its magic.
         return (await this.buildCore(components)).MVC();
     }

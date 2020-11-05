@@ -3,6 +3,7 @@
 import type { Cookie } from "../mvc-framework/core/interfaces/http/cookie.ts";
 import { Mandarine } from "../main-core/Mandarine.ns.ts";
 import type { Request, Response } from "../deps.ts"
+import type { ClassType } from "../main-core/utils/utilTypes.ts";
 
 /**
  * Contains all the essentials for Mandarine's security core to work
@@ -257,7 +258,7 @@ export namespace MandarineSecurity {
          * Principal interface for the authentication manager builder, which indicates what what service (implementing Mandarine.Security.Auth.UserDetailsService) we will call for built-in authentication
          */
         export interface AuthenticationManagerBuilder {
-            userDetailsService: (implementation: any) => AuthenticationManagerBuilder;
+            userDetailsService: (implementation: ClassType) => AuthenticationManagerBuilder;
             getUserDetailsService: () => UserDetailsService;
             passwordEncoder: (implementation: Crypto.PasswordEncoder) => AuthenticationManagerBuilder;
             getPasswordEncoder(): Crypto.PasswordEncoder;
@@ -285,6 +286,7 @@ export namespace MandarineSecurity {
          * Private API to perform authentication (Mandarine's built-in Authentication)
          */
         export interface Authenticator {
+            getAuthenticationId: (requestContext: Mandarine.Types.RequestContext) => string | undefined;
             performAuthentication: (data: PerformAuthenticationOptions) => [AuthenticationResult, UserDetails | undefined];
             performHTTPAuthentication: (data: PerformHTTPAuthenticationOptions) => [AuthenticationResult, UserDetails | undefined];
             stopHTTPAuthentication: (requestContext: Mandarine.Types.RequestContext) => void;

@@ -230,6 +230,8 @@ export class AuthenticationTest {
 
             authenticator.stopHTTPAuthentication(<any>requestContext);
 
+            DenoAsserts.assertEquals(Mandarine.Global.getSessionContainer().store?.getAll(), []);
+
             await handleBuiltinAuth()(<any>requestContext, () => {});
 
             DenoAsserts.assert((requestContext.request as any).authentication === undefined);

@@ -8,6 +8,7 @@ import { ApplicationContext } from "../application-context/mandarineApplicationC
 import { ComponentComponent } from "../components/component-component/componentComponent.ts";
 import { RepositoryComponent } from "../components/repository-component/repositoryComponent.ts";
 import { DI } from "../dependency-injection/di.ns.ts";
+import { Authenticator } from "../mandarine-native/security/authenticatorDefault.ts";
 import { Mandarine } from "../Mandarine.ns.ts";
 import { MandarineConstants } from "../mandarineConstants.ts";
 import { Reflect } from "../reflectMetadata.ts";
@@ -29,6 +30,12 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
         this.components.set("MANDARINE_LOGGER", {
             componentName: "MANDARINE_LOGGER",
             componentInstance: new Log("-"),
+            componentType: Mandarine.MandarineCore.ComponentTypes.INTERNAL
+        });
+
+        this.components.set("MANDARINE_AUTHENTICATOR", {
+            componentName: "MANDARINE_AUTHENTICATOR",
+            componentInstance: new Authenticator(),
             componentType: Mandarine.MandarineCore.ComponentTypes.INTERNAL
         });
     }
