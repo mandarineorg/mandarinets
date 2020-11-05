@@ -77,7 +77,11 @@ export class AuthenticationTest {
         const authenticator = new Authenticator();
 
         ApplicationContext.getInstance().getDIFactory().getDependency(AuthManagerService).users[0].password = "$2y$15$.rp/dnmo94FY9AgHHMLkH.YDdrDw/wUaUyNCdw62tdbMf7pWWrEqy";
-        let authenticate = authenticator.performAuthentication("test", "Changeme1", <any>requestContext);
+        let authenticate = authenticator.performHTTPAuthentication({
+            username: "test", 
+            password: "Changeme1",
+            requestContext: <any>requestContext
+        })[0];
 
         DenoAsserts.assertEquals(authenticate, {
             status: "FAILED",
@@ -88,7 +92,11 @@ export class AuthenticationTest {
         ApplicationContext.getInstance().getDIFactory().getDependency(AuthManagerService).users[0].password = user.password;
         ApplicationContext.getInstance().getDIFactory().getDependency(AuthManagerService).users[0].accountExpired = true;
 
-        authenticate = authenticator.performAuthentication("test", "Changeme1", <any>requestContext);
+        authenticate = authenticator.performHTTPAuthentication({
+            username: "test", 
+            password: "Changeme1",
+            requestContext: <any>requestContext
+        })[0];
 
         DenoAsserts.assertEquals(authenticate, {
             status: "FAILED",
@@ -99,7 +107,11 @@ export class AuthenticationTest {
         ApplicationContext.getInstance().getDIFactory().getDependency(AuthManagerService).users[0].accountExpired = false;
         ApplicationContext.getInstance().getDIFactory().getDependency(AuthManagerService).users[0].accountLocked = true;
 
-        authenticate = authenticator.performAuthentication("test", "Changeme1", <any>requestContext);
+        authenticate = authenticator.performHTTPAuthentication({
+            username: "test", 
+            password: "Changeme1",
+            requestContext: <any>requestContext
+        })[0];
 
         DenoAsserts.assertEquals(authenticate, {
             status: "FAILED",
@@ -110,7 +122,11 @@ export class AuthenticationTest {
         ApplicationContext.getInstance().getDIFactory().getDependency(AuthManagerService).users[0].accountLocked = false;
         ApplicationContext.getInstance().getDIFactory().getDependency(AuthManagerService).users[0].credentialsExpired = true;
 
-        authenticate = authenticator.performAuthentication("test", "Changeme1", <any>requestContext);
+        authenticate = authenticator.performHTTPAuthentication({
+            username: "test", 
+            password: "Changeme1",
+            requestContext: <any>requestContext
+        })[0];
 
         DenoAsserts.assertEquals(authenticate, {
             status: "FAILED",
@@ -121,7 +137,11 @@ export class AuthenticationTest {
         ApplicationContext.getInstance().getDIFactory().getDependency(AuthManagerService).users[0].credentialsExpired = false;
         ApplicationContext.getInstance().getDIFactory().getDependency(AuthManagerService).users[0].enabled = false;
 
-        authenticate = authenticator.performAuthentication("test", "Changeme1", <any>requestContext);
+        authenticate = authenticator.performHTTPAuthentication({
+            username: "test", 
+            password: "Changeme1",
+            requestContext: <any>requestContext
+        })[0];
 
         DenoAsserts.assertEquals(authenticate, {
             status: "FAILED",
@@ -132,7 +152,11 @@ export class AuthenticationTest {
         ApplicationContext.getInstance().getDIFactory().getDependency(AuthManagerService).users[0].enabled = true;
         ApplicationContext.getInstance().getDIFactory().getDependency(AuthManagerService).users[0].roles = undefined;
 
-        authenticate = authenticator.performAuthentication("test", "Changeme1", <any>requestContext);
+        authenticate = authenticator.performHTTPAuthentication({
+            username: "test", 
+            password: "Changeme1",
+            requestContext: <any>requestContext
+        })[0];
 
         DenoAsserts.assertEquals(authenticate, {
             status: "FAILED",
@@ -143,7 +167,11 @@ export class AuthenticationTest {
         ApplicationContext.getInstance().getDIFactory().getDependency(AuthManagerService).users[0].roles = user.roles;
         ApplicationContext.getInstance().getDIFactory().getDependency(AuthManagerService).users[0].username = undefined;
 
-        authenticate = authenticator.performAuthentication("test", "Changeme1", <any>requestContext);
+        authenticate = authenticator.performHTTPAuthentication({
+            username: "test", 
+            password: "Changeme1",
+            requestContext: <any>requestContext
+        })[0];
 
         DenoAsserts.assertEquals(authenticate, {
             status: "FAILED",
@@ -153,7 +181,11 @@ export class AuthenticationTest {
 
         ApplicationContext.getInstance().getDIFactory().getDependency(AuthManagerService).users[0].username = user.username;
 
-        authenticate = authenticator.performAuthentication("test", "Changeme1", <any>requestContext);
+        authenticate = authenticator.performHTTPAuthentication({
+            username: "test", 
+            password: "Changeme1",
+            requestContext: <any>requestContext
+        })[0];
 
         DenoAsserts.assertEquals(authenticate, {
             status: "PASSED",
@@ -171,12 +203,22 @@ export class AuthenticationTest {
             requestContext.cookies.set(MandarineConstants.SECURITY_AUTH_COOKIE_NAME, unsignedCookie);
             requestContext.cookies.set(MandarineConstants.SECURITY_AUTH_COOKIE_NAME + ".sig", signedCookie);
 
-            authenticate = authenticator.performAuthentication("test", "Changeme1", <any>requestContext);
+            let authenticate2 = authenticator.performHTTPAuthentication({
+                username: "test", 
+                password: "Changeme1",
+                requestContext: <any>requestContext
+            });
 
-            DenoAsserts.assertEquals(authenticate, {
+            DenoAsserts.assertNotEquals(authenticate2[0].authSesId, undefined);
+
+            DenoAsserts.assertEquals(authenticate2[0], {
                 status: "ALREADY-LOGGED-IN",
+                message: "Success",
                 authSesId: authenticate.authSesId
             });
+
+            DenoAsserts.assertNotEquals(authenticate2[1], undefined);
+            DenoAsserts.assertEquals(authenticate2[1]?.username, "test");
             
             await handleBuiltinAuth()(<any>requestContext, () => {});
 
@@ -186,7 +228,7 @@ export class AuthenticationTest {
             DenoAsserts.assert((requestContext.request as any).authentication.AUTH_PRINCIPAL != undefined);
             DenoAsserts.assertEquals((requestContext.request as any).authentication.AUTH_PRINCIPAL, user);
 
-            authenticator.stopAuthentication(<any>requestContext);
+            authenticator.stopHTTPAuthentication(<any>requestContext);
 
             await handleBuiltinAuth()(<any>requestContext, () => {});
 

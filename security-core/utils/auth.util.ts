@@ -8,11 +8,11 @@ export class AuthUtils {
         return context.cookies.get(MandarineConstants.SECURITY_AUTH_COOKIE_NAME, { signed: true });
     }
 
-    public static verifyAuthenticationSatisfaction(): boolean {
+    public static verifyAuthenticationSatisfaction(withSessionContainer?: boolean): boolean {
         const getAuthManagerBuilder = Mandarine.Security.getAuthManagerBuilder();
         return (getAuthManagerBuilder.passwordEncoder != undefined 
                 && getAuthManagerBuilder.userDetailsService != undefined
-                    && Mandarine.Global.getSessionContainer().store != undefined);
+                    && (withSessionContainer === false || Mandarine.Global.getSessionContainer().store != undefined));
     }
 
     public static verifyHTTPLogingConfigurerSatisfaction(loginConfigurer: Mandarine.Security.Core.LoginConfigurer): boolean {

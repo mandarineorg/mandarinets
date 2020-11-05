@@ -42,9 +42,12 @@ export class AuthenticationRouting {
             if(contentType === "application/json" || contentType === "application/x-www-form-urlencoded") body = await HttpUtils.parseBody(typedContext.request);
             if(!body) throw new MandarineSecurityException(MandarineSecurityException.INVALID_LOGIN_DATA);
 
-            const authentication = AuthenticationRouting.authenticator.performAuthentication(body[(<string> httpLogingConfigurer.login.usernameParameter)], 
-                                                                                            body[(<string> httpLogingConfigurer.login.passwordParameter)],
-                                                                                            typedContext);
+            const [ authentication ] = AuthenticationRouting.authenticator.performHTTPAuthentication({
+                username: body[(httpLogingConfigurer.login.usernameParameter || "username")], 
+                password: body[(httpLogingConfigurer.login.passwordParameter || "password")],
+                requestContext: typedContext
+            });
+            
             if (authentication.status === "FAILED") {
                 typedContext.response.status = 401;
                 httpLogingConfigurer.login.handler.onFailure(typedContext.request, typedContext.response, authentication);
@@ -70,7 +73,7 @@ export class AuthenticationRouting {
 
         const processor = async (context: any, next: Function) => {
             const typedContext: Mandarine.Types.RequestContext = context;
-            AuthenticationRouting.authenticator.stopAuthentication(typedContext);
+            AuthenticationRouting.authenticator.stopHTTPAuthentication(typedContext);
             typedContext.response.status = 200;
             typedContext.response.redirect(<string> httpLogingConfigurer.login.logoutSuccessUrl);
             await next();

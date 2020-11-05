@@ -263,14 +263,31 @@ export namespace MandarineSecurity {
             getPasswordEncoder(): Crypto.PasswordEncoder;
         }
 
+        export type AuthenticatorExecutor = (authenticationResult: Mandarine.Security.Auth.AuthenticationResult, userDetails: Mandarine.Security.Auth.UserDetails | undefined) => void;
+
+        export interface PerformAuthenticationOptions {
+            username: string,
+            password: string,
+            executer?: Mandarine.Security.Auth.AuthenticatorExecutor
+        }
+
+        export interface PerformHTTPAuthenticationOptions {
+            username: string,
+            password: string,
+            requestContext: Mandarine.Types.RequestContext
+            executers?: {
+                authExecuter?: Mandarine.Security.Auth.AuthenticatorExecutor,
+                httpExecuter?: Mandarine.Security.Auth.AuthenticatorExecutor
+            }
+        }
+
         /**
          * Private API to perform authentication (Mandarine's built-in Authentication)
          */
         export interface Authenticator {
-            verifyAuthenticationSatisfaction: () => boolean;
-            isAuthenticated: (requestContext: Mandarine.Types.RequestContext) => boolean;
-            performAuthentication: (username: string, password: string, requestContext: Mandarine.Types.RequestContext) => AuthenticationResult;
-            stopAuthentication: (requestContext: Mandarine.Types.RequestContext) => void;
+            performAuthentication: (data: PerformAuthenticationOptions) => [AuthenticationResult, UserDetails | undefined];
+            performHTTPAuthentication: (data: PerformHTTPAuthenticationOptions) => [AuthenticationResult, UserDetails | undefined];
+            stopHTTPAuthentication: (requestContext: Mandarine.Types.RequestContext) => void;
         }
 
         /**
