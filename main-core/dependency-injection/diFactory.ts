@@ -226,7 +226,7 @@ export class DependencyInjectionFactory {
     /**
      * Get component of dependency by Type
      */
-    public getComponentByType(type: ClassType) {
+    public getComponentByType(type: any) {
         let component = ApplicationContext.getInstance().getComponentsRegistry().getComponentByHandlerType(type);
         if(component != (null || undefined) && component.componentType !== Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT && component.componentType !== Mandarine.MandarineCore.ComponentTypes.INTERNAL) {
             return component.componentInstance;

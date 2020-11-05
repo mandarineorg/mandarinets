@@ -5,7 +5,7 @@ import { ApplicationContext } from "../../application-context/mandarineApplicati
 import { MandarineException } from "../../exceptions/mandarineException.ts";
 
 export const executePipe = (pipe: any, valueToProcess: any) => {
-    const pipeFromDI: Mandarine.Types.PipeTransform = ApplicationContext.getInstance().getDIFactory().getDependency(pipe);
+    const pipeFromDI: Mandarine.Types.PipeTransform | undefined = ApplicationContext.getInstance().getDIFactory().getDependency(pipe);
     if(pipeFromDI) {
         valueToProcess = pipeFromDI.transform(valueToProcess);
     } else if(!pipeFromDI && typeof pipe === 'function') {
