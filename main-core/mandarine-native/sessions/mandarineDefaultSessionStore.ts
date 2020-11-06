@@ -39,7 +39,11 @@ export class MandarineSessionHandler implements Mandarine.Security.Sessions.Sess
     }
 
     public set(sessionID: string, session: Mandarine.Security.Sessions.MandarineSession, config?: { override: boolean }): Mandarine.Security.Sessions.MandarineSession {
-        if(!this.exists(sessionID) || this.exists(sessionID) && config?.override) {
+        const doesExistAndOverride: boolean = this.exists(sessionID) == true && config?.override === true;
+        if(!this.exists(sessionID) || doesExistAndOverride) {
+            if(doesExistAndOverride) {
+                this.destroy(sessionID);
+            }
             this.getSessionsContainer().push(session);
             return session;
         } else {
@@ -62,8 +66,10 @@ export class MandarineSessionHandler implements Mandarine.Security.Sessions.Sess
             const currentSession = this.get(sessionID);
             // Even though we verified it exists up there, when we call `.get` it may have been deleted if it expired
             if(currentSession) {
-                currentSession.expiresAt = new Date(now.getTime() + this.getDefaultExpiration());
-                this.set(sessionID, currentSession, { override: true });
+                if(currentSession.expiresAt) {
+                    currentSession.expiresAt = new Date(currentSession.expiresAt.getTime() + this.getDefaultExpiration());
+                    this.set(sessionID, currentSession, { override: true });
+                }
             }
         }
     }

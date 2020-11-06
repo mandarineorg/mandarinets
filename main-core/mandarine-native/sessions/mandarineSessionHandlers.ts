@@ -21,6 +21,14 @@ class MandarineSessionHandler {
         this.expiredSessionHandler = undefined;
     }
 
+    public initializeSessionManager() {
+        const sessionContainerStore = Mandarine.Global.getSessionContainer().store;
+        if(sessionContainerStore && sessionContainerStore.launch) {
+            sessionContainerStore.launch();
+            this.initializeExpirationHandler();
+        }
+    }
+
 }
 
 export const sessionTimerHandlers = new MandarineSessionHandler();

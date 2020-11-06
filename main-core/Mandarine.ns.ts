@@ -712,7 +712,7 @@ export namespace Mandarine {
                 },
                 sessions: {
                     touch: true,
-                    expiration: (1000 * 4),
+                    expiration: (1000 * 60 * 60 * 24),
                     expirationInterval: (1000 * 60 * 60)
                 },
                 security: {

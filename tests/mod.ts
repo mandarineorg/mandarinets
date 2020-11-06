@@ -26,4 +26,22 @@ export class MockCookies {
 
 }
 
+export interface ResolvableMethods<T> {
+    resolve: (value?: T | PromiseLike<T>) => void;
+    // deno-lint-ignore no-explicit-any
+    reject: (reason?: any) => void;
+  }
+  
+export type Resolvable<T> = Promise<T> & ResolvableMethods<T>;
+  
+export function createResolvable<T>(): Resolvable<T> {
+    let methods: ResolvableMethods<T>;
+    const promise = new Promise<T>((resolve, reject): void => {
+      methods = { resolve, reject };
+    });
+    // TypeScript doesn't know that the Promise callback occurs synchronously
+    // therefore use of not null assertion (`!`)
+    return Object.assign(promise, methods!) as Resolvable<T>;
+}
+
 export const INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY = "./tests/integration-tests/files";

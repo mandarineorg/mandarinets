@@ -89,11 +89,7 @@ export class MandarineCore {
      */
     public MVC() {
         return new MandarineMVC(() => {
-            const sessionContainerStore = Mandarine.Global.getSessionContainer().store;
-            if(sessionContainerStore && sessionContainerStore.launch) {
-                sessionContainerStore.launch();
-                sessionTimerHandlers.initializeExpirationHandler();
-            }
+            sessionTimerHandlers.initializeSessionManager();
         }, () => {
             if(this.currentContextMetadata.engineMetadata?.mvc) {
                 const controllersAmount = this.currentContextMetadata.engineMetadata.mvc.controllersAmount;
