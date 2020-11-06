@@ -20,4 +20,4 @@ jobs:
       - name: run tests
         run: deno test -c tsconfig.json --reload --allow-all --unstable tests/unit-tests/
       - name: run session tests
-        run: SESSION_TEST=true deno test -c tsconfig.json --reload --allow-all --unstable tests/unit-tests/sessions_test.ts
+        run: deno test -c tsconfig.json --reload --allow-all --unstable tests/unit-tests/sessions.ts
