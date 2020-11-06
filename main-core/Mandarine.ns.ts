@@ -711,9 +711,9 @@ export namespace Mandarine {
                     }
                 },
                 sessions: {
-                    touch: true,
-                    expiration: (1000 * 60 * 60 * 24),
-                    expirationInterval: (1000 * 60 * 60)
+                    touch: CommonUtils.parseToKnownType(Deno.env.get(MandarineEnvironmentalConstants.MANDARINE_SESSIONS_TOUCH) || "true"),
+                    expiration: CommonUtils.parseToKnownType(Deno.env.get(MandarineEnvironmentalConstants.MANDARINE_SESSIONS_EXPIRATION_TIME) || (1000 * 60 * 60 * 24).toString()),
+                    expirationInterval: CommonUtils.parseToKnownType(Deno.env.get(MandarineEnvironmentalConstants.MANDARINE_SESSIONS_EXPIRATION_INTERVAL) || (1000 * 60 * 60).toString())
                 },
                 security: {
                     cookiesSignKeys: ["HORSE", "MANDARINE", "CAT", "NORWAY", "ORANGE", "TIGER"]
