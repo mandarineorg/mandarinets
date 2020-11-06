@@ -10,8 +10,7 @@ export class SessionTest {
 
     @Test({
         name: "Test creation, and expiration of session",
-        description: "Should create & remove a session based on its expiration time",
-        ignore: Deno.env.get("SESSION_TEST") === undefined
+        description: "Should create & remove a session based on its expiration time"
     })
     public testSessionCreateExp() {
 
@@ -80,8 +79,7 @@ export class SessionTest {
 
     @Test({
         name: "Test session time handlers",
-        description: "Should create & remove a session based on its expiration time by the expiration time handler",
-        ignore: Deno.env.get("SESSION_TEST") === undefined
+        description: "Should create & remove a session based on its expiration time by the expiration time handler"
     })
     public async testSessionCreateEx2p() {
         let interval: any;
