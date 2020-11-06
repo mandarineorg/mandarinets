@@ -1,16 +1,17 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { MandarineSessionHandler } from "../../main-core/mandarine-native/sessions/mandarineDefaultSessionStore.ts";
 import { sessionTimerHandlers } from "../../main-core/mandarine-native/sessions/mandarineSessionHandlers.ts";
 import { Mandarine } from "../../main-core/Mandarine.ns.ts";
 import { CommonUtils } from "../../main-core/utils/commonUtils.ts";
 import { DenoAsserts, mockDecorator, Orange, Test, createResolvable } from "../mod.ts";
+import { MandarineSessionHandler } from "../../main-core/mandarine-native/sessions/mandarineDefaultSessionStore.ts";
 
 export class SessionTest {
 
     @Test({
         name: "Test creation, and expiration of session",
-        description: "Should create & remove a session based on its expiration time"
+        description: "Should create & remove a session based on its expiration time",
+        ignore: Deno.env.get("SESSION_TEST") === undefined
     })
     public testSessionCreateExp() {
 
@@ -79,7 +80,8 @@ export class SessionTest {
 
     @Test({
         name: "Test session time handlers",
-        description: "Should create & remove a session based on its expiration time by the expiration time handler"
+        description: "Should create & remove a session based on its expiration time by the expiration time handler",
+        ignore: Deno.env.get("SESSION_TEST") === undefined
     })
     public async testSessionCreateEx2p() {
         let interval: any;
@@ -115,28 +117,27 @@ export class SessionTest {
             }
             const currentSes = Object.assign({}, session);
             DenoAsserts.assertEquals(newSession.expiresAt, currentSes.expiresAt);
-            let tries = 0;
             const promise = createResolvable();
-             interval = setInterval(() => {
-                const ses = sessionContainerStore?.get("ABCDID", { touch: false });
-                if(ses === undefined) {
-                    sessionTimerHandlers.stopExpirationHandler();
-                    promise.resolve();
-                    clearInterval(interval);
-                }
-                tries = tries + 1;
-
-                if(tries == 7) {
-                    promise.reject("ERROR");
-                    clearInterval(interval);
-                    throw new Error("Session was never cleaned");
-                }
-            }, (1000 * 3));
+            interval = setTimeout(() => {
+                 try {
+                    const ses = sessionContainerStore?.get("ABCDID", { touch: false });
+                    if(ses === undefined) {
+                        promise.resolve();
+                    } else {
+                        promise.reject("Session was not cleaned");
+                    }
+                 } catch(err) {
+                    promise.reject("Session was not cleaned");
+                    console.log(err);
+                 }
+                 sessionTimerHandlers.stopExpirationHandler();
+                 clearTimeout(interval);
+            }, (1000 * 10));
             await promise;
             
         } catch (err) {
             sessionTimerHandlers.stopExpirationHandler();
-            clearInterval(interval);
+            clearTimeout(interval);
             throw err;
         }
         
