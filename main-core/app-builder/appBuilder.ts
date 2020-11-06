@@ -19,7 +19,10 @@ export class AppBuilder {
         MandarineEnvironmentalConstants.MANDARINE_SERVER_RESPONSE_TIME_HEADER,
         MandarineEnvironmentalConstants.MANDARINE_SERVER_SESSION_MIDDLEWARE,
         MandarineEnvironmentalConstants.MANDARINE_STATIC_CONTENT_FOLDER,
-        MandarineEnvironmentalConstants.MANDARINE_AUTH_EXPIRATION_MS
+        MandarineEnvironmentalConstants.MANDARINE_AUTH_EXPIRATION_MS,
+        MandarineEnvironmentalConstants.MANDARINE_SESSIONS_TOUCH,
+        MandarineEnvironmentalConstants.MANDARINE_SESSIONS_EXPIRATION_TIME,
+        MandarineEnvironmentalConstants.MANDARINE_SESSIONS_EXPIRATION_INTERVAL
     ];
 
     public setHost(host: string): AppBuilder {
@@ -39,6 +42,23 @@ export class AppBuilder {
 
     public enableSessions(value: boolean = true): AppBuilder {
         Deno.env.set(MandarineEnvironmentalConstants.MANDARINE_SERVER_SESSION_MIDDLEWARE, value.toString());
+        return this;
+    }
+
+    public configureSessions(data: {
+        touch?: boolean,
+        expiration?: number,
+        expirationInterval?: number
+    }): AppBuilder {
+        if(data.touch) {
+            Deno.env.set(MandarineEnvironmentalConstants.MANDARINE_SESSIONS_TOUCH, data.touch.toString());
+        }
+        if(data.expiration) {
+            Deno.env.set(MandarineEnvironmentalConstants.MANDARINE_SESSIONS_EXPIRATION_TIME, data.expiration.toString());
+        }
+        if(data.expirationInterval) {
+            Deno.env.set(MandarineEnvironmentalConstants.MANDARINE_SESSIONS_EXPIRATION_INTERVAL, data.expirationInterval.toString());
+        }
         return this;
     }
 

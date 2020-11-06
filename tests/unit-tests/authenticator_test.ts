@@ -9,6 +9,7 @@ import { KeyStack } from "../../security-core/keyStack.ts";
 import { Authenticator } from "../../main-core/mandarine-native/security/authenticatorDefault.ts";
 import { handleBuiltinAuth } from "../../mvc-framework/core/middlewares/authMiddleware.ts";
 import { MandarineConstants } from "../../main-core/mandarineConstants.ts";
+import { sessionTimerHandlers } from "../../main-core/mandarine-native/sessions/mandarineSessionHandlers.ts";
 
 export class AuthenticationTest {
 
@@ -58,7 +59,10 @@ export class AuthenticationTest {
         MainCoreDecoratorProxy.overrideNativeComponent(FakeOverrideClass, Mandarine.MandarineCore.NativeComponents.WebMVCConfigurer);
 
         Mandarine.Global.initializeDefaultSessionContainer();
-        Mandarine.Global.getSessionContainer().store?.launch();
+        const sessionContainerStore = Mandarine.Global.getSessionContainer().store;
+        if(sessionContainerStore && sessionContainerStore.launch) {
+            sessionContainerStore.launch();
+        }
 
         let requestContext: { request: { headers: Headers }, response: { headers: Headers }, cookies: Cookies } = {
             request: {
@@ -236,7 +240,7 @@ export class AuthenticationTest {
 
             DenoAsserts.assert((requestContext.request as any).authentication === undefined);
 
-            Mandarine.Global.getSessionContainer().store?.stopIntervals();
+            sessionTimerHandlers.stopExpirationHandler();
             Mandarine.Global.getSessionContainer().store = <any><unknown>null;
         }
 

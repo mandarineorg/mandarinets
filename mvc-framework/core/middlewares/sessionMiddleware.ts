@@ -94,7 +94,9 @@ export class SessionMiddleware {
                 return;
             }
 
-            const currentSession = sessionContainerConfig.store.get(sesId, { touch: true });
+            const touch = Mandarine.Global.getMandarineConfiguration().mandarine?.sessions?.touch;
+            const touchSession = touch === undefined ? true : touch;
+            const currentSession = sessionContainerConfig.store.get(sesId, { touch: touchSession });
 
             if(currentSession == undefined) {
                 context.request.sessionContext = SessionsUtils.sessionBuilder({
