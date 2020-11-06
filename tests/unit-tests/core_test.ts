@@ -21,8 +21,8 @@ export class CoreTest {
         name: "Freeze project properties",
         description: "Mandarine properties should be frozen when invoking core"
     })
-    public async checkCopyright() {
-
+    public async checkFreezingProps() {
+        let deepCloneProps = Object.assign({}, Mandarine.Global.getMandarineGlobal().mandarineProperties);
         try {
         Mandarine;
         new MandarineCore();
@@ -37,6 +37,7 @@ export class CoreTest {
         }, TypeError, "Cannot assign to read only property 'host' of object '#<Object>'");
 
         DenoAsserts.assertEquals(Mandarine.Global.getMandarineGlobal().mandarineProperties.mandarine.server.host, Mandarine.Defaults.MandarineDefaultConfiguration.mandarine.server.host);
+        Mandarine.Global.getMandarineGlobal().mandarineProperties = deepCloneProps;
     }
 
 }

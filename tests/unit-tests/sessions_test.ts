@@ -1,5 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
+import { MandarineSessionHandler } from "../../main-core/mandarine-native/sessions/mandarineDefaultSessionStore.ts";
 import { sessionTimerHandlers } from "../../main-core/mandarine-native/sessions/mandarineSessionHandlers.ts";
 import { Mandarine } from "../../main-core/Mandarine.ns.ts";
 import { CommonUtils } from "../../main-core/utils/commonUtils.ts";
@@ -15,9 +16,9 @@ export class SessionTest {
 
         Mandarine.Global.initializeNativeComponents();
         Mandarine.Global.initializeDefaultSessionContainer();
-        const sessionContainerStore = Mandarine.Global.getSessionContainer().store;
+        let sessionContainerStore = Mandarine.Global.getSessionContainer().store;
         if(!sessionContainerStore) {
-            throw new Error("Session container is not present");
+           sessionContainerStore = new MandarineSessionHandler();
         }
         if(sessionContainerStore.launch) {
             sessionContainerStore.launch();
@@ -25,7 +26,7 @@ export class SessionTest {
 
         Mandarine.Global.getMandarineConfiguration().mandarine.sessions.expiration = 1000 * 5;
 
-        const createSession = () => sessionContainerStore.set("ABCDID", {
+        const createSession = () => sessionContainerStore?.set("ABCDID", {
             sessionID: "ABCDID",
             sessionCookie: undefined,
             sessionData: {
@@ -39,7 +40,7 @@ export class SessionTest {
 
         CommonUtils.sleep(2);
 
-        const getSession = () => sessionContainerStore.get("ABCDID", { touch: true});
+        const getSession = () => sessionContainerStore?.get("ABCDID", { touch: true});
         let currentSession = getSession();
         if(currentSession === undefined) {
             throw new Error("Session was destroyed wait too early");
@@ -85,16 +86,16 @@ export class SessionTest {
         try {
             Mandarine.Global.initializeNativeComponents();
             Mandarine.Global.initializeDefaultSessionContainer();
-            const sessionContainerStore = Mandarine.Global.getSessionContainer().store;
+            let sessionContainerStore = Mandarine.Global.getSessionContainer().store;
             if(!sessionContainerStore) {
-                throw new Error("Session container is not present");
-            }
+                sessionContainerStore = new MandarineSessionHandler();
+             }
 
             Mandarine.Global.getMandarineConfiguration().mandarine.sessions.expirationInterval = (1000 * 12); 
     
             sessionTimerHandlers.initializeSessionManager();
             
-            const createSession = () => sessionContainerStore.set("ABCDID", {
+            const createSession = () => sessionContainerStore?.set("ABCDID", {
                 sessionID: "ABCDID",
                 sessionCookie: undefined,
                 sessionData: {
@@ -117,7 +118,7 @@ export class SessionTest {
             let tries = 0;
             const promise = createResolvable();
              interval = setInterval(() => {
-                const ses = sessionContainerStore.get("ABCDID", { touch: false });
+                const ses = sessionContainerStore?.get("ABCDID", { touch: false });
                 if(ses === undefined) {
                     sessionTimerHandlers.stopExpirationHandler();
                     promise.resolve();
