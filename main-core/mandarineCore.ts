@@ -4,6 +4,7 @@ import { Log } from "../logger/log.ts";
 import { MandarineMVC } from "../mvc-framework/mandarineMVC.ts";
 import { ApplicationContext } from "./application-context/mandarineApplicationContext.ts";
 import { MandarineTSFrameworkEngineMethods } from "./engine/mandarineTSFrameworkEngineMethods.ts";
+import { sessionTimerHandlers } from "./mandarine-native/sessions/mandarineSessionHandlers.ts";
 import { Mandarine } from "./Mandarine.ns.ts";
 import { MandarineConstants } from "./mandarineConstants.ts";
 import { MandarineUtils } from "./utils/mandarineUtils.ts";
@@ -88,7 +89,11 @@ export class MandarineCore {
      */
     public MVC() {
         return new MandarineMVC(() => {
-            Mandarine.Global.getSessionContainer().store?.launch();
+            const sessionContainerStore = Mandarine.Global.getSessionContainer().store;
+            if(sessionContainerStore && sessionContainerStore.launch) {
+                sessionContainerStore.launch();
+                sessionTimerHandlers.initializeExpirationHandler();
+            }
         }, () => {
             if(this.currentContextMetadata.engineMetadata?.mvc) {
                 const controllersAmount = this.currentContextMetadata.engineMetadata.mvc.controllersAmount;

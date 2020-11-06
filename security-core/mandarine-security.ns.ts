@@ -47,15 +47,11 @@ export namespace MandarineSecurity {
          */
 
         export interface SessionStore {
-            options: {
-                expirationInterval: any,
-                autoclearExpiredSessions: boolean
-            }
-
             /**
-             * Initialize intervals and creates an object in `windows` or any other context where the sessions will be stored
+             * Prepares session store.
+             * Called when mounting session container during Mandarine Build Time (MBT). 
              */
-            launch(): void;
+            launch?(): void;
 
             /**
              * Gets a session. If it does not exist returns undefined. If param config.touch = true, updates the expiration of the session
@@ -86,32 +82,26 @@ export namespace MandarineSecurity {
             exists(sessionID: string): boolean;
 
             /**
-             * Clears all those sessions that have expired in the session container
+             * Handles the elimination of all expired sessions. This function is called in an internal interval managed by Mandarine.
              */
             clearExpiredSessions(): void;
-            /**
-             * Starts the interval that control the automatic cleaning of session expiration
-             */
-            startExpiringSessions(): void;
-            /**
-             * Removes the intervals set in the container
-             */
-            stopIntervals(): void;
-
-            /**
-             * Gets the current `setInterval` in the session container for expired sessions
-             */
-            getExpirationInterval(): void;
-            /**
-             * Sets a new handler for expired sessions
-             */
-            setExpirationInterval(intervalHandler: any): void;
 
             /**
              * Expiration time of a session (IN MS)
              * Default: (1000 * 60 * 60 * 24) (1 day)
              */
             getDefaultExpiration(): number;
+
+            /**
+             * Interval in milliseconds to call expired sessions cleaner
+             * Default: (1000 * 60 * 60) (1 hour)
+             */
+            getExpirationInterval(): number;
+
+            /**
+             * Returns a boolean specifying whether expired sessions should be autocleared by an internal handler
+             */
+            getAutoclearExpiredSessions(): boolean;
         }
         
 

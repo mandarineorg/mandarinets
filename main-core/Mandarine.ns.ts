@@ -103,6 +103,11 @@ export namespace Mandarine {
                 expiration?: number,
                 cookie?: CookieConfig
             },
+            sessions: {
+                touch: boolean,
+                expiration: number,
+                expirationInterval: number
+            },
             security?: {
                 cookiesSignKeys: Array<string>
             }
@@ -346,6 +351,10 @@ export namespace Mandarine {
             if(properties.mandarine.authentication == (null || undefined)) properties.mandarine.authentication = defaultConfiguration.mandarine.authentication;
             if(properties.mandarine.authentication.expiration == (null || undefined)) properties.mandarine.authentication.expiration = defaultConfiguration.mandarine.authentication.expiration;
             if(properties.mandarine.authentication.cookie == (null || undefined)) properties.mandarine.authentication.cookie = defaultConfiguration.mandarine.authentication.cookie;
+            if(properties.mandarine.sessions == (null || undefined)) properties.mandarine.sessions = defaultConfiguration.mandarine.sessions;
+            if(properties.mandarine.sessions.touch == (null || undefined)) properties.mandarine.sessions.touch = defaultConfiguration.mandarine.sessions.touch;
+            if(properties.mandarine.sessions.expiration == (null || undefined)) properties.mandarine.sessions.expiration = defaultConfiguration.mandarine.sessions.expiration;
+            if(properties.mandarine.sessions.expirationInterval == (null || undefined)) properties.mandarine.sessions.expirationInterval = defaultConfiguration.mandarine.sessions.expirationInterval;
             if(properties.mandarine.security == (null || undefined)) properties.mandarine.security = defaultConfiguration.mandarine.security;
             if(properties.mandarine.security.cookiesSignKeys == (null || undefined) || properties.mandarine.security.cookiesSignKeys && properties.mandarine.security.cookiesSignKeys.length == 0) properties.mandarine.security.cookiesSignKeys = defaultConfiguration.mandarine.security.cookiesSignKeys;
 
@@ -700,6 +709,11 @@ export namespace Mandarine {
                     cookie: {
                         httpOnly: false
                     }
+                },
+                sessions: {
+                    touch: true,
+                    expiration: (1000 * 4),
+                    expirationInterval: (1000 * 60 * 60)
                 },
                 security: {
                     cookiesSignKeys: ["HORSE", "MANDARINE", "CAT", "NORWAY", "ORANGE", "TIGER"]
