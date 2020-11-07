@@ -264,9 +264,8 @@ export namespace Mandarine {
             if(mandarineGlobal.mandarineProperties == (null || undefined)) {
 
                 try {
-                    const initialProperties: MandarineInitialProperties = getMandarineInitialProps();
-                    let mandarinePropertiesFile = Deno.env.get(MandarineEnvironmentalConstants.MANDARINE_PROPERTY_FILE) || Defaults.mandarinePropertiesFile;
-                    if(initialProperties && initialProperties.propertiesFilePath) mandarinePropertiesFile = initialProperties.propertiesFilePath;
+                    const initialProperties: MandarineInitialProperties | undefined = getMandarineInitialProps();
+                    let mandarinePropertiesFile = Deno.env.get(MandarineEnvironmentalConstants.MANDARINE_PROPERTY_FILE) || initialProperties?.propertiesFilePath || Defaults.mandarinePropertiesFile;
                     const propertiesData = JsonUtils.toJson(mandarinePropertiesFile, { isFile: true, allowEnvironmentalReferences: true });
                     setConfiguration(propertiesData);
                 } catch(error) {
