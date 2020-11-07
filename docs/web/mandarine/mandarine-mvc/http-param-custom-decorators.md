@@ -16,7 +16,7 @@ parameterDecoratorFactory<DecoratorData = any>(executor: Mandarine.MandarineMVC.
 
 ## Example
 ```typescript
-import { parameterDecoratorFactory, Controller, GET } from "https://deno.land/x/mandarinets@v2.2.1/mod.ts";
+import { parameterDecoratorFactory, Controller, GET } from "https://deno.land/x/mandarinets@v2.3.0/mod.ts";
 
 const RandomNumberDecorator = parameterDecoratorFactory((context: Mandarine.Types.RequestContextAcessor, ...parameter: Array<any>) => {
     return Math.round(Math.random() * parameter);

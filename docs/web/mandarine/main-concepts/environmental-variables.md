@@ -27,4 +27,13 @@ With Mandarine's environmental variables you can alter certain behaviors at Deno
     - Specifies the path of the folder where static content will be served if any.
 
 - `MANDARINE_AUTH_EXPIRATION_MS`: number
-    - Amount of time an authentication session should take in order to expire (in milliseconds)
+    - Amount of time an authentication session should take in order to expire (in milliseconds).
+
+- `MANDARINE_SESSIONS_TOUCH`: boolean
+    - Whether sessions should be touched whenever they are requested.
+
+- `MANDARINE_SESSIONS_EXPIRATION_TIME`: number
+    - Amount of time a regular session should take in order to expire.
+
+- `MANDARINE_SESSIONS_EXPIRATION_INTERVAL`: number
+    - Amount of time for each cleaning session interval to take place.

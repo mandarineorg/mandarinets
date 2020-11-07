@@ -13,14 +13,14 @@ Mandarine.TS contains a property structure that allows the developer to modify s
                 host?: string,
                 port: number,
                 responseType?: MandarineMVC.MediaTypes,
-                responseTimeHeader?: boolean,
+                responseTimeHeader?: boolean
                 enableSessions?: boolean
             } & any,
             resources: {
                 staticRegExpPattern?: string,
                 staticFolder?: string,
                 staticIndex?: string,
-                cors?: MandarineMVC.CorsMiddlewareOption
+                cors?: MandarineMVC.CorsMiddlewareOption;
             } & any,
             templateEngine: {
                 engine: Mandarine.MandarineMVC.TemplateEngine.Engines,
@@ -40,10 +40,15 @@ Mandarine.TS contains a property structure that allows the developer to modify s
             authentication?: {
                 expiration?: number,
                 cookie?: CookieConfig
-            } & any,
+            },
+            sessions: {
+                touch: boolean,
+                expiration: number,
+                expirationInterval: number
+            },
             security?: {
                 cookiesSignKeys: Array<string>
-            } & any,
+            }
         } & any
 }
 ```
@@ -68,8 +73,13 @@ Mandarine.TS contains a property structure that allows the developer to modify s
             path: "./src/main/resources/templates",
             engine: "ejs"
         },
+        sessions: {
+            touch: true,
+            expiration: (1000 * 60 * 60 * 24), // One day
+            expirationInterval: (1000 * 60 * 60), // One hour
+        },
         authentication: {
-            expiration: (1 * 3600 * 1000), // ONE HOUR
+            expiration: (1000 * 60 * 60), // ONE HOUR
                 cookie: {
                     httpOnly: false
                 }

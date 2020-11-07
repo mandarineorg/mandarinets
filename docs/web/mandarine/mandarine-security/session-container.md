@@ -57,12 +57,7 @@ export interface SessionCookie {
 For the session container, this is the most important interface. The implementations with this interface will handle the logic behind saving, modifying, and deleting a session.
 ```typescript
 export interface SessionStore {
-        options: {
-            expirationInterval: any,
-            autoclearExpiredSessions: boolean
-        }
-
-        launch(): void;
+        launch?(): void;
         get(sessionID: string, config?: { touch: boolean }): Mandarine.Security.Sessions.MandarineSession | undefined,
         getAll(): Array<Mandarine.Security.Sessions.MandarineSession>,
         set(sessionID: string, session: Mandarine.Security.Sessions.MandarineSession, config?: { override: boolean }): Mandarine.Security.Sessions.MandarineSession;
@@ -70,11 +65,9 @@ export interface SessionStore {
         touch(sessionID: string): Mandarine.Security.Sessions.MandarineSession | undefined;
         exists(sessionID: string): boolean;
         clearExpiredSessions(): void;
-        startExpiringSessions(): void;
-        stopIntervals(): void;
-        getExpirationInterval(): void;
-        setExpirationInterval(intervalHandler: any): void;
         getDefaultExpiration(): number;
+        getExpirationInterval(): number;
+        getAutoclearExpiredSessions(): boolean;
 }
 ```
 - `launch`
@@ -96,17 +89,12 @@ export interface SessionStore {
 - `clearExpiredSessions`
     - Function to be called by the _"expired sessions interval"_.
     - This function holds the logic behind removing expired sessions.
-- `startExpiringSession`
-    - Creates and adds a `setInterval` to `options.expirationIntervalHandler`, this interval should have `clearExpiredSessions` as its callback.
-- `stopIntervals`
-    - This function should hold the logic behind clearing any interval available in the session store implementation
-- `getExpirationInterval`
-    - Get the variable where `setInterval` was assigned.
-- `setExpirationInterval`
-    - Sets a new `setInterval` to internal variable
 - `getDefaultExpiration`
-    - Gets the expiration time of the session (in milliseconds)
-    - Default: `(1000 * 60 * 60 * 24)` (1 day)
+    - Gets the expiration time of a session if any. 
+- `getExpirationInterval`
+    - Gets the amount of time (in milliseonds) a cleaning interval should take in order to clean expired sessions
+- `getAutoclearExpiredSessions`
+    - Gets whether expired sessions should be automatically cleaned using intervals.
 
 &nbsp;
 

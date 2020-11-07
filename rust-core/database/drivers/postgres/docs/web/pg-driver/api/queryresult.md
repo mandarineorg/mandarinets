@@ -51,7 +51,7 @@ Optionally, the class `QueryResult` offers a helper method to map the rows from 
     - Signature: `rowsToObjects<T = any>(): Array<T>`
 
 ```typescript
-import { PgManager, QueryResult } from "https://deno.land/x/mandarine_postgres@v2.2.1/ts-src/mod.ts";
+import { PgManager, QueryResult } from "https://deno.land/x/mandarine_postgres@v2.3.0/ts-src/mod.ts";
 
 const queryResult: QueryResult = ....; 
 /**

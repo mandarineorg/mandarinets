@@ -145,6 +145,10 @@
             {
               "url": "exposed-injectable-logger",
               "title": "Logger"
+            },
+            {
+              "url": "exposed-injectable-authenticator",
+              "title": "Authenticator"
             }
           ]
         }

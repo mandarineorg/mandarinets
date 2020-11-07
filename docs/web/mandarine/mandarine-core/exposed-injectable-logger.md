@@ -6,7 +6,7 @@ With Mandarine exposing its internal logger as an injectable, you may write cont
 ## Usage
 
 ```typescript
-import { Log } from "https://deno.land/x/mandarinets@v2.2.1/mod.ts"; 
+import { Log } from "https://deno.land/x/mandarinets@v2.3.0/mod.ts"; 
 
 @Service()
 export class MyService {
