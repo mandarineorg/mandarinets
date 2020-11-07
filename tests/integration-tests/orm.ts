@@ -42,7 +42,7 @@ const flights = [{
 
 export class ORMTest {
 
-    public MAX_COMPILATION_TIMEOUT_SECONDS = 10;
+    public MAX_COMPILATION_TIMEOUT_SECONDS = 50;
 
     constructor() {
         Orange.setOptions(this, {
