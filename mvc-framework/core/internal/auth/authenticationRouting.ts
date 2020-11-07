@@ -47,6 +47,13 @@ export class AuthenticationRouting {
                 password: body[(httpLogingConfigurer.login.passwordParameter || "password")],
                 requestContext: typedContext
             });
+
+            const shouldRedirect = () => {
+                const loginSuccessUrl = httpLogingConfigurer.login.loginSucessUrl;
+                if(loginSuccessUrl) {
+                    typedContext.response.redirect(loginSuccessUrl);
+                }
+            }
             
             if (authentication.status === "FAILED") {
                 typedContext.response.status = 401;
@@ -54,10 +61,10 @@ export class AuthenticationRouting {
             } else if(authentication.status === "PASSED") {
                 typedContext.response.status = 200;
                 httpLogingConfigurer.login.handler.onSuccess(typedContext.request, typedContext.response, authentication);
-                typedContext.response.redirect((<string> httpLogingConfigurer.login.loginSucessUrl));
+                shouldRedirect();
             } else if(authentication.status === "ALREADY-LOGGED-IN") {
                 typedContext.response.status = 200;
-                typedContext.response.redirect((<string> httpLogingConfigurer.login.loginSucessUrl));
+                shouldRedirect();
             }
 
             await next();
@@ -75,7 +82,15 @@ export class AuthenticationRouting {
             const typedContext: Mandarine.Types.RequestContext = context;
             AuthenticationRouting.authenticator.stopHTTPAuthentication(typedContext);
             typedContext.response.status = 200;
-            typedContext.response.redirect(<string> httpLogingConfigurer.login.logoutSuccessUrl);
+            const logoutSuccessUrl = httpLogingConfigurer.login.logoutSuccessUrl;
+            if(logoutSuccessUrl) {
+                typedContext.response.redirect(logoutSuccessUrl);
+            } else {
+                typedContext.response.body = {
+                    status: "LOGOUT",
+                    message: "ok"
+                }
+            }
             await next();
         }
 

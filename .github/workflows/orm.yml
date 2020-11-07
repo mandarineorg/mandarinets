@@ -1,0 +1,42 @@
+name: Mandarine ORM
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: Mandarine ORM (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        deno: ["v1.5.0"]
+      fail-fast: true    
+
+    services:
+      postgres:
+        image: postgres:11.6-alpine
+        env:
+          POSTGRES_PASSWORD: Changeme1
+        ports:
+          - 5432:5432
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - name: Setup Environment
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+          echo ::set-env name=GH_ACTIONS::1
+          echo ::set-env name=RUST_BACKTRACE::full
+
+      - name: Clone repository
+        uses: actions/checkout@v2
+
+      - name: Setup deno
+        uses: denolib/setup-deno@master
+        with:
+          deno-version: ${{ matrix.deno }}
+      
+      - name: Run Postgres ORM Tests.
+        run: deno test -c tsconfig.json --allow-all --unstable tests/integration-tests/orm.ts

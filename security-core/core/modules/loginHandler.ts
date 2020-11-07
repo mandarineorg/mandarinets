@@ -4,17 +4,20 @@ import type { Mandarine } from "../../../main-core/Mandarine.ns.ts";
 
 export class LoginHandler implements Mandarine.Security.Auth.Handler {
 
+    private buildResponse(result: any, response: any) {
+        response.body = {
+            status: result.status,
+            exception: result.exception,
+            message: result.message
+        };
+    }
+
     public onSuccess(request: any, response: any, result: Mandarine.Security.Auth.AuthenticationResult) {
+        this.buildResponse(result, response);
     }
 
     public onFailure(request: any, response: any, result: Mandarine.Security.Auth.AuthenticationResult) {
-        if(result.status === "FAILED" || result.status === "UNKNOWN") {
-            response.body = {
-                status: result.status,
-                exception: result.exception,
-                message: result.message
-            };
-        }
+        this.buildResponse(result, response);
     }
 
 }

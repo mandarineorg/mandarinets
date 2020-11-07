@@ -16,13 +16,14 @@ export type RepositoryModeler = {
 * This class is generic where T equals your model.
 * This class has a parameter in its constructor, which should be your model's instance.
 *
-*  `@Repository()
+*  ```
+    @Repository()
     abstract class usersRepository extends MandarineRepository<MyModel> {
-
-                constructor() {
-                    super(MyModel);
-                }
-    }`
+            constructor() {
+                super(MyModel);
+            }
+    }
+    ```
  */  
 export abstract class MandarineRepository<T> {
 

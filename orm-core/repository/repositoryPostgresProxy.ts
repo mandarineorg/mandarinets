@@ -123,7 +123,7 @@ export class PostgresRepositoryProxy<T> implements Mandarine.ORM.RepositoryProxy
 
         let dialect = entityManager.getDialectClass();
         let query = (<Mandarine.ORM.Dialect.Dialect>dialect).selectAllCountStatement((<Mandarine.ORM.Dialect.Dialect>dialect).getTableMetadata(this.entity));
-        return (<any>await this.executeQuery(query))[0].count;
+        return parseFloat((<any>await this.executeQuery(query))[0]?.count || 0);
     }
 
     public async deleteAll() {
@@ -156,7 +156,7 @@ export class PostgresRepositoryProxy<T> implements Mandarine.ORM.RepositoryProxy
 
         if(query) {
             if(proxyType == "countBy") {
-                return (await query)[0].count;
+                return parseFloat((await query)[0]?.count || 0);
             } else if(proxyType == "existsBy") {
                 return ((await query)[0].count) >= 1;
             } else {
