@@ -25,7 +25,7 @@ Mandarine is available through [deno.land/x](https://deno.land/x/mandarinets) & 
 
 **deno.land/x**
 ```ts
-import { ... } from "https://deno.land/x/mandarinets@v2.2.1/mod.ts";
+import { ... } from "https://deno.land/x/mandarinets@v2.3.0/mod.ts";
 ```
 
 **nest.land**

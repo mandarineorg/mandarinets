@@ -23,7 +23,7 @@ The `@AllowOnly` decorator protects an endpoint with Mandarine's built-in authen
 
 ## Usage
 ```typescript
-import { Controller, GET, AllowOnly } from "https://deno.land/x/mandarinets@v2.2.1/mod.ts";
+import { Controller, GET, AllowOnly } from "https://deno.land/x/mandarinets@v2.3.0/mod.ts";
 
 // Only Controller
 @Controller()

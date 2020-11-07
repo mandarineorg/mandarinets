@@ -11,7 +11,7 @@ By using `automaticBuildAndRun`, Mandarine will handle running and configuring y
 > Note: Mandarine will create a folder called `.mandarine_target` where the auto-generated entry point will be located.
 
 ```typescript
-import { AppBuilder } from "https://deno.land/x/mandarinets@v2.2.1/appBuilder.ts";
+import { AppBuilder } from "https://deno.land/x/mandarinets@v2.3.0/appBuilder.ts";
 
 new AppBuilder().automaticBuildAndRun({
     tsconfigPath: "./tsconfig.json",
@@ -26,7 +26,7 @@ new AppBuilder().automaticBuildAndRun({
 By using `buildMVC`, you must supply the components that Mandarine will be working with (this includes your controllers, services, middleware, and any other Mandarine-powered component you have created).
 
 ```typescript
-import { AppBuilder } from "https://deno.land/x/mandarinets@v2.2.1/appBuilder.ts";
+import { AppBuilder } from "https://deno.land/x/mandarinets@v2.3.0/appBuilder.ts";
 import { MyController, MyService } from "imports.ts";
 
 new AppBuilder().setHost("127.0.0.1").setPort(1099).buildMVC([MyController, MyService]).run();

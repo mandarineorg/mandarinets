@@ -52,3 +52,5 @@ export type { GuardTarget, GuardTargetMethod } from "./main-core/internals/inter
 export { UseGuards } from "./mvc-framework/core/decorators/stereotypes/controller/useGuards.ts";
 
 export { parameterDecoratorFactory } from "./mvc-framework/core/decorators/custom-decorators/decoratorsFactory.ts";
+
+export { Authenticator } from "./main-core/mandarine-native/security/authenticatorDefault.ts";

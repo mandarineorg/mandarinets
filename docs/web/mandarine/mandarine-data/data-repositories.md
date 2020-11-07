@@ -15,7 +15,7 @@ The abstract class that will represent your repository must be extended [Mandari
 
 Example
 ```typescript
-import { Repository, MandarineRepository } from "https://deno.land/x/mandarinets@v2.2.1/mod.ts";
+import { Repository, MandarineRepository } from "https://deno.land/x/mandarinets@v2.3.0/mod.ts";
 
 @Repository()
 abstract class MyRepository extends MandarineRepository<MyModel> {

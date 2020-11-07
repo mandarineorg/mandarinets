@@ -318,5 +318,9 @@
     {
       "url": "exposed-injectable-logger",
       "document": "mandarine-core/exposed-injectable-logger.md"
+    },
+    {
+      "url": "exposed-injectable-authenticator",
+      "document": "mandarine-core/exposed-injectable-authenticator.md"
     }
 ]
