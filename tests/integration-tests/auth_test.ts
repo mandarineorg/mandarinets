@@ -6,7 +6,7 @@ import { DenoAsserts, INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY, Orange, Test } fr
 
 export class AuthenticationTest {
 
-    public MAX_COMPILATION_TIMEOUT_SECONDS = 10;
+    public MAX_COMPILATION_TIMEOUT_SECONDS = 50;
 
     constructor() {
         Orange.setOptions(this, {
