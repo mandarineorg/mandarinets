@@ -21,6 +21,8 @@ export class MandarineConstants {
     public static readonly REFLECTION_MANDARINE_SECURITY_ALLOWONLY_DECORATOR = "mandarine-security-allow-only";
     public static readonly REFLECTION_MANDARINE_USE_MIDDLEWARE_DECORATOR = "mandarine-use-middleware";
     public static readonly REFLECTION_MANDARINE_USE_GUARDS_DECORATOR = "mandarine-use-guards";
+    public static readonly REFLECTION_MANDARINE_VALUE_DECORATOR = "mandarine-value-decorator";
+    public static readonly REFLECTION_MANDARINE_CONFIGURATION_PROPERTIES = "mandarine-configuration-properties";
 
     // SECURITY
     public static readonly SECURITY_AUTH_COOKIE_NAME = "MDAUTHID";
