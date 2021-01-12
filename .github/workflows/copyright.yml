@@ -18,4 +18,6 @@ jobs:
         with:
           deno-version: ${{ matrix.deno }}
       - name: Verifying copyright header in files
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         run: deno test -c tsconfig.json --reload --allow-all --unstable tests/copyright.ts

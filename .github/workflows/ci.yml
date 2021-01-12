@@ -13,11 +13,16 @@ jobs:
       fail-fast: true
     steps:
       - uses: actions/checkout@v2
+      - env
       - name: Setup deno
         uses: denolib/setup-deno@master
         with:
           deno-version: ${{ matrix.deno }}
       - name: run tests
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         run: deno test -c tsconfig.json --reload --allow-all --unstable tests/unit-tests/
       - name: run session tests
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         run: deno test -c tsconfig.json --reload --allow-all --unstable tests/unit-tests/sessions.ts

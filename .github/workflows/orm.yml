@@ -24,6 +24,8 @@ jobs:
 
     steps:
       - name: Setup Environment
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         run: |
           git config --global core.autocrlf false
           git config --global core.eol lf
@@ -39,4 +41,6 @@ jobs:
           deno-version: ${{ matrix.deno }}
       
       - name: Run Postgres ORM Tests.
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         run: deno test -c tsconfig.json --allow-all --unstable tests/integration-tests/orm.ts
