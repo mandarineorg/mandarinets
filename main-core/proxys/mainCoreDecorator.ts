@@ -5,6 +5,9 @@ import { Mandarine } from "../Mandarine.ns.ts";
 import { CommonUtils } from "../utils/commonUtils.ts";
 import { ReflectUtils } from "../utils/reflectUtils.ts";
 import { MandarineException } from "../exceptions/mandarineException.ts";
+import { Reflect } from "../reflectMetadata.ts";
+import { MandarineConstants } from "../mandarineConstants.ts";
+import { JsonUtils } from "../utils/jsonUtils.ts";
 
 /**
  * Logic behind decorators of Mandarine's core
@@ -16,12 +19,32 @@ export class MainCoreDecoratorProxy {
         return;
     }
 
-    public static valueDecorator(targetClass: any, configKey: string, scope: Mandarine.MandarineCore.ValueScopes, propertyName: string) {
-        try {
-            let propertyObject: any;
-            if(scope == Mandarine.MandarineCore.ValueScopes.CONFIGURATION) propertyObject = Mandarine.Global.getMandarineConfiguration();
-            if(scope == Mandarine.MandarineCore.ValueScopes.ENVIRONMENTAL) propertyObject = Deno.env.toObject();
+    public static configurationPropertiesDecorator(targetClass: any, path: string) {
+        Reflect.defineMetadata(MandarineConstants.REFLECTION_MANDARINE_CONFIGURATION_PROPERTIES, path, targetClass);
+        const target = targetClass.prototype || targetClass;
+        const valueDecoratorMetadataKeys = Reflect.getMetadataKeys(target) || [];
+        valueDecoratorMetadataKeys.forEach((key) => {
+            const metadata: { configKey: string, scope: string, propertyName: string } = Reflect.getMetadata(key, target);
+            this.valueDecorator(target, metadata.configKey, undefined, metadata.propertyName, JsonUtils.toJson(path, { isFile: true, allowEnvironmentalReferences: true, handleException: (ex) => {
+                Mandarine.logger.warn(`Something happened while reading custom configuration file for @Value. ${ex} (${path})`);
+                return {}
+            } }));
+            
+        });
+    }
 
+    public static valueDecorator(targetClass: any, configKey: string, scope: Mandarine.MandarineCore.ValueScopes | undefined, propertyName: string, propertyObject?: any) {
+        Reflect.defineMetadata(`${MandarineConstants.REFLECTION_MANDARINE_VALUE_DECORATOR}-${CommonUtils.generateUUID()}`, {
+            configKey,
+            scope,
+            propertyName
+        }, targetClass);
+
+        try {
+            if(propertyObject === undefined) {
+                if(scope == Mandarine.MandarineCore.ValueScopes.CONFIGURATION) propertyObject = Mandarine.Global.getMandarineConfiguration();
+                if(scope == Mandarine.MandarineCore.ValueScopes.ENVIRONMENTAL) propertyObject = Deno.env.toObject();
+            }
             if(configKey.includes('.')) {
                 let parts = configKey.split('.');
 

@@ -5,12 +5,20 @@ import { CommonUtils } from "./commonUtils.ts";
 
 export class JsonUtils {
 
-    public static toJson(json: string, options: { isFile: boolean, allowEnvironmentalReferences: boolean } = { isFile: false, allowEnvironmentalReferences: true }) {
-        if(options.isFile) json = CommonUtils.readFile(json);
-        if(!json) throw new Error("Json could not be parsed because it was either invalid or the referential file does not exist.");
-        if(options.allowEnvironmentalReferences) json = CommonUtils.processVariableReferencesForEnvironmental(json);
+    public static toJson(json: string, options: { isFile: boolean, allowEnvironmentalReferences: boolean, handleException?: ((ex: any) => any) | undefined } = { isFile: false, allowEnvironmentalReferences: true, handleException: undefined }) {
+        try {
+            if(options.isFile) json = CommonUtils.readFile(json);
+            if(!json) throw new Error("Json could not be parsed because it was either invalid or the referential file does not exist.");
+            if(options.allowEnvironmentalReferences) json = CommonUtils.processVariableReferencesForEnvironmental(json);
 
-        return JSON.parse(json, (key, value) => CommonUtils.parseToKnownType(value));
+            return JSON.parse(json, (key, value) => CommonUtils.parseToKnownType(value));
+        }catch(ex){
+            if(options.handleException) {
+                return options.handleException(ex);
+            } else {
+                throw ex;
+            }
+        }
     }
 
     private static constructWalkJsonResponse(path: string, originalJson: string): Mandarine.Miscellaneous.WalkJson {

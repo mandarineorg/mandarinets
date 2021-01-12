@@ -18,4 +18,6 @@ jobs:
         with:
           deno-version: ${{ matrix.deno }}
       - name: run tests
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         run: cd tests && cd app-builder-tests && deno test -c ../../tsconfig.json --allow-all --unstable decoratorFinder.ts

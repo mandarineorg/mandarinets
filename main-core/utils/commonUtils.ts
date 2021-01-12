@@ -75,8 +75,8 @@ export class CommonUtils {
     }
 
     public static parseToKnownType(value: any) {
-        if(value === "true") return true;
-        if(value === "false") return false;
+        if(value === "true" || value === true) return true;
+        if(value === "false" || value === false) return false;
         if(CommonUtils.isNumeric(value)) return parseFloat(value);
         return value;
     }

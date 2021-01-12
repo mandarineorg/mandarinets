@@ -24,6 +24,8 @@ jobs:
 
     steps:
       - name: Setup Environment
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         run: |
           git config --global core.autocrlf false
           git config --global core.eol lf
@@ -52,6 +54,8 @@ jobs:
           deno-version: ${{ matrix.deno }}
       # Build
       - name: Build
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         run: |
           cd rust-core && cd database && cd drivers && cd postgres && cargo build --release --locked --all-targets && cd ../../../../
           RUST_BACKTRACE=FULL MANDARINE_INTERNAL=true deno test -c tsconfig.json --reload --allow-all --unstable tests/db-tests/pg/
@@ -61,6 +65,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         with:
           files: |
             ./rust-core/database/drivers/postgres/target/release/libmandarine_postgres.so
