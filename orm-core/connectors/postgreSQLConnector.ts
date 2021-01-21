@@ -1,8 +1,8 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import type { PoolClient } from "https://deno.land/x/postgres@v0.4.6/client.ts";
-import { Pool } from "https://deno.land/x/postgres@v0.4.6/mod.ts";
-import type { QueryConfig, QueryResult } from "https://deno.land/x/postgres@v0.4.6/query.ts";
+import type { PoolClient } from "https://raw.githubusercontent.com/mandarineorg/mandarine-postgres/v1.2.0/client.ts";
+import { Pool } from "https://raw.githubusercontent.com/mandarineorg/mandarine-postgres/v1.2.0/mod.ts";
+import type { QueryConfig, QueryResult } from "https://raw.githubusercontent.com/mandarineorg/mandarine-postgres/v1.2.0/query.ts";
 import { Log } from "../../logger/log.ts";
 import type { Mandarine } from "../../main-core/Mandarine.ns.ts";
 import { MandarineORMException } from "../core/exceptions/mandarineORMException.ts";

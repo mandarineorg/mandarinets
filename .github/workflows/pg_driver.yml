@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest, macOS-latest]
-        deno: ["v1.4.6"]
+        deno: ["v1.7.0"]
       fail-fast: true    
 
     steps:
