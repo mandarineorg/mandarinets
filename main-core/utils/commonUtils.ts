@@ -1,6 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { v4 } from "https://deno.land/std@0.71.0/uuid/mod.ts";
+import { v4 } from "https://deno.land/std@0.84.0/uuid/mod.ts";
 import { MandarineException } from "../exceptions/mandarineException.ts";
 import type { Mandarine } from "../Mandarine.ns.ts";
 

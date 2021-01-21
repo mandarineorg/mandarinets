@@ -1,6 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { delay } from "https://deno.land/std@0.71.0/async/delay.ts";
+import { delay } from "https://deno.land/std@0.84.0/async/delay.ts";
 import { CommonUtils } from "../../main-core/utils/commonUtils.ts";
 import { DenoAsserts, INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY, Orange, Test } from "../mod.ts";
 

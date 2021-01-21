@@ -1,6 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { decoder } from "https://deno.land/std@0.71.0/encoding/utf8.ts";
+import { decoder } from "https://deno.land/std@0.84.0/encoding/utf8.ts";
 import type { Cookies as OakCookies, Request } from "../../deps.ts";
 import { Log } from "../../logger/log.ts";
 import { Mandarine } from "../Mandarine.ns.ts";
