@@ -15,7 +15,7 @@ export class AppBuilderIntgTest {
         const process = new AppBuilder().setPort(1999).automaticBuildAndRun({
             tsconfigPath: "../../tsconfig.json",
             flags: ["--allow-all", "--unstable"],
-            mandarineVersion: "v2.2.0"
+            mandarineVersion: "v2.3.1"
         });
 
         CommonUtils.sleep(50);
