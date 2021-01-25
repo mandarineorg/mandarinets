@@ -322,5 +322,9 @@
     {
       "url": "exposed-injectable-authenticator",
       "document": "mandarine-core/exposed-injectable-authenticator.md"
+    },
+    {
+      "url": "configuration-properties-decorator",
+      "document": "main-concepts/custom-properties-decorator.md"
     }
 ]

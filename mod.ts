@@ -27,6 +27,7 @@ export { Override } from "./main-core/decorators/native-components/override.ts";
 export { Cors } from "./mvc-framework/core/decorators/stereotypes/controller/corsMiddlewareDecorator.ts";
 export { Render } from "./mvc-framework/core/decorators/stereotypes/view-engine/viewEngineDecorators.ts";
 export { Pipe } from "./mvc-framework/core/decorators/stereotypes/controller/pipeDecorator.ts";
+export { ConfigurationProperties } from "./main-core/decorators/configuration-readers/configurationProperties.ts";
 export { ViewModel } from "./mvc-framework/core/modules/view-engine/viewModel.ts";
 export { MandarineMVC } from "./mvc-framework/mandarineMVC.ts"
 

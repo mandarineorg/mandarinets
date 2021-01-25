@@ -108,6 +108,10 @@
             {
               "title": "@Value Decorator",
               "url": "value-decorator"
+            },
+            {
+              "title": "Custom Files",
+              "url": "configuration-properties-decorator"
             }
           ]
         },
