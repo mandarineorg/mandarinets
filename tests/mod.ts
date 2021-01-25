@@ -1,7 +1,7 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
 export * as DenoAsserts from "https://deno.land/std@0.84.0/testing/asserts.ts";
-export { Orange, Test } from "https://deno.land/x/orange@v0.4.0/mod.ts";
+export { Orange, Test } from "https://deno.land/x/orange@v0.5.0/mod.ts";
 
 // Mocking a decorator will give us "design:paramtypes", otherwise it will fail
 export function mockDecorator() {
