@@ -45,7 +45,7 @@ Routes are declared by using specific decorators (_each route has a different de
 
 ```typescript
 
-import { GET, POST, PUT, HEAD, DELETE, OPTIONS, PATCH, Controller, MandarineCore } from "https://deno.land/x/mandarinets@v2.3.0/mod.ts";
+import { GET, POST, PUT, HEAD, DELETE, OPTIONS, PATCH, Controller, MandarineCore } from "https://deno.land/x/mandarinets@v2.3.2/mod.ts";
 
 @Controller()
 export class MyController {

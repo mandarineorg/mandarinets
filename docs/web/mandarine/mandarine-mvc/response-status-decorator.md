@@ -14,7 +14,7 @@ Targets: Controller | HTTP Handler
 ## Usage
 
 ```typescript
-import { Mandarine, Controller, ResponseStatus, GET } from "https://deno.land/x/mandarinets@v2.3.0/mod.ts";
+import { Mandarine, Controller, ResponseStatus, GET } from "https://deno.land/x/mandarinets@v2.3.2/mod.ts";
 
 @Controller()
 @ResponseStatus(Mandarine.MandarineMVC.HttpStatusCode.OK)

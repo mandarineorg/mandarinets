@@ -18,7 +18,7 @@ Using Mandarine's built-in authenticator gives you control over calling it in th
 ## Usage
 
 ```typescript
-import { Authenticator } from "https://deno.land/x/mandarinets@v2.3.0/mod.ts"; 
+import { Authenticator } from "https://deno.land/x/mandarinets@v2.3.2/mod.ts"; 
 
 @Service()
 export class MyService {

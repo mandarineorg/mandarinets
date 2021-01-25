@@ -7,7 +7,7 @@ The core initialization is responsible for unifying all mandarine modules (Core,
 ## Invoking Mandarine's core
 In order to invoke the initialization of Mandarine's core, follow the example:
 ```typescript
-import { MandarineCore } from "https://deno.land/x/mandarinets@v2.3.0/mod.ts";
+import { MandarineCore } from "https://deno.land/x/mandarinets@v2.3.2/mod.ts";
 
 /**
  * Code
@@ -20,7 +20,7 @@ import { MandarineCore } from "https://deno.land/x/mandarinets@v2.3.0/mod.ts";
 ## MVC Bridge
 The MVC bridge is the process of using Mandarine's MVC Core. This process is done through Mandarine's core.
 ```typescript
-import { MandarineCore } from "https://deno.land/x/mandarinets@v2.3.0/mod.ts";
+import { MandarineCore } from "https://deno.land/x/mandarinets@v2.3.2/mod.ts";
 
 /**
  * Code

@@ -35,7 +35,7 @@ CORS middleware is added through the use of decorators.
 **Controller level**
 ```typescript
 
-import { Controller, GET, Cors } from "https://deno.land/x/mandarinets@v2.3.0/mod.ts";
+import { Controller, GET, Cors } from "https://deno.land/x/mandarinets@v2.3.2/mod.ts";
 
 @Controller('/api')
 @Cors({ origin: "https://myorigin.com" })

@@ -11,7 +11,7 @@ It is possible to create your own resource handlers & resource resolvers. For th
 In order to override this behavior, create a class which will receive the decorator [`@Override`](/docs/mandarine/native-components). This class must implement Mandarine.MandarineMVC.Configurers.WebMVCConfigurer & **extend Mandarine.Native.WebMvcConfigurer** (available in mod.ts).
 
 ```typescript
-import { Mandarine, Override } from "https://deno.land/x/mandarinets@v2.3.0/mod.ts";
+import { Mandarine, Override } from "https://deno.land/x/mandarinets@v2.3.2/mod.ts";
 
 @Override()
 export class WebMvcConfigurer extends Mandarine.Native.WebMvcConfigurer {
@@ -36,7 +36,7 @@ Our method addResourceHandlers will return an instance of the Resource Handler R
 
 ```typescript
 
-import { Mandarine, Override, ResourceHandler, MandarineResourceResolver } from "https://deno.land/x/mandarinets@v2.3.0/mod.ts";
+import { Mandarine, Override, ResourceHandler, MandarineResourceResolver } from "https://deno.land/x/mandarinets@v2.3.2/mod.ts";
 
 @Override()
 export class WebMvcConfigurer extends Mandarine.Native.WebMvcConfigurer {

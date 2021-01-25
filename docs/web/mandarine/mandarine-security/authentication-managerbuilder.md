@@ -22,7 +22,7 @@ export interface AuthenticationManagerBuilder {
 ## Basic Usage
 
 ```typescript
-import { Override, Mandarine } from "https://deno.land/x/mandarinets@v2.3.0/mod.ts";
+import { Override, Mandarine } from "https://deno.land/x/mandarinets@v2.3.2/mod.ts";
 
 @Override()
 export class WebMvcConfigurer extends Mandarine.Native.WebMvcConfigurer {
