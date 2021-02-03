@@ -25,6 +25,7 @@ import { HTTPLoginBuilder } from "../security-core/core/modules/loginBuilder.ts"
 // @ts-ignore
 import { MandarineCommonInterfaces } from "./Mandarine.commonInterfaces.ns.ts";
 import type { ComponentComponent } from "./components/component-component/componentComponent.ts";
+import { Leaf } from "../deps.ts";
 
 /**
 * This namespace contains all the essentials for mandarine to work
@@ -735,6 +736,20 @@ export namespace Mandarine {
             optionsSuccessStatus: 204
         }
     };
+
+    /**
+     * Mandarine File System
+     */
+
+    export const readFile = Leaf.readFile;
+    export const readFileSync = Leaf.readFileSync;
+    export const readTextFile = Leaf.readTextFile;
+    export const readTextFileSync = Leaf.readTextFileSync;
+
+     /**
+      * End File System
+      */
+
 }
 
 /**

@@ -2,6 +2,7 @@
 
 import type { Mandarine } from "../../Mandarine.ns.ts";
 import { CommonUtils } from "../../utils/commonUtils.ts";
+import { Leaf } from "../../../deps.ts";
 
 /**
  * This class represents the default resolver for resources.
@@ -44,7 +45,7 @@ export class MandarineResourceResolver implements Mandarine.MandarineMVC.HTTPRes
                 httpContext.response.type = `.${resourceExt}`;
             }
         
-            return Deno.readFileSync(resourcePath);
+            return Leaf.readFileSync(resourcePath);
         }
 
     }
