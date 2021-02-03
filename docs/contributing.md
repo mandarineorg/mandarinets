@@ -20,12 +20,12 @@ We want to be as self-dependent as we can, this means, the less external modules
   - When starting to work on an issue, you **must always** branch off of `master`
 ## Steps
 Before submitting, please make sure the following is done:
-1) You have branched off of `develop` for your current issue & PR
+1) You have branched off of `master` for your current issue & PR
 2) That there is a related issue and it is referenced in the PR text
 3) There are tests that cover the changes
 4) Github CI is passing
 5) Your code is documented with **JSDoc**
 
 # External modules
-If your code requires a third-party module **or** a module from `deno/std`, you will need to add this module to the following repository: [`mandarinets-modules`](https://github.com/mandarineorg/mandarinets-modules).  
+If your code requires a third-party module, you will need to add this module to the following repository: [`mandarinets-modules`](https://github.com/mandarineorg/mandarinets-modules).  
 It is likely you will need help from @andreespirela.
