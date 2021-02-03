@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest, macOS-latest]
-        deno: ["v1.7.0"]
+        deno: ["v1.7.1"]
       fail-fast: true
     steps:
       - uses: actions/checkout@v2
@@ -20,4 +20,4 @@ jobs:
       - name: run tests
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-        run: deno test -c tsconfig.json --reload --allow-all --unstable tests/integration-tests/
+        run: deno test -c tsconfig.json --reload --allow-all --unstable --fail-fast tests/integration-tests/
