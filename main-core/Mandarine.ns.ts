@@ -565,7 +565,7 @@ export namespace Mandarine {
             getComponents(): ComponentRegistryContext[];
             getControllers(): ComponentRegistryContext[];
             getComponentsByComponentType(componentType: Mandarine.MandarineCore.ComponentTypes): Mandarine.MandarineCore.ComponentRegistryContext[];
-            getComponentByHandlerType(classType: any): ComponentRegistryContext | undefined;
+            getComponentByHandlerType(classType: any, requiredType?: Mandarine.MandarineCore.ComponentTypes): ComponentRegistryContext | undefined;
             resolveDependencies(): void;
             getRepositoryByHandlerType(classType: any): Mandarine.MandarineCore.ComponentRegistryContext | undefined;
             connectRepositoriesToProxy(): void;
