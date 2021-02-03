@@ -21,7 +21,7 @@ export class PipeTest {
     })
     public async testManualInjectionEndpoint() {
         let cmd = Deno.run({
-            cmd: ["deno", "run", "-c", "tsconfig.json", "--allow-all", `${INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY}/pipes.ts`],
+            cmd: ["deno", "run", "-c", "tsconfig.json", "--allow-all", "--unstable", `${INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY}/pipes.ts`],
             stdout: "null",
             stderr: "null",
             stdin: "null"

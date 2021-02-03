@@ -21,7 +21,7 @@ export class MiddlewareTest {
     })
     public async testMiddlewareEndpoints() {
         let cmd = Deno.run({
-            cmd: ["deno", "run", "-c", "tsconfig.json", "--allow-all", `${INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY}/middleware.ts`],
+            cmd: ["deno", "run", "-c", "tsconfig.json", "--allow-all", "--unstable", `${INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY}/middleware.ts`],
             stdout: "null",
             stderr: "null",
             stdin: "null"

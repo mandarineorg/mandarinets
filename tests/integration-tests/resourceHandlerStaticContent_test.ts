@@ -21,7 +21,7 @@ export class ResourceHandlerStaticContentTest {
     })
     public async testTemplatesEndpoints() {
         let cmd = Deno.run({
-            cmd: ["deno", "run", "-c", "tsconfig.json", "--allow-all", `${INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY}/resourceHandlerStaticContent.ts`],
+            cmd: ["deno", "run", "-c", "tsconfig.json", "--allow-all", "--unstable", `${INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY}/resourceHandlerStaticContent.ts`],
             stdout: "null",
             stderr: "null",
             stdin: "null"

@@ -21,7 +21,7 @@ export class NestedInjectionTest {
     })
     public async testPiInService() {
         let cmd = Deno.run({
-            cmd: ["deno", "run", "-c", "tsconfig.json", "--allow-all", `${INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY}/nestedInjections.ts`],
+            cmd: ["deno", "run", "-c", "tsconfig.json", "--allow-all", "--unstable", `${INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY}/nestedInjections.ts`],
             stdout: "null",
             stderr: "null",
             stdin: "null"
