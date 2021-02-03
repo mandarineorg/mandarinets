@@ -9,6 +9,7 @@ import { Mandarine } from "../Mandarine.ns.ts";
 import { MandarineConstants } from "../mandarineConstants.ts";
 import { Reflect } from "../reflectMetadata.ts";
 import { ReflectUtils } from "../utils/reflectUtils.ts";
+import { Leaf } from "../../deps.ts";
 
 export class TemplatesManager implements Mandarine.MandarineCore.ITemplatesManager {
 
@@ -31,7 +32,7 @@ export class TemplatesManager implements Mandarine.MandarineCore.ITemplatesManag
                     };
 
                     const decoder = new TextDecoder();
-                    const templateContent = Deno.readFileSync(fullPath);
+                    const templateContent = Leaf.readFileSync(fullPath);
                     context.content = decoder.decode(templateContent);
 
                     this.templates.set(fullPath, context);

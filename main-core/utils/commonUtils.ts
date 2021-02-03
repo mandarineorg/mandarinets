@@ -3,7 +3,7 @@
 import { v4 } from "https://deno.land/std@0.84.0/uuid/mod.ts";
 import { MandarineException } from "../exceptions/mandarineException.ts";
 import type { Mandarine } from "../Mandarine.ns.ts";
-
+import { Leaf } from "../../deps.ts";
 export class CommonUtils {
     public static generateUUID(): string {
         return v4.generate();
@@ -25,7 +25,7 @@ export class CommonUtils {
             decoder = new TextDecoder();
         }
 
-        const data = Deno.readFileSync(filePath);
+        const data = Leaf.readFileSync(filePath);
         return decoder.decode(data);
     }
 

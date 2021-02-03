@@ -21,7 +21,7 @@ export class TemplatesTest {
     })
     public async testTemplatesEndpoints() {
         let cmd = Deno.run({
-            cmd: ["deno", "run", "-c", "tsconfig.json", "--allow-all", `${INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY}/templates.ts`],
+            cmd: ["deno", "run", "-c", "tsconfig.json", "--allow-all", "--unstable", `${INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY}/templates.ts`],
             stdout: "null",
             stderr: "null",
             stdin: "null"

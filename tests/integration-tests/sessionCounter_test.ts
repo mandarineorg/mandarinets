@@ -21,7 +21,7 @@ export class SessionCounterTest {
     })
     public async testSessionCounter() {
         let cmd = Deno.run({
-            cmd: ["deno", "run", "-c", "tsconfig.json", "--allow-all", `${INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY}/sessionCounter.ts`],
+            cmd: ["deno", "run", "-c", "tsconfig.json", "--allow-all", "--unstable", `${INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY}/sessionCounter.ts`],
             stdout: "null",
             stderr: "null",
             stdin: "null"

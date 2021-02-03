@@ -21,7 +21,7 @@ export class GuardsTest {
     })
     public async testGuardsEndpoints() {
         let cmd = Deno.run({
-            cmd: ["deno", "run", "-c", "tsconfig.json", "--allow-all", `${INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY}/guards.ts`],
+            cmd: ["deno", "run", "-c", "tsconfig.json", "--allow-all", "--unstable", `${INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY}/guards.ts`],
             stdout: "null",
             stderr: "null",
             stdin: "null"
