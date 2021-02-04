@@ -25,7 +25,7 @@ export class OpenAPITest {
 
         const fileContent = Deno.readTextFileSync('./openapi.yml');
         const fileContentExpected = Deno.readTextFileSync('./tests/integration-tests/resources/openapi.yml');
-        DenoAsserts.assertEquals(fileContent, fileContentExpected);
+        DenoAsserts.assertStringIncludes(fileContent, fileContentExpected);
         cmd.close();
     }
 
