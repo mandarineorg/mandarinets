@@ -1,6 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { Application, Middleware } from "../deps.ts";
+import { Application, Middleware, ListenOptionsTls, ListenOptionsBase } from "../deps.ts";
 import { Log } from "../logger/log.ts";
 import { Mandarine } from "../main-core/Mandarine.ns.ts";
 import { ResourceHandlerMiddleware } from "./core/middlewares/resourceHandlerMiddleware.ts";
@@ -42,23 +42,34 @@ export class MandarineMVC {
     }
   }
 
-  public run(options?: { hostname?: string; port?: number }) {
+  public run(options?: { hostname?: string; port?: number, https?: { certFile: string, keyFile: string } }) {
     let app: Application = this.initializeMVCApplication();
 
     let mandarineConfiguration: Mandarine.Properties = Mandarine.Global.getMandarineConfiguration();
 
     try {
       setTimeout(async () => {
-        app.listen({
-          hostname:
-            options && options.hostname
-              ? options.hostname
-              : mandarineConfiguration.mandarine.server.host,
-          port:
-            options && options.port
-              ? options.port
-              : mandarineConfiguration.mandarine.server.port,
-        });
+
+        const httpsInformation = mandarineConfiguration.mandarine.server.https || options?.https;
+        let listenerOptions: ListenOptionsBase | ListenOptionsTls;
+
+        const defaultConfiguration: any = {
+          hostname: options && options.hostname ? options.hostname : mandarineConfiguration.mandarine.server.host,
+          port: options && options.port ? options.port : mandarineConfiguration.mandarine.server.port,
+        };
+
+        if(!httpsInformation) {
+          listenerOptions = {...defaultConfiguration};
+        } else {
+          listenerOptions = {
+            ...defaultConfiguration, 
+            secure: true, 
+            certFile: httpsInformation.certFile,
+            keyFile: httpsInformation.keyFile
+          };
+        }
+
+        app.listen(listenerOptions);
       }, 1000);
     } catch (error) {
       this.logger.compiler(`Server has been shut down`, "error", error);

@@ -77,7 +77,11 @@ export namespace Mandarine {
                 port: number,
                 responseType?: MandarineMVC.MediaTypes,
                 responseTimeHeader?: boolean
-                enableSessions?: boolean
+                enableSessions?: boolean,
+                https?: {
+                    certFile: string,
+                    keyFile: string
+                }
             } & any,
             resources: {
                 staticRegExpPattern?: string,
