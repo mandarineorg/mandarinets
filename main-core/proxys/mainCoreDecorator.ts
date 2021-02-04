@@ -19,6 +19,15 @@ export class MainCoreDecoratorProxy {
         return;
     }
 
+    public static registerEventListener(targetClass: any, eventName: string, methodName: string) {
+        const metadata: Mandarine.MandarineCore.Decorators.EventListener = {
+            methodName: methodName,
+            eventName: eventName
+        };
+
+        Reflect.defineMetadata(`${MandarineConstants.REFLECTION_MANDARINE_EVENTLISTENER_DECORATOR}:${methodName}`, metadata, targetClass);
+    }
+
     public static configurationPropertiesDecorator(targetClass: any, path: string) {
         Reflect.defineMetadata(MandarineConstants.REFLECTION_MANDARINE_CONFIGURATION_PROPERTIES, path, targetClass);
         const target = targetClass.prototype || targetClass;

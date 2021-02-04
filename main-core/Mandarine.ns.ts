@@ -537,6 +537,7 @@ export namespace Mandarine {
             componentName?: string;
             componentInstance: any;
             componentType: ComponentTypes;
+            isServiceType?: boolean;
         };
 
         /**
@@ -574,6 +575,7 @@ export namespace Mandarine {
             getRepositoryByHandlerType(classType: any): Mandarine.MandarineCore.ComponentRegistryContext | undefined;
             connectRepositoriesToProxy(): void;
             initializeControllers(): void;
+            initializeEventListeners(): void;
         };
 
         /**
@@ -646,6 +648,16 @@ export namespace Mandarine {
          * Class responsible for storing resource handlers
          */
         export class MandarineResourceHandlerRegistry extends ResourceHandlerRegistry {}
+
+        /**
+         * Core Decorators
+         */
+        export namespace Decorators {
+            export interface EventListener {
+                eventName: string,
+                methodName: string
+            }
+        }
 
     };
 
