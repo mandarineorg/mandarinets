@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { IndependentUtils } from "../../../main-core/utils/independentUtils.ts";
 import { addOpenAPILoaderInfo, openAPIApplicationBuilder } from "../openapi-global.ts";
 import { OpenAPITagObject } from "../openapi-spec.ts";
