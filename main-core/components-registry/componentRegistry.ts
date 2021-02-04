@@ -49,6 +49,7 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
 
             let componentInstanceInitialized: any;
             let componentHandler: any = componentInstance;
+            let isServiceType: boolean = false;
 
             switch(componentType) {
                 case Mandarine.MandarineCore.ComponentTypes.CONTROLLER:
@@ -81,10 +82,23 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
                 break;
             }
 
+            switch(componentType) {
+                case Mandarine.MandarineCore.ComponentTypes.CONTROLLER:
+                case Mandarine.MandarineCore.ComponentTypes.SERVICE:
+                case Mandarine.MandarineCore.ComponentTypes.CONFIGURATION:
+                case Mandarine.MandarineCore.ComponentTypes.COMPONENT:
+                case Mandarine.MandarineCore.ComponentTypes.MIDDLEWARE:
+                case Mandarine.MandarineCore.ComponentTypes.CATCH:  
+                case Mandarine.MandarineCore.ComponentTypes.GUARDS:
+                    isServiceType = true;
+                break;  
+            }
+
             this.components.set(componentName, {
                 componentName: componentName,
                 componentInstance: componentInstanceInitialized,
-                componentType: componentType
+                componentType: componentType,
+                isServiceType: isServiceType
             });
         }
     }
@@ -276,6 +290,26 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
     public initializeControllers(): void {
         this.getControllers().forEach((controller) => {
             (<ControllerComponent>controller.componentInstance).initializeControllerFunctionality();
+        })
+    }
+
+    public initializeEventListeners(): void {
+        const serviceTypeComponents = this.getComponents().filter((item) => item.isServiceType === true);
+        serviceTypeComponents.forEach((component) => {
+            const instance = component.componentInstance.getClassHandler();
+            const metadataKeys: Array<string> = Reflect.getMetadataKeys(instance);
+
+            metadataKeys.filter(item => item.startsWith(MandarineConstants.REFLECTION_MANDARINE_EVENTLISTENER_DECORATOR)).forEach((item) => {
+                const metadata: Mandarine.MandarineCore.Decorators.EventListener = Reflect.getMetadata(item, instance);
+                if(metadata) {
+                    const isAsyncFunc = instance[metadata.methodName] instanceof Mandarine.AsyncFunction;
+                    if(isAsyncFunc) {
+                        addEventListener(metadata.eventName, async () => await instance[metadata.methodName]())
+                    } else {
+                        addEventListener(metadata.eventName, () => instance[metadata.methodName]())
+                    }
+                }
+            });
         })
     }
 }

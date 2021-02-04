@@ -25,6 +25,7 @@ export class MandarineCore {
         // If the repository proxy is resolved after the dependencies, then the dependencies will have an empty repository
         this.resolveRepositoriesProxy();
         this.resolveComponentsDependencies();
+        this.initializeEventListeners();
 
         MandarineTSFrameworkEngineMethods.initializeEngineMethods();
 
@@ -54,6 +55,10 @@ export class MandarineCore {
 
     private initializeTemplates() {
         ApplicationContext.getInstance().getTemplateManager().initializeTemplates();
+    }
+
+    private initializeEventListeners(): void {
+        ApplicationContext.getInstance().getComponentsRegistry().initializeEventListeners();
     }
 
     private initializeEntityManager() {
