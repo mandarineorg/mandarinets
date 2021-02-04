@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { EventListener } from "../../../main-core/decorators/stereotypes/events/dom/eventListener.ts";
 import { Service } from "../../../main-core/decorators/stereotypes/service/service.ts";
 import { MandarineCore } from "../../../main-core/mandarineCore.ts";
