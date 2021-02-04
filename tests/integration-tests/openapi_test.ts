@@ -12,7 +12,8 @@ export class OpenAPITest {
 
     @Test({
         name: "[IT04] Test OpenAPI from `files/openAPI.ts`",
-        description: "Verifies Mandarine generates the right file structure for OpenAPI metadata"
+        description: "Verifies Mandarine generates the right file structure for OpenAPI metadata",
+        ignore: Deno.build.os == "windows"
     })
     public async testOpenAPIFileGenerated() {
         let cmd = Deno.run({
