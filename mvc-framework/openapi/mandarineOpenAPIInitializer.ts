@@ -1,13 +1,38 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { ApplicationContext } from "../../main-core/application-context/mandarineApplicationContext.ts"
 import { DI } from "../../main-core/dependency-injection/di.ns.ts";
 import { DependencyInjectionUtil } from "../../main-core/dependency-injection/di.util.ts";
+import { MandarineException } from "../../main-core/exceptions/mandarineException.ts";
 import { Mandarine } from "../../main-core/Mandarine.ns.ts";
-import { Reflect } from "../../main-core/reflectMetadata.ts";
 import { HttpUtils } from "../../main-core/utils/httpUtils.ts";
 import { ReflectUtils } from "../../main-core/utils/reflectUtils.ts";
 import { ControllerComponent } from "../core/internal/components/routing/controllerContext.ts";
 import { openAPIApplicationBuilder, OpenAPILoaderData, openAPILoaderInformation } from "./openapi-global.ts";
 import { OpenAPIExternalDocs, OpenAPIOperationObject, OpenAPIParameter, OpenAPIResponse, OpenAPIServer, OpenAPITagObject } from "./openapi-spec.ts";
+
+const saveOpenAPI = () => {
+    const path = openAPIApplicationBuilder.getInternalSaveFile();
+    if(path) {
+        const splitPath = path.toString().split(".");
+        const extension = splitPath[splitPath.length - 1].toUpperCase();
+
+        let content: string = "";
+        switch(extension) {
+        case "JSON":
+            content = openAPIApplicationBuilder.toJSON();
+            break;
+        case "YAML":
+        case "YML":
+            content = openAPIApplicationBuilder.toYAML();
+            break;
+            default:
+            throw new MandarineException("OpenAPI document must be .json OR .yaml");
+        }
+
+        Deno.writeFileSync(path, new TextEncoder().encode(content));
+    }
+}
 
 export const mandarineOpenAPIInitializer = () => {
     ApplicationContext.getInstance().getComponentsRegistry().getControllers().forEach((componentFromRegistry) => {
@@ -16,6 +41,8 @@ export const mandarineOpenAPIInitializer = () => {
             const component = controller.getClassHandlerType().prototype;
             const openApiComponent = openAPILoaderInformation.get(component);
             const operations: Array<OpenAPILoaderData> = openApiComponent?.filter((loaderData) => loaderData.type == "ApiOperation") || [];
+            const componentresponses: Array<OpenAPILoaderData> = openApiComponent?.filter((loaderData) => loaderData.type == "ApiResponse" && loaderData.methodName == undefined) || [];
+
 
             operations.forEach((loaderData: OpenAPILoaderData) => {
                 const data: OpenAPIOperationObject = loaderData.data;
@@ -57,6 +84,7 @@ export const mandarineOpenAPIInitializer = () => {
                         let parameterMetadata: DI.InjectionMetadataContext | undefined = metadataValuesTyped.find((item) => item.parameterIndex == parameterIndex);
 
                         if(parameterMetadata) {
+                            //TODO(@Andreespirela): Injection type for header too.
                             switch(parameterMetadata.injectionType) {
                                 case DI.InjectionTypes.QUERY_PARAM:
                                     parameterData.in = "query";
@@ -68,9 +96,10 @@ export const mandarineOpenAPIInitializer = () => {
                                     parameterData.in = "path";
                                 break;
                             }
+
                             const parameterMetadataOriginalType = parameterMetadata.parameterOriginalMetadataType?.toLowerCase();
                             if(parameterMetadata.parameterOriginalMetadataType) {
-                                parameterData.schema = {
+                                parameterData.schema = parameterData.schema || {
                                     type: parameterMetadataOriginalType
                                 }
                             }
@@ -79,7 +108,6 @@ export const mandarineOpenAPIInitializer = () => {
                         if(!parameterData.required) {
                             parameterData.required = false;
                         }
-
 
                         // @ts-ignore
                         parameterData["name"] = parameterName;
@@ -125,7 +153,16 @@ export const mandarineOpenAPIInitializer = () => {
                 }
 
 
+            });
+
+            componentresponses.forEach((loaderData: OpenAPILoaderData) => {
+                const data: OpenAPIResponse = loaderData.data;
+                if(data.responseCode) {
+                    openAPIApplicationBuilder.setResponse(data.responseCode.toString(), data);
+                }
             })
         }
-    })
+    });
+
+    saveOpenAPI();
 }

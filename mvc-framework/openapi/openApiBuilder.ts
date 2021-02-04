@@ -1,9 +1,12 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import { OpenAPIContact, OpenAPIExampleObject, OpenAPIExternalDocumentationObject, OpenAPIHeaderObject, OpenAPIInfo, OpenAPILicense, OpenAPILinkObject, OpenAPIParameter, OpenAPIPath, OpenAPIRequestBody, OpenAPIResponse, OpenAPISchemaObject, OpenAPISecuritySchemeObject, OpenAPIServer, OpenAPISpec, OpenAPITagObject, OPEN_API_VERSION, REF_OBJECT } from "./openapi-spec.ts";
 import { IndependentUtils } from "../../main-core/utils/independentUtils.ts";
 import  * as YAML from "https://deno.land/std@0.85.0/encoding/yaml.ts";
 
 export class OpenAPIBuilder {
     private document: OpenAPISpec;
+    private saveFilePath: string | URL | undefined  = undefined;
 
     constructor(docoument?: OpenAPISpec) {
         this.document = docoument || {
@@ -236,4 +239,21 @@ export class OpenAPIBuilder {
         this.document.externalDocs = extDoc;
         return this;
     }
+
+    /**
+     * Set file to be saved when document is complete.
+     * This method is only used internally by Mandarine
+     */
+    public setInternalSaveFile(path: string | URL) {
+        this.saveFilePath = path;
+    }
+
+    /**
+     * Gets the file to be saved when document is complete.
+     * This method is only used internally by Mandarine
+     */
+    public getInternalSaveFile(): string | URL | undefined {
+        return this.saveFilePath;
+    }
+
 }

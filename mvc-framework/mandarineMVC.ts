@@ -11,6 +11,7 @@ import { ExceptionHandler } from "./core/middlewares/exceptionHandler.ts";
 import { OpenAPIBuilder } from "./openapi/openApiBuilder.ts";
 import { openAPIApplicationBuilder } from "./openapi/openapi-global.ts";
 import { mandarineOpenAPIInitializer } from "./openapi/mandarineOpenAPIInitializer.ts";
+import { MandarineException } from "../main-core/exceptions/mandarineException.ts";
 
 /**
  * This class is the bridge between the HTTP server & the Mandarine Compiler.
@@ -70,6 +71,11 @@ export class MandarineMVC {
 
   public openAPI(documentBuilder: (document: OpenAPIBuilder) => OpenAPIBuilder): MandarineMVC {
     documentBuilder(openAPIApplicationBuilder);
+    return this;
+  }
+
+  public saveOpenAPI(path: string | URL): MandarineMVC {
+    openAPIApplicationBuilder.setInternalSaveFile(path);
     return this;
   }
 

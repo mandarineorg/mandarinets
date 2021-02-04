@@ -1,3 +1,4 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
 export const OPEN_API_VERSION = "3.0.3";
 export type REF_OBJECT = { $ref: string };
@@ -187,7 +188,7 @@ export interface OpenAPIContent {
   }
 export interface OpenAPIResponse {
     description: string;
-    responseCode?: number;
+    responseCode?: string | number;
     headers?: {
         [prop: string]: OpenAPIHeaderObject | REF_OBJECT
     },
