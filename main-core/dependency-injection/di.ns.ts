@@ -42,6 +42,7 @@ export namespace DI {
         parameterMethodName: string;
         parameterObjectToInject?: any;
         parameterConfiguration?: any;
+        parameterOriginalMetadataType?: any;
         propertyName: string;
         className: string;
     }

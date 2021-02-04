@@ -8,6 +8,10 @@ import { MandarineMvcFrameworkStarter } from "./engine/mandarineMvcFrameworkStar
 import { handleBuiltinAuth } from "./core/middlewares/authMiddleware.ts";
 import { HttpUtils } from "../main-core/utils/httpUtils.ts";
 import { ExceptionHandler } from "./core/middlewares/exceptionHandler.ts";
+import { OpenAPIBuilder } from "./openapi/openApiBuilder.ts";
+import { openAPIApplicationBuilder } from "./openapi/openapi-global.ts";
+import { mandarineOpenAPIInitializer } from "./openapi/mandarineOpenAPIInitializer.ts";
+import { MandarineException } from "../main-core/exceptions/mandarineException.ts";
 
 /**
  * This class is the bridge between the HTTP server & the Mandarine Compiler.
@@ -65,12 +69,23 @@ export class MandarineMVC {
     }
   }
 
+  public openAPI(documentBuilder: (document: OpenAPIBuilder) => OpenAPIBuilder): MandarineMVC {
+    documentBuilder(openAPIApplicationBuilder);
+    return this;
+  }
+
+  public saveOpenAPI(path: string | URL): MandarineMVC {
+    openAPIApplicationBuilder.setInternalSaveFile(path);
+    return this;
+  }
+
   private initializeMVCApplication(): Application {
     let mandarineConfiguration: Mandarine.Properties = Mandarine.Global.getMandarineConfiguration();
 
     let starter: MandarineMvcFrameworkStarter = new MandarineMvcFrameworkStarter((engine: MandarineMvcFrameworkStarter) => {
         engine.intializeControllersRoutes();
         engine.initializeEssentials();
+        mandarineOpenAPIInitializer();
       }
     );
 

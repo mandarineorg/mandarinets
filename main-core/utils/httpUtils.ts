@@ -205,5 +205,15 @@ export class HttpUtils {
         
         context.response.headers.set('Content-Type', contentType);
     }
+
+    public static getFakeRequestContext() {
+        return {
+            request: {
+                url: ""
+            },
+            params: [],
+            cookies: []
+        }
+    }
     
 }

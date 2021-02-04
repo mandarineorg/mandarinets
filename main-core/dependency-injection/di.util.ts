@@ -22,7 +22,6 @@ export class DependencyInjectionUtil {
 
         if(isMethod) {
             let methodArgumentTypes = Reflect.getMetadata("design:paramtypes", target, propertyName);
-
             let methodParams: Array<string> = ReflectUtils.getParamNames(target[propertyName]);
             let parameterName: string = methodParams[parameterIndex];
 
@@ -38,6 +37,7 @@ export class DependencyInjectionUtil {
                 parameterIndex: parameterIndex,
                 parameterMethodName: propertyName,
                 parameterObjectToInject: (injectionType == DI.InjectionTypes.INJECTABLE_OBJECT) ? methodArgumentTypes[parameterIndex] : undefined,
+                parameterOriginalMetadataType: methodArgumentTypes[parameterIndex]?.name,
                 propertyName: <string> <unknown> undefined,
                 className: parentClassName,
                 parameterConfiguration: parameterConfiguration
