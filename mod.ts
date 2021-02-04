@@ -55,3 +55,8 @@ export { UseGuards } from "./mvc-framework/core/decorators/stereotypes/controlle
 export { parameterDecoratorFactory } from "./mvc-framework/core/decorators/custom-decorators/decoratorsFactory.ts";
 
 export { Authenticator } from "./main-core/mandarine-native/security/authenticatorDefault.ts";
+
+/*
+OpenAPI
+*/
+export { ApiOperation, ApiParameter, ApiResponse, ApiExternalDoc, ApiTag, ApiServer, OpenAPIBuilder } from "./mvc-framework/openapi/openApiMod.ts";
