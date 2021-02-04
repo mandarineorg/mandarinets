@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 export class IndependentUtils {
     public static isVersionValidSemantic(v: string = ""): boolean {
         let match = /(\d+)\.(\d+).(\d+)/.exec(v);
