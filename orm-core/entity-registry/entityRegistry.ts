@@ -3,7 +3,7 @@
 import { MandarineConstants } from "../../main-core/mandarineConstants.ts";
 import { Reflect } from "../../main-core/reflectMetadata.ts";
 import { ReflectUtils } from "../../main-core/utils/reflectUtils.ts";
-import type { Mandarine } from "../../mod.ts";
+import { Mandarine } from "../../mod.ts";
 
 /**
  * This class represents the registry where all the entities are added in order for mandarine to work with them at and after mandarine compile time.
@@ -11,19 +11,21 @@ import type { Mandarine } from "../../mod.ts";
 export class EntityRegistry {
     private entities: Map<string, Mandarine.ORM.Entity.Table> = new Map<string, Mandarine.ORM.Entity.Table>();
 
-    public register(schemaName: string, instance: any, tableName: string) {
+    public register(tableName: string, instance: any, schemaName?: string) {
 
         if(tableName == (null || undefined)) tableName = ReflectUtils.getClassName(instance);
 
         tableName = tableName.toLowerCase();
+
+        const entityName = this.getEntityName(tableName, schemaName);
         
-        if(this.entities.get(`${schemaName}.${tableName}`) == (null || undefined)) {
+        if(this.entities.get(entityName) == (null || undefined)) {
 
             let columns = this.getColumnsFromEntity(instance);
 
-            this.entities.set(`${schemaName}.${tableName}`, {
+            this.entities.set(entityName, {
                 tableName: tableName,
-                schema: schemaName,
+                schema: this.getDefaultSchema(schemaName),
                 columns: columns,
                 uniqueConstraints: columns.filter((item) => item.unique == true),
                 primaryKey: <Mandarine.ORM.Entity.Column> columns.find(item => item.options.primaryKey != undefined && item.options.primaryKey == true),
@@ -34,8 +36,34 @@ export class EntityRegistry {
         }
     }
 
+    public getDefaultSchema(schema?: string): string {
+        const dataSource = Mandarine.Global.getMandarineConfiguration().mandarine?.dataSource;
+        const dialect: Mandarine.ORM.Dialect.Dialects = dataSource?.dialect;
+        switch(dialect) {
+            case Mandarine.ORM.Dialect.Dialects.MYSQL:
+                return schema || dataSource.data?.database || "";
+            case Mandarine.ORM.Dialect.Dialects.POSTGRESQL:
+                return schema || "public";
+            default:
+                // @ts-ignore
+                return schema;
+        }
+    }
+
+    public getEntityName(table: string, schema?: string): string {
+        const dialect: Mandarine.ORM.Dialect.Dialects = Mandarine.Global.getMandarineConfiguration().mandarine?.dataSource?.dialect;
+        schema = this.getDefaultSchema(schema);
+        
+        switch(dialect) {
+            case Mandarine.ORM.Dialect.Dialects.MYSQL:
+                return table;
+            case Mandarine.ORM.Dialect.Dialects.POSTGRESQL:
+                return `${schema || "public"}.${table}`;
+        }
+    }
+
     public getEntity(schema: string, table: string) {
-        return this.entities.get(`${schema}.${table}`);
+        return this.entities.get(this.getEntityName(table, schema));
     }
 
     public getColumnsFromEntity(entityInstance: any): Array<Mandarine.ORM.Entity.Decorators.Column> {

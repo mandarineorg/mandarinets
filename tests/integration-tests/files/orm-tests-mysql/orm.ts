@@ -8,7 +8,7 @@ import { Repository } from "../../../../orm-core/core/decorators/Repository.ts";
 import { MandarineRepository } from "../../../../orm-core/repository/mandarineRepository.ts";
 import { Types } from "../../../../orm-core/sql/types.ts";
 
-@Table({ schema: "public" })
+@Table()
 export class flights {
 
     @Id()
@@ -29,7 +29,7 @@ export class flights {
     public fromFlight?: string;
 
     @Column({
-        type: Types.DECIMAL
+        type: Types.FLOAT
     })
     public duration?: number;
 
@@ -151,4 +151,4 @@ export class MyController {
         await this.flightsRepo.deleteAll();
     }
 }
-new MandarineCore().MVC().run({ port: 1293 });
+new MandarineCore().MVC().run({ port: 1257 });

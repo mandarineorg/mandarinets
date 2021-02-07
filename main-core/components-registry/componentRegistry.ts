@@ -3,6 +3,7 @@
 import { Log } from "../../logger/log.ts";
 import { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
 import { MandarineRepository } from "../../orm-core/repository/mandarineRepository.ts";
+import { MysqlRepositoryProxy } from "../../orm-core/repository/repositoryMysqlProxy.ts";
 import { PostgresRepositoryProxy } from "../../orm-core/repository/repositoryPostgresProxy.ts";
 import { ApplicationContext } from "../application-context/mandarineApplicationContext.ts";
 import { ComponentComponent } from "../components/component-component/componentComponent.ts";
@@ -189,6 +190,9 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
             switch(dialect) {
                 case Mandarine.ORM.Dialect.Dialects.POSTGRESQL:
                     repositoryProxy = new PostgresRepositoryProxy<any>(repositoryInstance.extraData.entity);
+                break;
+                case Mandarine.ORM.Dialect.Dialects.MYSQL:
+                    repositoryProxy = new MysqlRepositoryProxy<any>(repositoryInstance.extraData.entity);
                 break;
                 default:
                     throw new Error(`${dialect} is not supported inside Mandarine's ORM`);

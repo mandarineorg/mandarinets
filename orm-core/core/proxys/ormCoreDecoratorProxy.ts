@@ -21,8 +21,8 @@ export class ORMCoreDecoratorProxy {
         }, targetClass, methodName);
     }
 
-    public static registerTableDecorator(targetClass: any, decoratorOptions: Mandarine.ORM.Entity.Decorators.Table) {
-        ApplicationContext.getInstance().getEntityManager().entityRegistry.register(decoratorOptions.schema, targetClass, <string> decoratorOptions.name);
+    public static registerTableDecorator(targetClass: any, decoratorOptions?: Mandarine.ORM.Entity.Decorators.Table) {
+        ApplicationContext.getInstance().getEntityManager().entityRegistry.register(<string> decoratorOptions?.name, targetClass,  decoratorOptions?.schema);
     }
 
     public static registerColumnDecorator(targetClass: any, decoratorOptions: Mandarine.ORM.Entity.Decorators.Column, propertyKey: string) {

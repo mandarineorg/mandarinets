@@ -30,7 +30,8 @@ export namespace MandarineORM {
          * Contains the dialects supported by Mandarine
          */
         export enum Dialects {
-            POSTGRESQL = "postgresql"
+            POSTGRESQL = "postgresql",
+            MYSQL = "mysql"
         }
 
         /**
@@ -55,6 +56,9 @@ export namespace MandarineORM {
             selectColumnSyntax(colName: string, operator: string, colValue: string, secureParameter?: boolean): string;
             insertStatement(tableMetadata: Entity.TableMetadata, entity: Entity.Table, values: object, secureParameter?: boolean): any;
             updateStatement(tableMetadata: Entity.TableMetadata, entity: Entity.Table, values: object): any;
+            parameterizedQueryInformationType(): ["number" | "string", string];
+            getColumnNameForStatements(colName: string): string;
+            getReservedKeywords(): Array<string>;
         }
     }
 
@@ -68,7 +72,7 @@ export namespace MandarineORM {
          */
         export interface TableMetadata {
             name?: string;
-            schema: string;
+            schema?: string;
         }
 
         export namespace Decorators {
