@@ -43,7 +43,7 @@ export class MysqlRepositoryProxy<T> implements Mandarine.ORM.RepositoryProxy {
                 
                 return queryExecution;
             }catch(error){
-                console.log(error);
+                console.log(query, error);
                 return undefined;
             }
     }
@@ -112,7 +112,8 @@ export class MysqlRepositoryProxy<T> implements Mandarine.ORM.RepositoryProxy {
 
         let dialect = entityManager.getDialectClass();
         let query = (<Mandarine.ORM.Dialect.Dialect>dialect).selectAllCountStatement((<Mandarine.ORM.Dialect.Dialect>dialect).getTableMetadata(this.entity));
-        return parseFloat((<any>await this.executeQuery(query))[0]?.count || 0);
+        const queryExec = await this.executeQuery(query);
+        return parseFloat(queryExec[0]["COUNT(*)"]);
     }
 
     public async deleteAll() {

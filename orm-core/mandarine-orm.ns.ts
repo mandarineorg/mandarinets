@@ -58,6 +58,7 @@ export namespace MandarineORM {
             updateStatement(tableMetadata: Entity.TableMetadata, entity: Entity.Table, values: object): any;
             parameterizedQueryInformationType(): ["number" | "string", string];
             getColumnNameForStatements(colName: string): string;
+            getReservedKeywords(): Array<string>;
         }
     }
 

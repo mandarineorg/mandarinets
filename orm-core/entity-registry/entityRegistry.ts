@@ -44,6 +44,9 @@ export class EntityRegistry {
                 return schema || dataSource.data?.database || "";
             case Mandarine.ORM.Dialect.Dialects.POSTGRESQL:
                 return schema || "public";
+            default:
+                // @ts-ignore
+                return schema;
         }
     }
 

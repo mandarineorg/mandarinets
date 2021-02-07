@@ -34,7 +34,7 @@ export class PostgresRepositoryProxy<T> implements Mandarine.ORM.RepositoryProxy
                 }
                 let rowsOfObjects = queryExecution.query.result.rowsOfObjects();
                 if(rowsOfObjects.length == 0) {
-                    return null;
+                    return [];
                 } else if(rowsOfObjects.length >= 1) {
                     return rowsOfObjects;
                 }
