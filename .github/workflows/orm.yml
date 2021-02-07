@@ -27,7 +27,6 @@ jobs:
           MYSQL_ROOT_PASSWORD: Changeme1
           MYSQL_DATABASE: mandarine
           MYSQL_PASSWORD: Changeme1
-          MYSQL_USER: root
         ports:
           - 33306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
