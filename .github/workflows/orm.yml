@@ -48,7 +48,7 @@ jobs:
         run: |
           mysql --version
           sudo apt-get install -y mysql-client
-          mysql --host 127.0.0.1 --port 33306 --user=root --pasword=Changeme1 -e "SHOW DATABASES"      
+          mysql --host 127.0.0.1 --port 33306 --user=root --password=Changeme1 -e "SHOW DATABASES"      
 
       - name: Setup deno
         uses: denolib/setup-deno@master
