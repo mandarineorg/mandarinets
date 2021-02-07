@@ -48,15 +48,7 @@ jobs:
       - name: Setup deno
         uses: denolib/setup-deno@master
         with:
-          deno-version: ${{ matrix.deno }}
-
-      - name: Verify MYSQL connection
-        env:
-          PORT: 3306
-        run: |
-          while ! mysqladmin ping -h"127.0.0.1" -P"$PORT" --silent; do
-            sleep 1
-          done          
+          deno-version: ${{ matrix.deno }}     
       
       - name: Run Postgres & MYSQL ORM Tests.
         env:
