@@ -1,7 +1,7 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { ClientConfig, Client } from "https://deno.land/x/mysql@v2.7.0/mod.ts";
-import type { ExecuteResult } from "https://deno.land/x/mysql@v2.7.0/src/connection.ts";
+import { ClientConfig, Client } from "https://raw.githubusercontent.com/mandarineorg/mandarinets-modules/master/mysql/2.7.0/mod.ts";
+import type { ExecuteResult } from "https://raw.githubusercontent.com/mandarineorg/mandarinets-modules/master/mysql/2.7.0/src/connection.ts";
 import { Log } from "../../logger/log.ts";
 import { MandarineORMException } from "../core/exceptions/mandarineORMException.ts";
 

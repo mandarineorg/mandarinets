@@ -29,6 +29,11 @@ jobs:
             MYSQL_ROOT_PASSWORD: Changeme1
         ports:
             - 3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
 
     steps:
       - name: Setup Environment
@@ -48,7 +53,7 @@ jobs:
         with:
           deno-version: ${{ matrix.deno }}
       
-      - name: Run Postgres ORM Tests.
+      - name: Run Postgres & MYSQL ORM Tests.
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         run: deno test -c tsconfig.json --allow-all --unstable --fail-fast tests/integration-tests/orm.ts
