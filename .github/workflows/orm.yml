@@ -29,7 +29,7 @@ jobs:
           MYSQL_PASSWORD: Changeme1
           MYSQL_USER: root
         ports:
-          - 3306
+          - 33306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
@@ -49,7 +49,7 @@ jobs:
         run: |
           mysql --version
           sudo apt-get install -y mysql-client
-          mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }} -uuser -psecret -e "SHOW DATABASES"      
+          mysql --host 127.0.0.1 --port "33306:3306" -uuser -psecret -e "SHOW DATABASES"      
 
       - name: Setup deno
         uses: denolib/setup-deno@master
