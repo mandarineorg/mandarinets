@@ -123,7 +123,7 @@ export class ORMTest {
             }
         });
 
-        CommonUtils.sleep(10 || this.MAX_COMPILATION_TIMEOUT_SECONDS);
+        CommonUtils.sleep(this.MAX_COMPILATION_TIMEOUT_SECONDS);
 
         (await (await fetch("http://localhost:1257/create-fake-flights")).text());
         CommonUtils.sleep(2.5);
