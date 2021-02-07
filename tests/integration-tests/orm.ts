@@ -112,7 +112,7 @@ export class ORMTest {
         description: "Test all endpoints in file, and verifies that a Mandarine's built-in ORM is working properly."
     })
     public async testMysqlORM() {
-        CommonUtils.sleep(60);
+        CommonUtils.sleep(25);
         let cmd = Deno.run({
             cmd: ["deno", "run", "-c", "tsconfig.json", "--allow-all", "--unstable", `${INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY}/orm-tests-mysql/orm.ts`],
             stdout: "inherit",
