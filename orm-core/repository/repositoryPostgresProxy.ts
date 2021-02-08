@@ -7,12 +7,13 @@ import { ReflectUtils } from "../../main-core/utils/reflectUtils.ts";
 import type { PostgresConnector } from "../connectors/postgreSQLConnector.ts";
 import { MandarineORMException } from "../core/exceptions/mandarineORMException.ts";
 import { lexicalProcessor } from "../core/lexicalProcessor.ts";
+import { DefaultRepositoryProxy } from "./defaultRepositoryProxy.ts";
 
 /**
  * This class is one of the most important class for MQL
  * This class resolves the methods of your repository as it works as bridge between your repositories and Mandarine's Engine.
  */
-export class PostgresRepositoryProxy<T> implements Mandarine.ORM.RepositoryProxy {
+export class PostgresRepositoryProxy<T> extends DefaultRepositoryProxy implements Mandarine.ORM.RepositoryProxy {
 
     public readonly SUPPORTED_KEYWORDS = ["and", "or", "isnotnull", "isnull", "isempty", "isnotempty", "startingwith", "endswith", "like", "greaterthan", "lessthan"];
 
@@ -21,6 +22,7 @@ export class PostgresRepositoryProxy<T> implements Mandarine.ORM.RepositoryProxy
     private logger: Log = Log.getLogger("PostgresRepositoryProxy");
 
     constructor(entity: Mandarine.ORM.Entity.Table) {
+        super()
         this.entity = entity;
     }
 
@@ -33,19 +35,17 @@ export class PostgresRepositoryProxy<T> implements Mandarine.ORM.RepositoryProxy
                     return null;
                 }
                 let rowsOfObjects = queryExecution.query.result.rowsOfObjects();
+
                 if(rowsOfObjects.length == 0) {
                     return [];
                 } else if(rowsOfObjects.length >= 1) {
                     return rowsOfObjects;
                 }
+
             }catch(error){
+                this.logger.error(error);
                 return undefined;
             }
-    }
-
-    public getEntityManager(): Mandarine.ORM.Entity.EntityManager {
-        let entityManager: Mandarine.ORM.Entity.EntityManager = ApplicationContext.getInstance().getEntityManager();
-        return entityManager;
     }
 
     public async save(model: any): Promise<any> {
@@ -58,64 +58,42 @@ export class PostgresRepositoryProxy<T> implements Mandarine.ORM.RepositoryProxy
             if(!columns.some(col => col.name?.toLowerCase() == modelColumn.toLowerCase())) delete modelObject[modelColumn];
         });
 
-        let dialect = entityManager.getDialectClass();
+        let dialect: Mandarine.ORM.Dialect.Dialect = entityManager.getDialectClass()!;
 
         const primaryKey = this.entity.primaryKey;
 
+        let saveQuery;
+        let parameterizedData: Array<any> = new Array<any>();
         if(primaryKey == (undefined || null) || (primaryKey.fieldName != undefined && model[primaryKey.fieldName] == (null || undefined))) {
             // INSERTION
-                let insertionValues: Array<any> = new Array<any>();
-                let queryData = (<Mandarine.ORM.Dialect.Dialect>dialect).insertStatement((<Mandarine.ORM.Dialect.Dialect>dialect).getTableMetadata(this.entity), this.entity, modelObject, true);
-                let query = queryData.query;
-                let queryColumnValues = queryData.insertionValuesObject;
-                Object.keys(queryColumnValues).forEach((col, index) => insertionValues.push(`$${index + 1}`));
+                let { query, insertionValuesObject: queryColumnValues } = (dialect).insertStatement((dialect).getTableMetadata(this.entity), this.entity, modelObject, true);
+                Object.keys(queryColumnValues).forEach((col, index) => parameterizedData.push(`$${index + 1}`));
 
-                query = query.replace("%values%", insertionValues.join(", "));
-                let saveQuery = await this.executeQuery({
+                query = query.replace("%values%", parameterizedData.join(", "));
+                saveQuery = await this.executeQuery({
                     text: query,
                     args: Object.values(queryColumnValues)
                 });
-
-                if(saveQuery === undefined) {
-                    return false;
-                } else {
-                    return true;
-                }
         } else {
             // UPDATE
-                let updateValues: Array<any> = new Array<any>();
-                let queryData = (<Mandarine.ORM.Dialect.Dialect>dialect).updateStatement((<Mandarine.ORM.Dialect.Dialect>dialect).getTableMetadata(this.entity), this.entity, modelObject);
-                let query = queryData.query;
-                let queryColumnValues = queryData.updateValuesObject;
-                Object.keys(queryColumnValues).forEach((col, index) => updateValues.push(`$${index + 1}`));
-                query = query.replace("%values%", updateValues.join(", "));
+                let { query, updateValuesObject: queryColumnValues } = (dialect).updateStatement((dialect).getTableMetadata(this.entity), this.entity, modelObject);
+                Object.keys(queryColumnValues).forEach((col, index) => parameterizedData.push(`$${index + 1}`));
+                query = query.replace("%values%", parameterizedData.join(", "));
 
                 // Primary key value
-                query = query.replace("%primaryKeyValue%", `$${updateValues.length + 1}`);
+                query = query.replace("%primaryKeyValue%", `$${parameterizedData.length + 1}`);
                 // Query args
                 let queryArgs = Object.values(queryColumnValues);
                 queryArgs.push(model[<string> primaryKey.fieldName]);
                     
-                let saveQuery = await this.executeQuery({
+                saveQuery = await this.executeQuery({
                     text: query,
                     args: queryArgs
                 });
-
-                if(saveQuery === undefined) {
-                    return false;
-                } else {
-                    return true;
-                }
         }
 
-    }
+        return !(saveQuery === undefined);
 
-    public async findAll() {
-        let entityManager: Mandarine.ORM.Entity.EntityManager = this.getEntityManager();
-
-        let dialect = entityManager.getDialectClass();
-        let query = (<Mandarine.ORM.Dialect.Dialect>dialect).selectStatement((<Mandarine.ORM.Dialect.Dialect>dialect).getTableMetadata(this.entity));
-        return this.executeQuery(query);
     }
 
     public async countAll() {
@@ -124,56 +102,6 @@ export class PostgresRepositoryProxy<T> implements Mandarine.ORM.RepositoryProxy
         let dialect = entityManager.getDialectClass();
         let query = (<Mandarine.ORM.Dialect.Dialect>dialect).selectAllCountStatement((<Mandarine.ORM.Dialect.Dialect>dialect).getTableMetadata(this.entity));
         return parseFloat((<any>await this.executeQuery(query))[0]?.count || 0);
-    }
-
-    public async deleteAll() {
-        let entityManager: Mandarine.ORM.Entity.EntityManager = this.getEntityManager();
-
-        let dialect = entityManager.getDialectClass();
-        let query = (<Mandarine.ORM.Dialect.Dialect>dialect).deleteStatement((<Mandarine.ORM.Dialect.Dialect>dialect).getTableMetadata(this.entity));
-
-        let deleteQuery = await this.executeQuery(query);
-
-        if(deleteQuery === undefined) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public lexicalProcessor(methodName: string, proxyType: Mandarine.ORM.ProxyType): string {
-        const dialect  = this.getEntityManager().getDialectClass();
-        return lexicalProcessor(this, methodName, proxyType, (<Mandarine.ORM.Dialect.Dialect>dialect).getTableMetadata(this.entity), this.entity, (<Mandarine.ORM.Dialect.Dialect>dialect));
-    }
-
-    public async mainProxy(nativeMethodName: string, proxyType: Mandarine.ORM.ProxyType, args: Array<any>): Promise<any> {
-        let mqlQuery: string = this.lexicalProcessor(nativeMethodName, proxyType);
-
-       let query: any = this.executeQuery({
-        text: mqlQuery,
-        args: args
-        });
-
-        if(query) {
-            if(proxyType == "countBy") {
-                return parseFloat((await query)[0]?.count || 0);
-            } else if(proxyType == "existsBy") {
-                return ((await query)[0].count) >= 1;
-            } else {
-                return query;
-            }
-        }
-    }
-
-    public async manualProxy(query: String, secure: boolean, args: Array<any>) {
-            if(secure != undefined && secure == true) {
-                return this.executeQuery({
-                    text: query,
-                    args: args
-                });
-            } else {
-                return this.executeQuery(query);
-            }
     }
 
 }

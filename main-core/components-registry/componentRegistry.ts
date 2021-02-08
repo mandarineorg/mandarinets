@@ -213,7 +213,7 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
             
             if(manualQuery != undefined) {
                 repositoryTarget.prototype[methodName] = (...args: Array<any>) => {
-                    return repositoryProxy.manualProxy(manualQuery.query, manualQuery.secure || false, args);
+                    return repositoryProxy.manualProxy(repositoryProxy, manualQuery.query, manualQuery.secure || false, args);
                 }
                 return;
             }
@@ -221,17 +221,17 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
             switch(methodName) {
                 case 'findAll':
                     repositoryTarget.prototype[methodName] = () => {
-                        return repositoryProxy.findAll();
+                        return repositoryProxy.findAll(repositoryProxy);
                     }
                     return;
                 case 'countAll':
                     repositoryTarget.prototype[methodName] = () => {
-                        return repositoryProxy.countAll();
+                        return repositoryProxy.countAll(repositoryProxy);
                     }
                     return;
                 case 'deleteAll':
                     repositoryTarget.prototype[methodName] = () => {
-                        return repositoryProxy.deleteAll();
+                        return repositoryProxy.deleteAll(repositoryProxy);
                     }
                     return;
                 case 'save':
@@ -243,19 +243,19 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
 
             if(methodName.startsWith('find')) {
                 repositoryTarget.prototype[methodName] = (...args: Array<any>) => { 
-                    return repositoryProxy.mainProxy(methodName, "findBy", args);
+                    return repositoryProxy.mainProxy(repositoryProxy, methodName, "findBy", args);
                 }
             } else if(methodName.startsWith('exists')) {
                 repositoryTarget.prototype[methodName] = (...args: Array<any>) => { 
-                    return repositoryProxy.mainProxy(methodName, "existsBy", args);
+                    return repositoryProxy.mainProxy(repositoryProxy, methodName, "existsBy", args);
                 }
             } else if(methodName.startsWith('delete')) {
                 repositoryTarget.prototype[methodName] = (...args: Array<any>) => { 
-                    return repositoryProxy.mainProxy(methodName, "deleteBy", args);
+                    return repositoryProxy.mainProxy(repositoryProxy, methodName, "deleteBy", args);
                 }
             } else if(methodName.startsWith('count')) {
                 repositoryTarget.prototype[methodName] = (...args: Array<any>) => { 
-                    return repositoryProxy.mainProxy(methodName, "countBy", args);
+                    return repositoryProxy.mainProxy(repositoryProxy, methodName, "countBy", args);
                 }
             }
         });
