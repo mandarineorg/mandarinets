@@ -6,15 +6,15 @@ import type { Mandarine } from "../../main-core/Mandarine.ns.ts";
 import { CommonUtils } from "../../main-core/utils/commonUtils.ts";
 import { ReflectUtils } from "../../main-core/utils/reflectUtils.ts";
 import { MysqlConnector } from "../connectors/mysqlConnector.ts";
-import type { PostgresConnector } from "../connectors/postgreSQLConnector.ts";
 import { MandarineORMException } from "../core/exceptions/mandarineORMException.ts";
 import { lexicalProcessor } from "../core/lexicalProcessor.ts";
+import { DefaultRepositoryProxy } from "./defaultRepositoryProxy.ts";
 
 /**
  * This class is one of the most important class for MQL
  * This class resolves the methods of your repository as it works as bridge between your repositories and Mandarine's Engine.
  */
-export class MysqlRepositoryProxy<T> implements Mandarine.ORM.RepositoryProxy {
+export class MysqlRepositoryProxy<T> extends DefaultRepositoryProxy implements Mandarine.ORM.RepositoryProxy {
 
     public readonly SUPPORTED_KEYWORDS = ["and", "or", "isnotnull", "isnull", "isempty", "isnotempty", "startingwith", "endswith", "like", "greaterthan", "lessthan"];
 
@@ -23,10 +23,11 @@ export class MysqlRepositoryProxy<T> implements Mandarine.ORM.RepositoryProxy {
     private logger: Log = Log.getLogger("MysqlRepositoryProxy");
 
     constructor(entity: Mandarine.ORM.Entity.Table) {
+        super();
         this.entity = entity;
     }
 
-    public async executeQuery(query: any) {
+    public async executeQuery(query: any): Promise<any> {
 
         query = (CommonUtils.isObject(query)) ? query : {
             text: query,
@@ -42,14 +43,10 @@ export class MysqlRepositoryProxy<T> implements Mandarine.ORM.RepositoryProxy {
                 }
                 
                 return queryExecution;
-            }catch(error){
-                console.log(query, error);
+            } catch(error) {
+                this.logger.error(error);
                 return undefined;
             }
-    }
-
-    public getEntityManager(): Mandarine.ORM.Entity.EntityManager {
-        return ApplicationContext.getInstance().getEntityManager();
     }
 
     public async save(model: any): Promise<any> {
@@ -95,75 +92,18 @@ export class MysqlRepositoryProxy<T> implements Mandarine.ORM.RepositoryProxy {
                     args: queryArgs
                 });
         }
+        
         return !(saveQuery === undefined);
 
-    }
-
-    public async findAll() {
-        let entityManager: Mandarine.ORM.Entity.EntityManager = this.getEntityManager();
-
-        let dialect = entityManager.getDialectClass();
-        let query = (<Mandarine.ORM.Dialect.Dialect>dialect).selectStatement((<Mandarine.ORM.Dialect.Dialect>dialect).getTableMetadata(this.entity));
-        return this.executeQuery(query);
     }
 
     public async countAll() {
         let entityManager: Mandarine.ORM.Entity.EntityManager = this.getEntityManager();
 
-        let dialect = entityManager.getDialectClass();
-        let query = (<Mandarine.ORM.Dialect.Dialect>dialect).selectAllCountStatement((<Mandarine.ORM.Dialect.Dialect>dialect).getTableMetadata(this.entity));
+        let dialect: Mandarine.ORM.Dialect.Dialect = entityManager.getDialectClass()!;
+        let query = (dialect).selectAllCountStatement(dialect.getTableMetadata(this.entity));
         const queryExec = await this.executeQuery(query);
         return parseFloat(queryExec[0]["COUNT(*)"]);
-    }
-
-    public async deleteAll() {
-        let entityManager: Mandarine.ORM.Entity.EntityManager = this.getEntityManager();
-
-        let dialect = entityManager.getDialectClass();
-        let query = (<Mandarine.ORM.Dialect.Dialect>dialect).deleteStatement((<Mandarine.ORM.Dialect.Dialect>dialect).getTableMetadata(this.entity));
-
-        let deleteQuery = await this.executeQuery(query);
-
-        if(deleteQuery === undefined) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public lexicalProcessor(methodName: string, proxyType: Mandarine.ORM.ProxyType): string {
-        const dialect  = this.getEntityManager().getDialectClass();
-        return lexicalProcessor(this, methodName, proxyType, (<Mandarine.ORM.Dialect.Dialect>dialect).getTableMetadata(this.entity), this.entity, (<Mandarine.ORM.Dialect.Dialect>dialect));
-    }
-
-    public async mainProxy(nativeMethodName: string, proxyType: Mandarine.ORM.ProxyType, args: Array<any>): Promise<any> {
-        let mqlQuery: string = this.lexicalProcessor(nativeMethodName, proxyType);
-
-       let query: any = this.executeQuery({
-            text: mqlQuery,
-            args: args
-        });
-
-        if(query) {
-            if(proxyType == "countBy") {
-                return parseFloat((await query)[0]?.count || 0);
-            } else if(proxyType == "existsBy") {
-                return ((await query)[0].count) >= 1;
-            } else {
-                return query;
-            }
-        }
-    }
-
-    public async manualProxy(query: String, secure: boolean, args: Array<any>) {
-            if(secure != undefined && secure == true) {
-                return this.executeQuery({
-                    text: query,
-                    args: args
-                });
-            } else {
-                return this.executeQuery(query);
-            }
     }
 
 }
