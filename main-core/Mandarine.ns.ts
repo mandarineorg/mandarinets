@@ -26,6 +26,7 @@ import { HTTPLoginBuilder } from "../security-core/core/modules/loginBuilder.ts"
 import { MandarineCommonInterfaces } from "./Mandarine.commonInterfaces.ns.ts";
 import type { ComponentComponent } from "./components/component-component/componentComponent.ts";
 import { Leaf } from "../deps.ts";
+import { IndependentUtils } from "./utils/independentUtils.ts";
 
 /**
 * This namespace contains all the essentials for mandarine to work
@@ -115,6 +116,11 @@ export namespace Mandarine {
             },
             security?: {
                 cookiesSignKeys: Array<string>
+            },
+            services?: {
+                mongodb?: {
+                    connectionURL: string;
+                }
             }
         } & any
     };
@@ -434,6 +440,13 @@ export namespace Mandarine {
             if(!mandarineGlobal.__SECURITY__.auth.httpLoginBuilder) {
                 mandarineGlobal.__SECURITY__.auth.httpLoginBuilder = new HTTPLoginBuilder()
             }
+        }
+
+        /**
+         * Read Mandarine's configuration by dots
+         */
+        export function readConfigByDots(key: string) {
+            return IndependentUtils.readConfigByDots(getMandarineConfiguration(), key);
         }
     };
 

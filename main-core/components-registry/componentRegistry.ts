@@ -2,6 +2,7 @@
 
 import { Log } from "../../logger/log.ts";
 import { ControllerComponent } from "../../mvc-framework/core/internal/components/routing/controllerContext.ts";
+import { MongoDBService } from "../../orm-core/nosql/mongoDbService.ts";
 import { MandarineRepository } from "../../orm-core/repository/mandarineRepository.ts";
 import { MysqlRepositoryProxy } from "../../orm-core/repository/repositoryMysqlProxy.ts";
 import { PostgresRepositoryProxy } from "../../orm-core/repository/repositoryPostgresProxy.ts";
@@ -39,6 +40,18 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
             componentInstance: new Authenticator(),
             componentType: Mandarine.MandarineCore.ComponentTypes.INTERNAL
         });
+
+        const mongoDbConnectionUrl: string | undefined = Mandarine.Global.readConfigByDots("mandarine.services.mongodb.connectionURL");
+        if(mongoDbConnectionUrl) {
+            
+            this.components.set("MANDARINE_MONGODB_SERVICE", {
+                componentName: "MANDARINE_MONGODB_SERVICE",
+                componentInstance: new MongoDBService(mongoDbConnectionUrl),
+                componentType: Mandarine.MandarineCore.ComponentTypes.INTERNAL
+            });
+
+            this.logger.info("MongoDB Service has been injected");
+        }
     }
 
     public register(componentName: string, componentInstance: any, componentType: Mandarine.MandarineCore.ComponentTypes, configuration: any): void {
