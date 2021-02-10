@@ -10,7 +10,6 @@ export class JsonUtils {
             if(options.isFile) json = CommonUtils.readFile(json);
             if(!json) throw new Error("Json could not be parsed because it was either invalid or the referential file does not exist.");
             if(options.allowEnvironmentalReferences) json = CommonUtils.processVariableReferencesForEnvironmental(json);
-
             return JSON.parse(json, (key, value) => CommonUtils.parseToKnownType(value));
         }catch(ex){
             if(options.handleException) {

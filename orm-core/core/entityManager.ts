@@ -123,7 +123,7 @@ export class EntityManagerClass {
                             }
                         }));
                     }catch(error){
-                        console.log(error);
+                        // Initialization errors should not be shown
                     }
                 break;
             }

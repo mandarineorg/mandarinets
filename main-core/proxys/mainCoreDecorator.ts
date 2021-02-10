@@ -8,6 +8,7 @@ import { MandarineException } from "../exceptions/mandarineException.ts";
 import { Reflect } from "../reflectMetadata.ts";
 import { MandarineConstants } from "../mandarineConstants.ts";
 import { JsonUtils } from "../utils/jsonUtils.ts";
+import { IndependentUtils } from "../utils/independentUtils.ts";
 
 /**
  * Logic behind decorators of Mandarine's core
@@ -49,36 +50,12 @@ export class MainCoreDecoratorProxy {
             propertyName
         }, targetClass);
 
-        try {
-            if(propertyObject === undefined) {
-                if(scope == Mandarine.MandarineCore.ValueScopes.CONFIGURATION) propertyObject = Mandarine.Global.getMandarineConfiguration();
-                if(scope == Mandarine.MandarineCore.ValueScopes.ENVIRONMENTAL) propertyObject = Deno.env.toObject();
-            }
-            if(configKey.includes('.')) {
-                let parts = configKey.split('.');
-
-                if (Array.isArray(parts)) {
-                    let last: any = parts.pop();
-                    let keyPropertiesLength = parts.length;
-                    let propertiesStartingIndex = 1;
-
-                    let currentProperty = parts[0];
-            
-                    while((propertyObject = propertyObject[currentProperty]) && propertiesStartingIndex < keyPropertiesLength) {
-                        currentProperty = parts[propertiesStartingIndex];
-                        propertiesStartingIndex++;
-                    }
-                    
-                    targetClass[propertyName] = CommonUtils.parseToKnownType(propertyObject[last]);
-                } else {
-                    targetClass[propertyName] = undefined;
-                }
-            } else {
-                targetClass[propertyName] = CommonUtils.parseToKnownType(propertyObject[configKey]);
-            }
-        } catch(error) {
-            targetClass[propertyName] = undefined;
+        if(propertyObject === undefined) {
+            if(scope == Mandarine.MandarineCore.ValueScopes.CONFIGURATION) propertyObject = Mandarine.Global.getMandarineConfiguration();
+            if(scope == Mandarine.MandarineCore.ValueScopes.ENVIRONMENTAL) propertyObject = Deno.env.toObject();
         }
+
+        targetClass[propertyName] = IndependentUtils.readConfigByDots(propertyObject, configKey);
     }
 
     public static overrideNativeComponent(targetClass: any, overrideType: Mandarine.MandarineCore.NativeComponents) {
