@@ -9,6 +9,7 @@ export class ComponentComponent implements Mandarine.MandarineCore.ComponentComm
 
     public name?: string;
     public classHandler: any;
+    public classHandlerPrimitive: any;
     public type?: Mandarine.MandarineCore.ComponentTypes;
     public configuration?: any;
 
@@ -17,6 +18,10 @@ export class ComponentComponent implements Mandarine.MandarineCore.ComponentComm
         this.classHandler = classHandler;
         this.type = type;
         this.configuration = configuration;
+
+        if(!this.classHandlerPrimitive) {
+            this.classHandlerPrimitive = classHandler;
+        }
     }
 
     public getName() {
@@ -25,6 +30,10 @@ export class ComponentComponent implements Mandarine.MandarineCore.ComponentComm
 
     public getClassHandler() {
         return this.classHandler;
+    }
+
+    public getClassHandlerPrimitive() {
+        return this.classHandlerPrimitive;
     }
 
     public setClassHandler(handler: any) {
