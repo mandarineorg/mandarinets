@@ -25,3 +25,7 @@ jobs:
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         run: deno test -c tsconfig.json --reload --allow-all --unstable --fail-fast tests/unit-tests/sessions.ts
+      - name: Value decorator
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+        run: deno test -c tsconfig.json --reload --allow-all --unstable --fail-fast tests/unit-tests/valueDecorator.ts      

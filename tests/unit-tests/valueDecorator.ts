@@ -4,7 +4,7 @@ import { ApplicationContext } from "../../main-core/application-context/mandarin
 import { Value } from "../../main-core/decorators/configuration-readers/value.ts";
 import { Service } from "../../main-core/decorators/stereotypes/service/service.ts";
 import { MandarineCore } from "../../main-core/mandarineCore.ts";
-import { DenoAsserts, mockDecorator, Orange, Test, createResolvable } from "../mod.ts";
+import { DenoAsserts, Test } from "../mod.ts";
 
 @Service()
 class MyClass {
@@ -33,8 +33,8 @@ new MandarineCore({
 export class SessionTest {
 
     @Test({
-        name: "Test creation, and expiration of session",
-        description: "Should create & remove a session based on its expiration time"
+        name: "Test @Value decorator",
+        description: "Should test that values are created"
     })
     public testValueDecorator() {
        const component = ApplicationContext.getInstance().getComponentsRegistry().getComponentByHandlerType(MyClass)?.componentInstance.getClassHandler();
