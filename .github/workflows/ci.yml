@@ -13,7 +13,6 @@ jobs:
       fail-fast: true
     steps:
       - uses: actions/checkout@v2
-      - env
       - name: Setup deno
         uses: denolib/setup-deno@master
         with:
