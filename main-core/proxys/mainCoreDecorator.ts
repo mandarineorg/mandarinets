@@ -44,18 +44,18 @@ export class MainCoreDecoratorProxy {
     }
 
     public static valueDecorator(targetClass: any, configKey: string, scope: Mandarine.MandarineCore.ValueScopes | undefined, propertyName: string, propertyObject?: any) {
-        Reflect.defineMetadata(`${MandarineConstants.REFLECTION_MANDARINE_VALUE_DECORATOR}-${CommonUtils.generateUUID()}`, {
+        const metadata: Mandarine.MandarineCore.Decorators.Value = {
             configKey,
             scope,
             propertyName
-        }, targetClass);
+        };
+        
+        Reflect.defineMetadata(`${MandarineConstants.REFLECTION_MANDARINE_VALUE_DECORATOR}-${CommonUtils.generateUUID()}`, metadata, targetClass);
 
-        if(propertyObject === undefined) {
-            if(scope == Mandarine.MandarineCore.ValueScopes.CONFIGURATION) propertyObject = Mandarine.Global.getMandarineConfiguration();
-            if(scope == Mandarine.MandarineCore.ValueScopes.ENVIRONMENTAL) propertyObject = Deno.env.toObject();
+        if(propertyObject) {
+            // If we are passing a property object, then we resolve inmediatly.
+            targetClass[propertyName] = IndependentUtils.readConfigByDots(propertyObject, configKey);
         }
-
-        targetClass[propertyName] = IndependentUtils.readConfigByDots(propertyObject, configKey);
     }
 
     public static overrideNativeComponent(targetClass: any, overrideType: Mandarine.MandarineCore.NativeComponents) {

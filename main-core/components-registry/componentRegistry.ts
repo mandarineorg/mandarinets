@@ -15,6 +15,7 @@ import { Mandarine } from "../Mandarine.ns.ts";
 import { MandarineConstants } from "../mandarineConstants.ts";
 import { Reflect } from "../reflectMetadata.ts";
 import { CommonUtils } from "../utils/commonUtils.ts";
+import { IndependentUtils } from "../utils/independentUtils.ts";
 import { ReflectUtils } from "../utils/reflectUtils.ts";
 
 /**
@@ -328,5 +329,29 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
                 }
             });
         })
+    }
+
+    public initializeValueReaders(): void {
+        const serviceTypeComponents = this.getComponents().filter((item) => item.isServiceType === true);
+        serviceTypeComponents.forEach((component) => {
+            const instances = [component.componentInstance.getClassHandler(), component.componentInstance.getClassHandlerPrimitive()];
+            instances.forEach((instance) => {
+                const metadataKeys: Array<string> = Reflect.getMetadataKeys(instance);
+
+                metadataKeys.filter(item => item.startsWith(MandarineConstants.REFLECTION_MANDARINE_VALUE_DECORATOR)).forEach((item) => {
+                    const metadata: Mandarine.MandarineCore.Decorators.Value = Reflect.getMetadata(item, instance);
+                    if(metadata) {
+                        let propertyObject = {};
+                        if(metadata.scope == Mandarine.MandarineCore.ValueScopes.CONFIGURATION) propertyObject = Mandarine.Global.getMandarineConfiguration();
+                        if(metadata.scope == Mandarine.MandarineCore.ValueScopes.ENVIRONMENTAL) propertyObject = Deno.env.toObject();
+                        //onsole.log(propertyObject);
+                        
+                        if(!instance[metadata.propertyName]) {
+                            instance[metadata.propertyName] = IndependentUtils.readConfigByDots(propertyObject, metadata.configKey);
+                        }
+                    }
+                });
+            });
+        });
     }
 }

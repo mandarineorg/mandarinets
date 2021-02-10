@@ -269,14 +269,14 @@ export namespace Mandarine {
         * Get the properties mandarine is using.
         * If no properties are set by the user then it gets the default properties.
         */
-        export function getMandarineConfiguration(): Properties {
+        export function getMandarineConfiguration(configPath?: string): Properties {
             let mandarineGlobal: MandarineGlobalInterface = getMandarineGlobal();
 
             if(mandarineGlobal.mandarineProperties == (null || undefined)) {
 
                 try {
                     const initialProperties: MandarineInitialProperties | undefined = getMandarineInitialProps();
-                    let mandarinePropertiesFile = Deno.env.get(MandarineEnvironmentalConstants.MANDARINE_PROPERTY_FILE) || initialProperties?.propertiesFilePath || Defaults.mandarinePropertiesFile;
+                    let mandarinePropertiesFile = configPath || Deno.env.get(MandarineEnvironmentalConstants.MANDARINE_PROPERTY_FILE) || initialProperties?.propertiesFilePath || Defaults.mandarinePropertiesFile;
                     const propertiesData = JsonUtils.toJson(mandarinePropertiesFile, { isFile: true, allowEnvironmentalReferences: true });
                     setConfiguration(propertiesData);
                 } catch(error) {
@@ -589,6 +589,7 @@ export namespace Mandarine {
             connectRepositoriesToProxy(): void;
             initializeControllers(): void;
             initializeEventListeners(): void;
+            initializeValueReaders(): void;
         };
 
         /**
@@ -669,6 +670,11 @@ export namespace Mandarine {
             export interface EventListener {
                 eventName: string,
                 methodName: string
+            }
+            export interface Value {
+                configKey: string,
+                scope: ValueScopes | undefined,
+                propertyName: string
             }
         }
 
@@ -791,8 +797,8 @@ export namespace Mandarine {
     Mandarine.Global.initializeSecurityInternals();
     Mandarine.Global.initializeNativeComponents();
     Mandarine.Global.initializeMandarineGlobal();
-    Mandarine.Global.getMandarineInitialProps();
-    Mandarine.Global.getMandarineConfiguration();
+    Mandarine.Global.getMandarineInitialProps(); // Reads `mandarine.json`
+    Mandarine.Global.getMandarineConfiguration(); // Sets configuration by file. If Configuration is set programatically, it will be overriden
     Mandarine.Global.getComponentsRegistry();
     Mandarine.Global.getEntityManager();
     Mandarine.Global.getTemplateManager();

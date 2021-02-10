@@ -7,7 +7,12 @@ import { MandarineTSFrameworkEngineMethods } from "./engine/mandarineTSFramework
 import { sessionTimerHandlers } from "./mandarine-native/sessions/mandarineSessionHandlers.ts";
 import { Mandarine } from "./Mandarine.ns.ts";
 import { MandarineConstants } from "./mandarineConstants.ts";
+import { IndependentUtils } from "./utils/independentUtils.ts";
 import { MandarineUtils } from "./utils/mandarineUtils.ts";
+
+interface CoreOptions {
+    config?: string | object;
+}
 
 /**
  * Contains core methods & information related to Mandarine
@@ -19,13 +24,18 @@ export class MandarineCore {
 
     public currentContextMetadata = ApplicationContext.CONTEXT_METADATA;
 
-    constructor() {
+    constructor(options?: CoreOptions) {
+
+        if(options) {
+            if(options.config) this.setConfiguration(options.config);
+        }
 
         // ORDER OF THINGS MATTER
         // If the repository proxy is resolved after the dependencies, then the dependencies will have an empty repository
         this.resolveRepositoriesProxy();
         this.resolveComponentsDependencies();
         this.initializeEventListeners();
+        this.initializeValueReaders();
 
         MandarineTSFrameworkEngineMethods.initializeEngineMethods();
 
@@ -61,6 +71,10 @@ export class MandarineCore {
         ApplicationContext.getInstance().getComponentsRegistry().initializeEventListeners();
     }
 
+    private initializeValueReaders(): void {
+        ApplicationContext.getInstance().getComponentsRegistry().initializeValueReaders();
+    }
+
     private initializeEntityManager() {
         let entityManager = ApplicationContext.getInstance().getEntityManager();
         if(entityManager.getDataSource() != undefined) {
@@ -85,6 +99,15 @@ export class MandarineCore {
             if(templatesAmount && templatesAmount > 0) {
                 MandarineCore.logger.compiler(`A total of ${templatesAmount} templates have been found`, "info")
             }
+        }
+    }
+
+    private setConfiguration(config: string | object) {
+        if(typeof config === 'string') {
+            Mandarine.Global.getMandarineConfiguration(config);
+        } else if(IndependentUtils.isObject(config)) {
+            // @ts-ignore
+            Mandarine.Global.setConfiguration(config);
         }
     }
 
