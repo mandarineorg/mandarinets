@@ -48,4 +48,12 @@ export class ComponentComponent implements Mandarine.MandarineCore.ComponentComm
     public getInternal<T = any>(key: string): T {
         return this.internals[key];
     }
+
+    public deleteInternal(key: string): void {
+        delete this.internals[key];
+    }
+
+    public internalExists(key: string): boolean {
+        return this.getInternal(key) !== undefined;
+    }
 }
