@@ -212,8 +212,7 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
         return DI.Factory.componentDependencyResolver(this);
     }
 
-    private connectWebsocketClientProxy(websocketObject: Mandarine.MandarineCore.ComponentRegistryContext): void {
-        let websocketInstance: ComponentComponent = websocketObject.componentInstance;
+    public connectWebsocketClientProxy(websocketInstance: ComponentComponent): void {
         let websocketTarget: any = websocketInstance.getClassHandler();
 
         const metadataKeys: Array<string> = Reflect.getMetadataKeys(websocketTarget);
@@ -256,8 +255,7 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
         });
     }
 
-    private connectWebsocketServerProxy(websocketObject: Mandarine.MandarineCore.ComponentRegistryContext): void {
-        let websocketInstance: ComponentComponent = websocketObject.componentInstance;
+    public connectWebsocketServerProxy(websocketInstance: ComponentComponent): void {
         let websocketTarget: any = websocketInstance.getClassHandler();
 
         const metadataKeys: Array<string> = Reflect.getMetadataKeys(websocketTarget);
@@ -471,10 +469,8 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
             try {
                 if(type === "client") {
                     WebSocketClientUtil.mount(component, url, protocols);
-                    this.connectWebsocketClientProxy(item);
                 } else if(type === "server") {
                     WebSocketServerUtil.mount(component, port);
-                    this.connectWebsocketServerProxy(item);
                 }
             } catch(error) {
                 if(type === "client") {

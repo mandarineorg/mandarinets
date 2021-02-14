@@ -14,7 +14,12 @@ export class WebSocketServerItem {
 
     public reStart() {
         if(this.currentWebsocketComponent.internalExists(MandarineConstants.COMPONENT_PROPERTY_WEBSOCKET)) {
-            this.currentWebsocketComponent.getInternal<Worker>(MandarineConstants.COMPONENT_PROPERTY_WEBSOCKET).postMessage("RESTART");
+            this.currentWebsocketComponent.getInternal<Worker>(MandarineConstants.COMPONENT_PROPERTY_WEBSOCKET).postMessage({
+                cmd: "RESTART",
+                data: {
+                    port: this.currentWebsocketComponent.configuration.port
+                }
+            });
         } else {
             throw new Error("WebSocket cannot be re-started because its worker does not exist. Please mount the worker.");
         }

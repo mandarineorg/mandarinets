@@ -592,6 +592,9 @@ export namespace Mandarine {
             initializeEventListeners(): void;
             initializeValueReaders(): void;
             initializeWebsocketComponents(): void;
+            connectWebsocketClientProxy(component: any): void;
+            connectWebsocketServerProxy(component: any): void;
+
         };
 
         /**

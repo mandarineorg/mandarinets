@@ -1,5 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
+import { ApplicationContext } from "../../application-context/mandarineApplicationContext.ts";
 import type { ComponentComponent } from "../../components/component-component/componentComponent.ts";
 import { MandarineConstants } from "../../mandarineConstants.ts";
 import { WebSocketBase64Const } from "../../websocket/base64bundle.ts";
@@ -20,6 +21,8 @@ export class WebSocketServerUtil {
                 port: port
             }
         });
+
+        ApplicationContext.getInstance().getComponentsRegistry().connectWebsocketServerProxy(component);
     }
 
     public static unmount(component: ComponentComponent): void {
