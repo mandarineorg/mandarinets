@@ -36,6 +36,7 @@ export class MandarineCore {
         this.resolveComponentsDependencies();
         this.initializeEventListeners();
         this.initializeValueReaders();
+        this.initializeWebsocketComponents();
 
         MandarineTSFrameworkEngineMethods.initializeEngineMethods();
 
@@ -81,6 +82,10 @@ export class MandarineCore {
             entityManager.initializeEssentials();
             entityManager.initializeAllEntities();
         }
+    }
+
+    private initializeWebsocketComponents() {
+        ApplicationContext.getInstance().getComponentsRegistry().initializeWebsocketComponents();
     }
 
     private writeOnCompiler() {

@@ -68,4 +68,8 @@ export class IndependentUtils {
         return undefined;
     }
   }
+
+  public static getPrototypeMethods(object: any): Array<string> {
+    return Object.getOwnPropertyNames(object.prototype).filter((item) => item !== "constructor");
+  }
 }

@@ -29,6 +29,15 @@ export class MainCoreDecoratorProxy {
         Reflect.defineMetadata(`${MandarineConstants.REFLECTION_MANDARINE_EVENTLISTENER_DECORATOR}:${methodName}`, metadata, targetClass);
     }
 
+    public static registerWebsocketProperty(targetClass: any, eventName: Mandarine.MandarineCore.Decorators.WebSocketValidProperties, methodName: string) {
+        const metadata: Mandarine.MandarineCore.Decorators.WebSocketProperty  = {
+            methodName: methodName,
+            property: eventName
+        };
+
+        Reflect.defineMetadata(`${MandarineConstants.REFLECTION_MANDARINE_WEBSOCKET_PROPERTY}:${methodName}`, metadata, targetClass);
+    }
+
     public static configurationPropertiesDecorator(targetClass: any, path: string) {
         Reflect.defineMetadata(MandarineConstants.REFLECTION_MANDARINE_CONFIGURATION_PROPERTIES, path, targetClass);
         const target = targetClass.prototype || targetClass;
