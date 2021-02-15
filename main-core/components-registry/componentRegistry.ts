@@ -277,10 +277,7 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
                             }
                         break;
                         case "send":
-                            websocketTarget[metadata.methodName] = (message: any, postMessageOptions?: any) => {
-                                websocketInstance.getInternal<Worker>(MandarineConstants.COMPONENT_PROPERTY_WEBSOCKET).postMessage(message, postMessageOptions);
-                            }
-                        break;
+                            throw new Error("Sending from WebSocket server to client is not implemented in Mandarine.");
                         case "close":
                             websocketTarget[metadata.methodName] = () => {
                                 WebSocketServerUtil.unmount(websocketInstance);
