@@ -13,7 +13,7 @@ export class WebSocketTestFile {
         let cmd = Deno.run({
             cmd: ["deno", "run", "-c", "tsconfig.json", "--allow-all", "--unstable", `${INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY}/websocketServer.ts`],
             stdout: "piped",
-            stderr: "null",
+            stderr: "inherit",
             stdin: "null"
         });
 
@@ -22,13 +22,13 @@ export class WebSocketTestFile {
         let cmd2 = Deno.run({
             cmd: ["deno", "run", "-c", "tsconfig.json", "--allow-all", "--unstable", `${INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY}/websocketClient.ts`],
             stdout: "null",
-            stderr: "null",
+            stderr: "inherit",
             stdin: "null"
         });
         
-        CommonUtils.sleep(15);
+        CommonUtils.sleep(30);
         cmd2.close();
-        CommonUtils.sleep(15);
+        CommonUtils.sleep(30);
         cmd.close();
 
         const output = new TextDecoder().decode(await cmd.output());
