@@ -519,7 +519,8 @@ export namespace Mandarine {
             REPOSITORY,
             MANUAL_COMPONENT,
             GUARDS,
-            INTERNAL
+            INTERNAL,
+            WEBSOCKET
         };
 
         /**
@@ -590,6 +591,10 @@ export namespace Mandarine {
             initializeControllers(): void;
             initializeEventListeners(): void;
             initializeValueReaders(): void;
+            initializeWebsocketComponents(): void;
+            connectWebsocketClientProxy(component: any): void;
+            connectWebsocketServerProxy(component: any): void;
+
         };
 
         /**
@@ -675,6 +680,12 @@ export namespace Mandarine {
                 configKey: string,
                 scope: ValueScopes | undefined,
                 propertyName: string
+            }
+
+            export type WebSocketValidProperties =  "onClose" | "onOpen" | "onError" | "onMessage" | "send" | "close" | "onMessageError";
+            export interface WebSocketProperty {
+                property: WebSocketValidProperties,
+                methodName: string
             }
         }
 

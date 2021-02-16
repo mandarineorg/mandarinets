@@ -12,8 +12,9 @@ export class ComponentComponent implements Mandarine.MandarineCore.ComponentComm
     public classHandlerPrimitive: any;
     public type?: Mandarine.MandarineCore.ComponentTypes;
     public configuration?: any;
+    private internals: { [prop: string]: any } = {};
 
-    constructor(name?: string, classHandler?: any, type?: Mandarine.MandarineCore.ComponentTypes, configuration?: any) {
+    constructor(name: string, classHandler: any, type: Mandarine.MandarineCore.ComponentTypes, configuration?: any) {
         this.name = name;
         this.classHandler = classHandler;
         this.type = type;
@@ -40,4 +41,19 @@ export class ComponentComponent implements Mandarine.MandarineCore.ComponentComm
         this.classHandler = handler;
     }
 
+    public addInternal(key: string, value: any) {
+        this.internals[key] = value;
+    }
+
+    public getInternal<T = any>(key: string): T {
+        return this.internals[key];
+    }
+
+    public deleteInternal(key: string): void {
+        delete this.internals[key];
+    }
+
+    public internalExists(key: string): boolean {
+        return this.getInternal(key) !== undefined;
+    }
 }

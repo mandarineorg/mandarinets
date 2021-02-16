@@ -11,10 +11,14 @@ import { ComponentComponent } from "../components/component-component/componentC
 import { RepositoryComponent } from "../components/repository-component/repositoryComponent.ts";
 import { DI } from "../dependency-injection/di.ns.ts";
 import { Authenticator } from "../mandarine-native/security/authenticatorDefault.ts";
+import { WebSocketClientManager } from "../mandarine-native/websocket/websocketClientManager.ts";
+import { WebSocketServerManager } from "../mandarine-native/websocket/websocketServerManager.ts";
 import { Mandarine } from "../Mandarine.ns.ts";
 import { MandarineConstants } from "../mandarineConstants.ts";
 import { Reflect } from "../reflectMetadata.ts";
 import { CommonUtils } from "../utils/commonUtils.ts";
+import { WebSocketClientUtil } from "../utils/components/websocketClient.ts";
+import { WebSocketServerUtil } from "../utils/components/websocketServer.ts";
 import { IndependentUtils } from "../utils/independentUtils.ts";
 import { ReflectUtils } from "../utils/reflectUtils.ts";
 
@@ -42,6 +46,18 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
             componentType: Mandarine.MandarineCore.ComponentTypes.INTERNAL
         });
 
+        this.components.set("MANDARINE_WEBSOCKETSERVER_MANAGER", {
+            componentName: "MANDARINE_WEBSOCKETSERVER_MANAGER",
+            componentInstance: new WebSocketServerManager(),
+            componentType: Mandarine.MandarineCore.ComponentTypes.INTERNAL
+        });
+
+        this.components.set("MANDARINE_WEBSOCKETCLIENT_MANAGER", {
+            componentName: "MANDARINE_WEBSOCKETCLIENT_MANAGER",
+            componentInstance: new WebSocketClientManager(),
+            componentType: Mandarine.MandarineCore.ComponentTypes.INTERNAL
+        });
+
         const mongoDbConnectionUrl: string | undefined = Mandarine.Global.readConfigByDots("mandarine.services.mongodb.connectionURL");
         if(mongoDbConnectionUrl) {
             
@@ -53,6 +69,8 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
 
             this.logger.info("MongoDB Service has been injected");
         }
+
+
     }
 
     public register(componentName: string, componentInstance: any, componentType: Mandarine.MandarineCore.ComponentTypes, configuration: any): void {
@@ -95,6 +113,9 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
                 case Mandarine.MandarineCore.ComponentTypes.GUARDS:
                     componentInstanceInitialized = new ComponentComponent(componentName, componentHandler, Mandarine.MandarineCore.ComponentTypes.GUARDS, configuration);
                 break;
+                case Mandarine.MandarineCore.ComponentTypes.WEBSOCKET:
+                    componentInstanceInitialized = new ComponentComponent(componentName, componentHandler, Mandarine.MandarineCore.ComponentTypes.WEBSOCKET, configuration);
+                break;
             }
 
             switch(componentType) {
@@ -105,6 +126,7 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
                 case Mandarine.MandarineCore.ComponentTypes.MIDDLEWARE:
                 case Mandarine.MandarineCore.ComponentTypes.CATCH:  
                 case Mandarine.MandarineCore.ComponentTypes.GUARDS:
+                case Mandarine.MandarineCore.ComponentTypes.WEBSOCKET:
                     isServiceType = true;
                 break;  
             }
@@ -188,6 +210,85 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
 
     public resolveDependencies(): void {
         return DI.Factory.componentDependencyResolver(this);
+    }
+
+    public connectWebsocketClientProxy(websocketInstance: ComponentComponent): void {
+        let websocketTarget: any = websocketInstance.getClassHandler();
+
+        const metadataKeys: Array<string> = Reflect.getMetadataKeys(websocketTarget);
+        metadataKeys.filter(item => item.startsWith(MandarineConstants.REFLECTION_MANDARINE_WEBSOCKET_PROPERTY)).forEach((item) => {
+            const metadata: Mandarine.MandarineCore.Decorators.WebSocketProperty = Reflect.getMetadata(item, websocketTarget);
+            if(metadata) {
+                switch(metadata.property) {
+                    case "onClose":
+                        websocketInstance.getInternal<WebSocket>(MandarineConstants.COMPONENT_PROPERTY_WEBSOCKET).onclose = (event: CloseEvent) => {
+                            websocketTarget[metadata.methodName](event);
+                        }
+                    break;
+                    case "onOpen":
+                        websocketInstance.getInternal<WebSocket>(MandarineConstants.COMPONENT_PROPERTY_WEBSOCKET).onopen = (event: Event) => {
+                            websocketTarget[metadata.methodName](event);
+                        }
+                    break;
+                    case "onMessage":
+                        websocketInstance.getInternal<WebSocket>(MandarineConstants.COMPONENT_PROPERTY_WEBSOCKET).onmessage = (event: MessageEvent) => {
+                            websocketTarget[metadata.methodName](event);
+                        }
+                    break;
+                    case "onError":
+                        websocketInstance.getInternal<WebSocket>(MandarineConstants.COMPONENT_PROPERTY_WEBSOCKET).onerror = (event: Event | ErrorEvent) => {
+                            websocketTarget[metadata.methodName](event);
+                        }
+                    break;
+                    case "send":
+                        websocketTarget[metadata.methodName] = (data: string | ArrayBufferView | ArrayBuffer | Blob) => {
+                            websocketInstance.getInternal<WebSocket>(MandarineConstants.COMPONENT_PROPERTY_WEBSOCKET).send(data);
+                        }
+                    break;
+                    case "close":
+                        websocketTarget[metadata.methodName] = (closeOptions?: { code?: number, reason?: string}) => {
+                            WebSocketClientUtil.close(websocketInstance, closeOptions?.code, closeOptions?.reason);
+                        }
+                    break;
+                }
+            }
+        });
+    }
+
+    public connectWebsocketServerProxy(websocketInstance: ComponentComponent): void {
+        let websocketTarget: any = websocketInstance.getClassHandler();
+
+        const metadataKeys: Array<string> = Reflect.getMetadataKeys(websocketTarget);
+        metadataKeys.filter(item => item.startsWith(MandarineConstants.REFLECTION_MANDARINE_WEBSOCKET_PROPERTY)).forEach((item) => {
+            const metadata: Mandarine.MandarineCore.Decorators.WebSocketProperty = Reflect.getMetadata(item, websocketTarget);
+            if(metadata) {
+                const internalExists: boolean = websocketInstance.getInternal<Worker>(MandarineConstants.COMPONENT_PROPERTY_WEBSOCKET) !== undefined;
+                if(internalExists) {
+                    switch(metadata.property) {
+                        case "onMessage":
+                            websocketInstance.getInternal<Worker>(MandarineConstants.COMPONENT_PROPERTY_WEBSOCKET).onmessage = (event: MessageEvent) => {
+                                websocketTarget[metadata.methodName](event);
+                            }
+                        break;
+                        case "onError":
+                            websocketInstance.getInternal<Worker>(MandarineConstants.COMPONENT_PROPERTY_WEBSOCKET).onerror = (event: ErrorEvent) => {
+                                event.preventDefault(); // Don't panic main thread since it should be handled already
+                                websocketTarget[metadata.methodName](event);
+                            }
+                        break;
+                        case "send":
+                            throw new Error("Sending from WebSocket server to client is not implemented in Mandarine.");
+                        case "close":
+                            websocketTarget[metadata.methodName] = () => {
+                                WebSocketServerUtil.unmount(websocketInstance);
+                            }
+                        break;
+                    }
+                } else {
+                    this.logger.warn("An operation related to a websocket server was executed, but the worker for the server is not available.");
+                }
+            }
+        });
     }
 
     private connectRepositoryToProxy(repositoryObject: Mandarine.MandarineCore.ComponentRegistryContext) {
@@ -353,5 +454,28 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
                 });
             });
         });
+    }
+
+    public initializeWebsocketComponents(): void {
+        const websocketComponents = this.getComponentsByComponentType(Mandarine.MandarineCore.ComponentTypes.WEBSOCKET);
+        websocketComponents.forEach((item) => {
+            // Create Websocket
+            let component: ComponentComponent = item.componentInstance;
+            const { url, protocols, type, port } = component.configuration;
+
+            try {
+                if(type === "client") {
+                    WebSocketClientUtil.mount(component, url, protocols);
+                } else if(type === "server") {
+                    WebSocketServerUtil.mount(component, port);
+                }
+            } catch(error) {
+                if(type === "client") {
+                    this.logger.warn(`Websocket client component could not establish a connnection with host ${url}. You may retry manually.`, error);
+                } else if(type === "server") {
+                    this.logger.warn(`Websocket server component could not be created in worker. `, error);
+                }
+            }
+        })
     }
 }

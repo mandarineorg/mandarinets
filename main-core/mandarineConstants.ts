@@ -24,6 +24,9 @@ export class MandarineConstants {
     public static readonly REFLECTION_MANDARINE_VALUE_DECORATOR = "mandarine-value-decorator";
     public static readonly REFLECTION_MANDARINE_CONFIGURATION_PROPERTIES = "mandarine-configuration-properties";
     public static readonly REFLECTION_MANDARINE_EVENTLISTENER_DECORATOR = "mandarine-eventlistener";
+    public static readonly REFLECTION_MANDARINE_WEBSOCKET_PROPERTY = "mandarine-websocket-property";
+
+    public static readonly COMPONENT_PROPERTY_WEBSOCKET = "WEBSOCKET";
 
     // SECURITY
     public static readonly SECURITY_AUTH_COOKIE_NAME = "MDAUTHID";
