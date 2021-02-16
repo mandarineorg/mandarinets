@@ -5,6 +5,8 @@ import { DenoAsserts, INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY, Orange, Test } fr
 
 export class WebSocketTestFile {
 
+    public MAX_COMPILATION_TIMEOUT_SECONDS = 50;
+
     @Test({
         name: "WebSocket server",
         description: "Test the creation of a websocket server through Mandarine"
@@ -17,7 +19,7 @@ export class WebSocketTestFile {
             stdin: "null"
         });
 
-        CommonUtils.sleep(5);
+        CommonUtils.sleep(this.MAX_COMPILATION_TIMEOUT_SECONDS);
 
         let cmd2 = Deno.run({
             cmd: ["deno", "run", "-c", "tsconfig.json", "--allow-all", "--unstable", `${INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY}/websocketClient.ts`],
@@ -26,9 +28,9 @@ export class WebSocketTestFile {
             stdin: "null"
         });
         
-        CommonUtils.sleep(30);
+        CommonUtils.sleep(50);
         cmd2.close();
-        CommonUtils.sleep(30);
+        CommonUtils.sleep(10);
         cmd.close();
 
         const output = new TextDecoder().decode(await cmd.output());
