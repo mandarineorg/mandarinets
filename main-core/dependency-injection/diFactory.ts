@@ -204,7 +204,7 @@ export class DependencyInjectionFactory {
     /** 
      * Get a Dependency from the DI Container programatically
      */
-    public getDependency(type: ClassType) {
+    public getDependency<T = any>(type: ClassType): T | undefined {
         let component = ApplicationContext.getInstance().getComponentsRegistry().getComponentByHandlerType(type);
         if(component != (null || undefined)) return (component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT || component.componentType == Mandarine.MandarineCore.ComponentTypes.INTERNAL) ? component.componentInstance : component.componentInstance.getClassHandler();
     }
@@ -212,14 +212,14 @@ export class DependencyInjectionFactory {
     /** 
      * Get a Dependency from the DI Container programatically
      */
-    public getSeed(type: ClassType) {
+    public getSeed<T = any>(type: ClassType): T | undefined {
         return this.getDependency(type);
     }
 
     /** 
      * Get a Dependency from the DI Container programatically
      */
-    public getInjectable(type: ClassType) {
+    public getInjectable<T = any>(type: ClassType) : T | undefined {
         return this.getDependency(type);
     }
 
