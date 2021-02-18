@@ -85,4 +85,22 @@ export class MainCoreDecoratorProxy {
         Mandarine.Global.getNativeComponentsRegistry().override(overrideType, new targetClass());
     }
 
+    public static registerScheduledTask(targetClass: any, cronExpression: string, timeZone: string | undefined, methodName: string): void {
+        const metadata: Mandarine.MandarineCore.Decorators.ScheduledTask = {
+            methodName,
+            cronExpression,
+            timeZone
+        };
+
+        Reflect.defineMetadata(`${MandarineConstants.REFLECTION_MANDARINE_SCHEDULED_DECORATOR}-${CommonUtils.generateUUID()}`, metadata, targetClass);
+    }
+
+    public static registerTimer(targetClass: any, fixedRate: number, methodName: string): void {
+        const metadata: Mandarine.MandarineCore.Decorators.Timer = {
+            methodName,
+            fixedRate
+        };
+
+        Reflect.defineMetadata(`${MandarineConstants.REFLECTION_MANDARINE_TIMER_DECORATOR}-${CommonUtils.generateUUID()}`, metadata, targetClass);
+    }
 }

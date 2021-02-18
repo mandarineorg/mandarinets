@@ -27,6 +27,7 @@ import { MandarineCommonInterfaces } from "./Mandarine.commonInterfaces.ns.ts";
 import type { ComponentComponent } from "./components/component-component/componentComponent.ts";
 import { Leaf } from "../deps.ts";
 import { IndependentUtils } from "./utils/independentUtils.ts";
+import { ClassType } from "./utils/utilTypes.ts";
 
 /**
 * This namespace contains all the essentials for mandarine to work
@@ -533,6 +534,16 @@ export namespace Mandarine {
         }
 
         /**
+         * Context for Tasks that are timer-like.
+         */
+        export interface TimerMetadataContext {
+            handlerType: ClassType;
+            methodName: string;
+            fixedRate: number;
+            interval: number;
+        }
+
+        /**
         * Contains the metadata information of the component.
         * This information is initialized when a component decorator is used
         */
@@ -594,7 +605,7 @@ export namespace Mandarine {
             initializeWebsocketComponents(): void;
             connectWebsocketClientProxy(component: any): void;
             connectWebsocketServerProxy(component: any): void;
-
+            initializeTasks(): void;
         };
 
         /**
@@ -685,6 +696,16 @@ export namespace Mandarine {
             export type WebSocketValidProperties =  "onClose" | "onOpen" | "onError" | "onMessage" | "send" | "close" | "onMessageError";
             export interface WebSocketProperty {
                 property: WebSocketValidProperties,
+                methodName: string
+            }
+
+            export interface ScheduledTask {
+                methodName: string,
+                cronExpression: string,
+                timeZone: string | undefined
+            }
+            export interface Timer {
+                fixedRate: number,
                 methodName: string
             }
         }

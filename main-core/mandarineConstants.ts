@@ -22,6 +22,8 @@ export class MandarineConstants {
     public static readonly REFLECTION_MANDARINE_USE_MIDDLEWARE_DECORATOR = "mandarine-use-middleware";
     public static readonly REFLECTION_MANDARINE_USE_GUARDS_DECORATOR = "mandarine-use-guards";
     public static readonly REFLECTION_MANDARINE_VALUE_DECORATOR = "mandarine-value-decorator";
+    public static readonly REFLECTION_MANDARINE_SCHEDULED_DECORATOR = "mandarine-scheduled-decorator";
+    public static readonly REFLECTION_MANDARINE_TIMER_DECORATOR = "mandarine-timer-decorator";
     public static readonly REFLECTION_MANDARINE_CONFIGURATION_PROPERTIES = "mandarine-configuration-properties";
     public static readonly REFLECTION_MANDARINE_EVENTLISTENER_DECORATOR = "mandarine-eventlistener";
     public static readonly REFLECTION_MANDARINE_WEBSOCKET_PROPERTY = "mandarine-websocket-property";
