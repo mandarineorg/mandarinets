@@ -489,6 +489,7 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
     public initializeTasks(): void {
         const serviceTypeComponents = this.getComponents().filter((item) => item.isServiceType === true);
         const taskManagerDependency = ApplicationContext.getInstance().getDIFactory().getDependency<TaskManager>(TaskManager);
+        let cronTaskFound = false;
         if(taskManagerDependency) {
             serviceTypeComponents.forEach((component) => {
                 const instance = component.componentInstance.getClassHandler();
@@ -498,6 +499,7 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
                     const metadata: Mandarine.MandarineCore.Decorators.ScheduledTask = Reflect.getMetadata(item, instance);
                     if(metadata) {
                         taskManagerDependency.getCronManager().create(metadata.cronExpression, () => instance[metadata.methodName](), metadata.timeZone);
+                        cronTaskFound = true;
                     }
                 });
 
@@ -508,9 +510,11 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
                     }
                 });
             });
-            
+            // Only begin CRON tasks interval checker if > one task actually exists
+            if(cronTaskFound) {            
+                taskManagerDependency.getCronManager().beginTasks();
+            }
             // ALL CRON TASKS ARE SETUP
-            taskManagerDependency.getCronManager().beginTasks();
             this.logger.info("Task manager has been found and initialized");
         }
     }
