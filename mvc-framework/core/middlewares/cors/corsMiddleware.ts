@@ -32,7 +32,10 @@ interface MiddlewareData {
 
 export const handleCors = (requestContext: Mandarine.Types.RequestContext, data: MiddlewareData) => {
     let { corsOptions, useDefaultCors } = data;
-    if(!corsOptions && useDefaultCors) corsOptions = Mandarine.Defaults.MandarineDefaultCorsOptions;
+    if (!corsOptions) {
+        return;
+    }
+    if(useDefaultCors && !corsOptions.optionsSuccessStatus) corsOptions.optionsSuccessStatus = Mandarine.Defaults.MandarineDefaultCorsOptions.optionsSuccessStatus;
 
     let req = requestContext.request;
     let res = requestContext.response;
