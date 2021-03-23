@@ -244,6 +244,8 @@ export class MandarineMvcFrameworkStarter {
       }
     };
 
+
+    router = router.options(route, <any>responseHandler);
     switch (routingAction.actionType) {
       case Mandarine.MandarineMVC.HttpMethods.GET:
         return router.get(route, <any>responseHandler);
@@ -251,8 +253,6 @@ export class MandarineMvcFrameworkStarter {
         return router.post(route, <any>responseHandler);
       case Mandarine.MandarineMVC.HttpMethods.DELETE:
         return router.delete(route, <any>responseHandler);
-      case Mandarine.MandarineMVC.HttpMethods.OPTIONS:
-        return router.options(route, <any>responseHandler);
       case Mandarine.MandarineMVC.HttpMethods.PUT:
         return router.put(route, <any>responseHandler);
       case Mandarine.MandarineMVC.HttpMethods.PATCH:
@@ -260,6 +260,8 @@ export class MandarineMvcFrameworkStarter {
       case Mandarine.MandarineMVC.HttpMethods.HEAD:
         return router.head(route, <any>responseHandler);
     }
+
+    return router;
   }
 
   public getRouter(): Router {
