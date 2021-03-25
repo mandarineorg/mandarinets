@@ -9,7 +9,7 @@ export class MyController {
     @PUT('/default')
     @Cors({origin: 'http://localhost'})
     public default() {
-        return "default CORS headers for a PUT"
+        return "CORS-enabled PUT action"
     }
 }
 
