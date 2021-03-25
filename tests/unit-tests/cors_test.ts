@@ -108,7 +108,7 @@ export class CORSTest {
         DenoAsserts.assertEquals(requestMock.response.headers.get("access-control-allow-origin"), false);
         DenoAsserts.assertEquals(requestMock.response.headers.get("access-control-allow-methods"), "POST, GET");
         DenoAsserts.assertEquals(requestMock.response.headers.get("access-control-allow-headers"), "allowed-header-1");
-        DenoAsserts.assertEquals(requestMock.response.headers.get("accessl-control-expose-headers"), "exposed-header-1, exposed-header-2");
+        DenoAsserts.assertEquals(requestMock.response.headers.get("access-control-expose-headers"), "exposed-header-1, exposed-header-2");
         DenoAsserts.assert(requestMock.response.headers.get("access-control-allow-credentials") == undefined);
         DenoAsserts.assertEquals(requestMock.response.headers.get("access-control-max-age"), "100");
 
@@ -121,7 +121,7 @@ export class CORSTest {
             useDefaultCors: false
         });
         DenoAsserts.assertEquals(requestMock.response.headers.get("access-control-allow-origin"), false);
-        DenoAsserts.assertEquals(requestMock.response.headers.get("accessl-control-expose-headers"), "exposed-header-1, exposed-header-2");
+        DenoAsserts.assertEquals(requestMock.response.headers.get("access-control-expose-headers"), "exposed-header-1, exposed-header-2");
         DenoAsserts.assert(requestMock.response.headers.get("access-control-allow-credentials") == undefined);
 
         //RESET
@@ -135,7 +135,7 @@ export class CORSTest {
             useDefaultCors: false
         });
         DenoAsserts.assertEquals(requestMock.response.headers.get("access-control-allow-origin"), "http://localhost");
-        DenoAsserts.assertEquals(requestMock.response.headers.get("accessl-control-expose-headers"), "exposed-header-1, exposed-header-2");
+        DenoAsserts.assertEquals(requestMock.response.headers.get("access-control-expose-headers"), "exposed-header-1, exposed-header-2");
         DenoAsserts.assertEquals(requestMock.response.headers.get("access-control-allow-credentials"), "true");
 
         //RESET

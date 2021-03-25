@@ -15,7 +15,7 @@ const configureOrigin = (corsOptions: Mandarine.MandarineMVC.CorsMiddlewareOptio
 
 const configureExposeHeaders = (corsOptions: Mandarine.MandarineMVC.CorsMiddlewareOption, res: Mandarine.MandarineMVC.ResponseContext) => {
     if (corsOptions.exposedHeaders && corsOptions.exposedHeaders.length > 0) {
-        res.headers.set("accessl-control-expose-headers", corsOptions.exposedHeaders.join(", "));
+        res.headers.set("access-control-expose-headers", corsOptions.exposedHeaders.join(", "));
     }
 }
 
