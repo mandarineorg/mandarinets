@@ -45,3 +45,39 @@ export function createResolvable<T>(): Resolvable<T> {
 }
 
 export const INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY = "./tests/integration-tests/files";
+
+export function waitForMandarineServer(integrationTestFixtureFilename: string): Promise<Deno.Process> {
+
+    return new Promise((resolve, reject) => {
+        const proc = Deno.run({
+            cmd: ["deno", "run", "-c", "tsconfig.json", "--allow-all", "--unstable", `${INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY}/${integrationTestFixtureFilename}`],
+            stdout: "piped",
+            stderr: "null",
+            stdin: "null"
+        });
+
+        const lastOutput = new Uint8Array(1024)
+        const textDecoder = new TextDecoder();
+        let stdoutText = "";
+
+
+        const readOutput = () => {
+            proc.stdout!.read(lastOutput).then((bytesRead) => {
+                if (bytesRead === null) {
+                    proc.stdout!.close();
+                    reject("Process ended without having successfully started Mandarine server. Here its stdout: \n\n" + stdoutText);
+                } else {
+                    stdoutText += textDecoder.decode(lastOutput);
+                    if (stdoutText.indexOf("[MandarineMVC.class] Server has started") !== -1) {
+                        proc.stdout!.close();
+                        resolve(proc);
+                    } else {
+                        setTimeout(readOutput, 250);
+                    }
+                }
+            });
+        };
+        readOutput();
+    });
+}
+

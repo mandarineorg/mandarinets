@@ -1,11 +1,9 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
 import { CommonUtils } from "../../main-core/utils/commonUtils.ts";
-import { DenoAsserts, INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY, Orange, Test } from "../mod.ts";
+import { DenoAsserts,  Orange, Test, waitForMandarineServer } from "../mod.ts";
 
 export class PipeTest {
-
-    public MAX_COMPILATION_TIMEOUT_SECONDS = 55;
 
     constructor() {
         Orange.setOptions(this, {
@@ -20,14 +18,7 @@ export class PipeTest {
         description: "Test all endpoints in file, and verifies that transformation from pipe is working fine"
     })
     public async testManualInjectionEndpoint() {
-        let cmd = Deno.run({
-            cmd: ["deno", "run", "-c", "tsconfig.json", "--allow-all", "--unstable", `${INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY}/pipes.ts`],
-            stdout: "null",
-            stderr: "null",
-            stdin: "null"
-        });
-
-        CommonUtils.sleep(this.MAX_COMPILATION_TIMEOUT_SECONDS);
+        let cmd = await waitForMandarineServer("pipes.ts");
 
         let test1 = (await (await fetch("http://localhost:5320/hello-world?id=4")).json());
 
