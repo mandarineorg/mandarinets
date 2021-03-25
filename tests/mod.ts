@@ -46,7 +46,7 @@ export function createResolvable<T>(): Resolvable<T> {
 
 export const INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY = "./tests/integration-tests/files";
 
-export function waitForMandarineServer(integrationTestFixtureFilename: string): Promise<Deno.Process> {
+export function waitForMandarineServer(integrationTestFixtureFilename: string): Promise<{proc: Deno.Process, close: () => void}> {
 
     return new Promise((resolve, reject) => {
         const proc = Deno.run({
@@ -69,8 +69,8 @@ export function waitForMandarineServer(integrationTestFixtureFilename: string): 
                 } else {
                     stdoutText += textDecoder.decode(lastOutput);
                     if (stdoutText.indexOf("[MandarineMVC.class] Server has started") !== -1) {
-                        proc.stdout!.close();
-                        resolve(proc);
+                        resolve({proc, close: () => { proc.stdout!.close(); proc.close(); }});
+
                     } else {
                         setTimeout(readOutput, 250);
                     }
