@@ -1,6 +1,5 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { Context } from "../../../../deps.ts";
 import { Mandarine } from "../../../../main-core/Mandarine.ns.ts";
 import { HttpUtils } from "../../../../main-core/utils/httpUtils.ts";
 
@@ -30,10 +29,10 @@ interface MiddlewareData {
     useDefaultCors: boolean
 }
 
-export const handleCors = (requestContext: Mandarine.Types.RequestContext, data: MiddlewareData) => {
+export const handleCors = (requestContext: Mandarine.Types.RequestContext, data: MiddlewareData): boolean => {
     let { corsOptions, useDefaultCors } = data;
     if (!corsOptions) {
-        return;
+        return true;
     }
     if(useDefaultCors && !corsOptions.optionsSuccessStatus) corsOptions.optionsSuccessStatus = Mandarine.Defaults.MandarineDefaultCorsOptions.optionsSuccessStatus;
 
@@ -42,7 +41,7 @@ export const handleCors = (requestContext: Mandarine.Types.RequestContext, data:
     const requestOrigin = req.headers.get("origin");
 
     if(requestContext.request.method === "OPTIONS") {
-        if (!requestOrigin) return;
+        if (!requestOrigin) return true;
 
         configureOrigin(corsOptions, res, requestOrigin);
 
@@ -68,10 +67,12 @@ export const handleCors = (requestContext: Mandarine.Types.RequestContext, data:
         res.headers.set("access-control-max-age", finalMaxAge);
         
         res.status = (corsOptions.optionsSuccessStatus) ? corsOptions.optionsSuccessStatus : <any> Mandarine.MandarineMVC.HttpStatusCode.NO_CONTENT;
+        return false;
     } else {
         configureOrigin(corsOptions, res, <string> requestOrigin);
         configureExposeHeaders(corsOptions, res);
         configureCredentials(corsOptions, res);
+        return true;
     }
 }
 

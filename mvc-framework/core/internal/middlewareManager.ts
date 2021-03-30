@@ -15,18 +15,18 @@ export class MiddlewareManager {
         return this.internalMiddleware.find(x => x.type === type);
     }
 
-    public execute(context: Mandarine.Types.RequestContext, data: any, lifecycle: Mandarine.MandarineMVC.Internal.InternalMiddlewareLifecycle) : void {
+    public execute(context: Mandarine.Types.RequestContext, data: any, lifecycle: Mandarine.MandarineMVC.Internal.InternalMiddlewareLifecycle) : boolean {
         const configuration = Mandarine.Global.getMandarineConfiguration();
 
-        this.internalMiddleware
+        return this.internalMiddleware
         .filter(x => x.lifecycle === lifecycle || x.lifecycle === "ALL")
         .filter((middleware: Mandarine.MandarineMVC.Internal.InternalMiddleware) => {
             const { key, expectedValue } = middleware.configurationFlag;
             let flagValue = JsonUtils.getValueFromObjectByDots(configuration, key);
             return flagValue === expectedValue && middleware.enabled;
         })
-        .forEach((middleware: Mandarine.MandarineMVC.Internal.InternalMiddleware) => {
-            middleware.caller(context, data);
+        .every((middleware: Mandarine.MandarineMVC.Internal.InternalMiddleware) => {
+            return middleware.caller(context, data);
         });
     }
 

@@ -1,6 +1,7 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
 import { Mandarine } from "../../../main-core/Mandarine.ns.ts";
+import { MandarineMvc } from "../../mandarine-mvc.ns.ts";
 
 interface MiddlewareData {
   responseTimeIsPostRequest: boolean;
@@ -10,11 +11,11 @@ const defaultMiddlewareData: MiddlewareData = {
   responseTimeIsPostRequest: false
 }
 
-export const responseTimeHandler = (context: Mandarine.Types.RequestContext, data: MiddlewareData = defaultMiddlewareData) => {
+export const responseTimeHandler: MandarineMvc.Internal.InternalMiddlewareFunc = (context: Mandarine.Types.RequestContext, data: MiddlewareData = defaultMiddlewareData) => {
   const typedContext: Mandarine.Types.RequestContext = context;
 
   const config = Mandarine.Global.getMandarineConfiguration();
-  if(!config.mandarine.server.responseTimeHeader) return;
+  if(!config.mandarine.server.responseTimeHeader) return true;
   
   if(!typedContext.timeMetadata) typedContext.timeMetadata = { 
     startedAt: 0,
@@ -32,4 +33,6 @@ export const responseTimeHandler = (context: Mandarine.Types.RequestContext, dat
     typedContext.response.headers.set("X-Response-Time", responseTime.toString());
 
   }
+
+  return true;
 };

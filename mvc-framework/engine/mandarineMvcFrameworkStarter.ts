@@ -118,8 +118,8 @@ export class MandarineMvcFrameworkStarter {
     }
   }
 
-  private preRequestInternalMiddlewares(context: Mandarine.Types.RequestContext, routingAction: Mandarine.MandarineMVC.Routing.RoutingAction, controllerComponent: ControllerComponent): void {
-    this.internalMiddlewareManager.execute(context, {
+  private preRequestInternalMiddlewares(context: Mandarine.Types.RequestContext, routingAction: Mandarine.MandarineMVC.Routing.RoutingAction, controllerComponent: ControllerComponent): boolean {
+    return this.internalMiddlewareManager.execute(context, {
       corsOptions: controllerComponent.options.cors ? controllerComponent.options.cors : routingAction.routingOptions?.cors,
       useDefaultCors: true,
       responseTimeIsPostRequest: false
@@ -198,7 +198,7 @@ export class MandarineMvcFrameworkStarter {
         return;
       }
 
-      this.preRequestInternalMiddlewares(context, routingAction, controllerComponent); // Execute internal middleware like sessions
+      let continueRequest = this.preRequestInternalMiddlewares(context, routingAction, controllerComponent); // Execute internal middleware like sessions
 
       const controllerPermissions = controllerComponent.options.withPermissions;
       const routePermissions = routingAction.routingOptions?.withPermissions;
@@ -228,7 +228,7 @@ export class MandarineMvcFrameworkStarter {
         return;
       }
 
-      let continueRequest: boolean = await this.executeUserMiddlewares(true, availableMiddlewares, context); // If the user has any middleware, execute it
+      continueRequest = continueRequest && await this.executeUserMiddlewares(true, availableMiddlewares, context); // If the user has any middleware, execute it
 
       if (continueRequest) {
         await requestResolver(routingAction, context);

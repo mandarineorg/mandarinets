@@ -553,7 +553,7 @@ export namespace MandarineMvc {
             SESSION_STORE
         }
 
-        export type InternalMiddlewareFunc = (context: Mandarine.Types.RequestContext, data: any) => void;
+        export type InternalMiddlewareFunc = (context: Mandarine.Types.RequestContext, data: any) => boolean;
 
         export type InternalMiddlewareLifecycle = "PRE" | "POST" | "ALL";
 
