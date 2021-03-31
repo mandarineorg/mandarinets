@@ -39,6 +39,8 @@ export class ResourceHandler implements Mandarine.MandarineCore.IResourceHandler
 
     public addResourceCors(cors: Mandarine.MandarineMVC.CorsMiddlewareOption): ResourceHandler {
         if(cors == undefined) return this;
+        if(cors.origin == (null || undefined)) cors.origin = Mandarine.Defaults.MandarineDefaultCorsOptions.origin;
+        if(cors.methods == (null || undefined)) cors.methods = Mandarine.Defaults.MandarineDefaultCorsOptions.methods;
         if(cors.optionsSuccessStatus == (null || undefined)) cors.optionsSuccessStatus = Mandarine.Defaults.MandarineDefaultCorsOptions.optionsSuccessStatus;
         
         this.resourceCors = cors;

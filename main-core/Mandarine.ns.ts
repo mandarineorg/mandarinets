@@ -797,8 +797,9 @@ export namespace Mandarine {
             return Mandarine.Global.getNativeComponentsRegistry().get(MandarineCore.NativeComponents.WebMVCConfigurer).getSessionContainer();
         };
 
-        export const MandarineDefaultCorsOptions: { optionsSuccessStatus: number} = {
-
+        export const MandarineDefaultCorsOptions: Mandarine.MandarineMVC.CorsMiddlewareOption = {
+            origin: '*',
+            methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
             optionsSuccessStatus: 204
         }
     };
