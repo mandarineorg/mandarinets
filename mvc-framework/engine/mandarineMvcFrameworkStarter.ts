@@ -259,9 +259,8 @@ export class MandarineMvcFrameworkStarter {
         return router.patch(route, <any>responseHandler);
       case Mandarine.MandarineMVC.HttpMethods.HEAD:
         return router.head(route, <any>responseHandler);
+      default: return router;
     }
-
-    return router;
   }
 
   public getRouter(): Router {
