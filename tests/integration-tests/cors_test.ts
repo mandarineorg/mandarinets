@@ -1,4 +1,4 @@
-import {DenoAsserts, INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY, Orange, Test} from "../mod.ts";
+import {DenoAsserts, INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY, Orange, Test, waitForMandarineServer} from "../mod.ts";
 import {CommonUtils} from "../../main-core/utils/commonUtils.ts";
 
 export class CorsTest {
@@ -16,7 +16,7 @@ export class CorsTest {
         description: "Verifies Mandarine just returns CORS control headers for preflight requests"
     })
     public async testPreflightRequest() {
-        let cmd = await this.waitForMandarineServer(`${INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY}/cors.ts`)
+        let cmd = await waitForMandarineServer(`${INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY}/cors.ts`)
 
         let response = await fetch("http://localhost:1228" +
             "/default", {method: 'OPTIONS', headers: {origin: "http://localhost"}});
@@ -38,7 +38,7 @@ export class CorsTest {
         description: "Verifies Mandarine runs CORS-enabled actions if queried with their correct method"
     })
     public async testRunningAction() {
-        let cmd = await this.waitForMandarineServer(`${INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY}/cors.ts`)
+        let cmd = await waitForMandarineServer(`${INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY}/cors.ts`)
 
         let response = await fetch("http://localhost:1228" +
             "/default", {method: 'PUT', headers: {origin: "http://localhost"}});
@@ -49,40 +49,5 @@ export class CorsTest {
         } finally {
             cmd.close();
         }
-    }
-
-    private waitForMandarineServer(fixturePath: string): Promise<Deno.Process> {
-
-        return new Promise((resolve, reject) => {
-            const proc = Deno.run({
-                cmd: ["deno", "run", "-c", "tsconfig.json", "--allow-all", "--unstable", fixturePath],
-                stdout: "piped",
-                stderr: "null",
-                stdin: "null"
-            });
-
-            const lastOutput = new Uint8Array(1024)
-            const textDecoder = new TextDecoder();
-            let stdoutText = "";
-
-
-            const readOutput = () => {
-                proc.stdout!.read(lastOutput).then((bytesRead) => {
-                    if (bytesRead === null) {
-                        proc.stdout!.close();
-                        reject("Process ended without having successfully started Mandarine server. Here its stdout: \n\n" + stdoutText);
-                    } else {
-                        stdoutText += textDecoder.decode(lastOutput);
-                        if (stdoutText.indexOf("[MandarineMVC.class] Server has started") !== -1) {
-                            proc.stdout!.close();
-                            resolve(proc);
-                        } else {
-                            setTimeout(readOutput, 250);
-                        }
-                    }
-                });
-            };
-            readOutput();
-        });
     }
 }
