@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import {DenoAsserts, INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY, Orange, Test, waitForMandarineServer} from "../mod.ts";
 import {CommonUtils} from "../../main-core/utils/commonUtils.ts";
 

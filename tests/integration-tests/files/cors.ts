@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 import {Controller} from "../../../mvc-framework/core/decorators/stereotypes/controller/controller.ts";
 import {PUT} from "../../../mvc-framework/core/decorators/stereotypes/controller/routingDecorator.ts";
 import {Cors} from "../../../mvc-framework/core/decorators/stereotypes/controller/corsMiddlewareDecorator.ts";
