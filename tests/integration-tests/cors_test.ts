@@ -18,7 +18,7 @@ export class CorsTest {
         description: "Verifies Mandarine just returns CORS control headers for preflight requests"
     })
     public async testPreflightRequest() {
-        let cmd = await waitForMandarineServer(`${INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY}/cors.ts`)
+        let cmd = await waitForMandarineServer("cors.ts")
 
         let response = await fetch("http://localhost:1228" +
             "/default", {method: 'OPTIONS', headers: {origin: "http://localhost"}});
@@ -40,7 +40,7 @@ export class CorsTest {
         description: "Verifies Mandarine runs CORS-enabled actions if queried with their correct method"
     })
     public async testRunningAction() {
-        let cmd = await waitForMandarineServer(`${INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY}/cors.ts`)
+        let cmd = await waitForMandarineServer("cors.ts")
 
         let response = await fetch("http://localhost:1228" +
             "/default", {method: 'PUT', headers: {origin: "http://localhost"}});
