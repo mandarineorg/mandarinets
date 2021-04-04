@@ -80,4 +80,3 @@ export function waitForMandarineServer(integrationTestFixtureFilename: string): 
         readOutput();
     });
 }
-

@@ -57,12 +57,12 @@ export class SessionMiddleware {
         return sesId;
     }
 
-    public createSessionCookie(context: Mandarine.Types.RequestContext) {
+    public createSessionCookie(context: Mandarine.Types.RequestContext): boolean {
         const sessionContainerConfig: Mandarine.Security.Sessions.SessionContainer = this.getSessionContainer();
 
         if(!sessionContainerConfig) {
             this.logger.debug("A session cookie was tried to be created but the session container is not initialized");
-            return;
+            return true;
         } 
 
         if(!sessionContainerConfig.store) {
@@ -91,7 +91,7 @@ export class SessionMiddleware {
                 context.cookies.delete(sessionCookieName);
                 // Create context for new session
                 this.createSessionContext(sessionContainerConfig, context);
-                return;
+                return true;
             }
 
             const touch = Mandarine.Global.getMandarineConfiguration().mandarine?.sessions?.touch;
@@ -113,9 +113,10 @@ export class SessionMiddleware {
             context.request.sessionID = <string> sesId;
             context.request.session = Object.assign({}, context.request.sessionContext.sessionData);
         }
+        return true;
     }
 
-    public storeSession(context: Mandarine.Types.RequestContext) {
+    public storeSession(context: Mandarine.Types.RequestContext): boolean {
         const sessionContainerConfig: Mandarine.Security.Sessions.SessionContainer = this.getSessionContainer();
 
         if(!sessionContainerConfig.store) {
@@ -135,6 +136,8 @@ export class SessionMiddleware {
             if(mandarineSession.isSessionNew) { mandarineSession.isSessionNew = false; }
             sessionContainerConfig.store.set(context.request.sessionID, mandarineSession, { override: true });
         }
+
+        return true;
     }
 
 }
