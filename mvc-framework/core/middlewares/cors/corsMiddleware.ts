@@ -42,7 +42,7 @@ export const handleCors = (requestContext: Mandarine.Types.RequestContext, data:
 
         configureOrigin(corsOptions, res, requestOrigin);
 
-        const requestMethods = req.headers.get("access-control-request-methods");
+        const requestMethods = req.headers.get("access-control-request-method");
         if (requestMethods && corsOptions.methods && corsOptions.methods.length > 0) {
             const list = requestMethods.split(",").map((v) => v.trim());
             const allowed = list.filter((v) => corsOptions.methods?.includes(v));

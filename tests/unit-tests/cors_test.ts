@@ -97,7 +97,7 @@ export class CORSTest {
 
         let requestMock = this.getMockObject("OPTIONS");
 
-        requestMock.request.headers.set("access-control-request-methods", "POST, DELETE, GET");
+        requestMock.request.headers.set("access-control-request-method", "POST, DELETE, GET");
         requestMock.request.headers.set("access-control-request-headers", "Origin, allowed-header-1, Content-Type");
 
         requestMock.request.headers.set("origin", "http://localhost");
