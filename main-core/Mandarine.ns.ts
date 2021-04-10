@@ -521,7 +521,8 @@ export namespace Mandarine {
             MANUAL_COMPONENT,
             GUARDS,
             INTERNAL,
-            WEBSOCKET
+            WEBSOCKET,
+            MICROSERVICE
         };
 
         /**
@@ -606,6 +607,7 @@ export namespace Mandarine {
             connectWebsocketClientProxy(component: any): void;
             connectWebsocketServerProxy(component: any): void;
             initializeTasks(): void;
+            initializeMicroservices(): void;
         };
 
         /**
@@ -708,6 +710,15 @@ export namespace Mandarine {
                 fixedRate: number,
                 methodName: string
             }
+        }
+
+        export type MicroserviceStatus = "Initialized" | "Initialized,Listening" | "Unhealthy";
+        export interface MicroserviceItem {
+            worker: Worker;
+            createdDate: Date;
+            lastMountingDate: Date;
+            status: MicroserviceStatus;
+            parentComponent: ClassType;
         }
 
     };

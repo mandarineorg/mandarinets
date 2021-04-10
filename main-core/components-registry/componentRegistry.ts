@@ -16,6 +16,7 @@ import { WebSocketClientManager } from "../mandarine-native/websocket/websocketC
 import { WebSocketServerManager } from "../mandarine-native/websocket/websocketServerManager.ts";
 import { Mandarine } from "../Mandarine.ns.ts";
 import { MandarineConstants } from "../mandarineConstants.ts";
+import { MicroserviceManager } from "../microservices/microserviceManager.ts";
 import { Reflect } from "../reflectMetadata.ts";
 import { CommonUtils } from "../utils/commonUtils.ts";
 import { WebSocketClientUtil } from "../utils/components/websocketClient.ts";
@@ -62,6 +63,12 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
         this.components.set("MANDARINE_TASK_MANAGER", {
             componentName: "MANDARINE_TASK_MANAGER",
             componentInstance: new TaskManager(),
+            componentType: Mandarine.MandarineCore.ComponentTypes.INTERNAL
+        });
+
+        this.components.set("MANDARINE_MICROSERVICE_MANAGER", {
+            componentName: "MANDARINE_MICROSERVICE_MANAGER",
+            componentInstance: new MicroserviceManager(),
             componentType: Mandarine.MandarineCore.ComponentTypes.INTERNAL
         });
 
@@ -123,6 +130,9 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
                 case Mandarine.MandarineCore.ComponentTypes.WEBSOCKET:
                     componentInstanceInitialized = new ComponentComponent(componentName, componentHandler, Mandarine.MandarineCore.ComponentTypes.WEBSOCKET, configuration);
                 break;
+                case Mandarine.MandarineCore.ComponentTypes.MICROSERVICE:
+                    componentInstanceInitialized = new ComponentComponent(componentName, componentHandler, Mandarine.MandarineCore.ComponentTypes.MICROSERVICE, configuration);
+                break;
             }
 
             switch(componentType) {
@@ -134,6 +144,7 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
                 case Mandarine.MandarineCore.ComponentTypes.CATCH:  
                 case Mandarine.MandarineCore.ComponentTypes.GUARDS:
                 case Mandarine.MandarineCore.ComponentTypes.WEBSOCKET:
+                case Mandarine.MandarineCore.ComponentTypes.MICROSERVICE:
                     isServiceType = true;
                 break;  
             }
@@ -517,5 +528,16 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
             // ALL CRON TASKS ARE SETUP
             this.logger.info("Task manager has been found and initialized");
         }
+    }
+
+    public initializeMicroservices(): void {
+        const websocketComponents = this.getComponentsByComponentType(Mandarine.MandarineCore.ComponentTypes.MICROSERVICE);
+        const microserviceManager = ApplicationContext.getInstance().getDIFactory().getDependency<MicroserviceManager>(MicroserviceManager)!;
+        websocketComponents.forEach((item) => {
+            // Create Websocket
+            let component: ComponentComponent = item.componentInstance;
+            
+            microserviceManager.create(component.getClassHandlerPrimitive(), component.configuration);
+        });
     }
 }

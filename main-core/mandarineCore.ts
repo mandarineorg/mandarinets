@@ -46,6 +46,7 @@ export class MandarineCore {
         this.freezeMandarineProperties();
 
         this.initializeTasks();
+        this.initializeMicroservices();
 
         this.writeOnCompiler();
     }
@@ -92,6 +93,10 @@ export class MandarineCore {
 
     private initializeTasks() {
         ApplicationContext.getInstance().getComponentsRegistry().initializeTasks();
+    }
+
+    private initializeMicroservices() {
+        ApplicationContext.getInstance().getComponentsRegistry().initializeMicroservices();
     }
 
     private writeOnCompiler() {
