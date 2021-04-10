@@ -34,7 +34,7 @@ export class Boo {
 
 new MandarineCore().MVC().run();
 
-# request => http://localhost:4444/api/hello-world => Hello World
+// request => http://localhost:4444/api/hello-world => Hello World
 ```
 
 ## Questions
