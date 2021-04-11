@@ -27,6 +27,7 @@ export class MandarineConstants {
     public static readonly REFLECTION_MANDARINE_CONFIGURATION_PROPERTIES = "mandarine-configuration-properties";
     public static readonly REFLECTION_MANDARINE_EVENTLISTENER_DECORATOR = "mandarine-eventlistener";
     public static readonly REFLECTION_MANDARINE_WEBSOCKET_PROPERTY = "mandarine-websocket-property";
+    public static readonly REFLECTION_MANDARINE_MICROSERVICE_PROPERTY = "mandarine-microservice-property";
 
     public static readonly COMPONENT_PROPERTY_WEBSOCKET = "WEBSOCKET";
 

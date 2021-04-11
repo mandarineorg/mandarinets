@@ -28,6 +28,7 @@ import type { ComponentComponent } from "./components/component-component/compon
 import { Leaf } from "../deps.ts";
 import { IndependentUtils } from "./utils/independentUtils.ts";
 import { ClassType } from "./utils/utilTypes.ts";
+import * as Microlemon  from "https://deno.land/x/microlemon@v2.0.2/mod.ts";
 
 /**
 * This namespace contains all the essentials for mandarine to work
@@ -608,6 +609,7 @@ export namespace Mandarine {
             connectWebsocketServerProxy(component: any): void;
             initializeTasks(): void;
             initializeMicroservices(): void;
+            connectMicroserviceToProxy(microserviceInstance: ComponentComponent): void;
         };
 
         /**
@@ -710,6 +712,12 @@ export namespace Mandarine {
                 fixedRate: number,
                 methodName: string
             }
+
+            export type MicroserviceWorkerProperties = "onOpen" | "onClose" | "onError" | "onMessage" | "close";
+            export interface MicroserviceProperty {
+                property: MicroserviceWorkerProperties,
+                methodName: string
+            }
         }
 
         export type MicroserviceStatus = "Initialized" | "Initialized,Listening" | "Unhealthy";
@@ -719,6 +727,7 @@ export namespace Mandarine {
             lastMountingDate: Date;
             status: MicroserviceStatus;
             parentComponent: ClassType;
+            microserviceConfiguration: Microlemon.ConnectionData;
         }
 
     };

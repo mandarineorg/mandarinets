@@ -103,4 +103,13 @@ export class MainCoreDecoratorProxy {
 
         Reflect.defineMetadata(`${MandarineConstants.REFLECTION_MANDARINE_TIMER_DECORATOR}-${CommonUtils.generateUUID()}`, metadata, targetClass);
     }
+    
+    public static registerWorkerProperty(targetClass: any, eventName: Mandarine.MandarineCore.Decorators.MicroserviceWorkerProperties, methodName: string) {
+        const metadata: Mandarine.MandarineCore.Decorators.MicroserviceProperty  = {
+            methodName: methodName,
+            property: eventName
+        };
+
+        Reflect.defineMetadata(`${MandarineConstants.REFLECTION_MANDARINE_MICROSERVICE_PROPERTY}:${methodName}`, metadata, targetClass);
+    }
 }

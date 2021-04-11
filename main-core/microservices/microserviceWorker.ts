@@ -30,9 +30,7 @@ const subscribeAndListen = async (subscription: { transporter: Transporters, cha
             case Transporters.AMQP:
                 (async () => {
                     for await (const data of microserviceConnection.receive(subscription.channels[0])) {
-                      self.postMessage(buildPostMessage({
-                          message: data
-                      }));
+                      self.postMessage(buildPostMessage(data));
                     }
                   })();
             break;
@@ -41,10 +39,8 @@ const subscribeAndListen = async (subscription: { transporter: Transporters, cha
                 (async function () {
                   for await (const { channel, message } of subscriber.receive()) {
                     self.postMessage(buildPostMessage({
-                        message: {
-                            channel: channel,
-                            message: message
-                        }
+                        channel: channel,
+                        message: message
                     }));
                   }
                 })();
@@ -52,12 +48,10 @@ const subscribeAndListen = async (subscription: { transporter: Transporters, cha
             case Transporters.NATS:
                 const natsSubscriber = microserviceConnection.getSubscriber();
                 const [channelToSubscribe, queueGroup] = subscription.channels;
-                await subscriber.subscribe(channelToSubscribe, queueGroup);
+                await natsSubscriber.subscribe(channelToSubscribe, queueGroup);
                 (async function () {
                 for await (const data of natsSubscriber.receive()) {
-                    self.postMessage(buildPostMessage({
-                        message: data
-                    }))
+                    self.postMessage(buildPostMessage(data))
                 }
                 })();
             break;

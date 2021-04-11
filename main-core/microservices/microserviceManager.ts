@@ -4,6 +4,7 @@ import { ClassType } from "../utils/utilTypes.ts";
 import * as Microlemon from "./mod.ts";
 import { microserviceWorkerBase64Bundle } from "./base64bundle.ts"
 import { Log } from "../../logger/log.ts";
+import { ComponentComponent } from "../components/component-component/componentComponent.ts";
 
 export class MicroserviceManager {
 
@@ -11,7 +12,7 @@ export class MicroserviceManager {
 
     private microservices: Array<Mandarine.MandarineCore.MicroserviceItem> = new Array<Mandarine.MandarineCore.MicroserviceItem>();
 
-    public async create(componentPrimitive: ClassType, configuration: Microlemon.ConnectionData) {
+    public async create(componentPrimitive: ClassType, configuration: Microlemon.ConnectionData): Promise<[boolean, Mandarine.MandarineCore.MicroserviceItem]> {
         const worker = new Worker(microserviceWorkerBase64Bundle, {
             type: "module",
             deno: {
@@ -30,7 +31,7 @@ export class MicroserviceManager {
             e.preventDefault();
         }
 
-        let microserviceStatus: Mandarine.MandarineCore.MicroserviceStatus = "Unhealthy";
+        let microserviceStatus: Mandarine.MandarineCore.MicroserviceStatus | undefined;
         worker.onmessage = (e: MessageEvent) => {
 
            let { data } = e;
@@ -50,18 +51,27 @@ export class MicroserviceManager {
         worker.postMessage({
             cmd: "INITIALIZE",
             configuration: configuration
-        })
+        });
 
         await resolvable;
 
-        this.microservices.push({
+        const microserviceItem = {
             worker: worker,
             createdDate: new Date(),
             lastMountingDate: new Date(),
-            status: microserviceStatus,
-            parentComponent: componentPrimitive
-        });
+            status: microserviceStatus!,
+            parentComponent: componentPrimitive,
+            microserviceConfiguration: configuration
+        };
 
+        this.microservices.push(microserviceItem);
+
+        return [microserviceStatus === "Initialized", microserviceItem];
+
+    }
+
+    public getByComponent(component: ComponentComponent): Mandarine.MandarineCore.MicroserviceItem | undefined {
+        return this.microservices.find((item: Mandarine.MandarineCore.MicroserviceItem) => component.getClassHandler() instanceof item.parentComponent);
     }
 
 }
