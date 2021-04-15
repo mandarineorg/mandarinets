@@ -47,6 +47,7 @@ export class MandarineCore {
 
         this.initializeTasks();
         this.initializeMicroservices();
+        this.initializeAutomaticMicroserviceHealthCheck();
 
         this.writeOnCompiler();
     }
@@ -97,6 +98,10 @@ export class MandarineCore {
 
     private initializeMicroservices() {
         ApplicationContext.getInstance().getComponentsRegistry().initializeMicroservices();
+    }
+
+    private initializeAutomaticMicroserviceHealthCheck() {
+        ApplicationContext.getInstance().getMicroserviceManager().enableAutomaticHealthInterval();
     }
 
     private writeOnCompiler() {

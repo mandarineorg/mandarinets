@@ -16,7 +16,6 @@ import { WebSocketClientManager } from "../mandarine-native/websocket/websocketC
 import { WebSocketServerManager } from "../mandarine-native/websocket/websocketServerManager.ts";
 import { Mandarine } from "../Mandarine.ns.ts";
 import { MandarineConstants } from "../mandarineConstants.ts";
-import { MicroserviceManager } from "../microservices/microserviceManager.ts";
 import { Reflect } from "../reflectMetadata.ts";
 import { CommonUtils } from "../utils/commonUtils.ts";
 import { MicroserviceUtil } from "../utils/components/microserviceUtil.ts";
@@ -64,12 +63,6 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
         this.components.set("MANDARINE_TASK_MANAGER", {
             componentName: "MANDARINE_TASK_MANAGER",
             componentInstance: new TaskManager(),
-            componentType: Mandarine.MandarineCore.ComponentTypes.INTERNAL
-        });
-
-        this.components.set("MANDARINE_MICROSERVICE_MANAGER", {
-            componentName: "MANDARINE_MICROSERVICE_MANAGER",
-            componentInstance: new MicroserviceManager(),
             componentType: Mandarine.MandarineCore.ComponentTypes.INTERNAL
         });
 
@@ -533,18 +526,19 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
 
     public initializeMicroservices(): void {
         const websocketComponents = this.getComponentsByComponentType(Mandarine.MandarineCore.ComponentTypes.MICROSERVICE);
-        const microserviceManager = ApplicationContext.getInstance().getDIFactory().getDependency<MicroserviceManager>(MicroserviceManager)!;
+        const microserviceManager = Mandarine.Global.getMicroserviceManager();
         websocketComponents.forEach(async (item) => {
             // Create Websocket
             let component: ComponentComponent = item.componentInstance;
+            component.addInternal("HEALTH_CHECKS_COUNTS", 0);
             
-            MicroserviceUtil.mount(component, microserviceManager);
+            MicroserviceUtil.mount(component);
         });
     }
 
     public connectMicroserviceToProxy(microserviceInstance: ComponentComponent): void {
         let microserviceTarget: any = microserviceInstance.getClassHandler();
-        let microserviceWorkerItem = ApplicationContext.getInstance().getDIFactory().getDependency<MicroserviceManager>(MicroserviceManager)!.getByComponent(microserviceInstance);
+        let microserviceWorkerItem = Mandarine.Global.getMicroserviceManager().getByComponent(microserviceInstance);
         const microserviceWorker = microserviceWorkerItem?.worker;
         if(microserviceWorker) {
             const metadataKeys: Array<string> = Reflect.getMetadataKeys(microserviceTarget);
@@ -568,7 +562,11 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
                                 let { data } = e;
                                 data = JSON.parse(data);
 
-                                microserviceTarget[metadata.methodName](data);
+                                if(data.message === "ALIVE" && data.mandarine === "HEALTH-CHECK") {
+                                    microserviceInstance.addInternal("HEALTH_CHECKS_COUNTS", microserviceInstance.getInternal("HEALTH_CHECKS_COUNTS") + 1);
+                                } else {
+                                    microserviceTarget[metadata.methodName](data);
+                                }
                             }
                         break;
                         case "onError":

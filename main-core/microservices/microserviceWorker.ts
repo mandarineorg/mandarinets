@@ -72,6 +72,7 @@ self.onmessage = async ({ data }) => {
         break;
         case "HEALTH":
             await self.postMessage(buildPostMessage({
+                mandarine: "HEALTH-CHECK",
                 message: "ALIVE"
             }))
         break;

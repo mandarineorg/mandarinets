@@ -47,6 +47,10 @@ export class ApplicationContext implements Mandarine.ApplicationContext.IApplica
         return Mandarine.Global.getTemplateManager();
     }
 
+    public getMicroserviceManager(): Mandarine.MandarineCore.IMicroserviceManager {
+        return Mandarine.Global.getMicroserviceManager();
+    }
+
     public getDIFactory(): DI.FactoryClass {
         return DI.Factory;
     }

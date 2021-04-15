@@ -29,6 +29,7 @@ import { Leaf } from "../deps.ts";
 import { IndependentUtils } from "./utils/independentUtils.ts";
 import { ClassType } from "./utils/utilTypes.ts";
 import * as Microlemon  from "https://deno.land/x/microlemon@v2.0.2/mod.ts";
+import { MicroserviceManager } from "./microservices/microserviceManager.ts";
 
 /**
 * This namespace contains all the essentials for mandarine to work
@@ -123,6 +124,10 @@ export namespace Mandarine {
                 mongodb?: {
                     connectionURL: string;
                 }
+            },
+            microservices?: {
+                automaticHealthCheck?: boolean;
+                automaticHealthCheckInterval?: number;
             }
         } & any
     };
@@ -175,6 +180,7 @@ export namespace Mandarine {
             mandarineInitialProperties: MandarineInitialProperties;
             mandarineMiddleware: Array<ComponentComponent & Components.MiddlewareComponent>;
             mandarineNativeComponentsRegistry: NativeComponentsRegistry;
+            mandarineMicroserviceManager: MandarineCore.IMicroserviceManager;
             __SECURITY__: {
                 auth: {
                     authManagerBuilder: MandarineSecurity.Auth.AuthenticationManagerBuilder,
@@ -198,6 +204,7 @@ export namespace Mandarine {
                     mandarineTemplatesManager: undefined,
                     mandarineInitialProperties: undefined,
                     mandarineNativeComponentsRegistry: undefined,
+                    mandarineMicroserviceManager: undefined,
                     __SECURITY__: {
                         auth: {
                             authManagerBuilder: undefined
@@ -252,6 +259,19 @@ export namespace Mandarine {
             }
 
             return mandarineGlobal.mandarineTemplatesManager;
+        };
+
+        /**
+        * Get the microservice manager
+        */
+       export function getMicroserviceManager(): Mandarine.MandarineCore.IMicroserviceManager { 
+            let mandarineGlobal: MandarineGlobalInterface = getMandarineGlobal();
+
+            if(mandarineGlobal.mandarineMicroserviceManager == (null || undefined)) {
+                mandarineGlobal.mandarineMicroserviceManager = new Mandarine.MandarineCore.MandarineMicroserviceManager();
+            }
+
+            return mandarineGlobal.mandarineMicroserviceManager;
         };
 
         /**
@@ -485,6 +505,7 @@ export namespace Mandarine {
             getComponentsRegistry(): MandarineCore.IComponentsRegistry;
             getEntityManager(): Mandarine.ORM.Entity.EntityManager;
             getTemplateManager(): Mandarine.MandarineCore.ITemplatesManager;
+            getMicroserviceManager(): Mandarine.MandarineCore.IMicroserviceManager;
             initializeMetadata(): void;
             getInstance?: () => ApplicationContext.IApplicationContext;
             getDIFactory(): DI.FactoryClass;
@@ -627,6 +648,18 @@ export namespace Mandarine {
         export class MandarineTemplateManager extends TemplatesManager {}
 
         /**
+         * 
+         */
+        export interface IMicroserviceManager {
+            create(componentPrimitive: ClassType, configuration: Microlemon.ConnectionData): Promise<[boolean, Mandarine.MandarineCore.MicroserviceItem]>;
+            getByComponent(component: ComponentComponent): Mandarine.MandarineCore.MicroserviceItem | undefined;
+            deleteByHash(hash: string): void;
+            enableAutomaticHealthInterval(): void;
+        }
+
+        export class MandarineMicroserviceManager extends MicroserviceManager {}
+
+        /**
         * Refers to the resource handler registry.
         * All the resource handlers either initialized by the user or by Mandarine will be located here.
         */
@@ -728,6 +761,7 @@ export namespace Mandarine {
             status: MicroserviceStatus;
             parentComponent: ClassType;
             microserviceConfiguration: Microlemon.ConnectionData;
+            hash: string;
         }
 
     };
@@ -804,6 +838,10 @@ export namespace Mandarine {
                 },
                 security: {
                     cookiesSignKeys: ["HORSE", "MANDARINE", "CAT", "NORWAY", "ORANGE", "TIGER"]
+                },
+                microservices: {
+                    automaticHealthCheck: true,
+                    automaticHealthCheckInterval: (60 * 1000)
                 }
             }
         };
