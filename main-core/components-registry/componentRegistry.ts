@@ -594,6 +594,8 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
                 microserviceTarget[onOpenMethodName](microserviceWorkerItem);
             }
 
+        } else {
+            this.logger.debug("A microservice tried to connect to proxy, but no worker was found");
         }
     }
 }

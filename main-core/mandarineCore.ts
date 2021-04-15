@@ -47,7 +47,8 @@ export class MandarineCore {
 
         this.initializeTasks();
         this.initializeMicroservices();
-        this.initializeAutomaticMicroserviceHealthCheck();
+        // Wait 10 seconds, at least one microservice must load
+        setTimeout(() => this.initializeAutomaticMicroserviceHealthCheck(), 1000 * 10);
 
         this.writeOnCompiler();
     }

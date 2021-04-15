@@ -389,6 +389,10 @@ export namespace Mandarine {
             if(properties.mandarine.sessions.expirationInterval == (null || undefined)) properties.mandarine.sessions.expirationInterval = defaultConfiguration.mandarine.sessions.expirationInterval;
             if(properties.mandarine.security == (null || undefined)) properties.mandarine.security = defaultConfiguration.mandarine.security;
             if(properties.mandarine.security.cookiesSignKeys == (null || undefined) || properties.mandarine.security.cookiesSignKeys && properties.mandarine.security.cookiesSignKeys.length == 0) properties.mandarine.security.cookiesSignKeys = defaultConfiguration.mandarine.security.cookiesSignKeys;
+            if(properties.mandarine.microservices == (null || undefined)) properties.mandarine.microservices = defaultConfiguration.mandarine.microservices;
+            if(properties.mandarine.microservices.automaticHealthCheck == (null || undefined)) properties.mandarine.microservices.automaticHealthCheck = defaultConfiguration.mandarine.microservices.automaticHealthCheck;
+            if(properties.mandarine.microservices.automaticHealthCheckInterval == (null || undefined)) properties.mandarine.microservices.automaticHealthCheckInterval = defaultConfiguration.mandarine.microservices.automaticHealthCheckInterval;
+
 
             if(!Object.values(Mandarine.MandarineMVC.TemplateEngine.Engines).includes(properties.mandarine.templateEngine.engine)) throw new TemplateEngineException(TemplateEngineException.INVALID_ENGINE);
 
@@ -655,6 +659,7 @@ export namespace Mandarine {
             getByComponent(component: ComponentComponent): Mandarine.MandarineCore.MicroserviceItem | undefined;
             deleteByHash(hash: string): void;
             enableAutomaticHealthInterval(): void;
+            getMicroservices(): Array<Mandarine.MandarineCore.MicroserviceItem>
         }
 
         export class MandarineMicroserviceManager extends MicroserviceManager {}

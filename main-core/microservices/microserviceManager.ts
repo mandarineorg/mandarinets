@@ -8,7 +8,7 @@ import { ComponentComponent } from "../components/component-component/componentC
 import { CommonUtils } from "../utils/commonUtils.ts";
 import { ApplicationContext } from "../application-context/mandarineApplicationContext.ts";
 
-export class MicroserviceManager {
+export class MicroserviceManager implements Mandarine.MandarineCore.IMicroserviceManager {
 
     private logger: Log = Log.getLogger(MicroserviceManager);
     private microservices: Array<Mandarine.MandarineCore.MicroserviceItem> = new Array<Mandarine.MandarineCore.MicroserviceItem>();
@@ -157,6 +157,9 @@ export class MicroserviceManager {
         if(!healthiness) {
             this.logger.error("A microservice has lost connection");
         }
+
+        this.logger.debug("A healthcheck has been executed on a microservice");
+
         return healthiness;
     }
 
@@ -189,6 +192,10 @@ export class MicroserviceManager {
         if(this.automaticHealthIntervalId) {
             clearInterval(this.automaticHealthIntervalId);
         }
+    }
+
+    public getMicroservices() {
+        return this.microservices;
     }
 
 }
