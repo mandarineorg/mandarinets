@@ -25,37 +25,44 @@ const initializeMicroservice = async  (configuration: ConnectionData) => {
 }
 
 const subscribeAndListen = async (subscription: { transporter: Transporters, channels: Array<string> }) => {
-    if(microserviceConnection) {
-        switch(subscription.transporter.toUpperCase()) {
-            case Transporters.AMQP:
-                (async () => {
-                    for await (const data of microserviceConnection.receive(subscription.channels[0])) {
-                      self.postMessage(buildPostMessage(data));
+    try {
+        if(microserviceConnection) {
+            switch(subscription.transporter.toUpperCase()) {
+                case Transporters.AMQP:
+                    (async () => {
+                        for await (const data of microserviceConnection.receive(subscription.channels[0])) {
+                        self.postMessage(buildPostMessage(data));
+                        }
+                    })();
+                break;
+                case Transporters.REDIS:
+                    const subscriber = await microserviceConnection.getSubscriber().channelSubscribe(...subscription.channels);
+                    (async function () {
+                    for await (const { channel, message } of subscriber.receive()) {
+                        self.postMessage(buildPostMessage({
+                            channel: channel,
+                            message: message
+                        }));
                     }
-                  })();
-            break;
-            case Transporters.REDIS:
-                const subscriber = await microserviceConnection.getSubscriber().channelSubscribe(...subscription.channels);
-                (async function () {
-                  for await (const { channel, message } of subscriber.receive()) {
-                    self.postMessage(buildPostMessage({
-                        channel: channel,
-                        message: message
-                    }));
-                  }
-                })();
-            break;
-            case Transporters.NATS:
-                const natsSubscriber = microserviceConnection.getSubscriber();
-                const [channelToSubscribe, queueGroup] = subscription.channels;
-                await natsSubscriber.subscribe(channelToSubscribe, queueGroup);
-                (async function () {
-                for await (const data of natsSubscriber.receive()) {
-                    self.postMessage(buildPostMessage(data))
-                }
-                })();
-            break;
+                    })();
+                break;
+                case Transporters.NATS:
+                    const natsSubscriber = microserviceConnection.getSubscriber();
+                    const [channelToSubscribe, queueGroup] = subscription.channels;
+                    await natsSubscriber.subscribe(channelToSubscribe, queueGroup);
+                    (async function () {
+                    for await (const data of natsSubscriber.receive()) {
+                        self.postMessage(buildPostMessage(data))
+                    }
+                    })();
+                break;
+            }
         }
+    } catch (error) {
+        await self.postMessage(buildPostMessage({
+            mandarine: "LISTENING-ERROR",
+            message: error.message
+        }));
     }
 }
 

@@ -563,6 +563,9 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
 
                                 if(data.message === "ALIVE" && data.mandarine === "HEALTH-CHECK") {
                                     microserviceInstance.addInternal("HEALTH_CHECKS_COUNTS", microserviceInstance.getInternal("HEALTH_CHECKS_COUNTS") + 1);
+                                } else if(data.mandarine === "LISTENING-ERROR") {
+                                    this.logger.error("Microservice worker encountered an error. Closing connection. ", data.message)
+                                    microserviceWorker.terminate();
                                 } else {
                                     microserviceTarget[metadata.methodName](data);
                                 }
