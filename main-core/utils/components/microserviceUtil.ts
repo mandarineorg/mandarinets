@@ -3,17 +3,33 @@ import { ComponentComponent } from "../../components/component-component/compone
 import { Mandarine } from "../../Mandarine.ns.ts";
 
 export class MicroserviceUtil {
+
+    private static makeListeningCall(component: ComponentComponent, microserviceItem: Mandarine.MandarineCore.MicroserviceItem) {
+        microserviceItem.worker.postMessage({
+            cmd: "LISTEN",
+            transporter: microserviceItem.microserviceConfiguration.transport,
+            channels: component.configuration.channels
+        });
+    }
+
     public static async mount(component: ComponentComponent) {
         const [created, microserviceItem]: [boolean, Mandarine.MandarineCore.MicroserviceItem] = await Mandarine.Global.getMicroserviceManager().create(component.getClassHandlerPrimitive(), component.configuration);
 
         ApplicationContext.getInstance().getComponentsRegistry().connectMicroserviceToProxy(component);
 
         if(created) {
-            microserviceItem.worker.postMessage({
-                cmd: "LISTEN",
-                transporter: microserviceItem.microserviceConfiguration.transport,
-                channels: component.configuration.channels
-            });
+            this.makeListeningCall(component, microserviceItem);
+        }
+    }
+
+    public static async mountFromExistent(microservice: Mandarine.MandarineCore.MicroserviceItem) {
+        const componentRegistry = ApplicationContext.getInstance().getComponentsRegistry();
+        const componentsRegistryContext = componentRegistry.getComponentByHandlerType(microservice.parentComponent);
+
+        if(componentsRegistryContext && microservice.status === "Initialized") {
+            const component = componentsRegistryContext.componentInstance;
+            this.makeListeningCall(component, microservice);
+            componentRegistry.connectMicroserviceToProxy(componentsRegistryContext.componentInstance);
         }
     }
 

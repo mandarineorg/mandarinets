@@ -7,6 +7,7 @@ import { Log } from "../../logger/log.ts";
 import { ComponentComponent } from "../components/component-component/componentComponent.ts";
 import { CommonUtils } from "../utils/commonUtils.ts";
 import { ApplicationContext } from "../application-context/mandarineApplicationContext.ts";
+import { MicroserviceUtil } from "../utils/components/microserviceUtil.ts";
 
 export class MicroserviceManager implements Mandarine.MandarineCore.IMicroserviceManager {
 
@@ -176,12 +177,8 @@ export class MicroserviceManager implements Mandarine.MandarineCore.IMicroservic
                         this.microservices.push(newMicroservice);
 
                         // ReConnect to proxy
-                        const componentRegistry = ApplicationContext.getInstance().getComponentsRegistry();
-                        const componentsRegistryContext = componentRegistry.getComponentByHandlerType(item.parentComponent);
-                        if(componentsRegistryContext) {
-                            componentRegistry.connectMicroserviceToProxy(componentsRegistryContext.componentInstance);
-                            this.logger.info("A microservice has been reconnected");
-                        }
+                        MicroserviceUtil.mountFromExistent(newMicroservice);
+                        this.logger.info("A microservice has been reconnected");
                     }
                 })
             }, healthCheckInterval);

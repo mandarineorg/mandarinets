@@ -558,7 +558,6 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
                         break;
                         case "onMessage":
                             microserviceWorker!.onmessage = (e: { [prop: string]: any }) => {
-
                                 let { data } = e;
                                 data = JSON.parse(data);
 
