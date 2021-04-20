@@ -58,7 +58,7 @@ export class PostgresConnector implements PostgresConnectorInterface {
       try {
         return await this.clientPooler.connect();
       }catch(error) {
-        this.logger.compiler("Database connection could not be reached", error);
+        this.logger.compiler("Database connection could not be reached", "error", error);
         this.logger.debug((<Error>error).message);
         this.logger.debug((<Error>error).stack!);
       }
