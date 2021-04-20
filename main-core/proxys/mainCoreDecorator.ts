@@ -39,17 +39,7 @@ export class MainCoreDecoratorProxy {
     }
 
     public static configurationPropertiesDecorator(targetClass: any, path: string) {
-        Reflect.defineMetadata(MandarineConstants.REFLECTION_MANDARINE_CONFIGURATION_PROPERTIES, path, targetClass);
-        const target = targetClass.prototype || targetClass;
-        const valueDecoratorMetadataKeys = Reflect.getMetadataKeys(target) || [];
-        valueDecoratorMetadataKeys.filter((item) => item.startsWith(MandarineConstants.REFLECTION_MANDARINE_VALUE_DECORATOR)).forEach((key) => {
-            const metadata: { configKey: string, scope: string, propertyName: string } = Reflect.getMetadata(key, target);
-            this.valueDecorator(target, metadata.configKey, undefined, metadata.propertyName, JsonUtils.toJson(path, { isFile: true, allowEnvironmentalReferences: true, handleException: (ex) => {
-                Mandarine.logger.warn(`Something happened while reading custom configuration file for @Value. ${ex} (${path})`);
-                return {}
-            } }));
-            
-        });
+        Reflect.defineMetadata(MandarineConstants.REFLECTION_MANDARINE_CONFIGURATION_PROPERTIES, path, targetClass.prototype);
     }
 
     public static valueDecorator(targetClass: any, configKey: string, scope: Mandarine.MandarineCore.ValueScopes | undefined, propertyName: string, propertyObject?: any) {

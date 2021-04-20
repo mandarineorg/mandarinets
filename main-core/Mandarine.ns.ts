@@ -651,6 +651,7 @@ export namespace Mandarine {
             initializeTasks(): void;
             initializeMicroservices(): void;
             connectMicroserviceToProxy(microserviceInstance: ComponentComponent): void;
+            initializeValueReaderWithCustomConfiguration(): void;
         };
 
         /**

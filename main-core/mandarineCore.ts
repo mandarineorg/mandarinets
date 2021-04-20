@@ -38,6 +38,7 @@ export class MandarineCore {
         this.resolveComponentsDependencies();
         this.initializeEventListeners();
         this.initializeValueReaders();
+        this.initializeValueReaderWithCustomConfiguration();
         this.initializeWebsocketComponents();
 
         MandarineTSFrameworkEngineMethods.initializeEngineMethods();
@@ -104,6 +105,10 @@ export class MandarineCore {
 
     private initializeAutomaticMicroserviceHealthCheck() {
         ApplicationContext.getInstance().getMicroserviceManager().enableAutomaticHealthInterval();
+    }
+
+    private initializeValueReaderWithCustomConfiguration() {
+        ApplicationContext.getInstance().getComponentsRegistry().initializeValueReaderWithCustomConfiguration();
     }
 
     private handleOnExit() {

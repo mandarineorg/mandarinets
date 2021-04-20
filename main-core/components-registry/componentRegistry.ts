@@ -23,6 +23,7 @@ import { MicroserviceUtil } from "../utils/components/microserviceUtil.ts";
 import { WebSocketClientUtil } from "../utils/components/websocketClient.ts";
 import { WebSocketServerUtil } from "../utils/components/websocketServer.ts";
 import { IndependentUtils } from "../utils/independentUtils.ts";
+import { JsonUtils } from "../utils/jsonUtils.ts";
 import { ReflectUtils } from "../utils/reflectUtils.ts";
 
 /**
@@ -469,6 +470,35 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
                         if(!instance[metadata.propertyName]) {
                             instance[metadata.propertyName] = IndependentUtils.readConfigByDots(propertyObject, metadata.configKey);
                         }
+                    }
+                });
+            });
+        });
+    }
+
+    public initializeValueReaderWithCustomConfiguration(): void {
+        const serviceTypeComponents = this.getComponents().filter((item) => item.isServiceType === true);
+        serviceTypeComponents.forEach((component) => {
+            const instances = [component.componentInstance.getClassHandler(), component.componentInstance.getClassHandlerPrimitive()];
+            instances.forEach((instance) => {
+                const metadataKeys: Array<string> = Reflect.getMetadataKeys(instance);
+                metadataKeys.filter(item => item.startsWith(MandarineConstants.REFLECTION_MANDARINE_CONFIGURATION_PROPERTIES)).forEach((item) => {
+                    const customConfigPath: string = Reflect.getMetadata(item, instance);
+                    if(customConfigPath) {
+                        metadataKeys.filter((item) => item.startsWith(MandarineConstants.REFLECTION_MANDARINE_VALUE_DECORATOR)).forEach((key) => {
+                            const metadata: { configKey: string, scope: string, propertyName: string } = Reflect.getMetadata(key, instance);
+                            const configuration = JsonUtils.toJson(customConfigPath, { 
+                                    isFile: true, 
+                                    allowEnvironmentalReferences: true, 
+                                    handleException: (ex: any) => {
+                                        Mandarine.logger.warn(`Something happened while reading custom configuration file for @Value. ${ex} (${customConfigPath})`);
+                                        return {}
+                                    } 
+                            });
+                            if(!instance[metadata.propertyName]) {
+                                instance[metadata.propertyName] = IndependentUtils.readConfigByDots(configuration, metadata.configKey);
+                            }
+                        });
                     }
                 });
             });
