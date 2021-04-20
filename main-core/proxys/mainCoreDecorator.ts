@@ -42,7 +42,7 @@ export class MainCoreDecoratorProxy {
         Reflect.defineMetadata(MandarineConstants.REFLECTION_MANDARINE_CONFIGURATION_PROPERTIES, path, targetClass);
         const target = targetClass.prototype || targetClass;
         const valueDecoratorMetadataKeys = Reflect.getMetadataKeys(target) || [];
-        valueDecoratorMetadataKeys.forEach((key) => {
+        valueDecoratorMetadataKeys.filter((item) => item.startsWith(MandarineConstants.REFLECTION_MANDARINE_VALUE_DECORATOR)).forEach((key) => {
             const metadata: { configKey: string, scope: string, propertyName: string } = Reflect.getMetadata(key, target);
             this.valueDecorator(target, metadata.configKey, undefined, metadata.propertyName, JsonUtils.toJson(path, { isFile: true, allowEnvironmentalReferences: true, handleException: (ex) => {
                 Mandarine.logger.warn(`Something happened while reading custom configuration file for @Value. ${ex} (${path})`);
@@ -62,7 +62,6 @@ export class MainCoreDecoratorProxy {
         Reflect.defineMetadata(`${MandarineConstants.REFLECTION_MANDARINE_VALUE_DECORATOR}-${CommonUtils.generateUUID()}`, metadata, targetClass);
 
         if(propertyObject) {
-            // If we are passing a property object, then we resolve inmediatly.
             targetClass[propertyName] = IndependentUtils.readConfigByDots(propertyObject, configKey);
         }
     }

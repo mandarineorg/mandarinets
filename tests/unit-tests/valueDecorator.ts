@@ -40,7 +40,7 @@ export class SessionTest {
        const component = ApplicationContext.getInstance().getComponentsRegistry().getComponentByHandlerType(MyClass)?.componentInstance.getClassHandler();
        DenoAsserts.assertEquals(MyClass.lol, "MANDARINE1234");
        DenoAsserts.assertEquals(component.noStatic, "HELLO WORLD");
-        DenoAsserts.assertEquals(component.anObject, {
+       DenoAsserts.assertEquals(component.anObject, {
             hello: "xd"
         });
     }

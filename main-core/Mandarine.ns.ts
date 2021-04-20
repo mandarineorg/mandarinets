@@ -30,6 +30,7 @@ import { IndependentUtils } from "./utils/independentUtils.ts";
 import { ClassType } from "./utils/utilTypes.ts";
 import * as Microlemon  from "https://deno.land/x/microlemon@v2.0.2/mod.ts";
 import { MicroserviceManager } from "./microservices/microserviceManager.ts";
+import { MandarineCoreTimers } from "./internals/core/mandarineCoreTimers.ts";
 
 /**
 * This namespace contains all the essentials for mandarine to work
@@ -522,6 +523,21 @@ export namespace Mandarine {
     */
     export namespace MandarineCore {
 
+        export namespace Internals {
+
+            export type CoreTimersType = "Timeout" | "Interval";
+            export interface CoreTimers {
+                timerId: number;
+                key: string;
+                type: CoreTimersType
+            }
+
+            export const getTimersManager = () => {
+                return MandarineCoreTimers.getInstance();
+            }
+
+        }
+
         export enum ValueScopes {
             CONFIGURATION,
             ENVIRONMENTAL
@@ -659,7 +675,15 @@ export namespace Mandarine {
             getByComponent(component: ComponentComponent): Mandarine.MandarineCore.MicroserviceItem | undefined;
             deleteByHash(hash: string): void;
             enableAutomaticHealthInterval(): void;
-            getMicroservices(): Array<Mandarine.MandarineCore.MicroserviceItem>
+            getMicroservices(): Array<Mandarine.MandarineCore.MicroserviceItem>;
+            disableAutomaticHealthInterval(): void;
+            enableAutomaticHealthInterval(): void;
+            isHealthy(hash: string): Promise<boolean>;
+            getByHash(hash: string): Mandarine.MandarineCore.MicroserviceItem | undefined;
+            getByMicroservice(microservice: Mandarine.MandarineCore.MicroserviceItem): Mandarine.MandarineCore.MicroserviceItem | undefined;
+            deleteByMicroservice(microservice: Mandarine.MandarineCore.MicroserviceItem): void;
+            isHealthyByMicroservice(microservice: Mandarine.MandarineCore.MicroserviceItem): Promise<boolean>;
+            remountFromExistent(microservice: Mandarine.MandarineCore.MicroserviceItem): Promise<void>;
         }
 
         export class MandarineMicroserviceManager extends MicroserviceManager {}

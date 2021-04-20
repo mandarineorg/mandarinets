@@ -26,6 +26,8 @@ export class MandarineCore {
 
     constructor(options?: CoreOptions) {
 
+        this.handleOnExit();
+
         if(options) {
             if(options.config) this.setConfiguration(options.config);
         }
@@ -47,8 +49,7 @@ export class MandarineCore {
 
         this.initializeTasks();
         this.initializeMicroservices();
-        // Wait 10 seconds, at least one microservice must load
-        setTimeout(() => this.initializeAutomaticMicroserviceHealthCheck(), 1000 * 10);
+        this.initializeAutomaticMicroserviceHealthCheck();
 
         this.writeOnCompiler();
     }
@@ -103,6 +104,14 @@ export class MandarineCore {
 
     private initializeAutomaticMicroserviceHealthCheck() {
         ApplicationContext.getInstance().getMicroserviceManager().enableAutomaticHealthInterval();
+    }
+
+    private handleOnExit() {
+
+        window.addEventListener("unload", () => {
+            ApplicationContext.getInstance().getMicroserviceManager().disableAutomaticHealthInterval();
+        });
+
     }
 
     private writeOnCompiler() {

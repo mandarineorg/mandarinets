@@ -38,6 +38,7 @@ export class CoreTest {
 
         DenoAsserts.assertEquals(Mandarine.Global.getMandarineGlobal().mandarineProperties.mandarine.server.host, Mandarine.Defaults.MandarineDefaultConfiguration.mandarine.server.host);
         Mandarine.Global.getMandarineGlobal().mandarineProperties = deepCloneProps;
+        Mandarine.Global.getMicroserviceManager().disableAutomaticHealthInterval();
     }
 
 }

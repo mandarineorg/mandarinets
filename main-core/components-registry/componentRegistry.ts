@@ -10,6 +10,7 @@ import { ApplicationContext } from "../application-context/mandarineApplicationC
 import { ComponentComponent } from "../components/component-component/componentComponent.ts";
 import { RepositoryComponent } from "../components/repository-component/repositoryComponent.ts";
 import { DI } from "../dependency-injection/di.ns.ts";
+import { MicroserviceUserManager } from "../mandarine-native/microservices/MicroserviceUserManager.ts";
 import { Authenticator } from "../mandarine-native/security/authenticatorDefault.ts";
 import { TaskManager } from "../mandarine-native/tasks/taskManager.ts";
 import { WebSocketClientManager } from "../mandarine-native/websocket/websocketClientManager.ts";
@@ -63,6 +64,12 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
         this.components.set("MANDARINE_TASK_MANAGER", {
             componentName: "MANDARINE_TASK_MANAGER",
             componentInstance: new TaskManager(),
+            componentType: Mandarine.MandarineCore.ComponentTypes.INTERNAL
+        });
+
+        this.components.set("MANDARINE_MICROSERVICE_MANAGER", {
+            componentName: "MANDARINE_MICROSERVICE_MANAGER",
+            componentInstance: new MicroserviceUserManager(),
             componentType: Mandarine.MandarineCore.ComponentTypes.INTERNAL
         });
 
