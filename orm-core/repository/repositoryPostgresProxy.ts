@@ -32,7 +32,7 @@ export class PostgresRepositoryProxy<T> implements Mandarine.ORM.RepositoryProxy
                     this.logger.debug("Query execution returned null and operation was aborted");
                     return null;
                 }
-                let rowsOfObjects = queryExecution.query.result.rowsOfObjects();
+                let rowsOfObjects = queryExecution.rows;
                 if(rowsOfObjects.length == 0) {
                     return null;
                 } else if(rowsOfObjects.length >= 1) {
