@@ -1,1 +1,0 @@
-pub type Buf = Box<[u8]>;

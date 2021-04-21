@@ -34,8 +34,7 @@ export class PostgresRepositoryProxy<T> extends DefaultRepositoryProxy implement
                     this.logger.debug("Query execution returned null and operation was aborted");
                     return null;
                 }
-                let rowsOfObjects = queryExecution.query.result.rowsOfObjects();
-
+                let rowsOfObjects = queryExecution.rows;
                 if(rowsOfObjects.length == 0) {
                     return [];
                 } else if(rowsOfObjects.length >= 1) {
