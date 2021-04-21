@@ -1,3 +1,5 @@
+// Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
+
 export class Timers {
     public static readonly MANDARINE_EXPIRED_SESSIONS: string = "MANDARINE_EXPIRED_SESSIONS";
     public static readonly MANDARINE_TIMER_REGISTRY: string = "MANDARINE_TIMER_REGISTRY_{0}";
