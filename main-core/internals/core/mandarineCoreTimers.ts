@@ -27,15 +27,15 @@ export class MandarineCoreTimers {
 
     public delete(timerIdOrKey: string | number): void {
 
-        const clearAfterFiltering = (item: Mandarine.MandarineCore.Internals.CoreTimers) => {
+        const clearBeforeFiltering = (item: Mandarine.MandarineCore.Internals.CoreTimers) => {
             this.clear(item);
             return item;
         };
 
         if(typeof timerIdOrKey === "number") {
-            this.timers = this.timers.filter((item) => item.timerId !== timerIdOrKey).map(clearAfterFiltering);
+            this.timers = this.timers.map(clearBeforeFiltering).filter((item) => item.timerId !== timerIdOrKey);
         } else if(typeof timerIdOrKey === "string") {
-            this.timers = this.timers.filter((item) => item.key !== timerIdOrKey).map(clearAfterFiltering);
+            this.timers = this.timers.map(clearBeforeFiltering).filter((item) => item.key !== timerIdOrKey);
         }
     }
 
