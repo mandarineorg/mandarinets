@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        deno: ["v1.9.1"]
+        deno: ["v1.9.0"]
       fail-fast: true    
 
     services:
