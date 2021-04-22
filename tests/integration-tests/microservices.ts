@@ -98,9 +98,24 @@ export class MicroserviceTest {
         description: "Test Sending & receiving a message on Microservice"
     })
     public async testNATSMicroservice() {
-        let natsServer = ["cd", "~/nats-server", "&&", "./nats-server", "--user", "guest", "--pass", "guest"];
+        const $NATS_VERSION = "v2.2.1";
+        let natsServer = [
+        "wget",
+         `https://github.com/nats-io/nats-server/releases/download/${$NATS_VERSION}/nats-server-${$NATS_VERSION}-linux-amd64.zip`, 
+         "-O", 
+         "tmp.zip",
+         "&&",
+         "unzip", "tmp.zip",
+         "&&",
+         "mv", `nats-server-${$NATS_VERSION}-linux-amd64`, "nats-server",
+         "&&",
+         "rm", "nats-server/README.md", "LICENSE",
+         "&&",
+         "cd", "nats-server",
+         "./nats-server", "--user", "guest", "--pass", "guest"];
         let githubCmd;
         if(Deno.env.get("GITHUB") === "true") {
+            
             githubCmd = Deno.run({
                 cmd: natsServer,
                 stdout: "inherit",
