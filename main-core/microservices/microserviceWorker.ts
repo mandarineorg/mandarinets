@@ -1,6 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { Microlemon, Transporters, ConnectionData } from "https://deno.land/x/microlemon@v2.0.2/mod.ts";
+import { Microlemon, Transporters, ConnectionData } from "https://deno.land/x/microlemon@v2.0.3/mod.ts";
 
 declare const self: any;
 

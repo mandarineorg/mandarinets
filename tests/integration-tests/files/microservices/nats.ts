@@ -17,13 +17,13 @@ const createPromise = () => new Promise((resolve, reject) => {
 let promise = createPromise();
 
 @Microservice({
-    transporter: Microlemon.Transporters.AMQP,
+    transporter: Microlemon.Transporters.NATS,
     configuration: {
-        transport: "AMQP",
+        transport: "NATS",
         options: {
             host: "127.0.0.1",
-            username: "guest",
-            password: "guest"
+            user: "guest",
+            pass: "guest"
         }
     },
     channels: ["myqueue"]
@@ -48,4 +48,4 @@ class MicroserviceResult {
 
 }
 
-new MandarineCore().MVC().run({ port: 6932 });
+new MandarineCore().MVC().run({ port: 6933 });

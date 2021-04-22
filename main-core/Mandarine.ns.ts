@@ -28,7 +28,7 @@ import type { ComponentComponent } from "./components/component-component/compon
 import { Leaf } from "../deps.ts";
 import { IndependentUtils } from "./utils/independentUtils.ts";
 import { ClassType } from "./utils/utilTypes.ts";
-import * as Microlemon  from "https://deno.land/x/microlemon@v2.0.2/mod.ts";
+import { Microlemon }  from "./microservices/mod.ts";
 import { MicroserviceManager } from "./microservices/microserviceManager.ts";
 import { MandarineCoreTimers } from "./internals/core/mandarineCoreTimers.ts";
 

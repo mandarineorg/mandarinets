@@ -2,7 +2,7 @@
 
 import { Mandarine } from "../Mandarine.ns.ts";
 import { ClassType } from "../utils/utilTypes.ts";
-import * as Microlemon from "./mod.ts";
+import { Microlemon } from "./mod.ts";
 import { microserviceWorkerBase64Bundle } from "./base64bundle.ts"
 import { Log } from "../../logger/log.ts";
 import { ComponentComponent } from "../components/component-component/componentComponent.ts";

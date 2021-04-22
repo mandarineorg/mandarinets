@@ -10,6 +10,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         deno: ["v1.9.0"]
+        redis: [6.2]
       fail-fast: true
     services:
       rabbitmq:
@@ -23,6 +24,19 @@ jobs:
         uses: denolib/setup-deno@master
         with:
           deno-version: ${{ matrix.deno }}
+      - name: Set NATS Server Version
+        run: echo "NATS_VERSION=v2.2.1" >> $GITHUB_ENV          
+      - name: Get nats-server
+        run: |
+          wget "https://github.com/nats-io/nats-server/releases/download/$NATS_VERSION/nats-server-$NATS_VERSION-linux-amd64.zip" -O tmp.zip
+          unzip tmp.zip
+          mv nats-server-$NATS_VERSION-linux-amd64 nats-server
+          rm nats-server/README.md LICENSE       
+      - name: Set up Redis ${{ matrix.redis }}
+        uses: shogo82148/actions-setup-redis@v1
+        with:
+          redis-version: ${{ matrix.redis }}
+          auto-start: "true"             
       - name: run tests
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'

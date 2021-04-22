@@ -1,9 +1,12 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { Transporters, ConnectionData } from "https://deno.land/x/microlemon@v2.0.2/mod.ts";
+import { Microlemon } from "../../microservices/mod.ts";
 import { MandarineException } from "../../exceptions/mandarineException.ts";
 import { Mandarine } from "../../Mandarine.ns.ts";
 import { MainCoreDecoratorProxy } from "../../proxys/mainCoreDecorator.ts";
+
+type Transporters = Microlemon.Transporters;
+type ConnectionData = Microlemon.ConnectionData;
 
 export const Microservice = (configuration: { transporter: Transporters, configuration?: ConnectionData, channels: Array<string> }): Function => {
     return (target: any) => {
