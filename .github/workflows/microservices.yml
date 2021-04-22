@@ -32,7 +32,8 @@ jobs:
           unzip tmp.zip
           mv nats-server-$NATS_VERSION-linux-amd64 nats-server
           rm nats-server/README.md LICENSE
-          nats-server       
+          cd nats-server
+          ./nats-server --user "guest" --password "guest"   
       - name: Set up Redis ${{ matrix.redis }}
         uses: shogo82148/actions-setup-redis@v1
         with:
