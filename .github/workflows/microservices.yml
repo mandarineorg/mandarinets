@@ -1,0 +1,29 @@
+name: Mandarine Microservices
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: Mandarine Microservices (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        deno: ["v1.9.0"]
+      fail-fast: true
+    services:
+      rabbitmq:
+        image: rabbitmq:3-management
+        ports:
+          - 5672:5672
+          - 15672:15672
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup deno
+        uses: denolib/setup-deno@master
+        with:
+          deno-version: ${{ matrix.deno }}
+      - name: run tests
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+        run: deno test -c tsconfig.json --reload --allow-all --unstable --fail-fast tests/integration-tests/microservices.ts       
