@@ -31,7 +31,8 @@ jobs:
           wget "https://github.com/nats-io/nats-server/releases/download/$NATS_VERSION/nats-server-$NATS_VERSION-linux-amd64.zip" -O tmp.zip
           unzip tmp.zip
           mv nats-server-$NATS_VERSION-linux-amd64 nats-server
-          rm nats-server/README.md LICENSE       
+          rm nats-server/README.md LICENSE
+          nats-server       
       - name: Set up Redis ${{ matrix.redis }}
         uses: shogo82148/actions-setup-redis@v1
         with:
