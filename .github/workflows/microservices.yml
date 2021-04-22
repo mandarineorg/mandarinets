@@ -33,7 +33,7 @@ jobs:
           mv nats-server-$NATS_VERSION-linux-amd64 nats-server
           rm nats-server/README.md LICENSE
           cd nats-server
-          ./nats-server --user "guest" --password "guest"   
+          ./nats-server  --user "guest" --pass "guest" 
       - name: Set up Redis ${{ matrix.redis }}
         uses: shogo82148/actions-setup-redis@v1
         with:
