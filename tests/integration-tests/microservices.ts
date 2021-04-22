@@ -98,6 +98,16 @@ export class MicroserviceTest {
         description: "Test Sending & receiving a message on Microservice"
     })
     public async testNATSMicroservice() {
+        let natsServer = ["cd", "nats-server", "&&", "./nats-server", "--user", "guest", "--pass", "guest"];
+        let githubCmd;
+        if(Deno.env.get("GITHUB") === "true") {
+            githubCmd = Deno.run({
+                cmd: natsServer,
+                stdout: "inherit",
+                stderr: "inherit"
+            });
+        }
+
         let cmd = await waitForMandarineServer("microservices/nats.ts");
         Deno.sleepSync(3000);
         await this.sendNATSMessage();
@@ -113,6 +123,9 @@ export class MicroserviceTest {
             DenoAsserts.assertEquals(data.message, "My message");
         } finally {
             cmd.close();
+            if(githubCmd) {
+                githubCmd.close();
+            }
         }
     }
 
