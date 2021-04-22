@@ -98,7 +98,7 @@ export class MicroserviceTest {
         description: "Test Sending & receiving a message on Microservice"
     })
     public async testNATSMicroservice() {
-        let natsServer = ["cd", "nats-server", "&&", "./nats-server", "--user", "guest", "--pass", "guest"];
+        let natsServer = ["cd", "~/nats-server", "&&", "./nats-server", "--user", "guest", "--pass", "guest"];
         let githubCmd;
         if(Deno.env.get("GITHUB") === "true") {
             githubCmd = Deno.run({
