@@ -112,7 +112,7 @@ export class MicroserviceTest {
          "rm", "nats-server/README.md", "LICENSE",
          "&&",
          "cd", "nats-server",
-         "./nats-server", "--user", "guest", "--pass", "guest"];
+         "./nats-server"];
         let githubCmd;
         if(Deno.env.get("GITHUB") === "true") {
             
