@@ -26,6 +26,8 @@ export class MandarineCore {
 
     constructor(options?: CoreOptions) {
 
+        this.handleOnExit();
+
         if(options) {
             if(options.config) this.setConfiguration(options.config);
         }
@@ -36,6 +38,7 @@ export class MandarineCore {
         this.resolveComponentsDependencies();
         this.initializeEventListeners();
         this.initializeValueReaders();
+        this.initializeValueReaderWithCustomConfiguration();
         this.initializeWebsocketComponents();
 
         MandarineTSFrameworkEngineMethods.initializeEngineMethods();
@@ -46,6 +49,8 @@ export class MandarineCore {
         this.freezeMandarineProperties();
 
         this.initializeTasks();
+        this.initializeMicroservices();
+        this.initializeAutomaticMicroserviceHealthCheck();
 
         this.writeOnCompiler();
     }
@@ -92,6 +97,26 @@ export class MandarineCore {
 
     private initializeTasks() {
         ApplicationContext.getInstance().getComponentsRegistry().initializeTasks();
+    }
+
+    private initializeMicroservices() {
+        ApplicationContext.getInstance().getComponentsRegistry().initializeMicroservices();
+    }
+
+    private initializeAutomaticMicroserviceHealthCheck() {
+        ApplicationContext.getInstance().getMicroserviceManager().enableAutomaticHealthInterval();
+    }
+
+    private initializeValueReaderWithCustomConfiguration() {
+        ApplicationContext.getInstance().getComponentsRegistry().initializeValueReaderWithCustomConfiguration();
+    }
+
+    private handleOnExit() {
+
+        window.addEventListener("unload", () => {
+            ApplicationContext.getInstance().getMicroserviceManager().disableAutomaticHealthInterval();
+        });
+
     }
 
     private writeOnCompiler() {

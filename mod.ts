@@ -56,6 +56,9 @@ export { parameterDecoratorFactory } from "./mvc-framework/core/decorators/custo
 
 export { Authenticator } from "./main-core/mandarine-native/security/authenticatorDefault.ts";
 
+export { Microservice, MSOnOpen, MSOnClose, MSOnError, MSOnMessage, MSClose } from "./main-core/decorators/microservices/microservice.ts";
+export { MicroserviceUserManager } from "./main-core/mandarine-native/microservices/microserviceUserManager.ts";
+
 /*
 OpenAPI
 */

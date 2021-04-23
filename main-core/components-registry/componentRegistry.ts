@@ -10,6 +10,7 @@ import { ApplicationContext } from "../application-context/mandarineApplicationC
 import { ComponentComponent } from "../components/component-component/componentComponent.ts";
 import { RepositoryComponent } from "../components/repository-component/repositoryComponent.ts";
 import { DI } from "../dependency-injection/di.ns.ts";
+import { MicroserviceUserManager } from "../mandarine-native/microservices/microserviceUserManager.ts";
 import { Authenticator } from "../mandarine-native/security/authenticatorDefault.ts";
 import { TaskManager } from "../mandarine-native/tasks/taskManager.ts";
 import { WebSocketClientManager } from "../mandarine-native/websocket/websocketClientManager.ts";
@@ -18,9 +19,11 @@ import { Mandarine } from "../Mandarine.ns.ts";
 import { MandarineConstants } from "../mandarineConstants.ts";
 import { Reflect } from "../reflectMetadata.ts";
 import { CommonUtils } from "../utils/commonUtils.ts";
+import { MicroserviceUtil } from "../utils/components/microserviceUtil.ts";
 import { WebSocketClientUtil } from "../utils/components/websocketClient.ts";
 import { WebSocketServerUtil } from "../utils/components/websocketServer.ts";
 import { IndependentUtils } from "../utils/independentUtils.ts";
+import { JsonUtils } from "../utils/jsonUtils.ts";
 import { ReflectUtils } from "../utils/reflectUtils.ts";
 
 /**
@@ -62,6 +65,12 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
         this.components.set("MANDARINE_TASK_MANAGER", {
             componentName: "MANDARINE_TASK_MANAGER",
             componentInstance: new TaskManager(),
+            componentType: Mandarine.MandarineCore.ComponentTypes.INTERNAL
+        });
+
+        this.components.set("MANDARINE_MICROSERVICE_MANAGER", {
+            componentName: "MANDARINE_MICROSERVICE_MANAGER",
+            componentInstance: new MicroserviceUserManager(),
             componentType: Mandarine.MandarineCore.ComponentTypes.INTERNAL
         });
 
@@ -123,6 +132,9 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
                 case Mandarine.MandarineCore.ComponentTypes.WEBSOCKET:
                     componentInstanceInitialized = new ComponentComponent(componentName, componentHandler, Mandarine.MandarineCore.ComponentTypes.WEBSOCKET, configuration);
                 break;
+                case Mandarine.MandarineCore.ComponentTypes.MICROSERVICE:
+                    componentInstanceInitialized = new ComponentComponent(componentName, componentHandler, Mandarine.MandarineCore.ComponentTypes.MICROSERVICE, configuration);
+                break;
             }
 
             switch(componentType) {
@@ -134,6 +146,7 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
                 case Mandarine.MandarineCore.ComponentTypes.CATCH:  
                 case Mandarine.MandarineCore.ComponentTypes.GUARDS:
                 case Mandarine.MandarineCore.ComponentTypes.WEBSOCKET:
+                case Mandarine.MandarineCore.ComponentTypes.MICROSERVICE:
                     isServiceType = true;
                 break;  
             }
@@ -463,6 +476,35 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
         });
     }
 
+    public initializeValueReaderWithCustomConfiguration(): void {
+        const serviceTypeComponents = this.getComponents().filter((item) => item.isServiceType === true);
+        serviceTypeComponents.forEach((component) => {
+            const instances = [component.componentInstance.getClassHandler(), component.componentInstance.getClassHandlerPrimitive()];
+            instances.forEach((instance) => {
+                const metadataKeys: Array<string> = Reflect.getMetadataKeys(instance);
+                metadataKeys.filter(item => item.startsWith(MandarineConstants.REFLECTION_MANDARINE_CONFIGURATION_PROPERTIES)).forEach((item) => {
+                    const customConfigPath: string = Reflect.getMetadata(item, instance);
+                    if(customConfigPath) {
+                        metadataKeys.filter((item) => item.startsWith(MandarineConstants.REFLECTION_MANDARINE_VALUE_DECORATOR)).forEach((key) => {
+                            const metadata: { configKey: string, scope: string, propertyName: string } = Reflect.getMetadata(key, instance);
+                            const configuration = JsonUtils.toJson(customConfigPath, { 
+                                    isFile: true, 
+                                    allowEnvironmentalReferences: true, 
+                                    handleException: (ex: any) => {
+                                        Mandarine.logger.warn(`Something happened while reading custom configuration file for @Value. ${ex} (${customConfigPath})`);
+                                        return {}
+                                    } 
+                            });
+                            if(!instance[metadata.propertyName]) {
+                                instance[metadata.propertyName] = IndependentUtils.readConfigByDots(configuration, metadata.configKey);
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    }
+
     public initializeWebsocketComponents(): void {
         const websocketComponents = this.getComponentsByComponentType(Mandarine.MandarineCore.ComponentTypes.WEBSOCKET);
         websocketComponents.forEach((item) => {
@@ -516,6 +558,83 @@ export class ComponentsRegistry implements Mandarine.MandarineCore.IComponentsRe
             }
             // ALL CRON TASKS ARE SETUP
             this.logger.info("Task manager has been found and initialized");
+        }
+    }
+
+    public initializeMicroservices(): void {
+        const websocketComponents = this.getComponentsByComponentType(Mandarine.MandarineCore.ComponentTypes.MICROSERVICE);
+        const microserviceManager = Mandarine.Global.getMicroserviceManager();
+        websocketComponents.forEach(async (item) => {
+            // Create Websocket
+            let component: ComponentComponent = item.componentInstance;
+            component.addInternal("HEALTH_CHECKS_COUNTS", 0);
+            
+            MicroserviceUtil.mount(component);
+        });
+    }
+
+    public connectMicroserviceToProxy(microserviceInstance: ComponentComponent): void {
+        let microserviceTarget: any = microserviceInstance.getClassHandler();
+        let microserviceWorkerItem = Mandarine.Global.getMicroserviceManager().getByComponent(microserviceInstance);
+        const microserviceWorker = microserviceWorkerItem?.worker;
+        if(microserviceWorker) {
+            const metadataKeys: Array<string> = Reflect.getMetadataKeys(microserviceTarget);
+
+            let [closeMethodName, onCloseMethodName, onOpenMethodName]: [any, any, any] = [undefined, undefined, undefined];
+
+            metadataKeys.filter(item => item.startsWith(MandarineConstants.REFLECTION_MANDARINE_MICROSERVICE_PROPERTY)).forEach((item) => {
+                const metadata: Mandarine.MandarineCore.Decorators.WebSocketProperty = Reflect.getMetadata(item, microserviceTarget);
+                if(metadata) {
+
+                    switch(metadata.property) {
+                        case "onClose":
+                            onCloseMethodName = metadata.methodName;
+                        break;
+                        case "onOpen":
+                            onOpenMethodName = metadata.methodName;
+                        break;
+                        case "onMessage":
+                            microserviceWorker!.onmessage = (e: { [prop: string]: any }) => {
+                                let { data } = e;
+                                data = JSON.parse(data);
+
+                                if(data.message === "ALIVE" && data.mandarine === "HEALTH-CHECK") {
+                                    microserviceInstance.addInternal("HEALTH_CHECKS_COUNTS", microserviceInstance.getInternal("HEALTH_CHECKS_COUNTS") + 1);
+                                } else if(data.mandarine === "LISTENING-ERROR") {
+                                    this.logger.error("Microservice worker encountered an error. Closing connection. ", data.message)
+                                    microserviceWorker.terminate();
+                                } else {
+                                    microserviceTarget[metadata.methodName](data);
+                                }
+                            }
+                        break;
+                        case "onError":
+                            microserviceWorker!.onerror = (e: ErrorEvent) => {
+                                e.preventDefault();
+                                microserviceTarget[metadata.methodName](e);
+                            }
+                        break;
+                        case "close":
+                            closeMethodName = metadata.methodName;
+                        break;
+                    }
+
+                }
+            });
+
+            if(closeMethodName) {
+                microserviceTarget[closeMethodName] = () => {
+                    microserviceWorker!.terminate();
+                    microserviceTarget[onCloseMethodName](microserviceWorkerItem);
+                }
+            }
+
+            if(onOpenMethodName) {
+                microserviceTarget[onOpenMethodName](microserviceWorkerItem);
+            }
+
+        } else {
+            this.logger.debug("A microservice tried to connect to proxy, but no worker was found");
         }
     }
 }

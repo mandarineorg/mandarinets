@@ -25,6 +25,7 @@ export class MandarineException extends Error {
     public static INVALID_COMPONENT_CONTEXT: string = "Component context is invalid or missing";
     public static NEEDED_RESOURCE_HANDLER_LOCATION: string = "Resource Handler failed to obtain resource since it's lacking a resource handler location";
     public static INVALID_ROUTE_SIGNATURE_NULL: string = "The signature of the route is null which is invalid in the current context";
+    public static INVALID_MICROSERVICE_CONFIGURATION: string = "Microservice component has been found but it lacks a proper configuration";
 
     constructor(public message: string, public superAlert: boolean = false) {
       super(message);

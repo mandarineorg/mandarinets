@@ -28,6 +28,9 @@ import type { ComponentComponent } from "./components/component-component/compon
 import { Leaf } from "../deps.ts";
 import { IndependentUtils } from "./utils/independentUtils.ts";
 import { ClassType } from "./utils/utilTypes.ts";
+import { Microlemon }  from "./microservices/mod.ts";
+import { MicroserviceManager } from "./microservices/microserviceManager.ts";
+import { MandarineCoreTimers } from "./internals/core/mandarineCoreTimers.ts";
 
 /**
 * This namespace contains all the essentials for mandarine to work
@@ -122,6 +125,10 @@ export namespace Mandarine {
                 mongodb?: {
                     connectionURL: string;
                 }
+            },
+            microservices?: {
+                automaticHealthCheck?: boolean;
+                automaticHealthCheckInterval?: number;
             }
         } & any
     };
@@ -174,6 +181,7 @@ export namespace Mandarine {
             mandarineInitialProperties: MandarineInitialProperties;
             mandarineMiddleware: Array<ComponentComponent & Components.MiddlewareComponent>;
             mandarineNativeComponentsRegistry: NativeComponentsRegistry;
+            mandarineMicroserviceManager: MandarineCore.IMicroserviceManager;
             __SECURITY__: {
                 auth: {
                     authManagerBuilder: MandarineSecurity.Auth.AuthenticationManagerBuilder,
@@ -197,6 +205,7 @@ export namespace Mandarine {
                     mandarineTemplatesManager: undefined,
                     mandarineInitialProperties: undefined,
                     mandarineNativeComponentsRegistry: undefined,
+                    mandarineMicroserviceManager: undefined,
                     __SECURITY__: {
                         auth: {
                             authManagerBuilder: undefined
@@ -251,6 +260,19 @@ export namespace Mandarine {
             }
 
             return mandarineGlobal.mandarineTemplatesManager;
+        };
+
+        /**
+        * Get the microservice manager
+        */
+       export function getMicroserviceManager(): Mandarine.MandarineCore.IMicroserviceManager { 
+            let mandarineGlobal: MandarineGlobalInterface = getMandarineGlobal();
+
+            if(mandarineGlobal.mandarineMicroserviceManager == (null || undefined)) {
+                mandarineGlobal.mandarineMicroserviceManager = new Mandarine.MandarineCore.MandarineMicroserviceManager();
+            }
+
+            return mandarineGlobal.mandarineMicroserviceManager;
         };
 
         /**
@@ -368,6 +390,10 @@ export namespace Mandarine {
             if(properties.mandarine.sessions.expirationInterval == (null || undefined)) properties.mandarine.sessions.expirationInterval = defaultConfiguration.mandarine.sessions.expirationInterval;
             if(properties.mandarine.security == (null || undefined)) properties.mandarine.security = defaultConfiguration.mandarine.security;
             if(properties.mandarine.security.cookiesSignKeys == (null || undefined) || properties.mandarine.security.cookiesSignKeys && properties.mandarine.security.cookiesSignKeys.length == 0) properties.mandarine.security.cookiesSignKeys = defaultConfiguration.mandarine.security.cookiesSignKeys;
+            if(properties.mandarine.microservices == (null || undefined)) properties.mandarine.microservices = defaultConfiguration.mandarine.microservices;
+            if(properties.mandarine.microservices.automaticHealthCheck == (null || undefined)) properties.mandarine.microservices.automaticHealthCheck = defaultConfiguration.mandarine.microservices.automaticHealthCheck;
+            if(properties.mandarine.microservices.automaticHealthCheckInterval == (null || undefined)) properties.mandarine.microservices.automaticHealthCheckInterval = defaultConfiguration.mandarine.microservices.automaticHealthCheckInterval;
+
 
             if(!Object.values(Mandarine.MandarineMVC.TemplateEngine.Engines).includes(properties.mandarine.templateEngine.engine)) throw new TemplateEngineException(TemplateEngineException.INVALID_ENGINE);
 
@@ -484,6 +510,7 @@ export namespace Mandarine {
             getComponentsRegistry(): MandarineCore.IComponentsRegistry;
             getEntityManager(): Mandarine.ORM.Entity.EntityManager;
             getTemplateManager(): Mandarine.MandarineCore.ITemplatesManager;
+            getMicroserviceManager(): Mandarine.MandarineCore.IMicroserviceManager;
             initializeMetadata(): void;
             getInstance?: () => ApplicationContext.IApplicationContext;
             getDIFactory(): DI.FactoryClass;
@@ -495,6 +522,21 @@ export namespace Mandarine {
     * Refers to all the elements part of the core.
     */
     export namespace MandarineCore {
+
+        export namespace Internals {
+
+            export type CoreTimersType = "Timeout" | "Interval";
+            export interface CoreTimers {
+                timerId: number;
+                key: string;
+                type: CoreTimersType
+            }
+
+            export const getTimersManager = () => {
+                return MandarineCoreTimers.getInstance();
+            }
+
+        }
 
         export enum ValueScopes {
             CONFIGURATION,
@@ -521,7 +563,8 @@ export namespace Mandarine {
             MANUAL_COMPONENT,
             GUARDS,
             INTERNAL,
-            WEBSOCKET
+            WEBSOCKET,
+            MICROSERVICE
         };
 
         /**
@@ -606,6 +649,9 @@ export namespace Mandarine {
             connectWebsocketClientProxy(component: any): void;
             connectWebsocketServerProxy(component: any): void;
             initializeTasks(): void;
+            initializeMicroservices(): void;
+            connectMicroserviceToProxy(microserviceInstance: ComponentComponent): void;
+            initializeValueReaderWithCustomConfiguration(): void;
         };
 
         /**
@@ -621,6 +667,27 @@ export namespace Mandarine {
         }
 
         export class MandarineTemplateManager extends TemplatesManager {}
+
+        /**
+         * 
+         */
+        export interface IMicroserviceManager {
+            create(componentPrimitive: ClassType, configuration: Microlemon.ConnectionData): Promise<[boolean, Mandarine.MandarineCore.MicroserviceItem]>;
+            getByComponent(component: ComponentComponent): Mandarine.MandarineCore.MicroserviceItem | undefined;
+            deleteByHash(hash: string): void;
+            enableAutomaticHealthInterval(): void;
+            getMicroservices(): Array<Mandarine.MandarineCore.MicroserviceItem>;
+            disableAutomaticHealthInterval(): void;
+            enableAutomaticHealthInterval(): void;
+            isHealthy(hash: string): Promise<boolean>;
+            getByHash(hash: string): Mandarine.MandarineCore.MicroserviceItem | undefined;
+            getByMicroservice(microservice: Mandarine.MandarineCore.MicroserviceItem): Mandarine.MandarineCore.MicroserviceItem | undefined;
+            deleteByMicroservice(microservice: Mandarine.MandarineCore.MicroserviceItem): void;
+            isHealthyByMicroservice(microservice: Mandarine.MandarineCore.MicroserviceItem): Promise<boolean>;
+            remountFromExistent(microservice: Mandarine.MandarineCore.MicroserviceItem): Promise<void>;
+        }
+
+        export class MandarineMicroserviceManager extends MicroserviceManager {}
 
         /**
         * Refers to the resource handler registry.
@@ -708,6 +775,23 @@ export namespace Mandarine {
                 fixedRate: number,
                 methodName: string
             }
+
+            export type MicroserviceWorkerProperties = "onOpen" | "onClose" | "onError" | "onMessage" | "close";
+            export interface MicroserviceProperty {
+                property: MicroserviceWorkerProperties,
+                methodName: string
+            }
+        }
+
+        export type MicroserviceStatus = "Initialized" | "Initialized,Listening" | "Unhealthy";
+        export interface MicroserviceItem {
+            worker: Worker;
+            createdDate: Date;
+            lastMountingDate: Date;
+            status: MicroserviceStatus;
+            parentComponent: ClassType;
+            microserviceConfiguration: Microlemon.ConnectionData;
+            hash: string;
         }
 
     };
@@ -784,6 +868,10 @@ export namespace Mandarine {
                 },
                 security: {
                     cookiesSignKeys: ["HORSE", "MANDARINE", "CAT", "NORWAY", "ORANGE", "TIGER"]
+                },
+                microservices: {
+                    automaticHealthCheck: true,
+                    automaticHealthCheckInterval: (30 * 1000)
                 }
             }
         };

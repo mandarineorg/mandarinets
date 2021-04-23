@@ -39,17 +39,7 @@ export class MainCoreDecoratorProxy {
     }
 
     public static configurationPropertiesDecorator(targetClass: any, path: string) {
-        Reflect.defineMetadata(MandarineConstants.REFLECTION_MANDARINE_CONFIGURATION_PROPERTIES, path, targetClass);
-        const target = targetClass.prototype || targetClass;
-        const valueDecoratorMetadataKeys = Reflect.getMetadataKeys(target) || [];
-        valueDecoratorMetadataKeys.forEach((key) => {
-            const metadata: { configKey: string, scope: string, propertyName: string } = Reflect.getMetadata(key, target);
-            this.valueDecorator(target, metadata.configKey, undefined, metadata.propertyName, JsonUtils.toJson(path, { isFile: true, allowEnvironmentalReferences: true, handleException: (ex) => {
-                Mandarine.logger.warn(`Something happened while reading custom configuration file for @Value. ${ex} (${path})`);
-                return {}
-            } }));
-            
-        });
+        Reflect.defineMetadata(MandarineConstants.REFLECTION_MANDARINE_CONFIGURATION_PROPERTIES, path, targetClass.prototype);
     }
 
     public static valueDecorator(targetClass: any, configKey: string, scope: Mandarine.MandarineCore.ValueScopes | undefined, propertyName: string, propertyObject?: any) {
@@ -62,7 +52,6 @@ export class MainCoreDecoratorProxy {
         Reflect.defineMetadata(`${MandarineConstants.REFLECTION_MANDARINE_VALUE_DECORATOR}-${CommonUtils.generateUUID()}`, metadata, targetClass);
 
         if(propertyObject) {
-            // If we are passing a property object, then we resolve inmediatly.
             targetClass[propertyName] = IndependentUtils.readConfigByDots(propertyObject, configKey);
         }
     }
@@ -102,5 +91,14 @@ export class MainCoreDecoratorProxy {
         };
 
         Reflect.defineMetadata(`${MandarineConstants.REFLECTION_MANDARINE_TIMER_DECORATOR}-${CommonUtils.generateUUID()}`, metadata, targetClass);
+    }
+    
+    public static registerWorkerProperty(targetClass: any, eventName: Mandarine.MandarineCore.Decorators.MicroserviceWorkerProperties, methodName: string) {
+        const metadata: Mandarine.MandarineCore.Decorators.MicroserviceProperty  = {
+            methodName: methodName,
+            property: eventName
+        };
+
+        Reflect.defineMetadata(`${MandarineConstants.REFLECTION_MANDARINE_MICROSERVICE_PROPERTY}:${methodName}`, metadata, targetClass);
     }
 }

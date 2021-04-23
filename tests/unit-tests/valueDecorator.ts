@@ -3,6 +3,7 @@
 import { ApplicationContext } from "../../main-core/application-context/mandarineApplicationContext.ts";
 import { Value } from "../../main-core/decorators/configuration-readers/value.ts";
 import { Service } from "../../main-core/decorators/stereotypes/service/service.ts";
+import { Mandarine } from "../../main-core/Mandarine.ns.ts";
 import { MandarineCore } from "../../main-core/mandarineCore.ts";
 import { DenoAsserts, Test } from "../mod.ts";
 
@@ -26,6 +27,11 @@ new MandarineCore({
         noStatic: "HELLO WORLD",
         object: {
             hello: "xd"
+        },
+        mandarine: {
+            microservices: {
+                automaticHealthCheck: false
+            }
         }
     }
 });
@@ -40,8 +46,10 @@ export class SessionTest {
        const component = ApplicationContext.getInstance().getComponentsRegistry().getComponentByHandlerType(MyClass)?.componentInstance.getClassHandler();
        DenoAsserts.assertEquals(MyClass.lol, "MANDARINE1234");
        DenoAsserts.assertEquals(component.noStatic, "HELLO WORLD");
-        DenoAsserts.assertEquals(component.anObject, {
+       DenoAsserts.assertEquals(component.anObject, {
             hello: "xd"
         });
+        Mandarine.Global.getMicroserviceManager().disableAutomaticHealthInterval();
+        Mandarine.MandarineCore.Internals.getTimersManager().clearAll();
     }
 }

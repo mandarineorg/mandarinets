@@ -96,9 +96,15 @@ export class EntityManagerClass {
                     try {
                         let connection: any = await (<PostgresConnector>this.databaseClient).makeConnection();
                         if(connection) {
-                            await (<PostgresConnector>this.databaseClient).queryWithConnection(connection, tableQueriesFinal);
-                            await (<PostgresConnector>this.databaseClient).queryWithConnection(connection, columnQueriesFinal);
-                            await (<PostgresConnector>this.databaseClient).queryWithConnection(connection, constraintQueriesFinal);
+                            await (<PostgresConnector>this.databaseClient).queryWithConnection(connection, tableQueries.join(" "));
+                            await (<PostgresConnector>this.databaseClient).queryWithConnection(connection, columnQueries.join(" "));
+                            await Promise.all(constraintQueries.map(async (item) => {
+                                try {
+                                    await (<PostgresConnector>this.databaseClient).queryWithConnection(connection, item, true);
+                                } catch (error) {
+                                    this.logger.debug("Ignoring creation of constraint: ", error.message);
+                                }
+                            }));
                             connection = null;
                         }
                     }catch(error){
