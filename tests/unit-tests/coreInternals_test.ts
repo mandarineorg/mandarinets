@@ -18,7 +18,7 @@ export class CoreInternals {
         name: "Test internal core timer manager",
         description: "Should invoke & test functionalities for timer manager in core."
     })
-    public async checkFreezingProps() {
+    public async checkInternalCoreTimerManager() {
         const timerManager = Mandarine.MandarineCore.Internals.getTimersManager();
 
         DenoAsserts.assertEquals(timerManager.timers.length, 0);

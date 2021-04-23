@@ -33,7 +33,7 @@ export class MandarineCoreTimers {
         this.logger.debug("Deleting timer");
 
         const clearBeforeFiltering = (item: Mandarine.MandarineCore.Internals.CoreTimers) => {
-            let property: "timerId" | "key" = timerIdOrKey === "number" ? "timerId" : "key";
+            let property: "timerId" | "key" = typeof timerIdOrKey === "number" ? "timerId" : "key";
 
             if(item[property] === timerIdOrKey) {
                 this.clear(item);
