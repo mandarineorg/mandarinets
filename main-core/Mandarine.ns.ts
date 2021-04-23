@@ -871,7 +871,7 @@ export namespace Mandarine {
                 },
                 microservices: {
                     automaticHealthCheck: true,
-                    automaticHealthCheckInterval: (60 * 1000)
+                    automaticHealthCheckInterval: (30 * 1000)
                 }
             }
         };
