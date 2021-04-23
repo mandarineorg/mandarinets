@@ -99,21 +99,11 @@ export class MicroserviceTest {
     })
     public async testNATSMicroservice() {
         const $NATS_VERSION = "v2.2.1";
-        let natsServer = [
-        "wget",
-         `https://github.com/nats-io/nats-server/releases/download/${$NATS_VERSION}/nats-server-${$NATS_VERSION}-linux-amd64.zip`, 
-         "-O", 
-         "tmp.zip;",
-         "unzip", "tmp.zip;",
-         "mv", `nats-server-${$NATS_VERSION}-linux-amd64`, "nats-server;",
-         "rm", "nats-server/README.md", "LICENSE;",
-         "cd", "nats-server;",
-         "./nats-server"];
+        const exe = Deno.env.get("GITHUB") ? "nats-server/nats-server" : "nats-server";
         let githubCmd;
         if(Deno.env.get("GITHUB") === "true") {
-            console.log(natsServer.join(" "));
             githubCmd = Deno.run({
-                cmd: natsServer,
+                cmd: [exe],
                 stdout: "inherit",
                 stderr: "inherit"
             });
