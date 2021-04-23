@@ -150,4 +150,28 @@ export class MicroserviceTest {
             cmd.close();
         }
     }
+
+    @Test({
+        name: "Check healthiness",
+        description: "Check healthiness and Mandarine auto-recovery system"
+    })
+    public async checkMicroserviceHealthiness() {
+        let cmd = await waitForMandarineServer("microservices/autoRecovery.ts");
+        try {
+            let data = (await (await fetch("http://localhost:6935/result")).json());
+            DenoAsserts.assertNotEquals(data, {});
+            DenoAsserts.assertEquals(data.firstMicroserviceCount, 1);
+            DenoAsserts.assertEquals(data.firstMicroserviceHealthiness, true);
+            DenoAsserts.assertEquals(data.secondMicroserviceHealthiness, false);
+
+            Deno.sleepSync(62 * 1000);
+
+            let data2 = (await (await fetch("http://localhost:6935/result2")).json());
+            DenoAsserts.assertNotEquals(data2, {});
+            DenoAsserts.assertEquals(data2.wasMicroserviceFoundAfter60Seconds, true);
+            DenoAsserts.assertEquals(data2.thirdMicroserviceHealthiness, true);
+        } finally {
+            cmd.close();
+        }
+    }
 }

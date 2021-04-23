@@ -157,27 +157,29 @@ export class MicroserviceManager implements Mandarine.MandarineCore.IMicroservic
                             resolveScope(true);
                         } else {
                             if(attemps === maxAttemps) {
-                                timerManager.delete(healthInterval);
                                 resolveScope(false);
                             }
                         }
                         attemps = attemps + 1;
                     } catch {
-                        timerManager.delete(healthInterval);
                         resolveScope(false);
                     }
                 }, 1000);
+
+                const healthiness = await promise;
+                if(!healthiness) {
+                    this.logger.error("A microservice has lost connection");
+                }
+
+                timerManager.delete(healthInterval);
+
+                this.logger.debug("A healthcheck has been executed on a microservice");
+
+                return healthiness;
             }
         }
 
-        const healthiness = await promise;
-        if(!healthiness) {
-            this.logger.error("A microservice has lost connection");
-        }
-
-        this.logger.debug("A healthcheck has been executed on a microservice");
-
-        return healthiness;
+        return false;
     }
 
     public async remountFromExistent(microservice: Mandarine.MandarineCore.MicroserviceItem) {
@@ -196,11 +198,15 @@ export class MicroserviceManager implements Mandarine.MandarineCore.IMicroservic
 
         const isAutomaticHealthCheckEnabled = Mandarine.Global.readConfigByDots("mandarine.microservices.automaticHealthCheck");
         if(isAutomaticHealthCheckEnabled === true) {
+            this.logger.info("Microservice automatic healthiness check is enabled");
             const healthCheckInterval = Mandarine.Global.readConfigByDots("mandarine.microservices.automaticHealthCheckInterval") || Mandarine.Defaults.MandarineDefaultConfiguration.mandarine.microservices.automaticHealthCheckInterval;
             this.automaticHealthIntervalId = Mandarine.MandarineCore.Internals.getTimersManager().add(Timers.MANDARINE_AUTOMATIC_HEALTHCHECK_INTERVAL, "Interval", () => {
+                this.logger.debug("Microservice automatic healthiness check has been invoked");
                 this.microservices.forEach(async (item) => {
                     const isHealthy = await this.isHealthy(item.hash);
+
                     if(!isHealthy) {
+                        this.logger.debug("Trying to remount microservice");
                         await this.remountFromExistent(item);
                     }
                 })
@@ -210,6 +216,7 @@ export class MicroserviceManager implements Mandarine.MandarineCore.IMicroservic
 
     public disableAutomaticHealthInterval() {
         if(this.automaticHealthIntervalId) {
+            this.logger.debug("Microservice automatic healthiness check has been disabled");
             Mandarine.MandarineCore.Internals.getTimersManager().delete(this.automaticHealthIntervalId);
         }
     }

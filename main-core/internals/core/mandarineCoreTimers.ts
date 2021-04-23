@@ -1,10 +1,11 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { Mandarine } from "../../../mod.ts";
+import { Log, Mandarine } from "../../../mod.ts";
 
 export class MandarineCoreTimers {
 
     public static instance: MandarineCoreTimers;
+    public logger: Log = Log.getLogger(MandarineCoreTimers);
 
     public timers: Array<Mandarine.MandarineCore.Internals.CoreTimers> = new Array<Mandarine.MandarineCore.Internals.CoreTimers>();
 
@@ -29,8 +30,15 @@ export class MandarineCoreTimers {
 
     public delete(timerIdOrKey: string | number): void {
 
+        this.logger.debug("Deleting timer");
+
         const clearBeforeFiltering = (item: Mandarine.MandarineCore.Internals.CoreTimers) => {
-            this.clear(item);
+            let property: "timerId" | "key" = timerIdOrKey === "number" ? "timerId" : "key";
+
+            if(item[property] === timerIdOrKey) {
+                this.clear(item);
+            }
+            
             return item;
         };
 
@@ -55,13 +63,17 @@ export class MandarineCoreTimers {
 
     private clear(item: Mandarine.MandarineCore.Internals.CoreTimers) {
         if(item.type.toLowerCase() === "interval") {
+            this.logger.debug("Disattaching interval", item);
             clearInterval(item.timerId);
         } else if(item.type.toLowerCase() === "timeout") {
+            this.logger.debug("Disattaching timeout", item);
             clearTimeout(item.timerId);
         }
     }
 
     public clearAll() {
+        this.logger.debug("Deleting all timers");
+
         this.timers.forEach((item) => {
             this.delete(item.timerId);
         });
