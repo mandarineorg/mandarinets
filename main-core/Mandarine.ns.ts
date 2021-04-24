@@ -368,33 +368,8 @@ export namespace Mandarine {
             let mandarineGlobal: MandarineGlobalInterface = getMandarineGlobal();
             let defaultConfiguration: Properties = Defaults.MandarineDefaultConfiguration;
 
-            if(!properties) (properties as any) = {};
-            if(!properties.mandarine) properties.mandarine = {};
-            if(properties.mandarine.server == (null || undefined)) properties.mandarine.server = defaultConfiguration.mandarine.server;
-            if(properties.mandarine.server.host == (null || undefined)) properties.mandarine.server.host = defaultConfiguration.mandarine.server.host;
-            if(properties.mandarine.server.port == (null || undefined)) properties.mandarine.server.port = defaultConfiguration.mandarine.server.port;
-            if(properties.mandarine.server.responseType == (null || undefined)) properties.mandarine.server.responseType = defaultConfiguration.mandarine.server.responseType;
-            if(properties.mandarine.server.responseTimeHeader == (null || undefined)) properties.mandarine.server.responseTimeHeader = defaultConfiguration.mandarine.server.responseTimeHeader;
-            if(properties.mandarine.templateEngine == (null || undefined)) properties.mandarine.templateEngine = defaultConfiguration.mandarine.templateEngine;
-            if(properties.mandarine.templateEngine.path == (null || undefined)) properties.mandarine.templateEngine.path = defaultConfiguration.mandarine.templateEngine.path;
-            if(properties.mandarine.templateEngine.engine == (null || undefined)) properties.mandarine.templateEngine.engine = defaultConfiguration.mandarine.templateEngine.engine;
-            if(properties.mandarine.resources == (null || undefined)) properties.mandarine.resources = defaultConfiguration.mandarine.resources;
-            if(properties.mandarine.resources.staticFolder == (null || undefined)) properties.mandarine.resources.staticFolder = defaultConfiguration.mandarine.resources.staticFolder;
-            if(properties.mandarine.resources.staticRegExpPattern == (null || undefined)) properties.mandarine.resources.staticRegExpPattern = defaultConfiguration.mandarine.resources.staticRegExpPattern;
-            if(properties.mandarine.authentication == (null || undefined)) properties.mandarine.authentication = defaultConfiguration.mandarine.authentication;
-            if(properties.mandarine.authentication.expiration == (null || undefined)) properties.mandarine.authentication.expiration = defaultConfiguration.mandarine.authentication.expiration;
-            if(properties.mandarine.authentication.cookie == (null || undefined)) properties.mandarine.authentication.cookie = defaultConfiguration.mandarine.authentication.cookie;
-            if(properties.mandarine.sessions == (null || undefined)) properties.mandarine.sessions = defaultConfiguration.mandarine.sessions;
-            if(properties.mandarine.sessions.touch == (null || undefined)) properties.mandarine.sessions.touch = defaultConfiguration.mandarine.sessions.touch;
-            if(properties.mandarine.sessions.expiration == (null || undefined)) properties.mandarine.sessions.expiration = defaultConfiguration.mandarine.sessions.expiration;
-            if(properties.mandarine.sessions.expirationInterval == (null || undefined)) properties.mandarine.sessions.expirationInterval = defaultConfiguration.mandarine.sessions.expirationInterval;
-            if(properties.mandarine.security == (null || undefined)) properties.mandarine.security = defaultConfiguration.mandarine.security;
-            if(properties.mandarine.security.cookiesSignKeys == (null || undefined) || properties.mandarine.security.cookiesSignKeys && properties.mandarine.security.cookiesSignKeys.length == 0) properties.mandarine.security.cookiesSignKeys = defaultConfiguration.mandarine.security.cookiesSignKeys;
-            if(properties.mandarine.microservices == (null || undefined)) properties.mandarine.microservices = defaultConfiguration.mandarine.microservices;
-            if(properties.mandarine.microservices.automaticHealthCheck == (null || undefined)) properties.mandarine.microservices.automaticHealthCheck = defaultConfiguration.mandarine.microservices.automaticHealthCheck;
-            if(properties.mandarine.microservices.automaticHealthCheckInterval == (null || undefined)) properties.mandarine.microservices.automaticHealthCheckInterval = defaultConfiguration.mandarine.microservices.automaticHealthCheckInterval;
-
-
+            properties = IndependentUtils.setDefaultValues(properties, defaultConfiguration);
+            
             if(!Object.values(Mandarine.MandarineMVC.TemplateEngine.Engines).includes(properties.mandarine.templateEngine.engine)) throw new TemplateEngineException(TemplateEngineException.INVALID_ENGINE);
 
             mandarineGlobal.mandarineProperties = properties;
