@@ -69,7 +69,28 @@ export class IndependentUtils {
     }
   }
 
-  public static getPrototypeMethods(object: any): Array<string> {
-    return Object.getOwnPropertyNames(object.prototype).filter((item) => item !== "constructor");
-  }
+    public static getPrototypeMethods(object: any): Array<string> {
+      return Object.getOwnPropertyNames(object.prototype).filter((item) => item !== "constructor");
+    }
+
+    public static setDefaultValues(object: any, defaultObject: any): any {
+      const ownObject = {...object};
+      const keys = Object.keys(defaultObject);
+
+      keys.forEach((key) => {
+          const defaultValue = defaultObject[key];
+
+          if(ownObject[key] === undefined) {
+              ownObject[key] = defaultValue;
+          } else {
+              if(typeof defaultValue === "object") {
+                  ownObject[key] = this.setDefaultValues(ownObject[key], defaultValue);
+              } else {
+                  ownObject[key] = ownObject[key] === undefined ? defaultValue : ownObject[key];
+              }
+          }
+      });
+
+      return ownObject;
+    }
 }
