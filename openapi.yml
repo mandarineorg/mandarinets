@@ -1,0 +1,46 @@
+openapi: 3.0.3
+info:
+  title: App
+  version: 1.0.0
+servers: []
+paths:
+  '/:username':
+    get:
+      summary: Get user by user name
+      responses:
+        '400':
+          responseCode: 400
+          description: User not found
+        default:
+          description: lol
+      operationId: httpHandler
+      parameters:
+        - description: The name that needs to be fetched. Use user1 for testing.
+          required: true
+          in: path
+          schema:
+            type: string
+          name: username
+      tags:
+        - JAJA
+        - Framework
+        - NodeJS
+        - Deno
+        - Hello2
+        - Hello3
+        - Hello
+components:
+  schemas: {}
+  responses: {}
+  parameters: {}
+  examples: {}
+  requestBodies: {}
+  headers: {}
+  securitySchemes: {}
+  links: {}
+  callbacks: {}
+tags:
+  - name: Framework
+    description: .NET
+  - name: NodeJS
+    description: Runtime

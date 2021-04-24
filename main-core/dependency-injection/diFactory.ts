@@ -138,7 +138,7 @@ export class DependencyInjectionFactory {
                         valueToInject = context.request.session;
                         break;
                     case DI.InjectionTypes.SERVER_REQUEST_PARAM:
-                        valueToInject = context.request.serverRequest;
+                        valueToInject = context.request;
                     break;
                     case DI.InjectionTypes.REQUEST_BODY_PARAM:
                         valueToInject = await HttpUtils.parseBody(context.request);
