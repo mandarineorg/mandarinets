@@ -52,8 +52,8 @@ export function waitForMandarineServer(integrationTestFixtureFilename: string): 
         const proc = Deno.run({
             cmd: ["deno", "run", "-c", "tsconfig.json", "--allow-all", "--unstable", `${INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY}/${integrationTestFixtureFilename}`],
             stdout: "piped",
-            stderr: "null",
-            stdin: "null"
+            stderr: "inherit",
+            stdin: "inherit"
         });
 
         const lastOutput = new Uint8Array(1024)
@@ -72,7 +72,7 @@ export function waitForMandarineServer(integrationTestFixtureFilename: string): 
                         resolve({proc, close: () => { proc.stdout!.close(); proc.close(); }});
 
                     } else {
-                        setTimeout(readOutput, 250);
+                        setTimeout(readOutput, 2000);
                     }
                 }
             });
