@@ -5,12 +5,19 @@ import type { Mandarine } from "../../../main-core/Mandarine.ns.ts";
 import { ApplicationContext } from "../../../mod.ts";
 import { handleCors } from "./cors/corsMiddleware.ts";
 
-const resourceHandlerRegistry: Mandarine.MandarineCore.IResourceHandlerRegistry = ApplicationContext.getInstance().getResourceHandlerRegistry();
-const resources = resourceHandlerRegistry.getResourceHandlers();
+let resourceHandlerRegistry: Mandarine.MandarineCore.IResourceHandlerRegistry = null!;
+let resources: any = null;
 
 export const ResourceHandlerMiddleware = () => {
     return async (context: any, next: Function) => {
         const typedContext: Mandarine.Types.RequestContext = context;
+
+        if(resourceHandlerRegistry === null) {
+            resourceHandlerRegistry = ApplicationContext.getInstance().getResourceHandlerRegistry();
+        }
+        if(resources) {
+            resources = resourceHandlerRegistry.getResourceHandlers();
+        }
 
         for(let i = 0; i<resources.length; i++) {
             let resourceHandler = resources[i];
