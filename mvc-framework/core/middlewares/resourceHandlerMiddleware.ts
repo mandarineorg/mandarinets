@@ -15,7 +15,7 @@ export const ResourceHandlerMiddleware = () => {
         if(resourceHandlerRegistry === null) {
             resourceHandlerRegistry = ApplicationContext.getInstance().getResourceHandlerRegistry();
         }
-        if(resources) {
+        if(resources === null) {
             resources = resourceHandlerRegistry.getResourceHandlers();
         }
 
