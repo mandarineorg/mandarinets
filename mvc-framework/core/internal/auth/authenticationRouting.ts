@@ -37,7 +37,7 @@ export class AuthenticationRouting {
 
         const processor = async (context: any, next: Function) => {
             const typedContext: Mandarine.Types.RequestContext = context;
-            const contentType = typedContext.request.serverRequest.headers.get("content-type");
+            const contentType = typedContext.request.headers.get("content-type");
             let body = undefined;
             if(contentType === "application/json" || contentType === "application/x-www-form-urlencoded") body = await HttpUtils.parseBody(typedContext.request);
             if(!body) throw new MandarineSecurityException(MandarineSecurityException.INVALID_LOGIN_DATA);

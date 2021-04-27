@@ -6,6 +6,26 @@ import { JsonUtils } from "../../../main-core/utils/jsonUtils.ts";
 export class MiddlewareManager {
 
     private internalMiddleware: Array<Mandarine.MandarineMVC.Internal.InternalMiddleware> = new Array<Mandarine.MandarineMVC.Internal.InternalMiddleware>();
+    private middlewareMap: Map<Mandarine.MandarineMVC.Internal.InternalMiddlewareLifecycle, Array<Mandarine.MandarineMVC.Internal.InternalMiddleware>> = new Map();
+
+    private initializeMiddlewareMap() {
+        const configuration = Mandarine.Global.getMandarineConfiguration();
+
+        this.middlewareMap.set("ALL", []);
+        this.middlewareMap.set("PRE", []);
+        this.middlewareMap.set("POST", []);
+
+        this.internalMiddleware.forEach((middleware) => {
+            const { key, expectedValue } = middleware.configurationFlag;
+            const flagValue = JsonUtils.getValueFromObjectByDots(configuration, key);
+            const isEnabled = flagValue === expectedValue && middleware.enabled;
+            const lifecycle = middleware.lifecycle;
+
+            if(isEnabled) {
+                this.middlewareMap.get(lifecycle)?.push(middleware);
+            }
+        });
+    }
 
     public new(obj: Mandarine.MandarineMVC.Internal.InternalMiddleware) {
         this.internalMiddleware.push(obj);
@@ -16,16 +36,9 @@ export class MiddlewareManager {
     }
 
     public execute(context: Mandarine.Types.RequestContext, data: any, lifecycle: Mandarine.MandarineMVC.Internal.InternalMiddlewareLifecycle) : boolean {
-        const configuration = Mandarine.Global.getMandarineConfiguration();
+        this.initializeMiddlewareMap();
 
-        return this.internalMiddleware
-        .filter(x => x.lifecycle === lifecycle || x.lifecycle === "ALL")
-        .filter((middleware: Mandarine.MandarineMVC.Internal.InternalMiddleware) => {
-            const { key, expectedValue } = middleware.configurationFlag;
-            let flagValue = JsonUtils.getValueFromObjectByDots(configuration, key);
-            return flagValue === expectedValue && middleware.enabled;
-        })
-        .every((middleware: Mandarine.MandarineMVC.Internal.InternalMiddleware) => {
+        return this.middlewareMap.get(lifecycle)!.every((middleware: Mandarine.MandarineMVC.Internal.InternalMiddleware) => {
             return middleware.caller(context, data);
         });
     }
