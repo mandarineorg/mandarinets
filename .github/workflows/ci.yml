@@ -28,4 +28,8 @@ jobs:
       - name: Value decorator
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-        run: deno test -c tsconfig.json --reload --allow-all --unstable --fail-fast tests/unit-tests/valueDecorator.ts      
+        run: deno test -c tsconfig.json --reload --allow-all --unstable --fail-fast tests/unit-tests/valueDecorator.ts    
+      - name: Cache manager
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+        run: deno test -c tsconfig.json --reload --allow-all --unstable --fail-fast tests/unit-tests/cacheManager.ts             
