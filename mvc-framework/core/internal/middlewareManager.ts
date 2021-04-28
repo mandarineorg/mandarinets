@@ -5,26 +5,30 @@ import { JsonUtils } from "../../../main-core/utils/jsonUtils.ts";
 
 export class MiddlewareManager {
 
+    private initialized: boolean = false;
     private internalMiddleware: Array<Mandarine.MandarineMVC.Internal.InternalMiddleware> = new Array<Mandarine.MandarineMVC.Internal.InternalMiddleware>();
     private middlewareMap: Map<Mandarine.MandarineMVC.Internal.InternalMiddlewareLifecycle, Array<Mandarine.MandarineMVC.Internal.InternalMiddleware>> = new Map();
 
     private initializeMiddlewareMap() {
-        const configuration = Mandarine.Global.getMandarineConfiguration();
+        if(!this.initialized) {
+            const configuration = Mandarine.Global.getMandarineConfiguration();
 
-        this.middlewareMap.set("ALL", []);
-        this.middlewareMap.set("PRE", []);
-        this.middlewareMap.set("POST", []);
+            this.middlewareMap.set("ALL", []);
+            this.middlewareMap.set("PRE", []);
+            this.middlewareMap.set("POST", []);
 
-        this.internalMiddleware.forEach((middleware) => {
-            const { key, expectedValue } = middleware.configurationFlag;
-            const flagValue = JsonUtils.getValueFromObjectByDots(configuration, key);
-            const isEnabled = flagValue === expectedValue && middleware.enabled;
-            const lifecycle = middleware.lifecycle;
+            this.internalMiddleware.forEach((middleware) => {
+                const { key, expectedValue } = middleware.configurationFlag;
+                const flagValue = JsonUtils.getValueFromObjectByDots(configuration, key);
+                const isEnabled = flagValue === expectedValue && middleware.enabled;
+                const lifecycle = middleware.lifecycle;
 
-            if(isEnabled) {
-                this.middlewareMap.get(lifecycle)?.push(middleware);
-            }
-        });
+                if(isEnabled) {
+                    this.middlewareMap.get(lifecycle)?.push(middleware);
+                }
+            });
+            this.initialized = true;
+        }
     }
 
     public new(obj: Mandarine.MandarineMVC.Internal.InternalMiddleware) {
