@@ -40,6 +40,16 @@ export class CommonUtils {
         }
     }
 
+    public static async fileDirExistsAsync(path: string): Promise<[boolean, Deno.FileInfo | undefined]>  {
+        let fileInfo: Deno.FileInfo | undefined;
+        try {
+          fileInfo = await Deno.stat(path);
+        } catch (error) {
+          fileInfo = undefined;
+        }
+        return [fileInfo !== undefined, fileInfo];
+    }
+
     public static setEnvironmentVariablesFromObject(object: any) {
         Object.keys(object).forEach((key: string) => {
             const value = object[key];

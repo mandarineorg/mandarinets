@@ -154,6 +154,7 @@ export class MandarineCore {
     public MVC() {
         return new MandarineMVC(() => {
             sessionTimerHandlers.initializeSessionManager();
+            Mandarine.MandarineMVC.Internal.Core.getCacheManager().enableCleaningInterval();
         }, () => {
             if(this.currentContextMetadata.engineMetadata?.mvc) {
                 const controllersAmount = this.currentContextMetadata.engineMetadata.mvc.controllersAmount;

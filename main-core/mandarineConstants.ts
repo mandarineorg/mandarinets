@@ -31,6 +31,9 @@ export class MandarineConstants {
 
     public static readonly COMPONENT_PROPERTY_WEBSOCKET = "WEBSOCKET";
 
+    // CORE
+    public static readonly DOT_ENV_LOADED: string = "DOT_ENV_LOADED";
+
     // SECURITY
     public static readonly SECURITY_AUTH_COOKIE_NAME = "MDAUTHID";
 
@@ -52,5 +55,6 @@ export class MandarineConstants {
     ];
 
     public static MANDARINE_TARGET_FOLDER = ".mandarine_target";
+    
 
 }

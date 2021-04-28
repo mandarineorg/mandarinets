@@ -192,6 +192,7 @@ export class MandarineMvcFrameworkStarter {
     let availableMiddlewares: Array<Mandarine.Types.MiddlewareComponent | NonComponentMiddlewareTarget> = [...Mandarine.Global.getMiddleware()];
     availableMiddlewares = availableMiddlewares.concat(routingAction.routingOptions?.middleware || []).concat(controllerComponent.options.middleware || []);
 
+    const getRequestResolver = requestResolver(routingAction)(controllerComponent);
     let responseHandler = async (context: Mandarine.Types.RequestContext, next: Function) => {
       if (context.isResource) {
         await next();
@@ -231,7 +232,7 @@ export class MandarineMvcFrameworkStarter {
       continueRequest = continueRequest && await this.executeUserMiddlewares(true, availableMiddlewares, context); // If the user has any middleware, execute it
 
       if (continueRequest) {
-        await requestResolver(routingAction, context);
+        await getRequestResolver(context);
 
         this.executeUserMiddlewares(false, availableMiddlewares, context);
         this.postRequestInternalMiddlewares(context);
