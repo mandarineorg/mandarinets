@@ -18,4 +18,5 @@ export class MandarineEnvironmentalConstants {
     public static readonly MANDARINE_SESSIONS_TOUCH: string = "MANDARINE_SESSIONS_TOUCH";
     public static readonly MANDARINE_SESSIONS_EXPIRATION_TIME: string = "MANDARINE_SESSIONS_EXPIRATION_TIME";
     public static readonly MANDARINE_SESSIONS_EXPIRATION_INTERVAL: string = "MANDARINE_SESSIONS_EXPIRATION_INTERVAL";
+    public static readonly MANDARINE_SERVER_CACHE_ENABLED: string = "MANDARINE_SERVER_CACHE_ENABLED";
 }

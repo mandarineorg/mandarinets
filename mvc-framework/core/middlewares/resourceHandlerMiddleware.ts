@@ -9,15 +9,16 @@ let resourceHandlerRegistry: Mandarine.MandarineCore.IResourceHandlerRegistry = 
 let resources: any = null;
 
 export const ResourceHandlerMiddleware = () => {
+
+    if(resourceHandlerRegistry === null) {
+        resourceHandlerRegistry = ApplicationContext.getInstance().getResourceHandlerRegistry();
+    }
+    if(resources === null) {
+        resources = resourceHandlerRegistry.getResourceHandlers();
+    }
+    
     return async (context: any, next: Function) => {
         const typedContext: Mandarine.Types.RequestContext = context;
-
-        if(resourceHandlerRegistry === null) {
-            resourceHandlerRegistry = ApplicationContext.getInstance().getResourceHandlerRegistry();
-        }
-        if(resources === null) {
-            resources = resourceHandlerRegistry.getResourceHandlers();
-        }
 
         for(let i = 0; i<resources.length; i++) {
             let resourceHandler = resources[i];
@@ -61,7 +62,7 @@ export const ResourceHandlerMiddleware = () => {
                             }
                             
                             resource = (index) ? resource : `${resourceHandlerLocation}/${resource}`;
-                            const resourceData = resourceHandler.resourceResolver.resolve(typedContext, resource);
+                            const resourceData = await resourceHandler.resourceResolver.resolve(typedContext, resource);
                             typedContext.response.body = resourceData;
                             
                             if(resourceData) {

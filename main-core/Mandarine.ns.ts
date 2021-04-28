@@ -88,6 +88,11 @@ export namespace Mandarine {
                 https?: {
                     certFile: string,
                     keyFile: string
+                },
+                cache?: {
+                    enabled: boolean,
+                    defaultExpiration: number,
+                    expirationInterval: number
                 }
             } & any,
             resources: {
@@ -845,7 +850,12 @@ export namespace Mandarine {
                     responseType: MandarineMVC.MediaTypes.TEXT_HTML,
                     responseTimeHeader: CommonUtils.parseToKnownType(Mandarine.MandarineCore.Internals.getEnv(MandarineEnvironmentalConstants.MANDARINE_SERVER_RESPONSE_TIME_HEADER) || "false"),
                     enableSessions: CommonUtils.parseToKnownType(Mandarine.MandarineCore.Internals.getEnv(MandarineEnvironmentalConstants.MANDARINE_SERVER_SESSION_MIDDLEWARE) || "true"),
-                    enableCors: CommonUtils.parseToKnownType(Mandarine.MandarineCore.Internals.getEnv(MandarineEnvironmentalConstants.MANDARINE_SERVER_CORS_MIDDLEWARE) || "true")
+                    enableCors: CommonUtils.parseToKnownType(Mandarine.MandarineCore.Internals.getEnv(MandarineEnvironmentalConstants.MANDARINE_SERVER_CORS_MIDDLEWARE) || "true"),
+                    cache: {
+                        enabled: CommonUtils.parseToKnownType(Mandarine.MandarineCore.Internals.getEnv(MandarineEnvironmentalConstants.MANDARINE_SERVER_CACHE_ENABLED) || "true"),
+                        defaultExpiration: (60 * 1000) * 60,
+                        expirationInterval: (60 * 60 * 1000)
+                    }
                 },
                 resources: {
                     staticFolder: Mandarine.MandarineCore.Internals.getEnv(MandarineEnvironmentalConstants.MANDARINE_STATIC_CONTENT_FOLDER) || "./src/main/resources/static",
