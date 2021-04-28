@@ -43,38 +43,19 @@ export class CacheManager {
             deferredResolve = resolve;
         })
 
-        setTimeout(() => {
-            deferredResolve();
-        }, 2000);
+        let attempts = 0;
+        let interval = setInterval(() => {
+            if(attempts <= 4) {
+                DenoAsserts.assertEquals(cacheManager.get("MY_KEY"), "whatever");
+            } else {
+                DenoAsserts.assertEquals(cacheManager.get("MY_KEY"), undefined);
+                clearInterval(interval);
+                deferredResolve();
+            }
+            attempts +=1;
+        }, 1000);
 
         await deferred;
-
-        DenoAsserts.assertEquals(cacheManager.get("MY_KEY"), "whatever");
-
-        deferred = new Promise((resolve) => {
-            deferredResolve = resolve;
-        })
-
-        setTimeout(() => {
-            deferredResolve();
-        }, 2000);
-
-        await deferred;
-
-        DenoAsserts.assertEquals(cacheManager.get("MY_KEY"), "whatever");
-
-        deferred = new Promise((resolve) => {
-            deferredResolve = resolve;
-        })
-
-        setTimeout(() => {
-            deferredResolve();
-        }, 4000);
-
-        await deferred;
-
-        DenoAsserts.assertEquals(cacheManager.get("MY_KEY"), undefined);
-
         cacheManager.disableCleaningInterval();
     }
 
