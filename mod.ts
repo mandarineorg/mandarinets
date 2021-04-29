@@ -59,6 +59,13 @@ export { Authenticator } from "./main-core/mandarine-native/security/authenticat
 export { Microservice, MSOnOpen, MSOnClose, MSOnError, MSOnMessage, MSClose } from "./main-core/decorators/microservices/microservice.ts";
 export { MicroserviceUserManager } from "./main-core/mandarine-native/microservices/microserviceUserManager.ts";
 
+export { Scheduled, Timer } from "./main-core/decorators/tasks/taskScheduler.ts";
+
+export { WebSocketClient, WebSocketServer, WSOnOpen, WSOnClose, WSOnError, WSOnMessage, WSSend, WSClose } from "./main-core/decorators/websockets/webSocket.ts"
+
+export { MongoDBService } from "./orm-core/nosql/mongoDbService.ts";
+
+export { EventListener } from "./main-core/decorators/stereotypes/events/dom/eventListener.ts"
 /*
 OpenAPI
 */
