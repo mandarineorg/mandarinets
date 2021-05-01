@@ -56,6 +56,11 @@ export { parameterDecoratorFactory } from "./mvc-framework/core/decorators/custo
 
 export { Authenticator } from "./main-core/mandarine-native/security/authenticatorDefault.ts";
 
+export { WebSocketServerManager } from "./main-core/mandarine-native/websocket/websocketServerManager.ts";
+export { WebSocketClientManager } from "./main-core/mandarine-native/websocket/websocketClientManager.ts";
+export { TaskManager } from "./main-core/mandarine-native/tasks/taskManager.ts";
+export { MongoDBService } from "./orm-core/nosql/mongoDbService.ts";
+
 export { Microservice, MSOnOpen, MSOnClose, MSOnError, MSOnMessage, MSClose } from "./main-core/decorators/microservices/microservice.ts";
 export { MicroserviceUserManager } from "./main-core/mandarine-native/microservices/microserviceUserManager.ts";
 
