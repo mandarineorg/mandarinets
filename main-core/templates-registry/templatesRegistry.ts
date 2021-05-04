@@ -57,7 +57,7 @@ export class TemplatesManager implements Mandarine.MandarineCore.ITemplatesManag
         if(manual) {
             key = TemplateUtils.getTemplateKey(templatePath);
         } else {
-            key = this.getFullPath((<Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData> templatePath).template);
+            key = this.getFullPath((<Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData> templatePath).template, customPath);
         }
         return this.templates.get(key);
     }
