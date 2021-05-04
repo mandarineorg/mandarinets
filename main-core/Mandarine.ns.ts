@@ -138,6 +138,7 @@ export namespace Mandarine {
             microservices?: {
                 automaticHealthCheck?: boolean;
                 automaticHealthCheckInterval?: number;
+                [transporter: string]: Microlemon.ConnectionData | any;
             }
         } & any
     };
