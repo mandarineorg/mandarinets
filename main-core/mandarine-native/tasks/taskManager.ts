@@ -8,10 +8,22 @@ export class TaskManager {
     private cronManager: CronManager = new CronManager();
     private timerManager: TimerRegistry = new TimerRegistry();
 
+    /**
+     * 
+     * Gives access to all the CRON Jobs scheduled in the Mandarine-powered application
+     * 
+     * @returns an instance of CronManager
+     */
     public getCronManager(): CronManager {
         return this.cronManager;
     }
 
+    /**
+     * 
+     * Gives access to all the timers scheduled in the Mandarine-powered application
+     * 
+     * @returns an instance of TimerRegistry
+     */
     public getTimerManager(): TimerRegistry {
         return this.timerManager;
     }
