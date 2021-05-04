@@ -176,7 +176,7 @@ export class DependencyInjectionFactory {
                         const executerProvider = (<Mandarine.MandarineMVC.DecoratorFactoryData<any, any>>param.parameterConfiguration)?.provider;
                         const parameterData = (<Mandarine.MandarineMVC.DecoratorFactoryData<any, any>>param.parameterConfiguration)?.paramData;
                         const providerExecution = executerProvider(MandarineMVCUtils.buildRequestContextAccessor(context), ...parameterData);
-                        valueToInject = providerExecution;
+                        valueToInject = await providerExecution;
                         break;
                 }
 

@@ -47,7 +47,7 @@ export class WebSocketServerItem {
 
 export class WebSocketServerManager {
     
-    public getWebSocketServer(component: ClassType): WebSocketServerItem | undefined  {
+    public getWebSocketClient(component: ClassType): WebSocketServerItem | undefined  {
         const internalComponent = ApplicationContext.getInstance().getComponentsRegistry().getComponentByHandlerType(component);
         
         if(internalComponent) {
