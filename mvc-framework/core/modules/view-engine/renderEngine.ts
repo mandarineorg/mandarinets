@@ -35,8 +35,9 @@ export class RenderEngineClass {
         }
 
         let manual: boolean = renderData.options != undefined && renderData.options.manual == true;
+        let customPath: boolean = renderData.options != undefined && renderData.options.customPath == true;
 
-        let template: Mandarine.MandarineMVC.TemplateEngine.Template | undefined = templatesManager.getTemplate(renderData, manual);
+        let template: Mandarine.MandarineMVC.TemplateEngine.Template | undefined = templatesManager.getTemplate(renderData, customPath, manual);
         if(template == undefined) throw new TemplateEngineException(TemplateEngineException.INVALID_TEMPLATE_PROCESSING);
         
         return viewEngine(template.content, (model instanceof ViewModel) ? model.toObject() : model);

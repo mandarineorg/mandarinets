@@ -722,6 +722,7 @@ export namespace MandarineMvc {
          */
         export interface RenderingOptions {
             manual: boolean;
+            customPath?: boolean;
         }
 
         export class RenderEngine extends RenderEngineClass {}
