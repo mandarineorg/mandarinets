@@ -20,9 +20,11 @@ export class TemplatesManager implements Mandarine.MandarineCore.ITemplatesManag
         if(engine == (null || undefined)) engine = Mandarine.Global.getMandarineConfiguration().mandarine.templateEngine.engine;
 
         let manual: boolean = renderData.options != undefined && renderData.options.manual;
+        //@ts-ignore
+        let customPath: boolean = renderData.options != undefined && renderData.options.customPath;
 
         if(!manual) {
-            let fullPath: string = this.getFullPath(renderData.template);
+            let fullPath: string = this.getFullPath(renderData.template, customPath);
             if(fullPath != (null || undefined)) {
                 try {
                     let context: Mandarine.MandarineMVC.TemplateEngine.Template = {
