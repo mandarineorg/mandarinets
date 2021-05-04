@@ -52,7 +52,7 @@ export class TemplatesManager implements Mandarine.MandarineCore.ITemplatesManag
 
     }
 
-    public getTemplate(templatePath: Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData, manual?: boolean): Mandarine.MandarineMVC.TemplateEngine.Template | undefined {
+    public getTemplate(templatePath: Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData, customPath?: boolean, manual?: boolean): Mandarine.MandarineMVC.TemplateEngine.Template | undefined {
         let key: string;
         if(manual) {
             key = TemplateUtils.getTemplateKey(templatePath);
@@ -62,9 +62,9 @@ export class TemplatesManager implements Mandarine.MandarineCore.ITemplatesManag
         return this.templates.get(key);
     }
 
-    public getFullPath(templatePath: string): string {
+    public getFullPath(templatePath: string, customPath: boolean = false): string {
         let mandarineConfiguration = Mandarine.Global.getMandarineConfiguration();
-        return `${mandarineConfiguration.mandarine.templateEngine.path}/${templatePath}`;
+        return customPath === true ? templatePath : `${mandarineConfiguration.mandarine.templateEngine.path}/${templatePath}`;
     }
 
     public initializeTemplates(): void {
