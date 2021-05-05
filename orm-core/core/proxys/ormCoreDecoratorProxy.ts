@@ -42,7 +42,7 @@ export class ORMCoreDecoratorProxy {
         if(decoratorOptions.unique == undefined) decoratorOptions.unique = Mandarine.ORM.Defaults.ColumnDecoratorDefault.unique;
 
         decoratorOptions.fieldName = propertyKey;
-
+        console.log(decoratorOptions, propertyKey);
         if(decoratorOptions && !decoratorOptions.type) {
             if(!propertyTypeName) {
                 decoratorOptions.type = Types.VARCHAR;
