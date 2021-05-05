@@ -55,7 +55,7 @@ export class ORMTests {
         DenoAsserts.assertEquals(entity?.tableName, "mytable");
         DenoAsserts.assertEquals(entity?.schema, "public");
         DenoAsserts.assertEquals(entity?.columns,[{
-            name: "isAdult",
+            name: "is_adult",
             length: 255,
             scale: 2,
             precision: 8,
@@ -157,6 +157,40 @@ export class ORMTests {
     }
 
     @Test({
+        name: "Snake Case"
+    })
+    public snakeCase() {
+        // @ts-ignore
+        const fakeRepositoryProxy: Mandarine.ORM.RepositoryProxy = {
+            SUPPORTED_KEYWORDS: ["and", "or", "isnotnull", "isnull", "isempty", "isnotempty", "startingwith", "endswith", "like", "greaterthan", "lessthan"]
+        };
+
+        const fakeTableMetadata = {
+            name: "users",
+            schema: "public"
+        };
+
+        // @ts-ignore
+        const fakeEntity: Mandarine.ORM.Entity.Table = {
+            columns: [
+                {
+                    name: "createdDate"
+                },
+                {
+                    name: "accountType"
+                }
+            ]
+        }
+
+        const dialect = new PostgreSQLDialect();
+
+        const countByCreatedDate = lexicalProcessor(fakeRepositoryProxy, "countByCreatedDate", "countBy", fakeTableMetadata, fakeEntity, dialect);
+        const countByCreatedDateAndAccountType = lexicalProcessor(fakeRepositoryProxy, "countByCreatedDateAndAccountType", "countBy", fakeTableMetadata, fakeEntity, dialect);
+        DenoAsserts.assertEquals(countByCreatedDate, `SELECT COUNT(*) FROM public.users WHERE "created_date" = $1`);
+        DenoAsserts.assertEquals(countByCreatedDateAndAccountType, `SELECT COUNT(*) FROM public.users WHERE "created_date" = $1 AND "account_type" = $2`);
+    }
+
+    @Test({
         name: "[Postgres] Lexical processor",
         description: "Should create SQL queries"
     })
@@ -232,7 +266,7 @@ export class ORMTests {
         DenoAsserts.assertEquals(findByFirstnameAndAgeGreaterThanAndPostsLessThanOrPostsGreaterThan, `SELECT * FROM public.users WHERE "firstname" = $1 AND "age" > $2 AND "posts" < $3 OR "posts" > $4`);
 
         const findByCarmodel = lexicalProcessor(fakeRepositoryProxy, "findByCarModel", "findBy", fakeTableMetadata, fakeEntity, dialect);
-        DenoAsserts.assertEquals(findByCarmodel, `SELECT * FROM public.users WHERE "CarModEl" = $1`);
+        DenoAsserts.assertEquals(findByCarmodel, `SELECT * FROM public.users WHERE "_car_mod_el" = $1`);
     }
 
     @Test({
@@ -311,7 +345,7 @@ export class ORMTests {
         DenoAsserts.assertEquals(findByFirstnameAndAgeGreaterThanAndPostsLessThanOrPostsGreaterThan, `SELECT * FROM public.users WHERE firstname = ? AND age > ? AND posts < ? OR posts > ?`);
 
         const findByCarmodel = lexicalProcessor(fakeRepositoryProxy, "findByCarModel", "findBy", fakeTableMetadata, fakeEntity, dialect);
-        DenoAsserts.assertEquals(findByCarmodel, `SELECT * FROM public.users WHERE CarModEl = ?`);
+        DenoAsserts.assertEquals(findByCarmodel, `SELECT * FROM public.users WHERE _car_mod_el = ?`);
     }
 
 }

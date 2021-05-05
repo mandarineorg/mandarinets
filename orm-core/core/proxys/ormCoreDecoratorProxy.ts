@@ -5,6 +5,7 @@ import { ComponentsRegistryUtil } from "../../../main-core/components-registry/c
 import { Mandarine } from "../../../main-core/Mandarine.ns.ts";
 import { MandarineConstants } from "../../../main-core/mandarineConstants.ts";
 import { Reflect } from "../../../main-core/reflectMetadata.ts";
+import { IndependentUtils } from "../../../main-core/utils/independentUtils.ts";
 import { Types } from "../../sql/types.ts";
 
 export class ORMCoreDecoratorProxy {
@@ -33,7 +34,7 @@ export class ORMCoreDecoratorProxy {
 
         if(decoratorOptions == undefined) decoratorOptions = {};
 
-        if(decoratorOptions.name == undefined) decoratorOptions.name = propertyKey;
+        if(decoratorOptions.name == undefined) decoratorOptions.name = IndependentUtils.camelToUnderscore(propertyKey);
         if(decoratorOptions.length == undefined) decoratorOptions.length = Mandarine.ORM.Defaults.ColumnDecoratorDefault.length;
         if(decoratorOptions.scale == undefined) decoratorOptions.scale = Mandarine.ORM.Defaults.ColumnDecoratorDefault.scale;
         if(decoratorOptions.precision == undefined) decoratorOptions.precision = Mandarine.ORM.Defaults.ColumnDecoratorDefault.precision;

@@ -93,4 +93,18 @@ export class IndependentUtils {
 
       return ownObject;
     }
+
+    public static camelToUnderscore(key: string): string {
+      const result = key.replace( /([A-Z])/g, " $1" );
+      return result.split(' ').join('_').toLowerCase();
+    }
+
+    public static toCamel(s: string): string {
+      return s.replace(/([-_][a-z])/ig, ($1) => {
+        return $1.toUpperCase()
+          .replace('-', '')
+          .replace('_', '');
+      });
+    }
+
 }

@@ -1,13 +1,27 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
 import { Mandarine } from "../../main-core/Mandarine.ns.ts";
+import { IndependentUtils } from "../../main-core/utils/independentUtils.ts";
 import { MandarineORMException } from "./exceptions/mandarineORMException.ts";
+
+export interface ColumnParserFields {
+    camelCase: string;
+    snakeCase: string;
+    lowerCase: string;
+}
 
 export const lexicalProcessor = (currentProxy: Mandarine.ORM.RepositoryProxy, methodName: string, proxyType: Mandarine.ORM.ProxyType, tableMetadata: Mandarine.ORM.Entity.TableMetadata, entity: Mandarine.ORM.Entity.Table, dialect: Mandarine.ORM.Dialect.Dialect) => {
 
-    const columnNamesCases: Map<String, String> = new Map<String, String>();
+    const columnNamesCases: Map<String, ColumnParserFields> = new Map<String, ColumnParserFields>();
     entity.columns.forEach((item) => {
-        columnNamesCases.set(<string> item.name, <string> item.name?.toLowerCase());
+        if(item.name) {
+            const camelCase = IndependentUtils.toCamel(item.name);
+            columnNamesCases.set(<string> item.name, {
+                snakeCase: IndependentUtils.camelToUnderscore(item.name),
+                camelCase,
+                lowerCase: camelCase.toLowerCase()
+            });
+        }
     });
     const columnNameEntries = Array.from(columnNamesCases.entries());
 
@@ -111,7 +125,7 @@ export const lexicalProcessor = (currentProxy: Mandarine.ORM.RepositoryProxy, me
     }
 
     const isColumn = (word: string): boolean => {
-        return columnsNames.some(parameter => word == parameter);
+        return columnsNames.some(parameter => word == parameter.lowerCase);
     }
 
     const isOperator = (word: string): boolean => {
@@ -137,9 +151,9 @@ export const lexicalProcessor = (currentProxy: Mandarine.ORM.RepositoryProxy, me
 
         if(current && isColumn(current)) {
 
-            const originalName = columnNameEntries.find(([key, value]) => value === current);
+            const originalName = columnNameEntries.find(([key, value]) => value.lowerCase === current);
             if(!originalName) throw new MandarineORMException(MandarineORMException.MQL_INVALID_KEY, "");
-            queryData.push(dialect.getColumnNameForStatements(<string> originalName[0]));
+            queryData.push(dialect.getColumnNameForStatements(<string> originalName[1].snakeCase));
 
             if(next && isOperator(next)) {
                 if(next == 'and' || next == 'or') {
