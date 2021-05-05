@@ -53,8 +53,8 @@ export class ORMCoreDecoratorProxy {
             } else if(propertyTypeName == 'Number' && decoratorOptions.type == (undefined || null)) {
                 decoratorOptions.type = Types.BIGINT;
             } else if (decoratorOptions.type == (undefined || null)) {
+                console.log("INITIALIZING PROPERTY", propertyType);
                 const initialized = new (propertyType);
-                console.log("INITIALIZING PROPERTY", initialized);
                 switch(true) {
                     case initialized instanceof Date:
                         decoratorOptions.type = Types.DATE;
