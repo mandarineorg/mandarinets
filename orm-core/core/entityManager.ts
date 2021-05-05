@@ -108,6 +108,7 @@ export class EntityManagerClass {
                             connection = null;
                         }
                     }catch(error){
+                        this.logger.debug("Error initializing entities ", error)
                     }
                 break;
                 case Mandarine.ORM.Dialect.Dialects.MYSQL:
