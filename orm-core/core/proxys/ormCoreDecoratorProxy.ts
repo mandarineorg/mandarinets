@@ -52,6 +52,13 @@ export class ORMCoreDecoratorProxy {
                 decoratorOptions.type = Types.BOOLEAN;
             } else if(propertyTypeName == 'Number' && decoratorOptions.type == (undefined || null)) {
                 decoratorOptions.type = Types.BIGINT;
+            } else if(propertyTypeName == 'Object' && decoratorOptions.type == (undefined || null)) {
+                const initialized = new (propertyType);
+                switch(true) {
+                    case initialized instanceof Date:
+                        decoratorOptions.type = Types.DATE;
+                    break;
+                }
             }
         }
 

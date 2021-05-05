@@ -90,8 +90,7 @@ export class EntityManagerClass {
             });
 
             const [tableQueriesFinal, columnQueriesFinal, constraintQueriesFinal] = [tableQueries.join(" "), columnQueries.join(" "), constraintQueries.join(" ")]
-            // @ts-ignore
-            this.logger.debug(tableQueries, columnQueries, constraintQueries);
+
             switch(this.getDialect()) {
                 case Mandarine.ORM.Dialect.Dialects.POSTGRESQL:
                     try {
