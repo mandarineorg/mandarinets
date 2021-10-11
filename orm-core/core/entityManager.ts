@@ -7,8 +7,6 @@ import { PostgreSQLDialect } from "../dialect/postgreSQLDialect.ts";
 import { EntityRegistry } from "../entity-registry/entityRegistry.ts";
 import { MandarineORMException } from "./exceptions/mandarineORMException.ts";
 import { ApplicationContext } from "../../main-core/application-context/mandarineApplicationContext.ts";
-import { MysqlConnector } from "../connectors/mysqlConnector.ts";
-import { MysqlDialect } from "../dialect/mysqlDialect.ts";
 
 /**
  * This class represents the entity manager which contains all the necessary methods & references for Mandarine to interact with your database.
@@ -19,7 +17,7 @@ export class EntityManagerClass {
     private dialectClass: Mandarine.ORM.Dialect.Dialect | undefined = undefined;
     private dialect: Mandarine.ORM.Dialect.Dialects | undefined = undefined;
     public entityRegistry: EntityRegistry;
-    private databaseClient: any | PostgresConnector | MysqlConnector;
+    private databaseClient: any | PostgresConnector;
     private fullyInitialized: boolean = false;
 
     public logger: Log = Log.getLogger(Mandarine.ORM.Entity.EntityManager);
@@ -32,27 +30,19 @@ export class EntityManagerClass {
         let entities: Array<Mandarine.ORM.Entity.Table> = this.entityRegistry.getAllEntities();
         
         let dialect: Mandarine.ORM.Dialect.Dialect | undefined = this.dialectClass;
-        let dialectType = this.getDialect();
-
         if(dialect) {
             // CREATE TABLES
             let tableQueries: Array<string> = new Array<string>();
             entities.forEach((table) => {
                 let tableMetadata: Mandarine.ORM.Entity.TableMetadata = (<Mandarine.ORM.Dialect.Dialect>dialect).getTableMetadata(table);
-                let entityCreationQuery: string | undefined;
 
-                if (dialectType === Mandarine.ORM.Dialect.Dialects.MYSQL) {
-                    entityCreationQuery = (<Mandarine.ORM.Dialect.Dialect>dialect).createTable(tableMetadata, table.columns, true);
-                } else if(dialectType === Mandarine.ORM.Dialect.Dialects.POSTGRESQL) {
-                    entityCreationQuery = (<Mandarine.ORM.Dialect.Dialect>dialect).createTable(tableMetadata, undefined, true);
-                }
-                if(entityCreationQuery) {
-                    tableQueries.push(entityCreationQuery);
-                }
+                let entityCreationQuery = (<Mandarine.ORM.Dialect.Dialect>dialect).createTable(tableMetadata, undefined, true);
+
+                tableQueries.push(entityCreationQuery);
             });
 
             let columnQueries: Array<string> = new Array<string>();
-            entities.forEach((table) => {
+            entities.forEach(async (table) => {
                 let tableMetadata: Mandarine.ORM.Entity.TableMetadata = (<Mandarine.ORM.Dialect.Dialect>dialect).getTableMetadata(table);
                 let entityColumnsInitializationQuery = "";
 
@@ -69,7 +59,7 @@ export class EntityManagerClass {
 
             // CREATE PRIMARY KEY AND UNIQUE CONSTRAINTS FOR THE COLUMNS IN TABLE
             let constraintQueries: Array<string> = new Array<string>();
-            entities.forEach((table) => {
+            entities.forEach(async (table) => {
                 let tableMetadata: Mandarine.ORM.Entity.TableMetadata = (<Mandarine.ORM.Dialect.Dialect>dialect).getTableMetadata(table);
 
                 let entityPrimaryKeyConstraintsQuery = "";
@@ -89,8 +79,6 @@ export class EntityManagerClass {
                 }
             });
 
-            const [tableQueriesFinal, columnQueriesFinal, constraintQueriesFinal] = [tableQueries.join(" "), columnQueries.join(" "), constraintQueries.join(" ")]
-            
             switch(this.getDialect()) {
                 case Mandarine.ORM.Dialect.Dialects.POSTGRESQL:
                     try {
@@ -98,38 +86,10 @@ export class EntityManagerClass {
                         if(connection) {
                             await (<PostgresConnector>this.databaseClient).queryWithConnection(connection, tableQueries.join(" "));
                             await (<PostgresConnector>this.databaseClient).queryWithConnection(connection, columnQueries.join(" "));
-                            await Promise.all(constraintQueries.map(async (item) => {
-                                try {
-                                    await (<PostgresConnector>this.databaseClient).queryWithConnection(connection, item, true);
-                                } catch (error) {
-                                    this.logger.debug("Ignoring creation of constraint: ", error.message);
-                                }
-                            }));
+                            await (<PostgresConnector>this.databaseClient).queryWithConnection(connection, constraintQueries.join(" "));
                             connection = null;
                         }
                     }catch(error){
-                    }
-                break;
-                case Mandarine.ORM.Dialect.Dialects.MYSQL:
-                    try{
-                        const client: MysqlConnector = this.databaseClient;
-                        await (client).execute(`CREATE DATABASE IF NOT EXISTS ${client.currentDatabase}`);
-                        await (client).execute(`USE ${client.currentDatabase}`);
-                        await (client).query(tableQueriesFinal);
-                        await Promise.all(columnQueries.map(async (item) => {
-                            try {
-                                await client.execute(item);
-                            } catch {
-                            }
-                        }));
-                        await Promise.all(constraintQueries.map(async (item) => {
-                            try {
-                                await client.execute(item);
-                            } catch {
-                            }
-                        }));
-                    }catch(error){
-                        // Initialization errors should not be shown
                     }
                 break;
             }
@@ -155,19 +115,6 @@ export class EntityManagerClass {
                 if(this.dialectClass == undefined || null) {
                     this.dialectClass = new PostgreSQLDialect();
                     this.databaseClient = new PostgresConnector(dataSource.data.host, dataSource.data.username, dataSource.data.password, dataSource.data.database, dataSource.data.port, dataSource.data.poolSize);
-                }
-            break;
-            case Mandarine.ORM.Dialect.Dialects.MYSQL:
-                if(this.dialectClass == undefined || null) {
-                    this.dialectClass = new MysqlDialect();
-                    this.databaseClient = new MysqlConnector({
-                        hostname: dataSource.data.host, 
-                        username: dataSource.data.username, 
-                        password: dataSource.data.password, 
-                        db: dataSource.data.database, 
-                        port: dataSource.data.port, 
-                        poolSize: dataSource.data.poolSize
-                    });
                 }
             break;
             default:

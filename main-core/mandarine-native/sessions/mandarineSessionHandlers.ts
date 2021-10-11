@@ -1,6 +1,5 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import { Timers } from "../../internals/core/timers.ts";
 import { Mandarine } from "../../Mandarine.ns.ts";
 
 class MandarineSessionHandler {
@@ -12,16 +11,13 @@ class MandarineSessionHandler {
         if(sessionContainer) {
             const expirationInterval = sessionContainer.getExpirationInterval();
             if(sessionContainer.getAutoclearExpiredSessions() && this.expiredSessionHandler === undefined && expirationInterval > 0) {
-                this.expiredSessionHandler = Mandarine.MandarineCore.Internals.getTimersManager().add(Timers.MANDARINE_EXPIRED_SESSIONS, 
-                    "Interval", 
-                    () => sessionContainer.clearExpiredSessions(), 
-                    expirationInterval);
+                this.expiredSessionHandler = setInterval(() => sessionContainer.clearExpiredSessions(), expirationInterval);
             }
         }
     }
 
     public stopExpirationHandler() {
-        Mandarine.MandarineCore.Internals.getTimersManager().delete(this.expiredSessionHandler);
+        clearInterval(this.expiredSessionHandler);
         this.expiredSessionHandler = undefined;
     }
 

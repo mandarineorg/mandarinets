@@ -226,7 +226,7 @@ export namespace MandarineSecurity {
              * 
              * @throws MandarineSecurityException if no user was found.
              */
-            loadUserByUsername: (username: string, httpContext?: Mandarine.Types.RequestContext) => UserDetails | undefined;
+            loadUserByUsername: (username: string) => UserDetails | undefined;
         }
 
         /**

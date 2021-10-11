@@ -29,8 +29,8 @@ export class NativeComponentTest {
         
         DenoAsserts.assertNotEquals(webMvcConfigurerNativeComponentResourceHandlers, undefined);
         DenoAsserts.assertEquals(webMvcConfigurerNativeComponentResourceHandlers.overriden, false);
-        DenoAsserts.assertArrayIncludes(webMvcConfigurerNativeComponentResourceHandlers.resourceHandlers[0].resourceHandlerPath, [new RegExp("/(.*)")]);
-        DenoAsserts.assertArrayIncludes(webMvcConfigurerNativeComponentResourceHandlers.resourceHandlers[0].resourceHandlerLocations, ["./src/main/resources/static"]);
+        DenoAsserts.assertArrayContains(webMvcConfigurerNativeComponentResourceHandlers.resourceHandlers[0].resourceHandlerPath, [new RegExp("/(.*)")]);
+        DenoAsserts.assertArrayContains(webMvcConfigurerNativeComponentResourceHandlers.resourceHandlers[0].resourceHandlerLocations, ["./src/main/resources/static"]);
         DenoAsserts.assert(webMvcConfigurerNativeComponent.getSessionContainer() instanceof MandarineSessionContainer);
 
     }

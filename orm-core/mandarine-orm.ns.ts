@@ -13,15 +13,15 @@ export namespace MandarineORM {
     export interface RepositoryProxy {
         SUPPORTED_KEYWORDS: Array<string>;
         entity: Entity.Table;
-        executeQuery(query: any): Promise<any>;
+        executeQuery(query: any): void;
         getEntityManager(): Entity.EntityManager;
         save(model: any): Promise<any>;
-        findAll(proxyObject: RepositoryProxy): Promise<any>;
-        countAll(proxyObject: RepositoryProxy): Promise<any>;
-        deleteAll(proxyObject: RepositoryProxy): Promise<any>;
-        lexicalProcessor(proxyObject: RepositoryProxy, methodName: string, proxyType: ProxyType): string;
-        mainProxy(proxyObject: RepositoryProxy, nativeMethodName: string, proxyType: ProxyType, args: Array<any>): Promise<any>;
-        manualProxy(proxyObject: RepositoryProxy, query: String, secure: boolean, args: Array<any>): Promise<any>;
+        findAll(): Promise<any>;
+        countAll(): Promise<any>;
+        deleteAll(): Promise<any>;
+        lexicalProcessor(methodName: string, proxyType: ProxyType): string;
+        mainProxy(nativeMethodName: string, proxyType: ProxyType, args: Array<any>): Promise<any>;
+        manualProxy(query: String, secure: boolean, args: Array<any>): Promise<any>;
     }
 
     export namespace Dialect {
@@ -30,8 +30,7 @@ export namespace MandarineORM {
          * Contains the dialects supported by Mandarine
          */
         export enum Dialects {
-            POSTGRESQL = "postgresql",
-            MYSQL = "mysql"
+            POSTGRESQL = "postgresql"
         }
 
         /**
@@ -56,9 +55,6 @@ export namespace MandarineORM {
             selectColumnSyntax(colName: string, operator: string, colValue: string, secureParameter?: boolean): string;
             insertStatement(tableMetadata: Entity.TableMetadata, entity: Entity.Table, values: object, secureParameter?: boolean): any;
             updateStatement(tableMetadata: Entity.TableMetadata, entity: Entity.Table, values: object): any;
-            parameterizedQueryInformationType(): ["number" | "string", string];
-            getColumnNameForStatements(colName: string): string;
-            getReservedKeywords(): Array<string>;
         }
     }
 
@@ -72,7 +68,7 @@ export namespace MandarineORM {
          */
         export interface TableMetadata {
             name?: string;
-            schema?: string;
+            schema: string;
         }
 
         export namespace Decorators {

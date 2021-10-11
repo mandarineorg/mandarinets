@@ -56,6 +56,7 @@ export namespace DI {
         INJECTABLE_OBJECT,
         QUERY_PARAM,
         ROUTE_PARAM,
+        SERVER_REQUEST_PARAM,
         REQUEST_PARAM,
         REQUEST_CONTEXT_PARAM,
         SESSION_PARAM,

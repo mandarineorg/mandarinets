@@ -244,10 +244,6 @@ export class ControllerComponent {
         return this.classHandlerType;
     }
 
-    public getClassHandlerPrimitive() {
-        return this.getClassHandlerType();
-    }
-
     public getActions(): Map<String, Mandarine.MandarineMVC.Routing.RoutingAction> {
         return this.actions;
     }

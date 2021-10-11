@@ -8,7 +8,6 @@ import { MandarineException } from "../exceptions/mandarineException.ts";
 import { Reflect } from "../reflectMetadata.ts";
 import { MandarineConstants } from "../mandarineConstants.ts";
 import { JsonUtils } from "../utils/jsonUtils.ts";
-import { IndependentUtils } from "../utils/independentUtils.ts";
 
 /**
  * Logic behind decorators of Mandarine's core
@@ -20,39 +19,56 @@ export class MainCoreDecoratorProxy {
         return;
     }
 
-    public static registerEventListener(targetClass: any, eventName: string, methodName: string) {
-        const metadata: Mandarine.MandarineCore.Decorators.EventListener = {
-            methodName: methodName,
-            eventName: eventName
-        };
-
-        Reflect.defineMetadata(`${MandarineConstants.REFLECTION_MANDARINE_EVENTLISTENER_DECORATOR}:${methodName}`, metadata, targetClass);
-    }
-
-    public static registerWebsocketProperty(targetClass: any, eventName: Mandarine.MandarineCore.Decorators.WebSocketValidProperties, methodName: string) {
-        const metadata: Mandarine.MandarineCore.Decorators.WebSocketProperty  = {
-            methodName: methodName,
-            property: eventName
-        };
-
-        Reflect.defineMetadata(`${MandarineConstants.REFLECTION_MANDARINE_WEBSOCKET_PROPERTY}:${methodName}`, metadata, targetClass);
-    }
-
     public static configurationPropertiesDecorator(targetClass: any, path: string) {
-        Reflect.defineMetadata(MandarineConstants.REFLECTION_MANDARINE_CONFIGURATION_PROPERTIES, path, targetClass.prototype);
+        Reflect.defineMetadata(MandarineConstants.REFLECTION_MANDARINE_CONFIGURATION_PROPERTIES, path, targetClass);
+        const target = targetClass.prototype || targetClass;
+        const valueDecoratorMetadataKeys = Reflect.getMetadataKeys(target) || [];
+        valueDecoratorMetadataKeys.forEach((key) => {
+            const metadata: { configKey: string, scope: string, propertyName: string } = Reflect.getMetadata(key, target);
+            this.valueDecorator(target, metadata.configKey, undefined, metadata.propertyName, JsonUtils.toJson(path, { isFile: true, allowEnvironmentalReferences: true, handleException: (ex) => {
+                Mandarine.logger.warn(`Something happened while reading custom configuration file for @Value. ${ex} (${path})`);
+                return {}
+            } }));
+            
+        });
     }
 
     public static valueDecorator(targetClass: any, configKey: string, scope: Mandarine.MandarineCore.ValueScopes | undefined, propertyName: string, propertyObject?: any) {
-        const metadata: Mandarine.MandarineCore.Decorators.Value = {
+        Reflect.defineMetadata(`${MandarineConstants.REFLECTION_MANDARINE_VALUE_DECORATOR}-${CommonUtils.generateUUID()}`, {
             configKey,
             scope,
             propertyName
-        };
-        
-        Reflect.defineMetadata(`${MandarineConstants.REFLECTION_MANDARINE_VALUE_DECORATOR}-${CommonUtils.generateUUID()}`, metadata, targetClass);
+        }, targetClass);
 
-        if(propertyObject) {
-            targetClass[propertyName] = IndependentUtils.readConfigByDots(propertyObject, configKey);
+        try {
+            if(propertyObject === undefined) {
+                if(scope == Mandarine.MandarineCore.ValueScopes.CONFIGURATION) propertyObject = Mandarine.Global.getMandarineConfiguration();
+                if(scope == Mandarine.MandarineCore.ValueScopes.ENVIRONMENTAL) propertyObject = Deno.env.toObject();
+            }
+            if(configKey.includes('.')) {
+                let parts = configKey.split('.');
+
+                if (Array.isArray(parts)) {
+                    let last: any = parts.pop();
+                    let keyPropertiesLength = parts.length;
+                    let propertiesStartingIndex = 1;
+
+                    let currentProperty = parts[0];
+            
+                    while((propertyObject = propertyObject[currentProperty]) && propertiesStartingIndex < keyPropertiesLength) {
+                        currentProperty = parts[propertiesStartingIndex];
+                        propertiesStartingIndex++;
+                    }
+                    
+                    targetClass[propertyName] = CommonUtils.parseToKnownType(propertyObject[last]);
+                } else {
+                    targetClass[propertyName] = undefined;
+                }
+            } else {
+                targetClass[propertyName] = CommonUtils.parseToKnownType(propertyObject[configKey]);
+            }
+        } catch(error) {
+            targetClass[propertyName] = undefined;
         }
     }
 
@@ -74,31 +90,4 @@ export class MainCoreDecoratorProxy {
         Mandarine.Global.getNativeComponentsRegistry().override(overrideType, new targetClass());
     }
 
-    public static registerScheduledTask(targetClass: any, cronExpression: string, timeZone: string | undefined, methodName: string): void {
-        const metadata: Mandarine.MandarineCore.Decorators.ScheduledTask = {
-            methodName,
-            cronExpression,
-            timeZone
-        };
-
-        Reflect.defineMetadata(`${MandarineConstants.REFLECTION_MANDARINE_SCHEDULED_DECORATOR}-${CommonUtils.generateUUID()}`, metadata, targetClass);
-    }
-
-    public static registerTimer(targetClass: any, fixedRate: number, methodName: string): void {
-        const metadata: Mandarine.MandarineCore.Decorators.Timer = {
-            methodName,
-            fixedRate
-        };
-
-        Reflect.defineMetadata(`${MandarineConstants.REFLECTION_MANDARINE_TIMER_DECORATOR}-${CommonUtils.generateUUID()}`, metadata, targetClass);
-    }
-    
-    public static registerWorkerProperty(targetClass: any, eventName: Mandarine.MandarineCore.Decorators.MicroserviceWorkerProperties, methodName: string) {
-        const metadata: Mandarine.MandarineCore.Decorators.MicroserviceProperty  = {
-            methodName: methodName,
-            property: eventName
-        };
-
-        Reflect.defineMetadata(`${MandarineConstants.REFLECTION_MANDARINE_MICROSERVICE_PROPERTY}:${methodName}`, metadata, targetClass);
-    }
 }

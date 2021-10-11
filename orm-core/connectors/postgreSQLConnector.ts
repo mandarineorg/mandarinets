@@ -1,9 +1,8 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import type { PoolClient } from "https://deno.land/x/postgres@v0.11.1/client.ts";
-import { Pool, QueryConfig } from "https://deno.land/x/postgres@v0.11.1/mod.ts";
-import { QueryResult } from "https://deno.land/x/postgres@v0.11.1/query/query.ts";
-import type { QueryArrayResult } from "https://deno.land/x/postgres@v0.11.1/query/query.ts";
+import type { PoolClient } from "https://deno.land/x/postgres@v0.5.0/client.ts";
+import { Pool } from "https://deno.land/x/postgres@v0.5.0/mod.ts";
+import type { QueryConfig, QueryResult } from "https://deno.land/x/postgres@v0.5.0/query.ts";
 import { Log } from "../../logger/log.ts";
 import type { Mandarine } from "../../main-core/Mandarine.ns.ts";
 import { MandarineORMException } from "../core/exceptions/mandarineORMException.ts";
@@ -19,10 +18,10 @@ export interface PostgresConnectorInterface extends Mandarine.ORM.Connection.Con
     makeConnection(): Promise<PoolClient | undefined>;
     
     /** Execute a query on the external database instance. */
-    query(query: string | QueryConfig): Promise<QueryArrayResult | undefined>;
+    query(query: string | QueryConfig): Promise<QueryResult | undefined>;
 
     /** Execute a query on the external database instance with an existing connection. */
-    queryWithConnection(connection: PoolClient, query: string | QueryConfig, releaseOnFinish: boolean): Promise<QueryArrayResult | undefined>;
+    queryWithConnection(connection: PoolClient, query: string | QueryConfig, releaseOnFinish: boolean): Promise<QueryResult | undefined>;
     
     /** Execute queries within a transaction on the database instance. */
     transaction?(queries: string[]): Promise<any[]>;
@@ -59,34 +58,28 @@ export class PostgresConnector implements PostgresConnectorInterface {
       try {
         return await this.clientPooler.connect();
       }catch(error) {
-        this.logger.compiler("Database connection could not be reached", "error", error);
-        this.logger.debug((<Error>error).message);
-        this.logger.debug((<Error>error).stack!);
+        this.logger.compiler("Database connection could not be reached", "error");
       }
     }
 
-    public async query(query: string | QueryConfig): Promise<QueryArrayResult | undefined> {
+    public async query(query: string | QueryConfig): Promise<QueryResult | undefined> {
       try {
         const connection = await this.makeConnection();
         if(!connection) throw new Error(`Connection could not be made under query ${query}`);
-        // @ts-ignore
-        const result: QueryArrayResult = await connection.queryObject(query);
+        const result: QueryResult = await connection.query(query);
         await connection.release();
-        return result;
+        return Object.assign({}, result);
       }catch(error) {
-        this.logger.compiler("Query statement could not be executed", "debug", error);
+        this.logger.compiler("Query statement could not be executed", "error", error);
       }
     }
 
-    public async queryWithConnection(connection: PoolClient, query: string | QueryConfig, bootstrap: boolean = false): Promise<QueryArrayResult | undefined> {
+    public async queryWithConnection(connection: PoolClient, query: string | QueryConfig): Promise<QueryResult | undefined> {
       try {
-        // @ts-ignore
-        return await connection.queryObject(query);
+        let result: Promise<QueryResult> = connection.query(query);
+        return result;
       }catch(error) {
-        this.logger.compiler("Query & connection have failed to be reached", "debug", error, query);
-        if(bootstrap === true) {
-          throw error;
-        }
+        this.logger.compiler("Query & connection have failed to be reached", "error", error);
       }
   }
 }
