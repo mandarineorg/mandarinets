@@ -22,7 +22,7 @@ export class TestLogger {
     public testLoggerInjectable() {
         ApplicationContext.getInstance().getComponentsRegistry().resolveDependencies();
 
-        let logger: Log = ApplicationContext.getInstance().getDIFactory().getDependency(Log);
+        let logger: Log = ApplicationContext.getInstance().getDIFactory().getDependency(Log)!;
         DenoAsserts.assertNotEquals(logger, undefined);
         DenoAsserts.assertNotEquals(logger.info, undefined);
         logger.info("");
@@ -35,7 +35,7 @@ export class TestLogger {
     public testAuthenticatorInjectable() {
         ApplicationContext.getInstance().getComponentsRegistry().resolveDependencies();
 
-        let authenticator: Authenticator = ApplicationContext.getInstance().getDIFactory().getDependency(Authenticator);
+        let authenticator: Authenticator = ApplicationContext.getInstance().getDIFactory().getDependency(Authenticator)!;
         DenoAsserts.assertNotEquals(authenticator, undefined);
         DenoAsserts.assertNotEquals(authenticator.getAuthenticationId, undefined);
         DenoAsserts.assertNotEquals(authenticator.performAuthentication, undefined);

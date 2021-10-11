@@ -97,7 +97,7 @@ export class CORSTest {
 
         let requestMock = this.getMockObject("OPTIONS");
 
-        requestMock.request.headers.set("access-control-request-methods", "POST, DELETE, GET");
+        requestMock.request.headers.set("access-control-request-method", "POST, DELETE, GET");
         requestMock.request.headers.set("access-control-request-headers", "Origin, allowed-header-1, Content-Type");
 
         requestMock.request.headers.set("origin", "http://localhost");
@@ -108,7 +108,7 @@ export class CORSTest {
         DenoAsserts.assertEquals(requestMock.response.headers.get("access-control-allow-origin"), false);
         DenoAsserts.assertEquals(requestMock.response.headers.get("access-control-allow-methods"), "POST, GET");
         DenoAsserts.assertEquals(requestMock.response.headers.get("access-control-allow-headers"), "allowed-header-1");
-        DenoAsserts.assertEquals(requestMock.response.headers.get("accessl-control-expose-headers"), "exposed-header-1, exposed-header-2");
+        DenoAsserts.assertEquals(requestMock.response.headers.get("access-control-expose-headers"), "exposed-header-1, exposed-header-2");
         DenoAsserts.assert(requestMock.response.headers.get("access-control-allow-credentials") == undefined);
         DenoAsserts.assertEquals(requestMock.response.headers.get("access-control-max-age"), "100");
 
@@ -121,7 +121,7 @@ export class CORSTest {
             useDefaultCors: false
         });
         DenoAsserts.assertEquals(requestMock.response.headers.get("access-control-allow-origin"), false);
-        DenoAsserts.assertEquals(requestMock.response.headers.get("accessl-control-expose-headers"), "exposed-header-1, exposed-header-2");
+        DenoAsserts.assertEquals(requestMock.response.headers.get("access-control-expose-headers"), "exposed-header-1, exposed-header-2");
         DenoAsserts.assert(requestMock.response.headers.get("access-control-allow-credentials") == undefined);
 
         //RESET
@@ -135,7 +135,7 @@ export class CORSTest {
             useDefaultCors: false
         });
         DenoAsserts.assertEquals(requestMock.response.headers.get("access-control-allow-origin"), "http://localhost");
-        DenoAsserts.assertEquals(requestMock.response.headers.get("accessl-control-expose-headers"), "exposed-header-1, exposed-header-2");
+        DenoAsserts.assertEquals(requestMock.response.headers.get("access-control-expose-headers"), "exposed-header-1, exposed-header-2");
         DenoAsserts.assertEquals(requestMock.response.headers.get("access-control-allow-credentials"), "true");
 
         //RESET
@@ -160,11 +160,51 @@ export class CORSTest {
         DenoAsserts.assertEquals(requestMock.response.headers.get("access-control-max-age"), "0");
     }
 
+
+    @Test({
+        name: "Test CORS Middleware: HTTP header names are case insensitive",
+        description: "HTTP header names must be treated in a case insensitive manner as per https://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2"
+    })
+    public testCORSMiddlewareHttpHeadersCaseInsensitive(): void {
+
+        [
+            {
+                requestHeadersName: "access-control-request-headers",
+                requestHeadersValue: "Allowed-Header",
+                allowedHeadersValue: "allowed-header"
+            },
+            {
+                requestHeadersName: "Access-Control-Request-Headers",
+                requestHeadersValue: "allowed-header",
+                allowedHeadersValue: "Allowed-Header"
+            }
+        ].forEach((testFixture) => {
+            const {requestHeadersName, requestHeadersValue, allowedHeadersValue} = testFixture;
+
+            let corsOptions = {
+                origin: "https://stackoverflow.com",
+                allowedHeaders: [allowedHeadersValue],
+            };
+            let requestMock = this.getMockObject("OPTIONS");
+            requestMock.request.headers.set("origin", "https://stackoverflow.com");
+            requestMock.request.headers.set(requestHeadersName, requestHeadersValue);
+
+            handleCors(<any> requestMock, {
+                corsOptions,
+                useDefaultCors: false
+            });
+
+            DenoAsserts.assertEquals(requestMock.response.headers.has("access-control-allow-headers"), true);
+            DenoAsserts.assertEquals(requestMock.response.headers.get("access-control-allow-headers"), "allowed-header");
+        })
+    }
+
+
     public getMockObject(method: string) {
         return {
             request: {
                 method: method,
-                headers: new Map<string, any>()
+                headers: new Headers([])
             },
         response: {
             headers: new Map<string, any>()

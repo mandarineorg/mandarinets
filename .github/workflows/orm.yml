@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        deno: ["v1.7.1"]
+        deno: ["v1.9.0"]
       fail-fast: true    
 
     services:
@@ -21,6 +21,15 @@ jobs:
           - 5432:5432
         # needed because the postgres container does not provide a healthcheck
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: Changeme1
+          MYSQL_DATABASE: mandarine
+          MYSQL_PASSWORD: Changeme1
+        ports:
+          - 33306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
       - name: Setup Environment
@@ -35,12 +44,18 @@ jobs:
       - name: Clone repository
         uses: actions/checkout@v2
 
+      - name: Verify MySQL connection
+        run: |
+          mysql --version
+          sudo apt-get install -y mysql-client
+          mysql --host 127.0.0.1 --port 33306 --user=root --password=Changeme1 -e "SHOW DATABASES"      
+
       - name: Setup deno
         uses: denolib/setup-deno@master
         with:
-          deno-version: ${{ matrix.deno }}
+          deno-version: ${{ matrix.deno }}     
       
-      - name: Run Postgres ORM Tests.
+      - name: Run Postgres & MYSQL ORM Tests.
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         run: deno test -c tsconfig.json --allow-all --unstable --fail-fast tests/integration-tests/orm.ts

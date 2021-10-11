@@ -9,6 +9,7 @@ import { RepositoryComponent } from "../../main-core/components/repository-compo
 import { lexicalProcessor } from "../../orm-core/core/lexicalProcessor.ts";
 import { PostgreSQLDialect } from "../../orm-core/dialect/postgreSQLDialect.ts";
 import type { Mandarine } from "../../main-core/Mandarine.ns.ts";
+import { MysqlDialect } from "../../orm-core/dialect/mysqlDialect.ts";
 
 @mockDecorator()
 class MyTable {
@@ -156,7 +157,7 @@ export class ORMTests {
     }
 
     @Test({
-        name: "Lexical processor",
+        name: "[Postgres] Lexical processor",
         description: "Should create SQL queries"
     })
     public useLexicalProcessor() {
@@ -232,6 +233,85 @@ export class ORMTests {
 
         const findByCarmodel = lexicalProcessor(fakeRepositoryProxy, "findByCarModel", "findBy", fakeTableMetadata, fakeEntity, dialect);
         DenoAsserts.assertEquals(findByCarmodel, `SELECT * FROM public.users WHERE "CarModEl" = $1`);
+    }
+
+    @Test({
+        name: "[Mysql] Lexical processor",
+        description: "Should create SQL queries"
+    })
+    public useLexicalProcessorMysql() {
+
+        // @ts-ignore
+        const fakeRepositoryProxy: Mandarine.ORM.RepositoryProxy = {
+            SUPPORTED_KEYWORDS: ["and", "or", "isnotnull", "isnull", "isempty", "isnotempty", "startingwith", "endswith", "like", "greaterthan", "lessthan"]
+        };
+
+        const fakeTableMetadata = {
+            name: "users",
+            schema: "public"
+        };
+
+        // @ts-ignore
+        const fakeEntity: Mandarine.ORM.Entity.Table = {
+            columns: [
+                {
+                    name: "id"
+                },
+                {
+                    name: "firstname"
+                },
+                {
+                    name: "lastname"
+                },
+                {
+                    name: "age"
+                },
+                {
+                    name: "posts"
+                },
+                {
+                    name: "country"
+                },
+                {
+                    name: "CarModEl"
+                }
+            ]
+        }
+
+        const dialect = new MysqlDialect();
+
+        const countByCountry = lexicalProcessor(fakeRepositoryProxy, "countByCountry", "countBy", fakeTableMetadata, fakeEntity, dialect);
+        DenoAsserts.assertEquals(countByCountry, `SELECT COUNT(*) FROM public.users WHERE country = ?`);
+
+        const findByCountry = lexicalProcessor(fakeRepositoryProxy, "findByCountry", "findBy", fakeTableMetadata, fakeEntity, dialect);
+        DenoAsserts.assertEquals(findByCountry, `SELECT * FROM public.users WHERE country = ?`);
+
+        const findByFirstnameAndCountry = lexicalProcessor(fakeRepositoryProxy, "findByFirstnameAndCountry", "findBy", fakeTableMetadata, fakeEntity, dialect);
+        DenoAsserts.assertEquals(findByFirstnameAndCountry, `SELECT * FROM public.users WHERE firstname = ? AND country = ?`);
+
+        const findByCountryIsNotNull = lexicalProcessor(fakeRepositoryProxy, "findByCountryIsNotNull", "findBy", fakeTableMetadata, fakeEntity, dialect);
+        DenoAsserts.assertEquals(findByCountryIsNotNull, `SELECT * FROM public.users WHERE country IS NOT NULL`);
+
+        const findByCountryIsNull = lexicalProcessor(fakeRepositoryProxy, "findByCountryIsNull", "findBy", fakeTableMetadata, fakeEntity, dialect);
+        DenoAsserts.assertEquals(findByCountryIsNull, `SELECT * FROM public.users WHERE country IS NULL`);
+
+        const findByFirstnameIsNotEmptyAndCountryIsEmpty = lexicalProcessor(fakeRepositoryProxy, "findByFirstnameIsNotEmptyAndCountryIsEmpty", "findBy", fakeTableMetadata, fakeEntity, dialect);
+        DenoAsserts.assertEquals(findByFirstnameIsNotEmptyAndCountryIsEmpty, `SELECT * FROM public.users WHERE firstname <> '' AND country = ''`);
+
+        const findByLastnameStartingWith = lexicalProcessor(fakeRepositoryProxy, "findByLastnameStartingWith", "findBy", fakeTableMetadata, fakeEntity, dialect);
+        DenoAsserts.assertEquals(findByLastnameStartingWith, `SELECT * FROM public.users WHERE lastname LIKE '' || ? || '%'`);
+
+        const findByLastnameAndCountryLikeAndFirstnameEndsWith = lexicalProcessor(fakeRepositoryProxy, "findByLastnameAndCountryLikeAndFirstnameEndsWith", "findBy", fakeTableMetadata, fakeEntity, dialect);
+        DenoAsserts.assertEquals(findByLastnameAndCountryLikeAndFirstnameEndsWith, `SELECT * FROM public.users WHERE lastname = ? AND country LIKE '%' || ? || '%' AND firstname LIKE '%' || ? || ''`);
+
+        const findByFirstnameAndCountryAndLastnameEndsWithAndFirstnameIsNotNullOrLastnameIsNullAndCountryLike = lexicalProcessor(fakeRepositoryProxy, "findByFirstnameAndCountryAndLastnameEndsWithAndFirstnameIsNotNullOrLastnameIsNullAndCountryLike", "findBy", fakeTableMetadata, fakeEntity, dialect);
+        DenoAsserts.assertEquals(findByFirstnameAndCountryAndLastnameEndsWithAndFirstnameIsNotNullOrLastnameIsNullAndCountryLike, `SELECT * FROM public.users WHERE firstname = ? AND country = ? AND lastname LIKE '%' || ? || '' AND firstname IS NOT NULL OR lastname IS NULL AND country LIKE '%' || ? || '%'`);
+    
+        const findByFirstnameAndAgeGreaterThanAndPostsLessThanOrPostsGreaterThan = lexicalProcessor(fakeRepositoryProxy, "findByFirstnameAndAgeGreaterThanAndPostsLessThanOrPostsGreaterThan", "findBy", fakeTableMetadata, fakeEntity, dialect);
+        DenoAsserts.assertEquals(findByFirstnameAndAgeGreaterThanAndPostsLessThanOrPostsGreaterThan, `SELECT * FROM public.users WHERE firstname = ? AND age > ? AND posts < ? OR posts > ?`);
+
+        const findByCarmodel = lexicalProcessor(fakeRepositoryProxy, "findByCarModel", "findBy", fakeTableMetadata, fakeEntity, dialect);
+        DenoAsserts.assertEquals(findByCarmodel, `SELECT * FROM public.users WHERE CarModEl = ?`);
     }
 
 }

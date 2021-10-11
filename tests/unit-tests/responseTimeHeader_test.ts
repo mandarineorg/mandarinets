@@ -1,6 +1,5 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
-import { Orange } from "https://deno.land/x/orange@v0.3.0/lib/core.ns.ts";
-import { Test } from "https://deno.land/x/orange@v0.3.0/lib/decorators/testDecorator.ts";
+import { Orange, Test } from "../mod.ts";
 import { ApplicationContext } from "../../main-core/application-context/mandarineApplicationContext.ts";
 import { Mandarine } from "../../mod.ts";
 import { responseTimeHandler } from "../../mvc-framework/core/middlewares/responseTimeHeaderMiddleware.ts";

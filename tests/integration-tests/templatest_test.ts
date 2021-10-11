@@ -1,7 +1,7 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
 import { CommonUtils } from "../../main-core/utils/commonUtils.ts";
-import { DenoAsserts, INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY, Orange, Test } from "../mod.ts";
+import { DenoAsserts, Orange, Test, waitForMandarineServer } from "../mod.ts";
 
 export class TemplatesTest {
 
@@ -20,14 +20,7 @@ export class TemplatesTest {
         description: "Verifies manual templates are working properly"
     })
     public async testTemplatesEndpoints() {
-        let cmd = Deno.run({
-            cmd: ["deno", "run", "-c", "tsconfig.json", "--allow-all", "--unstable", `${INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY}/templates.ts`],
-            stdout: "null",
-            stderr: "null",
-            stdin: "null"
-        });
-
-        CommonUtils.sleep(this.MAX_COMPILATION_TIMEOUT_SECONDS);
+        let cmd = await waitForMandarineServer("templates.ts");
 
         let ejsTemplate = (await (await fetch("http://localhost:8090/manual-template-ejs")).text());
         let handlebarsTemplate = (await (await fetch("http://localhost:8090/manual-template-handlebars")).text());

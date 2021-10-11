@@ -1,6 +1,6 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
-import type { Mandarine } from "../../main-core/Mandarine.ns.ts";
+import { Mandarine } from "../../main-core/Mandarine.ns.ts";
 import { MandarineORMException } from "./exceptions/mandarineORMException.ts";
 
 export const lexicalProcessor = (currentProxy: Mandarine.ORM.RepositoryProxy, methodName: string, proxyType: Mandarine.ORM.ProxyType, tableMetadata: Mandarine.ORM.Entity.TableMetadata, entity: Mandarine.ORM.Entity.Table, dialect: Mandarine.ORM.Dialect.Dialect) => {
@@ -31,6 +31,16 @@ export const lexicalProcessor = (currentProxy: Mandarine.ORM.RepositoryProxy, me
         break;
     }
 
+    let [parameterStrategy, parameterStrategyValue] = dialect.parameterizedQueryInformationType();
+    const getParameterStrategyValue = (possibleValue?: any) => {
+        switch(parameterStrategy) {
+            case "number":
+                return `$${possibleValue}`;
+            case "string":
+                return parameterStrategyValue;
+        }
+    }
+
     let currentWord = "";
 
     let queryData: Array<string> = new Array<string>();
@@ -40,7 +50,7 @@ export const lexicalProcessor = (currentProxy: Mandarine.ORM.RepositoryProxy, me
         switch(operator) {
             case "=":
                 queryData.push('=');
-                queryData.push(`$${colSecureId}`);
+                queryData.push(getParameterStrategyValue(colSecureId));
                 colSecureId++;
             break;
 
@@ -69,31 +79,31 @@ export const lexicalProcessor = (currentProxy: Mandarine.ORM.RepositoryProxy, me
 
             case "startingwith":
                 queryData.push('LIKE');
-                queryData.push(`'' || $${colSecureId} || '%'`);
+                queryData.push(`'' || ${getParameterStrategyValue(colSecureId)} || '%'`);
                 colSecureId++;
             break;
 
             case "endswith":
                 queryData.push('LIKE');
-                queryData.push(`'%' || $${colSecureId} || ''`);
+                queryData.push(`'%' || ${getParameterStrategyValue(colSecureId)} || ''`);
                 colSecureId++;
             break;
 
             case "like":
                 queryData.push('LIKE');
-                queryData.push(`'%' || $${colSecureId} || '%'`);
+                queryData.push(`'%' || ${getParameterStrategyValue(colSecureId)} || '%'`);
                 colSecureId++;
             break;
 
             case "greaterthan":
                 queryData.push('>')
-                queryData.push(`$${colSecureId}`);
+                queryData.push(`${getParameterStrategyValue(colSecureId)}`);
                 colSecureId++;
             break;
 
             case "lessthan":
                 queryData.push('<')
-                queryData.push(`$${colSecureId}`);
+                queryData.push(`${getParameterStrategyValue(colSecureId)}`);
                 colSecureId++;
             break;
 
@@ -129,7 +139,7 @@ export const lexicalProcessor = (currentProxy: Mandarine.ORM.RepositoryProxy, me
 
             const originalName = columnNameEntries.find(([key, value]) => value === current);
             if(!originalName) throw new MandarineORMException(MandarineORMException.MQL_INVALID_KEY, "");
-            queryData.push(`"${originalName[0]}"`);
+            queryData.push(dialect.getColumnNameForStatements(<string> originalName[0]));
 
             if(next && isOperator(next)) {
                 if(next == 'and' || next == 'or') {

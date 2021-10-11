@@ -26,7 +26,7 @@ export class flights {
     public airline?: string;
 
     @Column()
-    public from?: string;
+    public fromFlight?: string;
 
     @Column({
         type: Types.DECIMAL
@@ -34,7 +34,7 @@ export class flights {
     public duration?: number;
 
     @Column()
-    public to?: string;
+    public toFlight?: string;
 }
 
 @Repository()
@@ -48,18 +48,18 @@ export abstract class FlightsRepository extends MandarineRepository<flights> {
     public findByFlightId<T>(id: string): T { return; }
     public findByAirline(airline: string) {}
     public findByFlightIdOrCaptain(flightId: string, captain: string) {}
-    public findByAirlineAndFrom(airline: string, from: string) {}
-    public findByFromAndTo(from: string, to: string) {}
-    public findByFromOrToAndAirline(from: string, to: string, airline: string) {}
+    public findByAirlineAndFromFlight(airline: string, from: string) {}
+    public findByFromFlightAndToFlight(from: string, to: string) {}
+    public findByFromFlightOrToFlightAndAirline(from: string, to: string, airline: string) {}
     public findByCaptainAndAirline(captain: string, airline: string) {}
-    public findByFrom(from: string) {}
-    public countByTo(to: string) {}
+    public findByFromFlight(from: string) {}
+    public countByToFlight(to: string) {}
     public countByCaptain(captain: string) {}
     public deleteByCaptain(captain: string) {}
-    public deleteByFlightIdOrTo(flightId: string, to: string) {}
+    public deleteByFlightIdOrToFlight(flightId: string, to: string) {}
     public findByDurationGreaterThan(duration: number) {}
     public findByDurationLessThan(duration: number) {}
-    public findByDurationGreaterThanOrDurationLessThanAndTo(duration1: number, duration2: number, to: string) {}
+    public findByDurationGreaterThanOrDurationLessThanAndToFlight(duration1: number, duration2: number, to: string) {}
 
 }
 
@@ -74,33 +74,33 @@ export class MyController {
             flightId: "AB1293",
             captain: "Andres Pirela",
             airline: "American Airlines",
-            from: "FLL",
+            fromFlight: "FLL",
             duration: 2,
-            to: "RDU"
+            toFlight: "RDU"
         },
         {
             flightId: "92H1238M",
             captain: "Nicole Lebroski",
             airline: "JetBlue",
-            from: "RDU",
+            fromFlight: "RDU",
             duration: 1.5,
-            to: "FLL"
+            toFlight: "FLL"
         },
         {
             flightId: "1293APS",
             captain: "Mark Alto",
             airline: "JetBlue",
-            from: "AVL",
+            fromFlight: "AVL",
             duration: 1,
-            to: "RDU"
+            toFlight: "RDU"
         },
         {
             flightId: "1238023S",
             captain: "Edward Naths",
             airline: "Allegiant",
-            from: "FLL",
+            fromFlight: "FLL",
             duration: 9,
-            to: "CDG"
+            toFlight: "CDG"
         }];
 
         for(let i = 0; i<flights.length; i++) {
@@ -112,20 +112,20 @@ export class MyController {
     public async handler2() {
         const flightById = await this.flightsRepo.findByFlightId("AB1293");
         const flightByAirline = await this.flightsRepo.findByAirline("JetBlue");
-        const flightByAirlineAndFrom = await this.flightsRepo.findByAirlineAndFrom("JetBlue", "RDU");
-        const flightByFromAndTo = await this.flightsRepo.findByFromAndTo("FLL", "RDU");
+        const flightByAirlineAndFrom = await this.flightsRepo.findByAirlineAndFromFlight("JetBlue", "RDU");
+        const flightByFromAndTo = await this.flightsRepo.findByFromFlightAndToFlight("FLL", "RDU");
         const flightByCaptainAndAirlineFalse = await this.flightsRepo.findByCaptainAndAirline("Mark Alto", "American airlines");
         const flightByCaptainAndAirlineTrue = await this.flightsRepo.findByCaptainAndAirline("Mark Alto", "JetBlue");
-        const flightByFrom = await this.flightsRepo.findByFrom("AVL");
+        const flightByFrom = await this.flightsRepo.findByFromFlight("AVL");
         const findAll = await this.flightsRepo.findAll();
         const countAll = await this.flightsRepo.countAll();
         const flightByFlightIdOrCaptain = await this.flightsRepo.findByFlightIdOrCaptain("NONVALID", "Edward Naths");
         const flightByFlightIdOrCaptainFalse = await this.flightsRepo.findByFlightIdOrCaptain("NONVALID", "NONVALID");
-        const flightByFromOrToAndAirline = await this.flightsRepo.findByFromOrToAndAirline("NONVALID", "RDU", "JetBlue");
-        const flightByFromOrToAndAirlineFLL = await this.flightsRepo.findByFromOrToAndAirline("FLL", "NONVALID", "NONVALID");
+        const flightByFromOrToAndAirline = await this.flightsRepo.findByFromFlightOrToFlightAndAirline("NONVALID", "RDU", "JetBlue");
+        const flightByFromOrToAndAirlineFLL = await this.flightsRepo.findByFromFlightOrToFlightAndAirline("FLL", "NONVALID", "NONVALID");
         const flightByDurationGreaterThan = await this.flightsRepo.findByDurationGreaterThan(2);
         const flightByDurationLessThan = await this.flightsRepo.findByDurationLessThan(2);
-        const flightbyDurationGreaterThanORDurationLessThanAndTo = await this.flightsRepo.findByDurationGreaterThanOrDurationLessThanAndTo(2, 1.5, "RDU");
+        const flightbyDurationGreaterThanORDurationLessThanAndTo = await this.flightsRepo.findByDurationGreaterThanOrDurationLessThanAndToFlight(2, 1.5, "RDU");
         return {
             flightById,
             flightByAirline,

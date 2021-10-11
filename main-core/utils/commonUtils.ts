@@ -40,6 +40,16 @@ export class CommonUtils {
         }
     }
 
+    public static async fileDirExistsAsync(path: string): Promise<[boolean, Deno.FileInfo | undefined]>  {
+        let fileInfo: Deno.FileInfo | undefined;
+        try {
+          fileInfo = await Deno.stat(path);
+        } catch (error) {
+          fileInfo = undefined;
+        }
+        return [fileInfo !== undefined, fileInfo];
+    }
+
     public static setEnvironmentVariablesFromObject(object: any) {
         Object.keys(object).forEach((key: string) => {
             const value = object[key];
@@ -73,14 +83,11 @@ export class CommonUtils {
     }
 
     public static isNumeric(num: any) {
-        return !isNaN(num);
+        return IndependentUtils.isNumeric(num);
     }
 
     public static parseToKnownType(value: any) {
-        if(value === "true" || value === true) return true;
-        if(value === "false" || value === false) return false;
-        if(CommonUtils.isNumeric(value)) return parseFloat(value);
-        return value;
+        return IndependentUtils.parseToKnownType(value);
     }
 
     public static async asyncIteratorToArray(iterator: any) {

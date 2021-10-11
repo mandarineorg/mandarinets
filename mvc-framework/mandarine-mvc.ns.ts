@@ -9,6 +9,7 @@ import { MandarineMVCContext } from "./core/mandarineMvcContext.ts";
 import { RenderEngineClass } from "./core/modules/view-engine/renderEngine.ts";
 import type { NonComponentMiddlewareTarget } from "../main-core/internals/interfaces/middlewareTarget.ts";
 import type { GuardTarget } from "../main-core/internals/interfaces/guardTarget.ts";
+import { MandarineMVCCache } from "./core/internal/mvcCacheManager.ts";
 
 /**
 * This namespace contains all the essentials for Mandarine MVC to work
@@ -553,7 +554,7 @@ export namespace MandarineMvc {
             SESSION_STORE
         }
 
-        export type InternalMiddlewareFunc = (context: Mandarine.Types.RequestContext, data: any) => void;
+        export type InternalMiddlewareFunc = (context: Mandarine.Types.RequestContext, data?: any) => boolean;
 
         export type InternalMiddlewareLifecycle = "PRE" | "POST" | "ALL";
 
@@ -566,6 +567,18 @@ export namespace MandarineMvc {
             };
             enabled: boolean;
             lifecycle: InternalMiddlewareLifecycle;
+        }
+
+        export namespace Core {
+            export interface CacheItem {
+                key: string;
+                object: any;
+                expiration: Date;
+            }
+
+            export const getCacheManager = () => {
+                return MandarineMVCCache.getInstance();
+            }
         }
     }
 
@@ -709,6 +722,7 @@ export namespace MandarineMvc {
          */
         export interface RenderingOptions {
             manual: boolean;
+            customPath?: boolean;
         }
 
         export class RenderEngine extends RenderEngineClass {}
@@ -731,7 +745,7 @@ export namespace MandarineMvc {
          * @param resourcePath is injected
          */
         export interface ResourceResolver {
-            resolve(httpContext: Mandarine.Types.RequestContext, resourcePath: string): Uint8Array | undefined;
+            resolve(httpContext: Mandarine.Types.RequestContext, resourcePath: string): Promise<Uint8Array | undefined>;
         }
 
     }

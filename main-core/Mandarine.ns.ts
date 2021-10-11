@@ -26,6 +26,14 @@ import { HTTPLoginBuilder } from "../security-core/core/modules/loginBuilder.ts"
 import { MandarineCommonInterfaces } from "./Mandarine.commonInterfaces.ns.ts";
 import type { ComponentComponent } from "./components/component-component/componentComponent.ts";
 import { Leaf } from "../deps.ts";
+import { IndependentUtils } from "./utils/independentUtils.ts";
+import { ClassType } from "./utils/utilTypes.ts";
+import { Microlemon }  from "./microservices/mod.ts";
+import { MicroserviceManager } from "./microservices/microserviceManager.ts";
+import { MandarineCoreTimers } from "./internals/core/mandarineCoreTimers.ts";
+import { MandarineConstants } from "./mandarineConstants.ts";
+import { YamlUtils } from "./utils/yamlUtils.ts";
+import { PropertiesUtils } from "./utils/propertiesUtils.ts";
 
 /**
 * This namespace contains all the essentials for mandarine to work
@@ -77,7 +85,17 @@ export namespace Mandarine {
                 port: number,
                 responseType?: MandarineMVC.MediaTypes,
                 responseTimeHeader?: boolean
-                enableSessions?: boolean
+                enableSessions?: boolean,
+                enableCors?: boolean,
+                https?: {
+                    certFile: string,
+                    keyFile: string
+                },
+                cache?: {
+                    enabled: boolean,
+                    defaultExpiration: number,
+                    expirationInterval: number
+                }
             } & any,
             resources: {
                 staticRegExpPattern?: string,
@@ -111,6 +129,16 @@ export namespace Mandarine {
             },
             security?: {
                 cookiesSignKeys: Array<string>
+            },
+            services?: {
+                mongodb?: {
+                    connectionURL: string;
+                }
+            },
+            microservices?: {
+                automaticHealthCheck?: boolean;
+                automaticHealthCheckInterval?: number;
+                [transporter: string]: Microlemon.ConnectionData | any;
             }
         } & any
     };
@@ -163,12 +191,14 @@ export namespace Mandarine {
             mandarineInitialProperties: MandarineInitialProperties;
             mandarineMiddleware: Array<ComponentComponent & Components.MiddlewareComponent>;
             mandarineNativeComponentsRegistry: NativeComponentsRegistry;
+            mandarineMicroserviceManager: MandarineCore.IMicroserviceManager;
             __SECURITY__: {
                 auth: {
                     authManagerBuilder: MandarineSecurity.Auth.AuthenticationManagerBuilder,
                     httpLoginBuilder: MandarineSecurity.Core.Modules.LoginBuilder
                 }
-            }
+            },
+            internalProps: Map<string, any>
         };
 
         /**
@@ -186,11 +216,13 @@ export namespace Mandarine {
                     mandarineTemplatesManager: undefined,
                     mandarineInitialProperties: undefined,
                     mandarineNativeComponentsRegistry: undefined,
+                    mandarineMicroserviceManager: undefined,
                     __SECURITY__: {
                         auth: {
                             authManagerBuilder: undefined
                         }
-                    }
+                    },
+                    internalProps: new Map()
                 }
             }
         };
@@ -243,6 +275,19 @@ export namespace Mandarine {
         };
 
         /**
+        * Get the microservice manager
+        */
+       export function getMicroserviceManager(): Mandarine.MandarineCore.IMicroserviceManager { 
+            let mandarineGlobal: MandarineGlobalInterface = getMandarineGlobal();
+
+            if(mandarineGlobal.mandarineMicroserviceManager == (null || undefined)) {
+                mandarineGlobal.mandarineMicroserviceManager = new Mandarine.MandarineCore.MandarineMicroserviceManager();
+            }
+
+            return mandarineGlobal.mandarineMicroserviceManager;
+        };
+
+        /**
         * Get the resource handler registry for incoming requests.
         */
        export function getResourceHandlerRegistry(): Mandarine.MandarineCore.IResourceHandlerRegistry { 
@@ -259,19 +304,33 @@ export namespace Mandarine {
         * Get the properties mandarine is using.
         * If no properties are set by the user then it gets the default properties.
         */
-        export function getMandarineConfiguration(): Properties {
+        export function getMandarineConfiguration(configPath?: string): Properties {
             let mandarineGlobal: MandarineGlobalInterface = getMandarineGlobal();
-
-            if(mandarineGlobal.mandarineProperties == (null || undefined)) {
-
+            if(!mandarineGlobal.mandarineProperties) {
                 try {
                     const initialProperties: MandarineInitialProperties | undefined = getMandarineInitialProps();
-                    let mandarinePropertiesFile = Deno.env.get(MandarineEnvironmentalConstants.MANDARINE_PROPERTY_FILE) || initialProperties?.propertiesFilePath || Defaults.mandarinePropertiesFile;
-                    const propertiesData = JsonUtils.toJson(mandarinePropertiesFile, { isFile: true, allowEnvironmentalReferences: true });
+                    let mandarinePropertiesFile = configPath || Deno.env.get(MandarineEnvironmentalConstants.MANDARINE_PROPERTY_FILE) || initialProperties?.propertiesFilePath || Defaults.mandarinePropertiesFile;
+                    let fileExtOpts = mandarinePropertiesFile.split(".");
+                    let fileExt = fileExtOpts[fileExtOpts.length - 1].toLowerCase();
+
+                    let propertiesData: any;
+                    logger.debug(`Using configuration with type: ${fileExt}`);
+                    if(fileExt === "json") {
+                        propertiesData = JsonUtils.toJson(mandarinePropertiesFile, { isFile: true, allowEnvironmentalReferences: true });
+                    } else if(fileExt === "yaml" || fileExt === "yml") {
+                        const yamlContent = JSON.stringify(YamlUtils.yamlFileToJS(mandarinePropertiesFile));
+                        propertiesData = JsonUtils.toJson(yamlContent, { isFile: false, allowEnvironmentalReferences: true });
+                    } else if(fileExt === "properties") {
+                        const propertiesContent = JSON.stringify(PropertiesUtils.propertiesToJS(mandarinePropertiesFile));
+                        propertiesData = JsonUtils.toJson(propertiesContent, { isFile: false, allowEnvironmentalReferences: true });
+                    }
+
                     setConfiguration(propertiesData);
                 } catch(error) {
                     mandarineGlobal.mandarineProperties = Defaults.MandarineDefaultConfiguration;
                     logger.warn(`properties.json could not be found or parsed. Using default values. `);
+                    logger.debug(`Properties file: ${configPath}`);
+                    logger.debug(`Properties reading error ${error.message}`)
                 }
 
             }
@@ -315,14 +374,18 @@ export namespace Mandarine {
         export function getMandarineDotEnv() {
             let compilerAlert = () => logger.compiler("No `.env` file was found or it could not be read", "warn");
             try {
+                const coreProps = Mandarine.Global.getInternalProps();
                 if(CommonUtils.fileDirExists('./.env')) {
-                    const environmentVariablesString = CommonUtils.readFile('./.env');
-                    const enviromentVariables = MandarineUtils.parseConfigurationFile(environmentVariablesString);
-                    Object.keys(enviromentVariables).forEach((key) => Deno.env.set(key, enviromentVariables[key]));
+                    if(!coreProps.has(MandarineConstants.DOT_ENV_LOADED)) {
+                        const environmentVariablesString = CommonUtils.readFile('./.env');
+                        const enviromentVariables = MandarineUtils.parseConfigurationFile(environmentVariablesString);
+                        Object.keys(enviromentVariables).forEach((key) => Deno.env.set(key, enviromentVariables[key]));
+                        coreProps.set(MandarineConstants.DOT_ENV_LOADED, true);
+                    }
                 } else {
                     compilerAlert();
                 }
-            } catch {
+            } catch (error) {
                 compilerAlert();
             }
         }
@@ -335,29 +398,8 @@ export namespace Mandarine {
             let mandarineGlobal: MandarineGlobalInterface = getMandarineGlobal();
             let defaultConfiguration: Properties = Defaults.MandarineDefaultConfiguration;
 
-            if(!properties) (properties as any) = {};
-            if(!properties.mandarine) properties.mandarine = {};
-            if(properties.mandarine.server == (null || undefined)) properties.mandarine.server = defaultConfiguration.mandarine.server;
-            if(properties.mandarine.server.host == (null || undefined)) properties.mandarine.server.host = defaultConfiguration.mandarine.server.host;
-            if(properties.mandarine.server.port == (null || undefined)) properties.mandarine.server.port = defaultConfiguration.mandarine.server.port;
-            if(properties.mandarine.server.responseType == (null || undefined)) properties.mandarine.server.responseType = defaultConfiguration.mandarine.server.responseType;
-            if(properties.mandarine.server.responseTimeHeader == (null || undefined)) properties.mandarine.server.responseTimeHeader = defaultConfiguration.mandarine.server.responseTimeHeader;
-            if(properties.mandarine.templateEngine == (null || undefined)) properties.mandarine.templateEngine = defaultConfiguration.mandarine.templateEngine;
-            if(properties.mandarine.templateEngine.path == (null || undefined)) properties.mandarine.templateEngine.path = defaultConfiguration.mandarine.templateEngine.path;
-            if(properties.mandarine.templateEngine.engine == (null || undefined)) properties.mandarine.templateEngine.engine = defaultConfiguration.mandarine.templateEngine.engine;
-            if(properties.mandarine.resources == (null || undefined)) properties.mandarine.resources = defaultConfiguration.mandarine.resources;
-            if(properties.mandarine.resources.staticFolder == (null || undefined)) properties.mandarine.resources.staticFolder = defaultConfiguration.mandarine.resources.staticFolder;
-            if(properties.mandarine.resources.staticRegExpPattern == (null || undefined)) properties.mandarine.resources.staticRegExpPattern = defaultConfiguration.mandarine.resources.staticRegExpPattern;
-            if(properties.mandarine.authentication == (null || undefined)) properties.mandarine.authentication = defaultConfiguration.mandarine.authentication;
-            if(properties.mandarine.authentication.expiration == (null || undefined)) properties.mandarine.authentication.expiration = defaultConfiguration.mandarine.authentication.expiration;
-            if(properties.mandarine.authentication.cookie == (null || undefined)) properties.mandarine.authentication.cookie = defaultConfiguration.mandarine.authentication.cookie;
-            if(properties.mandarine.sessions == (null || undefined)) properties.mandarine.sessions = defaultConfiguration.mandarine.sessions;
-            if(properties.mandarine.sessions.touch == (null || undefined)) properties.mandarine.sessions.touch = defaultConfiguration.mandarine.sessions.touch;
-            if(properties.mandarine.sessions.expiration == (null || undefined)) properties.mandarine.sessions.expiration = defaultConfiguration.mandarine.sessions.expiration;
-            if(properties.mandarine.sessions.expirationInterval == (null || undefined)) properties.mandarine.sessions.expirationInterval = defaultConfiguration.mandarine.sessions.expirationInterval;
-            if(properties.mandarine.security == (null || undefined)) properties.mandarine.security = defaultConfiguration.mandarine.security;
-            if(properties.mandarine.security.cookiesSignKeys == (null || undefined) || properties.mandarine.security.cookiesSignKeys && properties.mandarine.security.cookiesSignKeys.length == 0) properties.mandarine.security.cookiesSignKeys = defaultConfiguration.mandarine.security.cookiesSignKeys;
-
+            properties = IndependentUtils.setDefaultValues(properties, defaultConfiguration);
+            
             if(!Object.values(Mandarine.MandarineMVC.TemplateEngine.Engines).includes(properties.mandarine.templateEngine.engine)) throw new TemplateEngineException(TemplateEngineException.INVALID_ENGINE);
 
             mandarineGlobal.mandarineProperties = properties;
@@ -388,6 +430,16 @@ export namespace Mandarine {
             }
 
             return mandarineGlobal.mandarineNativeComponentsRegistry;
+        }
+
+        export function getInternalProps(): Map<string, any> {
+            const mandarineGlobal: MandarineGlobalInterface = getMandarineGlobal();
+
+            if(mandarineGlobal.internalProps == (undefined || null)) {
+                mandarineGlobal.internalProps = new Map();
+            }
+
+            return mandarineGlobal.internalProps;
         }
 
         /**
@@ -431,6 +483,13 @@ export namespace Mandarine {
                 mandarineGlobal.__SECURITY__.auth.httpLoginBuilder = new HTTPLoginBuilder()
             }
         }
+
+        /**
+         * Read Mandarine's configuration by dots
+         */
+        export function readConfigByDots(key: string) {
+            return IndependentUtils.readConfigByDots(getMandarineConfiguration(), key);
+        }
     };
 
     /**
@@ -466,6 +525,7 @@ export namespace Mandarine {
             getComponentsRegistry(): MandarineCore.IComponentsRegistry;
             getEntityManager(): Mandarine.ORM.Entity.EntityManager;
             getTemplateManager(): Mandarine.MandarineCore.ITemplatesManager;
+            getMicroserviceManager(): Mandarine.MandarineCore.IMicroserviceManager;
             initializeMetadata(): void;
             getInstance?: () => ApplicationContext.IApplicationContext;
             getDIFactory(): DI.FactoryClass;
@@ -477,6 +537,27 @@ export namespace Mandarine {
     * Refers to all the elements part of the core.
     */
     export namespace MandarineCore {
+
+        export namespace Internals {
+
+            export type CoreTimersType = "Timeout" | "Interval";
+            export interface CoreTimers {
+                timerId: number;
+                key: string;
+                type: CoreTimersType
+            }
+
+            export const getTimersManager = () => {
+                return MandarineCoreTimers.getInstance();
+            }
+
+            export const getEnv = (env: string) => {
+                Mandarine.Global.getMandarineDotEnv();
+
+                return Deno.env.get(env);
+            }
+
+        }
 
         export enum ValueScopes {
             CONFIGURATION,
@@ -502,7 +583,9 @@ export namespace Mandarine {
             REPOSITORY,
             MANUAL_COMPONENT,
             GUARDS,
-            INTERNAL
+            INTERNAL,
+            WEBSOCKET,
+            MICROSERVICE
         };
 
         /**
@@ -512,6 +595,16 @@ export namespace Mandarine {
         */
         export enum NativeComponents {
             WebMVCConfigurer
+        }
+
+        /**
+         * Context for Tasks that are timer-like.
+         */
+        export interface TimerMetadataContext {
+            handlerType: ClassType;
+            methodName: string;
+            fixedRate: number;
+            interval: number;
         }
 
         /**
@@ -533,6 +626,7 @@ export namespace Mandarine {
             componentName?: string;
             componentInstance: any;
             componentType: ComponentTypes;
+            isServiceType?: boolean;
         };
 
         /**
@@ -570,6 +664,15 @@ export namespace Mandarine {
             getRepositoryByHandlerType(classType: any): Mandarine.MandarineCore.ComponentRegistryContext | undefined;
             connectRepositoriesToProxy(): void;
             initializeControllers(): void;
+            initializeEventListeners(): void;
+            initializeValueReaders(): void;
+            initializeWebsocketComponents(): void;
+            connectWebsocketClientProxy(component: any): void;
+            connectWebsocketServerProxy(component: any): void;
+            initializeTasks(): void;
+            initializeMicroservices(): void;
+            connectMicroserviceToProxy(microserviceInstance: ComponentComponent): void;
+            initializeValueReaderWithCustomConfiguration(): void;
         };
 
         /**
@@ -579,12 +682,33 @@ export namespace Mandarine {
         */
         export interface ITemplatesManager {
             register(renderData: Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData, engine?: Mandarine.MandarineMVC.TemplateEngine.Engines): void;
-            getTemplate(templatePath: Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData, manual: boolean): Mandarine.MandarineMVC.TemplateEngine.Template | undefined;
+            getTemplate(templatePath: Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData, customPath?: boolean, manual?: boolean): Mandarine.MandarineMVC.TemplateEngine.Template | undefined;
             getFullPath(templatePath: string): string;
             initializeTemplates(): void;
         }
 
         export class MandarineTemplateManager extends TemplatesManager {}
+
+        /**
+         * 
+         */
+        export interface IMicroserviceManager {
+            create(componentPrimitive: ClassType, configuration: Microlemon.ConnectionData): Promise<[boolean, Mandarine.MandarineCore.MicroserviceItem]>;
+            getByComponent(component: ComponentComponent): Mandarine.MandarineCore.MicroserviceItem | undefined;
+            deleteByHash(hash: string): void;
+            enableAutomaticHealthInterval(): void;
+            getMicroservices(): Array<Mandarine.MandarineCore.MicroserviceItem>;
+            disableAutomaticHealthInterval(): void;
+            enableAutomaticHealthInterval(): void;
+            isHealthy(hash: string): Promise<boolean>;
+            getByHash(hash: string): Mandarine.MandarineCore.MicroserviceItem | undefined;
+            getByMicroservice(microservice: Mandarine.MandarineCore.MicroserviceItem): Mandarine.MandarineCore.MicroserviceItem | undefined;
+            deleteByMicroservice(microservice: Mandarine.MandarineCore.MicroserviceItem): void;
+            isHealthyByMicroservice(microservice: Mandarine.MandarineCore.MicroserviceItem): Promise<boolean>;
+            remountFromExistent(microservice: Mandarine.MandarineCore.MicroserviceItem): Promise<void>;
+        }
+
+        export class MandarineMicroserviceManager extends MicroserviceManager {}
 
         /**
         * Refers to the resource handler registry.
@@ -643,6 +767,54 @@ export namespace Mandarine {
          */
         export class MandarineResourceHandlerRegistry extends ResourceHandlerRegistry {}
 
+        /**
+         * Core Decorators
+         */
+        export namespace Decorators {
+            export interface EventListener {
+                eventName: string,
+                methodName: string
+            }
+            export interface Value {
+                configKey: string,
+                scope: ValueScopes | undefined,
+                propertyName: string
+            }
+
+            export type WebSocketValidProperties =  "onClose" | "onOpen" | "onError" | "onMessage" | "send" | "close" | "onMessageError";
+            export interface WebSocketProperty {
+                property: WebSocketValidProperties,
+                methodName: string
+            }
+
+            export interface ScheduledTask {
+                methodName: string,
+                cronExpression: string,
+                timeZone: string | undefined
+            }
+            export interface Timer {
+                fixedRate: number,
+                methodName: string
+            }
+
+            export type MicroserviceWorkerProperties = "onOpen" | "onClose" | "onError" | "onMessage" | "close";
+            export interface MicroserviceProperty {
+                property: MicroserviceWorkerProperties,
+                methodName: string
+            }
+        }
+
+        export type MicroserviceStatus = "Initialized" | "Initialized,Listening" | "Unhealthy";
+        export interface MicroserviceItem {
+            worker: Worker;
+            createdDate: Date;
+            lastMountingDate: Date;
+            status: MicroserviceStatus;
+            parentComponent: ClassType;
+            microserviceConfiguration: Microlemon.ConnectionData;
+            hash: string;
+        }
+
     };
 
     /**
@@ -690,14 +862,20 @@ export namespace Mandarine {
         export const MandarineDefaultConfiguration: Properties = {
             mandarine: {
                 server: {
-                    host: Deno.env.get(MandarineEnvironmentalConstants.MANDARINE_SERVER_HOST) || "0.0.0.0",
-                    port: parseInt(Deno.env.get(MandarineEnvironmentalConstants.MANDARINE_SERVER_PORT) || "8080"),
+                    host: Mandarine.MandarineCore.Internals.getEnv(MandarineEnvironmentalConstants.MANDARINE_SERVER_HOST) || "0.0.0.0",
+                    port: parseInt(Mandarine.MandarineCore.Internals.getEnv(MandarineEnvironmentalConstants.MANDARINE_SERVER_PORT) || "8080"),
                     responseType: MandarineMVC.MediaTypes.TEXT_HTML,
-                    responseTimeHeader: CommonUtils.parseToKnownType(Deno.env.get(MandarineEnvironmentalConstants.MANDARINE_SERVER_RESPONSE_TIME_HEADER) || "false"),
-                    enableSessions: CommonUtils.parseToKnownType(Deno.env.get(MandarineEnvironmentalConstants.MANDARINE_SERVER_SESSION_MIDDLEWARE) || "true")
+                    responseTimeHeader: CommonUtils.parseToKnownType(Mandarine.MandarineCore.Internals.getEnv(MandarineEnvironmentalConstants.MANDARINE_SERVER_RESPONSE_TIME_HEADER) || "false"),
+                    enableSessions: CommonUtils.parseToKnownType(Mandarine.MandarineCore.Internals.getEnv(MandarineEnvironmentalConstants.MANDARINE_SERVER_SESSION_MIDDLEWARE) || "true"),
+                    enableCors: CommonUtils.parseToKnownType(Mandarine.MandarineCore.Internals.getEnv(MandarineEnvironmentalConstants.MANDARINE_SERVER_CORS_MIDDLEWARE) || "true"),
+                    cache: {
+                        enabled: CommonUtils.parseToKnownType(Mandarine.MandarineCore.Internals.getEnv(MandarineEnvironmentalConstants.MANDARINE_SERVER_CACHE_ENABLED) || "true"),
+                        defaultExpiration: (60 * 1000) * 60,
+                        expirationInterval: (60 * 60 * 1000)
+                    }
                 },
                 resources: {
-                    staticFolder: Deno.env.get(MandarineEnvironmentalConstants.MANDARINE_STATIC_CONTENT_FOLDER) || "./src/main/resources/static",
+                    staticFolder: Mandarine.MandarineCore.Internals.getEnv(MandarineEnvironmentalConstants.MANDARINE_STATIC_CONTENT_FOLDER) || "./src/main/resources/static",
                     staticRegExpPattern: "/(.*)"
                 },
                 templateEngine: {
@@ -705,18 +883,22 @@ export namespace Mandarine {
                     engine: "ejs"
                 },
                 authentication: {
-                    expiration: CommonUtils.parseToKnownType(Deno.env.get(MandarineEnvironmentalConstants.MANDARINE_AUTH_EXPIRATION_MS) || (1 * 3600 * 1000).toString()), // ONE HOUR
+                    expiration: CommonUtils.parseToKnownType(Mandarine.MandarineCore.Internals.getEnv(MandarineEnvironmentalConstants.MANDARINE_AUTH_EXPIRATION_MS) || (1 * 3600 * 1000).toString()), // ONE HOUR
                     cookie: {
                         httpOnly: false
                     }
                 },
                 sessions: {
-                    touch: CommonUtils.parseToKnownType(Deno.env.get(MandarineEnvironmentalConstants.MANDARINE_SESSIONS_TOUCH) || "true"),
-                    expiration: CommonUtils.parseToKnownType(Deno.env.get(MandarineEnvironmentalConstants.MANDARINE_SESSIONS_EXPIRATION_TIME) || (1000 * 60 * 60 * 24).toString()),
-                    expirationInterval: CommonUtils.parseToKnownType(Deno.env.get(MandarineEnvironmentalConstants.MANDARINE_SESSIONS_EXPIRATION_INTERVAL) || (1000 * 60 * 60).toString())
+                    touch: CommonUtils.parseToKnownType(Mandarine.MandarineCore.Internals.getEnv(MandarineEnvironmentalConstants.MANDARINE_SESSIONS_TOUCH) || "true"),
+                    expiration: CommonUtils.parseToKnownType(Mandarine.MandarineCore.Internals.getEnv(MandarineEnvironmentalConstants.MANDARINE_SESSIONS_EXPIRATION_TIME) || (1000 * 60 * 60 * 24).toString()),
+                    expirationInterval: CommonUtils.parseToKnownType(Mandarine.MandarineCore.Internals.getEnv(MandarineEnvironmentalConstants.MANDARINE_SESSIONS_EXPIRATION_INTERVAL) || (1000 * 60 * 60).toString())
                 },
                 security: {
                     cookiesSignKeys: ["HORSE", "MANDARINE", "CAT", "NORWAY", "ORANGE", "TIGER"]
+                },
+                microservices: {
+                    automaticHealthCheck: true,
+                    automaticHealthCheckInterval: (30 * 1000)
                 }
             }
         };
@@ -762,8 +944,8 @@ export namespace Mandarine {
     Mandarine.Global.initializeSecurityInternals();
     Mandarine.Global.initializeNativeComponents();
     Mandarine.Global.initializeMandarineGlobal();
-    Mandarine.Global.getMandarineInitialProps();
-    Mandarine.Global.getMandarineConfiguration();
+    Mandarine.Global.getMandarineInitialProps(); // Reads `mandarine.json`
+    Mandarine.Global.getMandarineConfiguration(); // Sets configuration by file. If Configuration is set programatically, it will be overriden
     Mandarine.Global.getComponentsRegistry();
     Mandarine.Global.getEntityManager();
     Mandarine.Global.getTemplateManager();

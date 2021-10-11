@@ -34,7 +34,7 @@ export class ComponentCreationTests {
         const originalMetadataKey = `${MandarineConstants.REFLECTION_MANDARINE_COMPONENT}:controller:MyController`;
         const reflectMetadataKeys = Reflect.getMetadataKeys(MyController);
         const componentMetadata = Reflect.getMetadata(originalMetadataKey, MyController);
-        DenoAsserts.assertArrayContains(reflectMetadataKeys, [originalMetadataKey]);
+        DenoAsserts.assertArrayIncludes(reflectMetadataKeys, [originalMetadataKey]);
         DenoAsserts.assert(componentMetadata != (undefined || null));
         DenoAsserts.assertEquals(componentMetadata, {
             componentName: "MyController",
@@ -61,7 +61,7 @@ export class ComponentCreationTests {
         const originalMetadataKey = `${MandarineConstants.REFLECTION_MANDARINE_COMPONENT}:controller:MyController2`;
         const reflectMetadataKeys = Reflect.getMetadataKeys(MyController2);
         const componentMetadata = Reflect.getMetadata(originalMetadataKey, MyController2);
-        DenoAsserts.assertArrayContains(reflectMetadataKeys, [originalMetadataKey]);
+        DenoAsserts.assertArrayIncludes(reflectMetadataKeys, [originalMetadataKey]);
         DenoAsserts.assert(componentMetadata != (undefined || null));
         DenoAsserts.assertEquals(componentMetadata, {
             componentName: "MyController2",
@@ -88,7 +88,7 @@ export class ComponentCreationTests {
         const originalMetadataKey = `${MandarineConstants.REFLECTION_MANDARINE_COMPONENT}:component:MyComponent`;
         const reflectMetadataKeys = Reflect.getMetadataKeys(MyComponent);
         const componentMetadata = Reflect.getMetadata(originalMetadataKey, MyComponent);
-        DenoAsserts.assertArrayContains(reflectMetadataKeys, [originalMetadataKey]);
+        DenoAsserts.assertArrayIncludes(reflectMetadataKeys, [originalMetadataKey]);
         DenoAsserts.assert(componentMetadata != (undefined || null));
         DenoAsserts.assertEquals(componentMetadata, {
             componentName: "MyComponent",
@@ -113,7 +113,7 @@ export class ComponentCreationTests {
         const originalMetadataKey = `${MandarineConstants.REFLECTION_MANDARINE_COMPONENT}:service:MyService`;
         const reflectMetadataKeys = Reflect.getMetadataKeys(MyService);
         const componentMetadata = Reflect.getMetadata(originalMetadataKey, MyService);
-        DenoAsserts.assertArrayContains(reflectMetadataKeys, [originalMetadataKey]);
+        DenoAsserts.assertArrayIncludes(reflectMetadataKeys, [originalMetadataKey]);
         DenoAsserts.assert(componentMetadata != (undefined || null));
         DenoAsserts.assertEquals(componentMetadata, {
             componentName: "MyService",
@@ -140,7 +140,7 @@ export class ComponentCreationTests {
         const originalMetadataKey = `${MandarineConstants.REFLECTION_MANDARINE_COMPONENT}:middleware:MyMiddleware`;
         const reflectMetadataKeys = Reflect.getMetadataKeys(MyMiddleware);
         const componentMetadata = Reflect.getMetadata(originalMetadataKey, MyMiddleware);
-        DenoAsserts.assertArrayContains(reflectMetadataKeys, [originalMetadataKey]);
+        DenoAsserts.assertArrayIncludes(reflectMetadataKeys, [originalMetadataKey]);
         DenoAsserts.assert(componentMetadata != (undefined || null));
         DenoAsserts.assertEquals(componentMetadata, {
             componentName: "MyMiddleware",
@@ -169,7 +169,7 @@ export class ComponentCreationTests {
         const originalMetadataKey = `${MandarineConstants.REFLECTION_MANDARINE_COMPONENT}:configuration:MyConfiguration`;
         const reflectMetadataKeys = Reflect.getMetadataKeys(MyConfiguration);
         const componentMetadata = Reflect.getMetadata(originalMetadataKey, MyConfiguration);
-        DenoAsserts.assertArrayContains(reflectMetadataKeys, [originalMetadataKey]);
+        DenoAsserts.assertArrayIncludes(reflectMetadataKeys, [originalMetadataKey]);
         DenoAsserts.assert(componentMetadata != (undefined || null));
         DenoAsserts.assertEquals(componentMetadata, {
             componentName: "MyConfiguration",
@@ -196,7 +196,7 @@ export class ComponentCreationTests {
         const originalMetadataKey = `${MandarineConstants.REFLECTION_MANDARINE_COMPONENT}:catch:createCatchComponent`;
         const reflectMetadataKeys = Reflect.getMetadataKeys(createCatchComponent);
         const componentMetadata = Reflect.getMetadata(originalMetadataKey, createCatchComponent);
-        DenoAsserts.assertArrayContains(reflectMetadataKeys, [originalMetadataKey]);
+        DenoAsserts.assertArrayIncludes(reflectMetadataKeys, [originalMetadataKey]);
         DenoAsserts.assert(componentMetadata != (undefined || null));
         DenoAsserts.assertEquals(componentMetadata, {
             componentName: "createCatchComponent",

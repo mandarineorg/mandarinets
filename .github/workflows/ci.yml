@@ -9,11 +9,10 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest, macOS-latest]
-        deno: ["v1.7.1"]
+        deno: ["v1.9.0"]
       fail-fast: true
     steps:
       - uses: actions/checkout@v2
-      - env
       - name: Setup deno
         uses: denolib/setup-deno@master
         with:
@@ -26,3 +25,15 @@ jobs:
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         run: deno test -c tsconfig.json --reload --allow-all --unstable --fail-fast tests/unit-tests/sessions.ts
+      - name: Value decorator
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+        run: deno test -c tsconfig.json --reload --allow-all --unstable --fail-fast tests/unit-tests/valueDecorator.ts    
+      - name: Cache manager
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+        run: deno test -c tsconfig.json --reload --allow-all --unstable --fail-fast tests/unit-tests/cacheManager.ts 
+      - name: Configuration setter
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+        run: deno test -c tsconfig.json --reload --allow-all --unstable --fail-fast tests/unit-tests/setConfiguration.ts                         

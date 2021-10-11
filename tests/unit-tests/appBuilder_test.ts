@@ -118,7 +118,7 @@ export class AppBuilderTest {
         let dynamicEntryFile = `import { MandarineCore } from "https://deno.land/x/mandarinets@2.2.0/mod.ts";`;
         
         dynamicEntryFile = dynamicEntryFile.concat(AppBuilderUtil.createEntrypointData(repeatedDecoratorsArray));
-        DenoAsserts.assertStringContains(dynamicEntryFile, `import { MandarineCore } from "https://deno.land/x/mandarinets@2.2.0/mod.ts";
+        DenoAsserts.assertStringIncludes(dynamicEntryFile, `import { MandarineCore } from "https://deno.land/x/mandarinets@2.2.0/mod.ts";
 import { MyComponent } from "file:///users/mandarine/file1.ts"
 
 import { MyService } from "file:///users/mandarine/file1.ts"
