@@ -32,8 +32,8 @@ jobs:
       - name: Cache manager
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-        run: deno test -c tsconfig.json --reload --allow-all --unstable --fail-fast tests/unit-tests/cacheManager.ts 
+        run: deno test -c tsconfig.json --reload --allow-all --unstable --fail-fast tests/unit-tests/cacheManager.ts             
       - name: Configuration setter
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-        run: deno test -c tsconfig.json --reload --allow-all --unstable --fail-fast tests/unit-tests/setConfiguration.ts                         
+        run: deno test -c tsconfig.json --reload --allow-all --unstable --fail-fast tests/unit-tests/setConfiguration.ts
