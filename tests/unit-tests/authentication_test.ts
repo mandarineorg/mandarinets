@@ -51,7 +51,7 @@ class AuthenticationTest {
         ApplicationContext.getInstance().getComponentsRegistry().resolveDependencies();
         MainCoreDecoratorProxy.overrideNativeComponent(WebMvcConfigurer, Mandarine.MandarineCore.NativeComponents.WebMVCConfigurer);
 
-        const authenticator: Authenticator = ApplicationContext.getInstance().getDIFactory().getDependency(Authenticator)!;
+        const authenticator: Authenticator = ApplicationContext.getInstance().getDIFactory().getDependency(Authenticator);
         const getUser = () => ApplicationContext.getInstance().getDIFactory().getDependency(AuthManagerService).users[0];
         const [noUsernameResult, noUsernameUser] = authenticator.performAuthentication({
             username: <any> undefined,

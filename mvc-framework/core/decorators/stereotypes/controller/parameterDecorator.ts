@@ -100,6 +100,20 @@ export const Session = (): Function => {
 /**
  * **Decorator**
  * 
+ * Injects the Server Request object from a request.
+ * 
+ * `@ServerRequestParam()
+ *  Target: Method parameter`
+ */
+export const ServerRequestParam = (): Function => {
+    return (target: Object, propertyName: string, index: number) => {
+        MVCDecoratorsProxy.registerRoutingParam(target, DI.InjectionTypes.SERVER_REQUEST_PARAM, propertyName, index);
+    };
+};
+
+/**
+ * **Decorator**
+ * 
  * Injects the response object from a request.
  * 
  * `@ResponseParam()

@@ -69,7 +69,7 @@ export class HttpHandlersTest {
         ApplicationContext.getInstance().getComponentsRegistry().initializeControllers();
         new MandarineMvcFrameworkStarter()["intializeControllersRoutes"]();
         let actions: Map<String, Mandarine.MandarineMVC.Routing.RoutingAction> = ApplicationContext.getInstance().getComponentsRegistry().get("MyControllerWithRoutes")?.componentInstance.getActions();
-        DenoAsserts.assertArrayIncludes(Array.from(actions.values()), [
+        DenoAsserts.assertArrayContains(Array.from(actions.values()), [
               {
                 actionParent: "MyControllerWithRoutes",
                 actionType: 0,

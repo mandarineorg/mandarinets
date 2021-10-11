@@ -18,7 +18,7 @@ Dependencies are essentially classes that rely on other classes (also dependents
 -----
 &nbsp;
 
-## Injection Validity Table
+## Injetion Validity Table
 
 | Component Type      | Injectable | Allows Injection |
 | ------------------- | ---------- | ---------------- |  

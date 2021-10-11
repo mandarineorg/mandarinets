@@ -1,38 +1,17 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
 import { decoder } from "https://deno.land/std@0.84.0/encoding/utf8.ts";
-import { Cookies as OakCookies, Request } from "../../deps.ts";
-import { FormDataReader } from "../../deps.ts";
+import type { Cookies as OakCookies, Request } from "../../deps.ts";
 import { Log } from "../../logger/log.ts";
 import { Mandarine } from "../Mandarine.ns.ts";
 import { CommonUtils } from "./commonUtils.ts";
 
 export class HttpUtils {
 
-    private static logger: Log = new Log(HttpUtils);
-
-    private static getBodyType(body: any): "Uint8Array" | "URLSearchParams" | "String" | "FormDataReader" | "JS" | "Any" {
-        if(typeof body === "string") {
-            return "String";
-        } else {
-            if(body instanceof Uint8Array) {
-                return "Uint8Array";
-            } else if(body instanceof URLSearchParams) {
-                return "URLSearchParams"
-            } else if(body instanceof FormDataReader) {
-                return "FormDataReader"
-            } else if(CommonUtils.isObject(body)) {
-                return "JS";
-            } else {
-                return "Any";
-            }
-        }
-    }
-
     public static async parseBody(request: Request): Promise<any> {
-        const body = await (request.body().value);
-        const bodyType = this.getBodyType(body);
-        let contentType = request.headers.get("content-type");
+        const body = await Deno.readAll(request.serverRequest.body);
+        let decodedBody: string = decoder.decode(body);
+        let contentType = request.serverRequest.headers.get("content-type");
         if(contentType) {
             if(contentType.includes('multipart/form-data; boundary=')) contentType = "multipart/form-data";
 
@@ -40,29 +19,21 @@ export class HttpUtils {
                 case "application/json":
 
                     try {
-                        if(bodyType === "JS") {
-                            return body;
-                        } else if(bodyType === "String") {
-                            return JSON.parse(body);
-                        }
+                        return JSON.parse(decodedBody);
                     } catch(error) {
-                        this.logger.warn("Body could not be parsed");
+                        new Log(HttpUtils).warn("Body could not be parsed");
                     }
 
                     break;
                 
                 case "multipart/form-data":
-                    return this.handleMultipartFormData(body, <string> request.headers.get("content-type"));
+                    return this.handleMultipartFormData(body, <string> request.serverRequest.headers.get("content-type"));
                 break;
 
                 case "application/x-www-form-urlencoded":
                     let returningElements: {[key: string]: string} = {};
-                    if(bodyType === "URLSearchParams") {
-                        for (const [key, value] of body.entries()) {
-                            returningElements[key] = value;
-                        }
-                    } else {
-                        this.logger.warn("Body could not be parsed");
+                    for (const [key, value] of new URLSearchParams(decodedBody).entries()) {
+                        returningElements[key] = value;
                     }
                     return returningElements;
 

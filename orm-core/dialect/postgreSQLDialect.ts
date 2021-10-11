@@ -99,10 +99,8 @@ export class PostgreSQLDialect implements Mandarine.ORM.Dialect.Dialect {
         
         if(columns != (undefined || null)) {
             let columnSqls: Array<string> = new Array<string>();
-            const reservedKeywords = this.getReservedKeywords();
 
             columns.forEach((column) => {
-                if(reservedKeywords.includes(column.name?.toUpperCase() || "")) throw new MandarineORMException(MandarineORMException.RESERVED_KEYWORD_COLNAME.replace("%column%", column.name || "undefined"), "PostgresSQLDialect");
                 columnSqls.push(`${column.name} ${this.getColumnTypeSyntax(column)} ${(column.nullable == false) ? "NOT NULL" : ""}`);
             });
             syntax += ` (
@@ -227,15 +225,4 @@ export class PostgreSQLDialect implements Mandarine.ORM.Dialect.Dialect {
         };
     }
 
-    public parameterizedQueryInformationType(): ["number" | "string", string] {
-        return ["number", ""]
-    }
-
-    public getColumnNameForStatements(colName: string): string {
-        return `"${colName}"`;
-    }
-
-    public getReservedKeywords(): Array<string> {
-        return [];
-    }
 }

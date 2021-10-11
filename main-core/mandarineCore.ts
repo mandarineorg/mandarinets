@@ -7,12 +7,7 @@ import { MandarineTSFrameworkEngineMethods } from "./engine/mandarineTSFramework
 import { sessionTimerHandlers } from "./mandarine-native/sessions/mandarineSessionHandlers.ts";
 import { Mandarine } from "./Mandarine.ns.ts";
 import { MandarineConstants } from "./mandarineConstants.ts";
-import { IndependentUtils } from "./utils/independentUtils.ts";
 import { MandarineUtils } from "./utils/mandarineUtils.ts";
-
-interface CoreOptions {
-    config?: string | object;
-}
 
 /**
  * Contains core methods & information related to Mandarine
@@ -24,22 +19,12 @@ export class MandarineCore {
 
     public currentContextMetadata = ApplicationContext.CONTEXT_METADATA;
 
-    constructor(options?: CoreOptions) {
-
-        this.handleOnExit();
-
-        if(options) {
-            if(options.config) this.setConfiguration(options.config);
-        }
+    constructor() {
 
         // ORDER OF THINGS MATTER
         // If the repository proxy is resolved after the dependencies, then the dependencies will have an empty repository
         this.resolveRepositoriesProxy();
         this.resolveComponentsDependencies();
-        this.initializeEventListeners();
-        this.initializeValueReaders();
-        this.initializeValueReaderWithCustomConfiguration();
-        this.initializeWebsocketComponents();
 
         MandarineTSFrameworkEngineMethods.initializeEngineMethods();
 
@@ -47,10 +32,6 @@ export class MandarineCore {
         this.initializeTemplates();
         this.initializeEntityManager(); 
         this.freezeMandarineProperties();
-
-        this.initializeTasks();
-        this.initializeMicroservices();
-        this.initializeAutomaticMicroserviceHealthCheck();
 
         this.writeOnCompiler();
     }
@@ -75,48 +56,12 @@ export class MandarineCore {
         ApplicationContext.getInstance().getTemplateManager().initializeTemplates();
     }
 
-    private initializeEventListeners(): void {
-        ApplicationContext.getInstance().getComponentsRegistry().initializeEventListeners();
-    }
-
-    private initializeValueReaders(): void {
-        ApplicationContext.getInstance().getComponentsRegistry().initializeValueReaders();
-    }
-
     private initializeEntityManager() {
         let entityManager = ApplicationContext.getInstance().getEntityManager();
         if(entityManager.getDataSource() != undefined) {
             entityManager.initializeEssentials();
             entityManager.initializeAllEntities();
         }
-    }
-
-    private initializeWebsocketComponents() {
-        ApplicationContext.getInstance().getComponentsRegistry().initializeWebsocketComponents();
-    }
-
-    private initializeTasks() {
-        ApplicationContext.getInstance().getComponentsRegistry().initializeTasks();
-    }
-
-    private initializeMicroservices() {
-        ApplicationContext.getInstance().getComponentsRegistry().initializeMicroservices();
-    }
-
-    private initializeAutomaticMicroserviceHealthCheck() {
-        ApplicationContext.getInstance().getMicroserviceManager().enableAutomaticHealthInterval();
-    }
-
-    private initializeValueReaderWithCustomConfiguration() {
-        ApplicationContext.getInstance().getComponentsRegistry().initializeValueReaderWithCustomConfiguration();
-    }
-
-    private handleOnExit() {
-
-        window.addEventListener("unload", () => {
-            ApplicationContext.getInstance().getMicroserviceManager().disableAutomaticHealthInterval();
-        });
-
     }
 
     private writeOnCompiler() {
@@ -138,15 +83,6 @@ export class MandarineCore {
         }
     }
 
-    private setConfiguration(config: string | object) {
-        if(typeof config === 'string') {
-            Mandarine.Global.getMandarineConfiguration(config);
-        } else if(IndependentUtils.isObject(config)) {
-            // @ts-ignore
-            Mandarine.Global.setConfiguration(config);
-        }
-    }
-
     /**
      * Creates bridge between Mandarine's core and Mandarine MVC Core.
      * Allows you to create Mandarine-powered web applications.
@@ -154,7 +90,6 @@ export class MandarineCore {
     public MVC() {
         return new MandarineMVC(() => {
             sessionTimerHandlers.initializeSessionManager();
-            Mandarine.MandarineMVC.Internal.Core.getCacheManager().enableCleaningInterval();
         }, () => {
             if(this.currentContextMetadata.engineMetadata?.mvc) {
                 const controllersAmount = this.currentContextMetadata.engineMetadata.mvc.controllersAmount;

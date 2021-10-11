@@ -1,0 +1,60 @@
+name: PG Driver
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: PG Driver (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, macOS-latest]
+        deno: ["v1.7.1"]
+      fail-fast: true    
+
+    steps:
+      - name: Setup Environment
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+          echo ::set-env name=GH_ACTIONS::1
+          echo ::set-env name=RUST_BACKTRACE::full
+
+      - name: Clone repository
+        uses: actions/checkout@v2
+
+      - name: Install rust
+        uses: hecrj/setup-rust-action@v1
+        with:
+          rust-version: 1.47.0
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target/
+          key: ${{ runner.os }}-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-
+      - name: Setup deno
+        uses: denolib/setup-deno@master
+        with:
+          deno-version: ${{ matrix.deno }}
+      # Build
+      - name: Build
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+        run: cd rust-core && cd database && cd drivers && cd postgres && cargo build --release --locked --all-targets && cd ../../../../
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: |
+            ./rust-core/database/drivers/postgres/target/release/libmandarine_postgres.dylib
+            ./rust-core/database/drivers/postgres/target/release/mandarine_postgres.dll

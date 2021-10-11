@@ -8,8 +8,6 @@ export class MandarineORMException extends Error {
     public static IMPOSSIBLE_CONNECTION: string = "The connection could not be made because the database client did not accept it.";
     public static INSTANCE_IN_SAVE: string = "Saving an instance is not a valid save statement. Please save an initialized object.";
     public static MQL_INVALID_KEY: string = "MQL has failed to process the expression.";
-    public static QUERY_BEFORE_CONNECTION: string = "A query has been requested but the connection is not initialized.";
-    public static RESERVED_KEYWORD_COLNAME: string = "Name (%column%) is a reserved keyword and cannot be used for column.";
     
     constructor(public message: string, public objectName: string) {
       super(message + " ~ Object name: " + objectName);

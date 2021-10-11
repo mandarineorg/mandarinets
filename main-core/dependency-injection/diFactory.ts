@@ -137,6 +137,9 @@ export class DependencyInjectionFactory {
                     case DI.InjectionTypes.SESSION_PARAM:
                         valueToInject = context.request.session;
                         break;
+                    case DI.InjectionTypes.SERVER_REQUEST_PARAM:
+                        valueToInject = context.request.serverRequest;
+                    break;
                     case DI.InjectionTypes.REQUEST_BODY_PARAM:
                         valueToInject = await HttpUtils.parseBody(context.request);
                     break;
@@ -176,7 +179,7 @@ export class DependencyInjectionFactory {
                         const executerProvider = (<Mandarine.MandarineMVC.DecoratorFactoryData<any, any>>param.parameterConfiguration)?.provider;
                         const parameterData = (<Mandarine.MandarineMVC.DecoratorFactoryData<any, any>>param.parameterConfiguration)?.paramData;
                         const providerExecution = executerProvider(MandarineMVCUtils.buildRequestContextAccessor(context), ...parameterData);
-                        valueToInject = await providerExecution;
+                        valueToInject = providerExecution;
                         break;
                 }
 
@@ -201,7 +204,7 @@ export class DependencyInjectionFactory {
     /** 
      * Get a Dependency from the DI Container programatically
      */
-    public getDependency<T = any>(type: ClassType): T | undefined {
+    public getDependency(type: ClassType) {
         let component = ApplicationContext.getInstance().getComponentsRegistry().getComponentByHandlerType(type);
         if(component != (null || undefined)) return (component.componentType == Mandarine.MandarineCore.ComponentTypes.MANUAL_COMPONENT || component.componentType == Mandarine.MandarineCore.ComponentTypes.INTERNAL) ? component.componentInstance : component.componentInstance.getClassHandler();
     }
@@ -209,14 +212,14 @@ export class DependencyInjectionFactory {
     /** 
      * Get a Dependency from the DI Container programatically
      */
-    public getSeed<T = any>(type: ClassType): T | undefined {
+    public getSeed(type: ClassType) {
         return this.getDependency(type);
     }
 
     /** 
      * Get a Dependency from the DI Container programatically
      */
-    public getInjectable<T = any>(type: ClassType) : T | undefined {
+    public getInjectable(type: ClassType) {
         return this.getDependency(type);
     }
 
@@ -234,6 +237,6 @@ export class DependencyInjectionFactory {
      * Get component of dependency by component type
      */
     public getComponentsByComponentType<T>(type: Mandarine.MandarineCore.ComponentTypes): Array<T> {
-        return ApplicationContext.getInstance().getComponentsRegistry().getComponentsByComponentType(type).map((item: any) => item.componentInstance);
+        return ApplicationContext.getInstance().getComponentsRegistry().getComponentsByComponentType(type).map((item) => item.componentInstance);
     }
 }

@@ -11,7 +11,7 @@ import { ORMCoreDecoratorProxy } from "../proxys/ormCoreDecoratorProxy.ts";
  * `@Table(decoratorOptions)
  *  Target: class`
  */
-export const Table = (decoratorOptions?: Mandarine.ORM.Entity.Decorators.Table): Function => {
+export const Table = (decoratorOptions: Mandarine.ORM.Entity.Decorators.Table): Function => {
     return (target: any) => {
         ORMCoreDecoratorProxy.registerTableDecorator(target, decoratorOptions);
     }

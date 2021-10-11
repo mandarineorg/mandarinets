@@ -1,9 +1,11 @@
 // Copyright 2020-2020 The Mandarine.TS Framework authors. All rights reserved. MIT license.
 
 import { CommonUtils } from "../../main-core/utils/commonUtils.ts";
-import { DenoAsserts, Orange, Test, waitForMandarineServer } from "../mod.ts";
+import { DenoAsserts, INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY, Orange, Test } from "../mod.ts";
 
 export class RouteParamTest {
+
+    public MAX_COMPILATION_TIMEOUT_SECONDS = 50;
 
     constructor() {
         Orange.setOptions(this, {
@@ -18,7 +20,14 @@ export class RouteParamTest {
         description: "Test all endpoints in file, and verifies its return values"
     })
     public async testSayHi() {
-        let cmd = await waitForMandarineServer("routeParam.ts");
+        let cmd = Deno.run({
+            cmd: ["deno", "run", "-c", "tsconfig.json", "--allow-all", "--unstable", `${INTEGRATION_TEST_FILES_TO_RUN_DIRECTORY}/routeParam.ts`],
+            stdout: "null",
+            stderr: "null",
+            stdin: "null"
+        });
+
+        CommonUtils.sleep(this.MAX_COMPILATION_TIMEOUT_SECONDS);
 
         let sayHiNameEndpoint = (await (await fetch("http://localhost:8081/say-hi-1/Andres")).json());
         let apiSayHiNameEndpoint = (await (await fetch("http://localhost:8081/api/say-hi-2/Bill")).json());

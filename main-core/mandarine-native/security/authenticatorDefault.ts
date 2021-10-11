@@ -44,7 +44,7 @@ export class Authenticator implements Mandarine.Security.Auth.Authenticator {
      * 
      * @param data Contains the information to execute the authentication such as user & password. It takes an optional value for `executer` which is a function to be executed when authentication is done (if successful)
      */
-    public performAuthentication(data: Mandarine.Security.Auth.PerformAuthenticationOptions, httpContext?: Mandarine.Types.RequestContext): [Mandarine.Security.Auth.AuthenticationResult, Mandarine.Security.Auth.UserDetails | undefined] {
+    public performAuthentication(data: Mandarine.Security.Auth.PerformAuthenticationOptions): [Mandarine.Security.Auth.AuthenticationResult, Mandarine.Security.Auth.UserDetails | undefined] {
         const { username, password, executer } = data;
         const throwUserError = () => new MandarineAuthenticationException("User does not exist", Mandarine.Security.Auth.AuthExceptions.INVALID_USER);
         const throwPasswordError = () => new MandarineAuthenticationException("Password is invalid", Mandarine.Security.Auth.AuthExceptions.INVALID_PASSWORD);
@@ -59,7 +59,7 @@ export class Authenticator implements Mandarine.Security.Auth.Authenticator {
             if(!this.verifyAuthenticationSatisfaction(false)) throw new MandarineSecurityException(MandarineSecurityException.UNSATISFIED_AUTHENTICATOR);
 
             const getAuthManagerBuilder = Mandarine.Security.getAuthManagerBuilder();
-            const userDetailsLookUpOriginal = getAuthManagerBuilder.getUserDetailsService().loadUserByUsername(username, httpContext);
+            const userDetailsLookUpOriginal = getAuthManagerBuilder.getUserDetailsService().loadUserByUsername(username);
 
             if(!userDetailsLookUpOriginal) {
                 throw throwUserError();
@@ -123,7 +123,7 @@ export class Authenticator implements Mandarine.Security.Auth.Authenticator {
             executer: data.executers?.authExecuter
         };
 
-        const [authenticate, userDetails] = this.performAuthentication(authenticationData, requestContext);
+        const [authenticate, userDetails] = this.performAuthentication(authenticationData);
 
         const authenticationObject = Object.assign({}, authenticate);
 
