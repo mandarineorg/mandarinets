@@ -32,6 +32,8 @@ import { Microlemon }  from "./microservices/mod.ts";
 import { MicroserviceManager } from "./microservices/microserviceManager.ts";
 import { MandarineCoreTimers } from "./internals/core/mandarineCoreTimers.ts";
 import { MandarineConstants } from "./mandarineConstants.ts";
+import { YamlUtils } from "./utils/yamlUtils.ts";
+import { PropertiesUtils } from "./utils/propertiesUtils.ts";
 
 /**
 * This namespace contains all the essentials for mandarine to work
@@ -136,6 +138,7 @@ export namespace Mandarine {
             microservices?: {
                 automaticHealthCheck?: boolean;
                 automaticHealthCheckInterval?: number;
+                [transporter: string]: Microlemon.ConnectionData | any;
             }
         } & any
     };
@@ -303,17 +306,31 @@ export namespace Mandarine {
         */
         export function getMandarineConfiguration(configPath?: string): Properties {
             let mandarineGlobal: MandarineGlobalInterface = getMandarineGlobal();
-
-            if(mandarineGlobal.mandarineProperties == (null || undefined)) {
-
+            if(!mandarineGlobal.mandarineProperties) {
                 try {
                     const initialProperties: MandarineInitialProperties | undefined = getMandarineInitialProps();
                     let mandarinePropertiesFile = configPath || Deno.env.get(MandarineEnvironmentalConstants.MANDARINE_PROPERTY_FILE) || initialProperties?.propertiesFilePath || Defaults.mandarinePropertiesFile;
-                    const propertiesData = JsonUtils.toJson(mandarinePropertiesFile, { isFile: true, allowEnvironmentalReferences: true });
+                    let fileExtOpts = mandarinePropertiesFile.split(".");
+                    let fileExt = fileExtOpts[fileExtOpts.length - 1].toLowerCase();
+
+                    let propertiesData: any;
+                    logger.debug(`Using configuration with type: ${fileExt}`);
+                    if(fileExt === "json") {
+                        propertiesData = JsonUtils.toJson(mandarinePropertiesFile, { isFile: true, allowEnvironmentalReferences: true });
+                    } else if(fileExt === "yaml" || fileExt === "yml") {
+                        const yamlContent = JSON.stringify(YamlUtils.yamlFileToJS(mandarinePropertiesFile));
+                        propertiesData = JsonUtils.toJson(yamlContent, { isFile: false, allowEnvironmentalReferences: true });
+                    } else if(fileExt === "properties") {
+                        const propertiesContent = JSON.stringify(PropertiesUtils.propertiesToJS(mandarinePropertiesFile));
+                        propertiesData = JsonUtils.toJson(propertiesContent, { isFile: false, allowEnvironmentalReferences: true });
+                    }
+
                     setConfiguration(propertiesData);
                 } catch(error) {
                     mandarineGlobal.mandarineProperties = Defaults.MandarineDefaultConfiguration;
                     logger.warn(`properties.json could not be found or parsed. Using default values. `);
+                    logger.debug(`Properties file: ${configPath}`);
+                    logger.debug(`Properties reading error ${error.message}`)
                 }
 
             }
@@ -665,7 +682,7 @@ export namespace Mandarine {
         */
         export interface ITemplatesManager {
             register(renderData: Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData, engine?: Mandarine.MandarineMVC.TemplateEngine.Engines): void;
-            getTemplate(templatePath: Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData, manual: boolean): Mandarine.MandarineMVC.TemplateEngine.Template | undefined;
+            getTemplate(templatePath: Mandarine.MandarineMVC.TemplateEngine.Decorators.RenderData, customPath?: boolean, manual?: boolean): Mandarine.MandarineMVC.TemplateEngine.Template | undefined;
             getFullPath(templatePath: string): string;
             initializeTemplates(): void;
         }
